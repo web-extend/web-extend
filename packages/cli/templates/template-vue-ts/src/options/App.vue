@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <h1>WebExtend + Vue</h1>
-    <p>This is a options page.</p>
+    <p>This is an options page.</p>
   </div>
 </template>
 
