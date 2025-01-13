@@ -1,8 +1,8 @@
 <script lang="ts">
-  let visible = $state(false);
-  const toggle = () => {
-    visible = !visible;
-  };
+let visible = $state(false);
+const toggle = () => {
+  visible = !visible;
+};
 </script>
 
 <main>

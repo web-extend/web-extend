@@ -1,6 +1,6 @@
+import type { ContentScriptConfig } from 'rsbuild-plugin-web-ext';
 import { mount } from 'svelte';
 import App from './App.svelte';
-import type { ContentScriptConfig } from 'rsbuild-plugin-web-ext';
 
 let app = null;
 let rootEl = document.getElementById('web-extend-content');
