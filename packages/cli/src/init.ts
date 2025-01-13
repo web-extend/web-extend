@@ -11,6 +11,7 @@ export interface InitialOptions {
   projectName?: string;
   template?: string;
   entry?: string[];
+  override?: boolean;
 }
 
 const frameworks = [
@@ -19,7 +20,7 @@ const frameworks = [
     value: 'vanilla',
   },
   {
-    name: chalk.blue('React'),
+    name: chalk.cyan('React'),
     value: 'react',
   },
   {
@@ -40,6 +41,7 @@ const variants = [
   {
     name: 'JavaScript',
     value: 'js',
+    disabled: true,
   },
 ];
 
@@ -70,7 +72,9 @@ const entrypoints = [
   },
 ];
 
-const templates = ['vanilla-js', 'vanilla-ts', 'react-js', 'react-ts', 'vue-js', 'vue-ts'];
+const templates = frameworks.flatMap((framework) =>
+  variants.filter((variant) => !variant.disabled).map((variant) => `${framework.value}-${variant.value}`),
+);
 
 export async function normalizeTemplate(text?: string) {
   let template = '';
@@ -110,8 +114,24 @@ export async function normalizeInitialOptions(options: InitialOptions) {
     const root = process.cwd();
     const projectPath = resolve(root, options.projectName);
     if (existsSync(projectPath)) {
-      console.log(`${options.projectName} has exist.`);
-      return null;
+      options.override = await select({
+        message: `Target directory "${options.projectName}" is not empty, please choose`,
+        choices: [
+          {
+            name: 'Cancel operation',
+            value: false,
+          },
+          {
+            name: 'Continue and override files',
+            value: true,
+          },
+        ],
+      });
+      if (!options.override) {
+        const error = new Error('Cancel operation');
+        error.name = 'ExitPromptError';
+        throw error;
+      }
     }
 
     options.template = await normalizeTemplate(options.template);
@@ -147,7 +167,9 @@ export async function createProject(options: InitialOptions) {
   const templatePath = getTemplatePath(template);
   const destPath = resolve(root, projectName);
 
-  await mkdir(destPath);
+  if (!existsSync(destPath)) {
+    await mkdir(destPath);
+  }
   await copyTemplate(templatePath, destPath);
   await copyEntryFiles(resolve(templatePath, 'src'), resolve(destPath, 'src'), options.entry);
   await modifyPackageJson(destPath, basename(projectName));
