@@ -1,6 +1,6 @@
 import { existsSync } from 'node:fs';
 import { copyFile, cp, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
-import { dirname, relative, resolve } from 'node:path';
+import { dirname, relative, resolve, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { checkbox, input, select } from '@inquirer/prompts';
 import chalk from 'chalk';
@@ -100,9 +100,10 @@ export async function normalizeInitialOptions(options: InitialOptions) {
     console.log();
 
     if (!options.projectName) {
-      options.projectName = await input({ message: 'Project name', default: 'my-extension-app' });
+      options.projectName = await input({ message: 'Project name or path', default: 'my-extension-app' });
     }
 
+    // TODO： 校验是否存在
     const root = process.cwd();
     const projectPath = resolve(root, options.projectName);
     if (existsSync(projectPath)) {
@@ -146,7 +147,7 @@ export async function createProject(options: InitialOptions) {
   await mkdir(destPath);
   await copyTemplate(templatePath, destPath);
   await copyEntryFiles(resolve(templatePath, 'src'), resolve(destPath, 'src'), options.entry);
-  await modifyPackageJson(destPath, projectName);
+  await modifyPackageJson(destPath, basename(projectName));
 }
 
 export function getTemplatePath(template: string) {

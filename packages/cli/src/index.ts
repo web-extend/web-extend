@@ -1,18 +1,18 @@
 import { type Command, program } from 'commander';
-import { type GenerateOptions, generate } from './add.js';
+import { type GenerateOptions, generate } from './generate.js';
 import { init } from './init.js';
 import { type StartOptions, startBuild, startDevServer } from './rsbuild.js';
 import { type ZipOptions, zipExtenison } from './zip.js';
 
 function main() {
   const initCommand = program.command('init').description('create a new project');
-  const addCommand = program.command('add').description('add entry points');
+  const generateCommand = program.command('generate').alias('g').description('generate entry files');
   const rsbuildDevCommand = program.command('rsbuild:dev').description('execute the dev command of rsbuild');
   const rsbuildBuildCommand = program.command('rsbuild:build').description('execute the build command of rsbuild');
   const zipCommand = program.command('zip').description('package an extension into a .zip file for publishing');
 
   applyInitCommand(initCommand);
-  applyAddCommand(addCommand);
+  applyGenerateCommand(generateCommand);
   applyRsbuildDevCommand(rsbuildDevCommand);
   applyRsbuildBuildCommand(rsbuildBuildCommand);
   applyZipCommand(zipCommand);
@@ -22,7 +22,7 @@ function main() {
 
 function applyInitCommand(command: Command) {
   command
-    .argument('[project-name]')
+    .argument('[dir]')
     .option('-t, --template <name>', 'specify the template name')
     .option('-e, --entry <name>', 'specify entry ponts')
     .action(async (projectName, cliOptions) => {
@@ -42,7 +42,7 @@ function applyInitCommand(command: Command) {
     });
 }
 
-function applyAddCommand(command: Command) {
+function applyGenerateCommand(command: Command) {
   command
     .argument('<type>', 'type of files')
     .option('-r, --root <dir>', 'specify the project root directory')
