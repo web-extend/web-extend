@@ -1,0 +1,23 @@
+{
+  "name": "template-svelte-ts",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "web-extend rsbuild:dev --open",
+    "build": "web-extend rsbuild:build",
+    "svelte-check": "svelte-check --tsconfig ./tsconfig.json"
+  },
+  "dependencies": {
+    "svelte": "^5.8.1"
+  },
+  "devDependencies": {
+    "@rsbuild/core": "^1.1.8",
+    "@rsbuild/plugin-svelte": "^1.0.5",
+    "@types/chrome": "^0.0.290",
+    "rsbuild-plugin-web-ext": "0.0.1-alpha.11",
+    "svelte-check": "^4.1.1",
+    "typescript": "^5.7.2",
+    "web-ext": "^8.3.0",
+    "web-extend": "0.0.1-alpha.1"
+  }
+}
