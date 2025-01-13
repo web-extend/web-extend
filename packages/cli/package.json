@@ -13,7 +13,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "npm run build"
   },
-  "files": ["dist", "bin", "templates"],
+  "files": [
+    "dist",
+    "bin",
+    "templates"
+  ],
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -21,6 +25,7 @@
   "dependencies": {
     "@inquirer/prompts": "^7.2.1",
     "archiver": "^7.0.1",
+    "chalk": "^5.4.1",
     "chokidar": "^4.0.3",
     "commander": "^12.1.0",
     "sharp": "^0.33.5"

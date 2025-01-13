@@ -3,6 +3,7 @@ import { copyFile, cp, mkdir, readFile, readdir, writeFile } from 'node:fs/promi
 import { dirname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { checkbox, input, select } from '@inquirer/prompts';
+import chalk from 'chalk';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -127,7 +128,7 @@ export async function normalizeInitialOptions(options: InitialOptions) {
     return options;
   } catch (error) {
     if (error instanceof Error && error.name === 'ExitPromptError') {
-      console.log('Canceled\n');
+      console.log(`${chalk.red('✕')} ${chalk.bold('Canceled')}\n`);
       return null;
     }
     throw error;

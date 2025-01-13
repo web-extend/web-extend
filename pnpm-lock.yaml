@@ -89,6 +89,9 @@ importers:
       archiver:
         specifier: ^7.0.1
         version: 7.0.1
+      chalk:
+        specifier: ^5.4.1
+        version: 5.4.1
       chokidar:
         specifier: ^4.0.3
         version: 4.0.3
