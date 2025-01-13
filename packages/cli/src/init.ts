@@ -15,19 +15,19 @@ export interface InitialOptions {
 
 const frameworks = [
   {
-    name: 'Vanilla',
+    name: chalk.yellow('Vanilla'),
     value: 'vanilla',
   },
   {
-    name: 'React',
+    name: chalk.blue('React'),
     value: 'react',
   },
   {
-    name: 'Vue',
+    name: chalk.green('Vue'),
     value: 'vue',
   },
   {
-    name: 'Svelte',
+    name: chalk.red('Svelte'),
     value: 'svelte',
   },
 ];
