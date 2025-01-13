@@ -26,6 +26,10 @@ const frameworks = [
     name: 'Vue',
     value: 'vue',
   },
+  {
+    name: 'Svelte',
+    value: 'svelte',
+  },
 ];
 
 const variants = [
@@ -103,7 +107,6 @@ export async function normalizeInitialOptions(options: InitialOptions) {
       options.projectName = await input({ message: 'Project name or path', default: 'my-extension-app' });
     }
 
-    // TODO： 校验是否存在
     const root = process.cwd();
     const projectPath = resolve(root, options.projectName);
     if (existsSync(projectPath)) {
