@@ -35,7 +35,6 @@ const variants = [
   {
     name: 'JavaScript',
     value: 'js',
-    disabled: true,
   },
 ];
 
@@ -70,20 +69,22 @@ const templates = ['vanilla-js', 'vanilla-ts', 'react-js', 'react-ts', 'vue-js',
 
 export async function normalizeTemplate(text?: string) {
   let template = '';
+  // only support ts template
+  const variant = 'ts';
   if (!text) {
     const framework = await select({
       message: 'Select a framework',
       choices: frameworks,
     });
-    const variant = await select({
-      message: 'Select a variant',
-      choices: variants,
-    });
+    // const variant = await select({
+    //   message: 'Select a variant',
+    //   choices: variants,
+    // });
     template = `${framework}-${variant}`;
   } else {
     const list = text.split('-');
     const framework = list[0];
-    const variant = list[1] || 'js';
+    // const variant = list[1] || 'js';
     template = `${framework}-${variant}`;
   }
 
@@ -100,9 +101,9 @@ export async function normalizeInitialOptions(options: InitialOptions) {
     if (!options.projectName) {
       options.projectName = await input({ message: 'Project name', default: 'my-extension-app' });
     }
+
     const root = process.cwd();
     const projectPath = resolve(root, options.projectName);
-
     if (existsSync(projectPath)) {
       console.log(`${options.projectName} has exist.`);
       return null;
@@ -127,10 +128,9 @@ export async function normalizeInitialOptions(options: InitialOptions) {
   } catch (error) {
     if (error instanceof Error && error.name === 'ExitPromptError') {
       console.log('Canceled\n');
-    } else {
-      throw error;
+      return null;
     }
-    return null;
+    throw error;
   }
 }
 
@@ -166,7 +166,6 @@ async function copyTemplate(source: string, dest: string) {
     const destPath = resolve(dest, name);
 
     if (['node_modules', 'dist'].includes(name)) continue;
-
     if (file.isDirectory()) {
       await cp(srcPath, destPath, {
         recursive: true,
@@ -198,7 +197,7 @@ export async function copyEntryFiles(source: string, dest: string, entries?: str
   if (!entries?.length) return;
 
   if (!existsSync(source)) {
-    throw new Error('Cannot find source');
+    throw new Error("Source directory doesn't exist");
   }
   if (!existsSync(dest)) {
     await mkdir(dest);
