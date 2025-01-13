@@ -1,7 +1,7 @@
 <main>
   <div class="content">
     <h1>WebExtend + Svelte</h1>
-    <p>This is a popup page.</p>
+    <p>This is a sidepanel page.</p>
   </div>
 </main>
 
