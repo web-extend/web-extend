@@ -57,6 +57,12 @@ async function init({
     envMode: commonOptions.envMode,
   });
 
+  config.source ||= {};
+  config.source.define = {
+    ...envs.publicVars,
+    ...config.source.define,
+  };
+
   if (commonOptions.root) {
     config.root = root;
   }
@@ -92,52 +98,52 @@ async function init({
     environment: commonOptions.environment,
   });
 
-  // clear all watchers
-  for (const wather of watchers) {
-    await wather?.close();
-  }
-  watchers = [];
-
-  // set watchers
-  const restart = isDev ? restartDevServer : isBuildWatch ? restartBuild : null;
-  rsbuild.onBeforeCreateCompiler(() => {
-    if (!restart) return;
-
-    const files = [...envs.filePaths];
-    if (configFilePath) {
-      files.push(configFilePath);
-    }
-
-    // const config = rsbuild.getNormalizedConfig();
-    // if (config.dev?.watchFiles) {
-    //   const watchFiles = [config.dev.watchFiles].flat().filter((item) => item.type === 'reload-server');
-    //   for (const watchFilesConfig of watchFiles) {
-    //     const paths = [watchFilesConfig.paths].flat();
-    //     if (watchFilesConfig.options) {
-    //       const watcher = watchFilesForRestart({
-    //         files: paths,
-    //         root,
-    //         restart,
-    //         watchOptions: watchFilesConfig.options,
-    //         watchEvents: ['add', 'unlink'],
-    //       });
-    //       if (watcher) {
-    //         watchers.push(watcher);
-    //       }
-    //     } else {
-    //       files.push(...paths);
-    //     }
-    //   }
-    // }
-
-    const watcher = watchFilesForRestart({ files, root, restart });
-    if (watcher) {
-      watchers.push(watcher);
-    }
-  });
-
   rsbuild.onCloseBuild(envs.cleanup);
   rsbuild.onCloseDevServer(envs.cleanup);
+
+  if (isBuildWatch || isDev) {
+    for (const wather of watchers) {
+      await wather?.close();
+    }
+    watchers = [];
+
+    const restart = isDev ? restartDevServer : isBuildWatch ? restartBuild : null;
+    rsbuild.onBeforeCreateCompiler(() => {
+      if (!restart) return;
+
+      const files = [...envs.filePaths];
+      if (configFilePath) {
+        files.push(configFilePath);
+      }
+
+      // const config = rsbuild.getNormalizedConfig();
+      // if (config.dev?.watchFiles) {
+      //   const watchFiles = [config.dev.watchFiles].flat().filter((item) => item.type === 'reload-server');
+      //   for (const watchFilesConfig of watchFiles) {
+      //     const paths = [watchFilesConfig.paths].flat();
+      //     if (watchFilesConfig.options) {
+      //       const watcher = watchFilesForRestart({
+      //         files: paths,
+      //         root,
+      //         restart,
+      //         watchOptions: watchFilesConfig.options,
+      //         watchEvents: ['add', 'unlink'],
+      //       });
+      //       if (watcher) {
+      //         watchers.push(watcher);
+      //       }
+      //     } else {
+      //       files.push(...paths);
+      //     }
+      //   }
+      // }
+
+      const watcher = watchFilesForRestart({ files, root, restart });
+      if (watcher) {
+        watchers.push(watcher);
+      }
+    });
+  }
 
   return rsbuild;
 }
@@ -208,7 +214,6 @@ const restartDevServer: RestartCallback = async ({ filePath }) => {
 
 async function startBuild(options: StartOptions) {
   prepareRun(options.target);
-
   const rsbuild = await init({
     cliOptions: options,
     isBuildWatch: options.watch,
