@@ -1,11 +1,11 @@
 import { resolve } from 'node:path';
 import type { RsbuildMode } from '@rsbuild/core';
 import type { FSWatcher } from 'chokidar';
+import { writeBuildInfo } from './cache.js';
 import { type RestartCallback, beforeRestart, onBeforeRestart, watchFilesForRestart } from './restart.js';
 import { normalizeWebExtRunConfig } from './web-ext.js';
 import type { TargetType } from './web-ext.js';
 import { zip } from './zip.js';
-import { writeBuildInfo } from './cache.js';
 
 export interface StartOptions {
   target?: string;
