@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "web-extend rsbuild:dev --open",
-    "build": "web-extend rsbuild:build"
+    "build": "web-extend rsbuild:build",
+    "zip": "web-extend zip"
   },
   "dependencies": {
     "react": "^19.0.0",
@@ -19,6 +20,6 @@
     "rsbuild-plugin-web-ext": "0.0.1-alpha.11",
     "typescript": "^5.7.2",
     "web-ext": "^8.3.0",
-    "web-extend": "0.0.1-alpha.1"
+    "web-extend": "0.0.1-alpha.2"
   }
 }

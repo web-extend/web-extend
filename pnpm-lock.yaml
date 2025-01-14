@@ -152,8 +152,8 @@ importers:
         specifier: ^8.3.0
         version: 8.3.0
       web-extend:
-        specifier: 0.0.1-alpha.1
-        version: 0.0.1-alpha.1(@rsbuild/core@1.1.12)(@types/node@22.10.5)
+        specifier: 0.0.1-alpha.2
+        version: 0.0.1-alpha.2(@rsbuild/core@1.1.12)(@types/node@22.10.5)(web-ext@8.3.0)
 
   packages/cli/templates/template-svelte-ts:
     dependencies:
@@ -183,8 +183,8 @@ importers:
         specifier: ^8.3.0
         version: 8.3.0
       web-extend:
-        specifier: 0.0.1-alpha.1
-        version: 0.0.1-alpha.1(@rsbuild/core@1.1.13)(@types/node@22.10.5)
+        specifier: 0.0.1-alpha.2
+        version: 0.0.1-alpha.2(@rsbuild/core@1.1.13)(@types/node@22.10.5)(web-ext@8.3.0)
 
   packages/cli/templates/template-vanilla-ts:
     devDependencies:
@@ -204,8 +204,8 @@ importers:
         specifier: ^8.3.0
         version: 8.3.0
       web-extend:
-        specifier: 0.0.1-alpha.1
-        version: 0.0.1-alpha.1(@rsbuild/core@1.1.12)(@types/node@22.10.5)
+        specifier: 0.0.1-alpha.2
+        version: 0.0.1-alpha.2(@rsbuild/core@1.1.12)(@types/node@22.10.5)(web-ext@8.3.0)
 
   packages/cli/templates/template-vue-ts:
     dependencies:
@@ -232,8 +232,8 @@ importers:
         specifier: ^8.3.0
         version: 8.3.0
       web-extend:
-        specifier: 0.0.1-alpha.1
-        version: 0.0.1-alpha.1(@rsbuild/core@1.1.12)(@types/node@22.10.5)
+        specifier: 0.0.1-alpha.2
+        version: 0.0.1-alpha.2(@rsbuild/core@1.1.12)(@types/node@22.10.5)(web-ext@8.3.0)
 
   packages/rsbuild:
     dependencies:
@@ -3445,14 +3445,17 @@ packages:
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
     hasBin: true
 
-  web-extend@0.0.1-alpha.1:
-    resolution: {integrity: sha512-h65RguBt1vyTYBHt81U6zQMzrAsl1x3YeoGzP2T3xWOt/KDk4efMD/5+bwO9m8o8z/nIv0Pc/XFbXbgkJ7nYrg==}
+  web-extend@0.0.1-alpha.2:
+    resolution: {integrity: sha512-MyAKWhJbhJo2dx8S6NTXbtaFfZZemCF1vYtE2l4mqwXuiW5vL7nwkYMd9x+RQP5cSxVmJgnbjlMxeqxl5cQlGg==}
     engines: {node: '>=16.7.0'}
     hasBin: true
     peerDependencies:
       '@rsbuild/core': 1.x
+      web-ext: ^8.3.0
     peerDependenciesMeta:
       '@rsbuild/core':
+        optional: true
+      web-ext:
         optional: true
 
   webextension-polyfill@0.12.0:
@@ -6809,10 +6812,11 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  web-extend@0.0.1-alpha.1(@rsbuild/core@1.1.12)(@types/node@22.10.5):
+  web-extend@0.0.1-alpha.2(@rsbuild/core@1.1.12)(@types/node@22.10.5)(web-ext@8.3.0):
     dependencies:
       '@inquirer/prompts': 7.2.2(@types/node@22.10.5)
       archiver: 7.0.1
+      chalk: 5.4.1
       chokidar: 4.0.3
       commander: 12.1.0
       sharp: 0.33.5
@@ -6821,18 +6825,12 @@ snapshots:
       web-ext: 8.3.0
     transitivePeerDependencies:
       - '@types/node'
-      - body-parser
-      - bufferutil
-      - express
-      - node-fetch
-      - safe-compare
-      - supports-color
-      - utf-8-validate
 
-  web-extend@0.0.1-alpha.1(@rsbuild/core@1.1.13)(@types/node@22.10.5):
+  web-extend@0.0.1-alpha.2(@rsbuild/core@1.1.13)(@types/node@22.10.5)(web-ext@8.3.0):
     dependencies:
       '@inquirer/prompts': 7.2.2(@types/node@22.10.5)
       archiver: 7.0.1
+      chalk: 5.4.1
       chokidar: 4.0.3
       commander: 12.1.0
       sharp: 0.33.5
@@ -6841,13 +6839,6 @@ snapshots:
       web-ext: 8.3.0
     transitivePeerDependencies:
       - '@types/node'
-      - body-parser
-      - bufferutil
-      - express
-      - node-fetch
-      - safe-compare
-      - supports-color
-      - utf-8-validate
 
   webextension-polyfill@0.12.0: {}
 
