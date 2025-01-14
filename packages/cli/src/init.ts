@@ -115,7 +115,7 @@ export async function normalizeInitialOptions(options: InitialOptions) {
     const projectPath = resolve(root, options.projectName);
     if (existsSync(projectPath)) {
       options.override = await select({
-        message: `Target directory "${options.projectName}" is not empty, please choose`,
+        message: `Target directory ${options.projectName} is not empty, please choose`,
         choices: [
           {
             name: 'Cancel operation',

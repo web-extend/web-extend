@@ -4,7 +4,8 @@ import type { FSWatcher } from 'chokidar';
 import { type RestartCallback, beforeRestart, onBeforeRestart, watchFilesForRestart } from './restart.js';
 import { normalizeWebExtRunConfig } from './web-ext.js';
 import type { TargetType } from './web-ext.js';
-import { zipExtenison } from './zip.js';
+import { zip } from './zip.js';
+import { writeBuildInfo } from './cache.js';
 
 export interface StartOptions {
   target?: string;
@@ -214,19 +215,27 @@ const restartDevServer: RestartCallback = async ({ filePath }) => {
 
 async function startBuild(options: StartOptions) {
   prepareRun(options.target);
+
   const rsbuild = await init({
     cliOptions: options,
     isBuildWatch: options.watch,
   });
 
-  if (options.zip) {
-    rsbuild.onAfterBuild(async () => {
-      await zipExtenison({
-        root: options.root,
-        source: rsbuild.context.distPath,
+  // run after manifest.json written
+  rsbuild.onCloseBuild(async () => {
+    const config = rsbuild.getNormalizedConfig();
+    const buildInfo = {
+      root: config.root,
+      outDir: config.output.distPath.root,
+    };
+    await writeBuildInfo(buildInfo.root, buildInfo);
+    if (options.zip) {
+      await zip({
+        root: buildInfo.root,
+        source: buildInfo.outDir,
       });
-    });
-  }
+    }
+  });
 
   const buildInstance = await rsbuild.build({ watch: options.watch });
   if (options.watch) {
@@ -242,14 +251,21 @@ const restartBuild: RestartCallback = async ({ filePath }) => {
   const rsbuild = await init({ isBuildWatch: true, isRestart: true });
   if (!rsbuild) return;
 
-  if (commonOptions.zip) {
-    rsbuild.onAfterBuild(async () => {
-      await zipExtenison({
-        root: commonOptions.root,
-        source: rsbuild.context.distPath,
+  // run after manifest.json written
+  rsbuild.onCloseBuild(async () => {
+    const config = rsbuild.getNormalizedConfig();
+    const buildInfo = {
+      root: config.root,
+      outDir: config.output.distPath.root,
+    };
+    await writeBuildInfo(buildInfo.root, buildInfo);
+    if (commonOptions.zip) {
+      await zip({
+        root: buildInfo.root,
+        source: buildInfo.outDir,
       });
-    });
-  }
+    }
+  });
 
   const buildInstance = await rsbuild.build({ watch: true });
   onBeforeRestart(buildInstance.close);
