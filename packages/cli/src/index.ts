@@ -2,7 +2,7 @@ import { type Command, program } from 'commander';
 import { type GenerateOptions, generate } from './generate.js';
 import { init } from './init.js';
 import { type StartOptions, startBuild, startDevServer } from './rsbuild.js';
-import { type ZipOptions, zipExtenison } from './zip.js';
+import { type ZipOptions, zip } from './zip.js';
 
 function main() {
   const initCommand = program.command('init').description('create a new project');
@@ -107,13 +107,13 @@ function applyCommonRunOptions(command: Command) {
 
 function applyZipCommand(command: Command) {
   command
-    .argument('<source>', 'specify the dist path')
+    .argument('[source]', 'specify the dist path')
     .option('-r, --root <root>', 'specify the project root directory')
     .option('-o, --out-dir <dir>', 'specify the output directory')
     .option('-n, --filename <filename>', 'specify the output filename')
     .action(async (source: string, options: ZipOptions) => {
       try {
-        await zipExtenison({ ...options, source });
+        await zip({ ...options, source });
       } catch (err) {
         console.error('Failed to package the extension.');
         console.error(err);
