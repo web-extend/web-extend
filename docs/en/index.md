@@ -4,7 +4,7 @@ layout: home
 
 hero:
   name: "WebExtend"
-  text: "A VitePress Site"
+  text: "The build tool for web extensions"
   tagline: My great project tagline
   actions:
     - theme: brand
