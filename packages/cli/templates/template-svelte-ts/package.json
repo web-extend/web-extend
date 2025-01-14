@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "web-extend rsbuild:dev --open",
     "build": "web-extend rsbuild:build",
+    "zip": "web-extend zip",
     "svelte-check": "svelte-check --tsconfig ./tsconfig.json"
   },
   "dependencies": {
@@ -18,6 +19,6 @@
     "svelte-check": "^4.1.1",
     "typescript": "^5.7.2",
     "web-ext": "^8.3.0",
-    "web-extend": "0.0.1-alpha.1"
+    "web-extend": "0.0.1-alpha.2"
   }
 }
