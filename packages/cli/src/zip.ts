@@ -16,7 +16,7 @@ export async function zip({ filename, source, root = process.cwd() }: ZipOptions
     if (data?.distPath) {
       sourceDir = data.distPath;
     } else {
-      throw new Error('Argument source missing.');
+      throw new Error('Argument source is missing.');
     }
   }
 
