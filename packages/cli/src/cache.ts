@@ -3,8 +3,9 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
 export interface BuildInfo {
-  root: string;
-  outDir: string;
+  rootPath: string;
+  distPath: string;
+  target: string;
 }
 
 interface CacheResult {
@@ -20,11 +21,11 @@ async function initCacheDir(dirPath: string) {
 }
 
 export async function writeBuildInfo(root: string, data: BuildInfo) {
-  const cacheDirPath = resolve(root, cacheDir);
-  const resultPath = resolve(cacheDirPath, resultFile);
+  const cachePath = resolve(root, cacheDir);
+  const resultPath = resolve(cachePath, resultFile);
 
-  if (!existsSync(cacheDirPath)) {
-    initCacheDir(cacheDirPath);
+  if (!existsSync(cachePath)) {
+    initCacheDir(cachePath);
   }
 
   let result = await readCacheResult(resultPath);

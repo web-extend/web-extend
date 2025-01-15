@@ -42,7 +42,7 @@ export interface WebExtRunOptions {
 
 const posibleConfigFiles = ['web-ext.config.mjs', 'web-ext.config.cjs', 'web-ext.config.js'];
 
-export async function loadWebExtConfig(root: string) {
+async function loadWebExtConfig(root: string) {
   const configFile = posibleConfigFiles.map((item) => resolve(root, item)).find((item) => existsSync(item));
   if (!configFile) return null;
   try {
@@ -65,4 +65,14 @@ export async function normalizeWebExtRunConfig(root: string, options: WebExtRunO
   };
 
   return config;
+}
+
+export async function importWebExt() {
+  const webExt = await import('web-ext')
+    .then((mod) => mod.default)
+    .catch(() => {
+      console.warn(`Cannot find package 'web-ext', falling back to default open method.`);
+      return null;
+    });
+  return webExt;
 }
