@@ -1,10 +1,9 @@
 import { resolve } from 'node:path';
 import type { RsbuildMode } from '@rsbuild/core';
 import type { FSWatcher } from 'chokidar';
-import { writeBuildInfo } from './cache.js';
+import { writeBuildInfo, type BuildInfo } from './cache.js';
 import { type RestartCallback, beforeRestart, onBeforeRestart, watchFilesForRestart } from './restart.js';
-import { normalizeWebExtRunConfig } from './web-ext.js';
-import type { TargetType } from './web-ext.js';
+import { normalizeWebExtRunConfig, importWebExt, type TargetType } from './web-ext.js';
 import { zip } from './zip.js';
 
 export interface StartOptions {
@@ -153,14 +152,8 @@ async function startDevServer(options: StartOptions) {
   prepareRun(options.target);
 
   let webExt = null;
-
   if (options.open) {
-    webExt = await import('web-ext')
-      .then((mod) => mod.default)
-      .catch(() => {
-        console.warn(`Cannot find package 'web-ext', falling back to default open method.`);
-        return null;
-      });
+    webExt = await importWebExt();
   }
 
   const rsbuild = await init({
@@ -174,7 +167,8 @@ async function startDevServer(options: StartOptions) {
   if (options.open && webExt) {
     rsbuild.onDevCompileDone(async () => {
       if (extensionRunner !== null) return;
-      const config = await normalizeWebExtRunConfig(options.root || process.cwd(), {
+      const root = rsbuild.context.rootPath;
+      const config = await normalizeWebExtRunConfig(root, {
         target: getBrowserTarget(),
         startUrl: typeof options.open === 'string' ? options.open : undefined,
         sourceDir: rsbuild.context.distPath,
@@ -223,18 +217,21 @@ async function startBuild(options: StartOptions) {
 
   // run after manifest.json written
   rsbuild.onCloseBuild(async () => {
-    const config = rsbuild.getNormalizedConfig();
-    const buildInfo = {
-      root: config.root,
-      outDir: config.output.distPath.root,
+    const { rootPath, distPath } = rsbuild.context;
+    const buildInfo: BuildInfo = {
+      rootPath,
+      distPath,
+      target: getBuildTarget(),
     };
-    await writeBuildInfo(buildInfo.root, buildInfo);
+
     if (options.zip) {
       await zip({
-        root: buildInfo.root,
-        source: buildInfo.outDir,
+        root: buildInfo.rootPath,
+        source: buildInfo.distPath,
       });
     }
+
+    await writeBuildInfo(buildInfo.rootPath, buildInfo);
   });
 
   const buildInstance = await rsbuild.build({ watch: options.watch });
@@ -251,20 +248,22 @@ const restartBuild: RestartCallback = async ({ filePath }) => {
   const rsbuild = await init({ isBuildWatch: true, isRestart: true });
   if (!rsbuild) return;
 
-  // run after manifest.json written
   rsbuild.onCloseBuild(async () => {
-    const config = rsbuild.getNormalizedConfig();
-    const buildInfo = {
-      root: config.root,
-      outDir: config.output.distPath.root,
+    const { rootPath, distPath } = rsbuild.context;
+    const buildInfo: BuildInfo = {
+      rootPath,
+      distPath,
+      target: getBuildTarget(),
     };
-    await writeBuildInfo(buildInfo.root, buildInfo);
+
     if (commonOptions.zip) {
       await zip({
-        root: buildInfo.root,
-        source: buildInfo.outDir,
+        root: buildInfo.rootPath,
+        source: buildInfo.distPath,
       });
     }
+
+    await writeBuildInfo(buildInfo.rootPath, buildInfo);
   });
 
   const buildInstance = await rsbuild.build({ watch: true });
@@ -277,8 +276,13 @@ function prepareRun(target: string | undefined) {
   }
 }
 
-function getBrowserTarget(): TargetType {
+function getBuildTarget() {
   const target = process.env.WEB_EXTEND_TARGET || '';
+  return target;
+}
+
+function getBrowserTarget(): TargetType {
+  const target = getBuildTarget();
   const browser = target?.includes('firefox') ? 'firefox-desktop' : 'chromium';
   return browser;
 }

@@ -14,10 +14,10 @@ export async function zip({ filename, source, root = process.cwd(), outDir }: Zi
   let sourceDir = source;
   if (!sourceDir) {
     const data = await readBuildInfo(root);
-    if (data?.outDir) {
-      sourceDir = data.outDir;
+    if (data?.distPath) {
+      sourceDir = data.distPath;
     } else {
-      throw new Error('Zipped directory is not defined. Try build first.');
+      throw new Error('Argument source missing.');
     }
   }
 
