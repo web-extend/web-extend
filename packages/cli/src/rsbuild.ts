@@ -3,7 +3,7 @@ import type { RsbuildMode } from '@rsbuild/core';
 import type { FSWatcher } from 'chokidar';
 import { type BuildInfo, writeBuildInfo } from './cache.js';
 import { type RestartCallback, beforeRestart, onBeforeRestart, watchFilesForRestart } from './restart.js';
-import { type ExtensionRunner, getBrowserTarget, importWebExt, normalizeWebExtRunConfig, run } from './web-ext.js';
+import { type ExtensionRunner, importWebExt, normalizeRunConfig, run } from './web-ext.js';
 import { zip } from './zip.js';
 
 export interface StartOptions {
@@ -165,11 +165,8 @@ async function startDevServer(options: StartOptions) {
   if (options.open && webExt) {
     rsbuild.onDevCompileDone(async () => {
       if (extensionRunner !== null) return;
-      const root = rsbuild.context.rootPath;
-      const config = await normalizeWebExtRunConfig(root, {
-        target: getBrowserTarget(getBuildTarget()),
+      const config = await normalizeRunConfig(rsbuild.context.rootPath, rsbuild.context.distPath, getBuildTarget(), {
         startUrl: typeof options.open === 'string' ? options.open : undefined,
-        sourceDir: rsbuild.context.distPath,
       });
 
       extensionRunner = await run(webExt, config);

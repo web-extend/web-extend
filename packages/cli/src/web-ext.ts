@@ -52,6 +52,11 @@ export interface PreviewOptions {
   outDir?: string;
 }
 
+export function getBrowserTarget(target: string): TargetType {
+  const browser = target?.includes('firefox') ? 'firefox-desktop' : 'chromium';
+  return browser;
+}
+
 const posibleConfigFiles = ['web-ext.config.mjs', 'web-ext.config.cjs', 'web-ext.config.js'];
 
 async function loadWebExtConfig(root: string) {
@@ -66,13 +71,22 @@ async function loadWebExtConfig(root: string) {
   }
 }
 
-export async function normalizeWebExtRunConfig(root: string, options: WebExtRunOptions) {
+export async function normalizeRunConfig(
+  root: string,
+  outDir: string,
+  extensionTarget: string,
+  options: WebExtRunOptions = {},
+) {
   const userConfig = await loadWebExtConfig(root);
   const userRunconfig = userConfig?.run || {};
+  const target = getBrowserTarget(extensionTarget);
+  const sourceDir = resolve(root, outDir);
 
   const config: WebExtRunOptions = {
+    target,
+    sourceDir,
     ...options,
-    ...(userRunconfig || {}),
+    ...userRunconfig,
     noReload: true,
   };
 
@@ -100,24 +114,16 @@ export async function preview({ root = process.cwd(), outDir, target }: PreviewO
 
   const buildInfo = await readBuildInfo(root);
   const sourceDir = outDir ? resolve(root, outDir) : buildInfo?.distPath;
-  const extendionTarget = target || buildInfo?.target;
+  const extensionTarget = target || buildInfo?.target;
 
   if (!sourceDir) {
     throw Error('The output directory is missing, please build first.');
   }
 
-  if (!extendionTarget) {
+  if (!extensionTarget) {
     throw Error('The extension target is missing, please build first.');
   }
 
-  const config = await normalizeWebExtRunConfig(root, {
-    target: getBrowserTarget(extendionTarget),
-    sourceDir,
-  });
+  const config = await normalizeRunConfig(root, sourceDir, extensionTarget);
   return run(webExt, config);
-}
-
-export function getBrowserTarget(target: string): TargetType {
-  const browser = target?.includes('firefox') ? 'firefox-desktop' : 'chromium';
-  return browser;
 }
