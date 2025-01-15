@@ -40,8 +40,14 @@ export async function zip({ filename, source, root = process.cwd() }: ZipOptions
       zlib: { level: 9 },
     });
     output.on('close', () => {
-      console.log(`Zipped ${sourceDir} successfully.`);
-      resolve({});
+      const total = Math.round((archive.pointer() / 1024) * 100) / 100;
+      console.log(`Packaged ${basename(sourceDir)} successfully.`);
+      console.log(`Output: ${filePath}`);
+      console.log(`Total: ${total} kB`);
+      resolve({
+        output: filePath,
+        total,
+      });
     });
     archive.on('error', reject);
 

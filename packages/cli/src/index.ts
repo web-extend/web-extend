@@ -8,10 +8,12 @@ import { type ZipOptions, zip } from './zip.js';
 function main() {
   const initCommand = program.command('init').description('create a new project');
   const generateCommand = program.command('generate').alias('g').description('generate entry files');
-  const rsbuildDevCommand = program.command('rsbuild:dev').description('execute the dev command of rsbuild');
-  const rsbuildBuildCommand = program.command('rsbuild:build').description('execute the build command of rsbuild');
+  const rsbuildDevCommand = program.command('rsbuild:dev').description('start the dev server with rsbuild');
+  const rsbuildBuildCommand = program
+    .command('rsbuild:build')
+    .description('build the extension for production with rsbuild');
   const previewCommand = program.command('preview').description('preview the built extension');
-  const zipCommand = program.command('zip').description('package the extension into a .zip file for publishing');
+  const zipCommand = program.command('zip').description('package the built extension into a .zip file for publishing');
 
   applyInitCommand(initCommand);
   applyGenerateCommand(generateCommand);
@@ -27,7 +29,7 @@ function applyInitCommand(command: Command) {
   command
     .argument('[dir]')
     .option('-t, --template <name>', 'specify the template name')
-    .option('-e, --entry <name>', 'specify entry ponts')
+    .option('-e, --entry <name>', 'specify entrypoints')
     .action(async (projectName, cliOptions) => {
       const { entry, ...otherOptions } = cliOptions;
       const entrypoints = entry ? entry.split(',') : undefined;
@@ -47,7 +49,7 @@ function applyInitCommand(command: Command) {
 
 function applyGenerateCommand(command: Command) {
   command
-    .argument('<type>', 'type of files')
+    .argument('<type>', 'type of entry files')
     .option('-r, --root <dir>', 'specify the project root directory')
     .option('-t, --template <name>', 'specify the template name or path')
     .option('-o, --out-dir <dir>', 'specify the output directory')
@@ -72,7 +74,7 @@ function applyGenerateCommand(command: Command) {
 function applyRsbuildDevCommand(command: Command) {
   applyCommonRunOptions(command);
   command
-    .option('-o, --open [url]', 'open the page in browser on startup')
+    .option('-o, --open [url]', 'open the extension in browser on startup')
     .option('--port <port>', 'specify a port number for server to listen')
     .action(async (options: StartOptions) => {
       try {
@@ -87,7 +89,7 @@ function applyRsbuildDevCommand(command: Command) {
 
 function applyRsbuildBuildCommand(command: Command) {
   applyCommonRunOptions(command);
-  command.option('-z, --zip', 'package the extension after build').action(async (options: StartOptions) => {
+  command.option('-z, --zip', 'package the built extension').action(async (options: StartOptions) => {
     try {
       await startBuild(options);
     } catch (err) {
