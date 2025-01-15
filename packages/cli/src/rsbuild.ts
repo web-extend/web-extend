@@ -3,7 +3,7 @@ import type { RsbuildMode } from '@rsbuild/core';
 import type { FSWatcher } from 'chokidar';
 import { type BuildInfo, writeBuildInfo } from './cache.js';
 import { type RestartCallback, beforeRestart, onBeforeRestart, watchFilesForRestart } from './restart.js';
-import { type TargetType, importWebExt, normalizeWebExtRunConfig } from './web-ext.js';
+import { importWebExt, normalizeWebExtRunConfig, type ExtensionRunner, run, getBrowserTarget } from './web-ext.js';
 import { zip } from './zip.js';
 
 export interface StartOptions {
@@ -19,11 +19,6 @@ export interface StartOptions {
   port?: number;
   watch?: boolean;
   zip?: boolean;
-}
-
-interface ExtensionRunner {
-  reloadAllExtensions: () => void;
-  exit: () => void;
 }
 
 let commonOptions: StartOptions = {};
@@ -154,6 +149,9 @@ async function startDevServer(options: StartOptions) {
   let webExt = null;
   if (options.open) {
     webExt = await importWebExt();
+    if (!webExt) {
+      console.warn(`Cannot find package 'web-ext', falling back to default open method.`);
+    }
   }
 
   const rsbuild = await init({
@@ -169,18 +167,12 @@ async function startDevServer(options: StartOptions) {
       if (extensionRunner !== null) return;
       const root = rsbuild.context.rootPath;
       const config = await normalizeWebExtRunConfig(root, {
-        target: getBrowserTarget(),
+        target: getBrowserTarget(getBuildTarget()),
         startUrl: typeof options.open === 'string' ? options.open : undefined,
         sourceDir: rsbuild.context.distPath,
       });
 
-      webExt.cmd
-        .run(config, {
-          shouldExitProgram: false,
-        })
-        .then((runner: ExtensionRunner) => {
-          extensionRunner = runner;
-        });
+      extensionRunner = await run(webExt, config);
     });
 
     rsbuild.onExit(() => {
@@ -279,12 +271,6 @@ function prepareRun(target: string | undefined) {
 function getBuildTarget() {
   const target = process.env.WEB_EXTEND_TARGET || '';
   return target;
-}
-
-function getBrowserTarget(): TargetType {
-  const target = getBuildTarget();
-  const browser = target?.includes('firefox') ? 'firefox-desktop' : 'chromium';
-  return browser;
 }
 
 export { startDevServer, startBuild };

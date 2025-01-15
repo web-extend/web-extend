@@ -3,18 +3,21 @@ import { type GenerateOptions, generate } from './generate.js';
 import { init } from './init.js';
 import { type StartOptions, startBuild, startDevServer } from './rsbuild.js';
 import { type ZipOptions, zip } from './zip.js';
+import { preview, type PreviewOptions } from './web-ext.js';
 
 function main() {
   const initCommand = program.command('init').description('create a new project');
   const generateCommand = program.command('generate').alias('g').description('generate entry files');
   const rsbuildDevCommand = program.command('rsbuild:dev').description('execute the dev command of rsbuild');
   const rsbuildBuildCommand = program.command('rsbuild:build').description('execute the build command of rsbuild');
-  const zipCommand = program.command('zip').description('package an extension into a .zip file for publishing');
+  const previewCommand = program.command('preview').description('preview the built extension');
+  const zipCommand = program.command('zip').description('package the extension into a .zip file for publishing');
 
   applyInitCommand(initCommand);
   applyGenerateCommand(generateCommand);
   applyRsbuildDevCommand(rsbuildDevCommand);
   applyRsbuildBuildCommand(rsbuildBuildCommand);
+  applyPreviewCommand(previewCommand);
   applyZipCommand(zipCommand);
 
   program.parse();
@@ -105,11 +108,26 @@ function applyCommonRunOptions(command: Command) {
     .option('-t, --target <target>', 'specify the extension target');
 }
 
+function applyPreviewCommand(command: Command) {
+  command
+    .option('-r, --root <root>', 'specify the project root directory')
+    .option('-o, --out-dir <dir>', 'specify the output directory')
+    .option('-t, --target <target>', 'specify the extension target')
+    .action(async (options: PreviewOptions) => {
+      try {
+        await preview(options);
+      } catch (err) {
+        console.error('Failed to preview.');
+        console.error(err);
+        process.exit(1);
+      }
+    });
+}
+
 function applyZipCommand(command: Command) {
   command
     .argument('[source]', 'specify the dist path')
     .option('-r, --root <root>', 'specify the project root directory')
-    .option('-o, --out-dir <dir>', 'specify the output directory')
     .option('-n, --filename <filename>', 'specify the output filename')
     .action(async (source: string, options: ZipOptions) => {
       try {

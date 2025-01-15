@@ -4,13 +4,12 @@ import archiver from 'archiver';
 import { readBuildInfo } from './cache.js';
 
 export interface ZipOptions {
-  outDir?: string;
-  filename?: string;
   root?: string;
   source?: string;
+  filename?: string;
 }
 
-export async function zip({ filename, source, root = process.cwd(), outDir }: ZipOptions) {
+export async function zip({ filename, source, root = process.cwd() }: ZipOptions) {
   let sourceDir = source;
   if (!sourceDir) {
     const data = await readBuildInfo(root);
@@ -33,7 +32,7 @@ export async function zip({ filename, source, root = process.cwd(), outDir }: Zi
   }
 
   const dest = filename || `${basename(sourcePath)}.zip`;
-  const filePath = resolve(root, outDir || dirname(sourceDir), dest);
+  const filePath = resolve(root, dirname(sourceDir), dest);
   const output = createWriteStream(filePath);
 
   return new Promise((resolve, reject) => {
