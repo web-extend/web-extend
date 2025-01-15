@@ -3,7 +3,7 @@ import type { RsbuildMode } from '@rsbuild/core';
 import type { FSWatcher } from 'chokidar';
 import { type BuildInfo, writeBuildInfo } from './cache.js';
 import { type RestartCallback, beforeRestart, onBeforeRestart, watchFilesForRestart } from './restart.js';
-import { importWebExt, normalizeWebExtRunConfig, type ExtensionRunner, run, getBrowserTarget } from './web-ext.js';
+import { type ExtensionRunner, getBrowserTarget, importWebExt, normalizeWebExtRunConfig, run } from './web-ext.js';
 import { zip } from './zip.js';
 
 export interface StartOptions {

@@ -2,8 +2,8 @@ import { type Command, program } from 'commander';
 import { type GenerateOptions, generate } from './generate.js';
 import { init } from './init.js';
 import { type StartOptions, startBuild, startDevServer } from './rsbuild.js';
+import { type PreviewOptions, preview } from './web-ext.js';
 import { type ZipOptions, zip } from './zip.js';
-import { preview, type PreviewOptions } from './web-ext.js';
 
 function main() {
   const initCommand = program.command('init').description('create a new project');
