@@ -4,27 +4,27 @@ layout: home
 
 hero:
   name: "WebExtend"
-  text: "浏览器扩展的构建工具"
-  tagline: My great project tagline
+  text: "浏览器扩展构建工具"
+  tagline: "助您使用现代 Web 技术构建浏览器扩展"
   actions:
     - theme: brand
       text: 介绍
-      link: /markdown-examples
+      link: /zh/guide/introduction
     - theme: alt
       text: 快速上手
-      link: /api-examples
+      link: /zh/guide/quick-start
 
 features:
   - title: 声明式开发
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+    details: 基于目录自动解析入口，减少 manifest.json 的配置负担
   - title: 无缝的开发体验
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: TypeScript 开箱即用
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+    details: 支持即时 HMR、自动打开浏览器和运行扩展
   - title: 跨浏览器兼容
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+    details: 自动处理不同浏览器间 manifest.json 的差异性，轻松实现多浏览器支持
+  - title: TypeScript 开箱即用
+    details: 提供 TypeScript 一级支持，无需额外配置
   - title: 前端框架无关
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+    details: 可以自由使用任何前端框架和库
   - title: 极速性能
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+    details: 基于 Rsbuild 实现极速开发和构建
 ---

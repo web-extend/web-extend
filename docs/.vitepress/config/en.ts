@@ -1,27 +1,12 @@
 import { defineConfig } from 'vitepress';
 
-// https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: 'WebExtend',
+  lang: 'en-US',
   description: 'The build tool for web extensions',
-  locales: {
-    root: {
-      label: 'English',
-      lang: 'en',
-      dir: 'en',
-      link: '/en',
-    },
-    zh: {
-      label: '简体中文',
-      lang: 'zh',
-      dir: 'zh',
-      link: '/zh/',
-    },
-  },
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
-      { text: 'Home', link: '/en' },
+      { text: 'Home', link: '/' },
       { text: 'Examples', link: '/markdown-examples' },
     ],
 
