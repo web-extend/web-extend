@@ -10,7 +10,7 @@ WebExtend 是一个帮助您使用现代 Web 技术构建浏览器扩展的工�
 
 ## 为什么选 WebExtend {#why}
 
-目前社区中已经有一些类似的构建工具，如 Plasmo、WXT、CRXJS 等。这些珠玉在前，为什么还要推出 WebExtend 呢？它们存在的几个问题如下：
+目前社区中已经有一些类似的构建工具，如 Plasmo、WXT、CRXJS 等。这些珠玉在前，为什么还要推出 WebExtend 呢？它们存在如下几个问题：
 
 - 不支持 content_scripts HMR。每次变化需要重刷页面，导致组件状态丢失。
 - 较为复杂的 API。
@@ -28,7 +28,7 @@ WebExtend 是一个帮助您使用现代 Web 技术构建浏览器扩展的工�
 
 ## 预备知识 {#pre-requisite-knowledge}
 
-了解浏览器扩展开发的基础知识，可以参考以下资源：
+了解浏览器扩展开发的基础知识，可以参考以下资源。
 
 - [Chrome Extensions](https://developer.chrome.com/docs/extensions/get-started)
 - [Web Extensions](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions)

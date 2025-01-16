@@ -2,7 +2,7 @@
 
 ## 准备环境
 
-Node.js >= 16，推荐使用 Node LTS 版本。
+[Node.js >= 16](https://nodejs.org/en/download)，推荐使用 Node LTS 版本。
 
 ## 自动安装
 
@@ -12,11 +12,18 @@ Node.js >= 16，推荐使用 Node LTS 版本。
 npx web-extend@latest init
 ```
 
+`web-extend` 内置的模板如下。这些模板都使用 TypeScript，如果需要使用 JavaScript，可以手动将项目文件的 `.ts` 后缀名改为 `.js`。
+
+- Vanilla
+- [React](https://react.dev/)
+- [Vue](https://vuejs.org/)
+- [Svelte](https://svelte.dev/)
+
 ## 手动安装
 
 ### 安装依赖项
 
-首先，创建项目、安装依赖项。WebExtend 使用 [Rsbuild](https://rsbuild.dev/) 作为底层构建工具，因此还需要安装它。
+创建项目并安装依赖项。WebExtend 使用 [Rsbuild](https://rsbuild.dev/) 作为底层构建工具，因此还需要安装它。
 
 ```shell
 # create an empty project
@@ -29,9 +36,9 @@ npm i -D web-extend @rsbuild/core rsbuild-plugin-web-ext
 
 ```
 
-推荐安装 TypeScript、React/Vue、Eslint/Prettier/Biome 等前端工具，提升开发体验（可选）。 
+推荐安装 TypeScript、React/Vue、Eslint/Prettier/Biome 等前端工具，提升开发体验（可选）。
 
-###  添加脚本命令
+### 添加脚本命令
 
 修改 `package.json`，添加 `"type": "module"` 字段和如下命令：
 
@@ -64,23 +71,14 @@ import { pluginWebExt } from "rsbuild-plugin-web-ext";
 export default {
   plugins: [pluginWebExt()],
 };
-
 ```
 
 ### 添加入口文件
 
-
-推荐使用声明式开发，WebExtend 会基于文件系统自动解析扩展入口，并生成 `manifest.json` 文件。创建 src 目录，按照约定格式添加入口文件。
-
-```
-src/
-└── popup.js
-```
-
-`popup.js` 文件内容如下：
+推荐使用声明式开发，WebExtend 会基于文件系统自动解析入口文件。创建 src 源码目录，在该目录下创建 `popup.js`，文件内容如下。
 
 ```js
-const rootEl = document.querySelector('#root');
+const rootEl = document.querySelector("#root");
 if (rootEl) {
   rootEl.innerHTML = `
   <div class="content">
@@ -89,16 +87,15 @@ if (rootEl) {
   </div>
   `;
 }
-
 ```
 
-为了方便开发，`web-extend` 工具提供了自动生成入口文件的功能，运行命令：
+为了方便开发，`web-extend` 工具提供了自动生成入口文件的功能，运行命令。
 
 ```shell
 npx web-extend generate
 ```
 
-此外，还可以显示传递 manifest 配置。在 `rsbuild.config.js` 引入的插件中添加 `manifest` 选项参数。
+在 `rsbuild.config.js` 引入的插件中添加 `manifest` 选项参数，传递除入口文件以外的其他配置项。（可选）
 
 ```js
 
@@ -113,9 +110,5 @@ export default {
 
 ### 构建运行
 
-- 运行 `npm run dev` 命令，启动服务器，自动打开浏览器并运行扩展。
+- 运行 `npm run dev` 命令，启动服务器，自动打开浏览器并运行扩展。如果需要手动运行扩展，可以去除命令中的 `--open` 选项，在浏览器扩展页面开启开发者模式，加载 `dist/chrome-mv3-dev` 目录。
 - 运行 `npm run build` 命令，构建生产版本的扩展。
-
-### 发布
-
-TODO: 待补充
