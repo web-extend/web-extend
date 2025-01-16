@@ -18,6 +18,8 @@ export default defineConfig({
             items: [
               { text: '介绍', link: 'introduction' },
               { text: '快速上手', link: 'quick-start' },
+              { text: '项目结构', link: 'quick-start' },
+              { text: '扩展入口', link: 'quick-start' },
             ],
           },
         ],
