@@ -15,12 +15,25 @@ export default defineConfig({
         items: [
           {
             text: '开始',
+            collapsed: false,
             items: [
               { text: '介绍', link: 'introduction' },
               { text: '快速上手', link: 'quick-start' },
               { text: '项目结构', link: 'project-structure' },
-              { text: '扩展入口', link: 'quick-start' },
+              { text: '入口', link: 'extension-entrypoints' },
             ],
+          },
+          {
+            text: '项目配置',
+            items: [],
+          },
+          {
+            text: 'API',
+            items: [],
+          },
+          {
+            text: '资源',
+            items: [],
           },
         ],
       },
