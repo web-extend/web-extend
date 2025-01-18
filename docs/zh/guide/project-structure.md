@@ -68,6 +68,8 @@ WebExtend 支持自定义项目中的源码目录、输出目录，和传递 `ma
 ::: code-group
 
 ```js [rsbuild.config.js]
+import { defineConfig } from '@rsbuild/core';
+
 export default defineConfig({
   plugins: [
     pluginWebExt({

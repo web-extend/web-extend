@@ -29,8 +29,8 @@ export default defineConfig({
           base: '/zh/api/',
           collapsed: false,
           items: [
-            { text: 'CLI', link: 'web-extend' },
-            { text: 'Rsbuild Plugin', link: 'rsbuild-plugin' },
+            { text: 'web-extend CLI', link: 'web-extend' },
+            { text: '@web-extend/rsbuild', link: 'rsbuild-plugin' },
           ],
         },
         {

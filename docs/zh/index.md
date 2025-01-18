@@ -5,7 +5,7 @@ layout: home
 hero:
   name: "WebExtend"
   text: "浏览器扩展构建工具"
-  tagline: "助您使用现代 Web 技术构建浏览器扩展"
+  tagline: "帮助您使用现代 Web 技术轻松构建浏览器扩展"
   actions:
     - theme: brand
       text: 介绍
