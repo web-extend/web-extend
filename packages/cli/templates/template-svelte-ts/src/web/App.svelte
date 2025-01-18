@@ -1,7 +1,7 @@
 <main>
   <div class="content">
     <h1>WebExtend + Svelte</h1>
-    <p>This is an options page.</p>
+    <p>This is a web page.</p>
   </div>
 </main>
 
