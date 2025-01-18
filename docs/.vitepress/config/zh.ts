@@ -2,7 +2,7 @@ import { defineConfig } from 'vitepress';
 
 export default defineConfig({
   lang: 'zh-Hans',
-  description: 'The build tool for web extensions',
+  description: '浏览器扩展构建工具',
   themeConfig: {
     nav: [
       { text: '指南', link: '/zh/guide/introduction' },
@@ -47,6 +47,19 @@ export default defineConfig({
 
     outline: {
       label: '页面导航',
+    },
+
+    footer: {
+      message: '基于 MIT 许可发布',
+      copyright: `版权所有 © 2025-${new Date().getFullYear()} ZhangBingBin`,
+    },
+
+    lastUpdated: {
+      text: '最后更新于',
+      formatOptions: {
+        dateStyle: 'short',
+        timeStyle: 'medium',
+      },
     },
   },
 });
