@@ -17,6 +17,6 @@
     "@web-extend/rsbuild-plugin": "0.0.1-alpha.1",
     "typescript": "^5.7.2",
     "web-ext": "^8.3.0",
-    "web-extend": "0.0.1-alpha.2"
+    "web-extend": "0.0.1-alpha.3"
   }
 }

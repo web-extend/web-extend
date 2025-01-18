@@ -1,3 +1,3 @@
-# Web Extend
+# web-extend
 
-A CLI Tool to build web extenson.
+A CLI Tool to build web extensons.
