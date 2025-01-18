@@ -116,7 +116,7 @@ export async function preview({ root = process.cwd(), outDir, target }: PreviewO
   const sourceDir = outDir ? resolve(root, outDir) : buildInfo?.distPath;
   const extensionTarget = target || buildInfo?.target;
 
-  if (!sourceDir) {
+  if (!sourceDir || !existsSync(sourceDir)) {
     throw Error('The output directory is missing, please build first.');
   }
 

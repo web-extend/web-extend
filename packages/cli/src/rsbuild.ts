@@ -165,11 +165,15 @@ async function startDevServer(options: StartOptions) {
   if (options.open && webExt) {
     rsbuild.onDevCompileDone(async () => {
       if (extensionRunner !== null) return;
-      const config = await normalizeRunConfig(rsbuild.context.rootPath, rsbuild.context.distPath, getBuildTarget(), {
-        startUrl: typeof options.open === 'string' ? options.open : undefined,
-      });
+      // run after manifest.json written in @web-extend/rsbuild-plugin
+      setTimeout(async () => {
+        const { rootPath, distPath } = rsbuild.context;
+        const config = await normalizeRunConfig(rootPath, distPath, getBuildTarget(), {
+          startUrl: typeof options.open === 'string' ? options.open : undefined,
+        });
 
-      extensionRunner = await run(webExt, config);
+        extensionRunner = await run(webExt, config);
+      }, 200);
     });
 
     rsbuild.onExit(() => {
@@ -204,7 +208,7 @@ async function startBuild(options: StartOptions) {
     isBuildWatch: options.watch,
   });
 
-  // run after manifest.json written
+  // run after manifest.json written in @web-extend/rsbuild-plugin
   rsbuild.onCloseBuild(async () => {
     const { rootPath, distPath } = rsbuild.context;
     const buildInfo: BuildInfo = {
