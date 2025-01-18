@@ -1,3 +1,7 @@
+---
+outline: deep
+---
+
 # 快速上手
 
 ## 准备环境
@@ -42,7 +46,9 @@ npm i -D web-extend @rsbuild/core rsbuild-plugin-web-ext
 
 修改 `package.json`，添加 `"type": "module"` 字段和如下命令：
 
-```json
+::: code-group
+
+```json [package.json]
 {
   "type": "module",
   "scripts": {
@@ -53,6 +59,8 @@ npm i -D web-extend @rsbuild/core rsbuild-plugin-web-ext
   }
 }
 ```
+
+:::
 
 上述命令的含义如下：
 
@@ -65,7 +73,9 @@ npm i -D web-extend @rsbuild/core rsbuild-plugin-web-ext
 
 创建 `rsbuild.config.js`，添加如下内容。
 
-```js
+::: code-group
+
+```js [rsbuild.config.js]
 import { pluginWebExt } from "rsbuild-plugin-web-ext";
 
 export default {
@@ -73,11 +83,15 @@ export default {
 };
 ```
 
+:::
+
 ### 添加入口文件
 
 推荐使用声明式开发，WebExtend 会基于文件系统自动解析入口文件。创建 src 源码目录，在该目录下创建 `popup.js`，文件内容如下。
 
-```js
+::: code-group
+
+```js [popup.js]
 const rootEl = document.querySelector("#root");
 if (rootEl) {
   rootEl.innerHTML = `
@@ -89,6 +103,8 @@ if (rootEl) {
 }
 ```
 
+:::
+
 为了方便开发，`web-extend` 工具提供了自动生成入口文件的功能，运行命令。
 
 ```shell
@@ -97,8 +113,9 @@ npx web-extend generate
 
 在 `rsbuild.config.js` 引入的插件中添加 `manifest` 选项参数，传递除入口文件以外的其他配置项。（可选）
 
-```js
+::: code-group
 
+```js [rsbuild.config.js]
 import { pluginWebExt } from "rsbuild-plugin-web-ext";
 
 export default {
@@ -108,7 +125,11 @@ export default {
 };
 ```
 
+:::
+
 ### 构建运行
 
-- 运行 `npm run dev` 命令，启动服务器，自动打开浏览器并运行扩展。如果需要手动运行扩展，可以去除命令中的 `--open` 选项，在浏览器扩展页面开启开发者模式，加载 `dist/chrome-mv3-dev` 目录。
+- 运行 `npm run dev` 命令，启动服务器，自动打开浏览器并运行扩展。
 - 运行 `npm run build` 命令，构建生产版本的扩展。
+
+如果要手动加载扩展，可以去除 dev 命令中的 `--open` 选项，在浏览器扩展页面开启开发者模式，加载 `dist/chrome-mv3-dev` 目录。

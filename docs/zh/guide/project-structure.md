@@ -2,63 +2,82 @@
 
 ## 顶层目录
 
-顶层文件位于项目的根目录下。
+项目根目录通常存放如下目录或文件。
 
-| 目录                |                描述                |
-| ------------------- | :--------------------------------: |
-| `public`            |          公共静态资源目录          |
-| `src`               |              源码目录              |
-| `.web-extend`       | WebExtend 临时目录，存储构建信息等 |
-| `package.json`      |          项目的依赖和脚本          |
-| `rsbuild.config.js` |          Rsbuild 配置文件          |
-| `tsconfig.json`     |        TypeScript 配置文件         |
+| 名称                | 描述                                                 |
+| ------------------- | ---------------------------------------------------- |
+| `public`            | 公共的静态资源，这些资源会被直接拷贝到构建产物目录下 |
+| `src`               | 源码目录                                             |
+| `.web-extend`       | WebExtend 临时目录，存放构建信息                     |
+| `.env`、`.env.*`    | 环境变量配置文件                                     |
+| `.gitignore`        | 定义 git 忽略文件                                    |
+| `package.json`      | 项目的依赖和脚本                                     |
+| `rsbuild.config.js` | Rsbuild 配置文件                                     |
+| `tsconfig.json`     | TypeScript 配置文件                                  |
 
 ## 源码目录
 
-源码内容位于 src 目录下，用来存放扩展的入口文件和其他源码内容。
+项目源码目录通常存放入口文件等代码。
 
-| 目录     |     描述     |
-| -------- | :----------: |
-| `assets` | 静态资源目录 |
+| 名称                     | 描述                                                      |
+| ------------------------ | --------------------------------------------------------- |
+| `assets`                 | 静态资源目录，存放 icons 等文件，这些资源会被构建工具处理 |
+| `background`             | background 入口                                           |
+| `content` 或 `contents`  | 单个或多个 content 入口                                   |
+| `popup`                  | popup 入口                                                |
+| `options`                | options 入口                                              |
+| `sidepanel`              | sidepanel 入口                                            |
+| `devtools`               | devtools 入口                                             |
+| `sandbox` 或 `sandboxes` | 单个或多个 sandbox 入口                                   |
+| `newtab`                 | newtab 入口                                               |
+| `bookmarks`              | bookmarks 入口                                            |
+| `history`                | history 入口                                              |
 
-## Manifest 配置
+[什么是入口](./extension-entrypoints.md)
 
-WebExtend 会按下以下格式自动解析配置项。
+## Manifest 映射
 
-| Manifest Field             | File Path                                |
-| -------------------------- | ---------------------------------------- |
-| `name`                     | `displayName` or `name` in package.json  |
-| `version`                  | `version` in package.json                |
-| `description`              | `description` in package.json            |
-| `author`                   | `author` in package.json                 |
-| `homepage_url`             | `homepage` in package.json               |
-| `icons`                    | `assets/icon-[size].png`                 |
-| `action`                   | `popup.ts` or `popup/index.ts`           |
-| `background`               | `background.ts` or `background/index.ts` |
-| `content_scripts`          | `content.ts` or `contents/*.ts`          |
-| `options_ui`               | `options.ts` or `options/index.ts`       |
-| `devtools_page`            | `devtools.ts` or `devtools/index.ts`     |
-| `sandbox`                  | `sandbox.ts` or `sandboxes/*.ts`         |
-| `newtab`                   | `newtab.ts` or `newtab/index.ts`         |
-| `bookmarks`                | `bookmarks.ts` or `bookmarks/index.ts`   |
-| `history`                  | `history.ts` or `history/index.ts`       |
-| `side_panel`               | `sidepanel.ts` or `sidepanel/index.ts`   |
-| `_locales`                 | `public/_locales/*`                      |
-| `web_accessible_resources` | `public/*`                               |
+WebExtend 会基于文件系统自动构建和生成 `manifest.json` 中的配置项，对应的映射关系如下。
+
+| Manifest 字段                    | 映射路径                                         |
+| -------------------------------- | ------------------------------------------------ |
+| `manifest_version`               | 默认为 `3`                                       |
+| `name`                           | `package.json` 的 `displayName` 或 `name` 字段   |
+| `version`                        | `package.json` 的 `version` 字段                 |
+| `description`                    | `package.json` 的 `description` 字段             |
+| `author`                         | `package.json` 的 `author` 字段                  |
+| `homepage_url`                   | `package.json` 的 `homepage` 字段                |
+| `icons` 、`action.default_icon`  | `src/assets/icon-[size].png`                     |
+| `action.default_popup`           | `src/popup.js` 或 `src/popup/index.js`           |
+| `background.service_worker`      | `src/background.js` 或 `src/background/index.js` |
+| `content_scripts`                | `src/content.js` 或 `src/contents/*.js`          |
+| `options_ui.page`                | `src/options.js` 或 `src/options/index.js`       |
+| `devtools_page`                  | `src/devtools.js` 或 `src/devtools/index.js`     |
+| `sandbox`                        | `src/sandbox.js` 或 `src/sandboxes/*.js`         |
+| `chrome_url_overrides.newtab`    | `src/newtab.js` 或 `src/newtab/index.js`         |
+| `chrome_url_overrides.bookmarks` | `src/bookmarks.js` 或 `src/bookmarks/index.js`   |
+| `chrome_url_overrides.history`   | `src/history.js` 或 `src/history/index.js`       |
+| `side_panel.default_path`        | `src/sidepanel.js` 或 `src/sidepanel/index.js`   |
+| `_locales`                       | `public/_locales/*`                              |
+| `web_accessible_resources`       | `public/*`                                       |
 
 ## 自定义配置
 
-```js
-// rsbuild.config.js
+WebExtend 支持自定义项目中的源码目录、输出目录，和传递 `manifest.json` 中其他配置项。
+
+::: code-group
+
+```js [rsbuild.config.js]
 export default defineConfig({
   plugins: [
     pluginWebExt({
-      srcDir: "src", // default: "src"
-      outDir: "dist", // default: "dist/[target]-[mode]"
-
-      manifest: {},
-      target: "firefox-mv2", // default: "chrome-mv3"
+      srcDir: "src", // default: "src" // [!code highlight]
+      outDir: "dist", // default: "dist/[target]-[mode]" // [!code highlight]
+      manifest: {...}, // default: {} // [!code highlight]
+      target: "firefox-mv2", // default: "chrome-mv3" // [!code highlight]
     }),
   ],
 });
 ```
+
+:::
