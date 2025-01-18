@@ -45,30 +45,70 @@ const variants = [
   },
 ];
 
-export const entrypoints = [
+export type EntryPointType =
+  | 'background'
+  | 'content'
+  | 'popup'
+  | 'options'
+  | 'sidepanel'
+  | 'devtools'
+  | 'newtab'
+  | 'bookmarks'
+  | 'history'
+  | 'sandbox';
+
+export type EntryTemplateType = 'background' | 'content' | 'devtools' | 'web';
+
+export const entrypoints: { name: string; value: EntryPointType; template: EntryTemplateType }[] = [
   {
     name: 'background',
     value: 'background',
+    template: 'background',
   },
   {
     name: 'content',
     value: 'content',
+    template: 'content',
   },
   {
     name: 'popup',
     value: 'popup',
+    template: 'web',
   },
   {
     name: 'options',
     value: 'options',
-  },
-  {
-    name: 'devtools',
-    value: 'devtools',
+    template: 'web',
   },
   {
     name: 'sidepanel',
     value: 'sidepanel',
+    template: 'web',
+  },
+  {
+    name: 'devtools',
+    value: 'devtools',
+    template: 'devtools',
+  },
+  {
+    name: 'newtab',
+    value: 'newtab',
+    template: 'web',
+  },
+  {
+    name: 'bookmarks',
+    value: 'bookmarks',
+    template: 'web',
+  },
+  {
+    name: 'history',
+    value: 'history',
+    template: 'web',
+  },
+  {
+    name: 'sandbox',
+    value: 'sandbox',
+    template: 'web',
   },
 ];
 
@@ -137,6 +177,7 @@ export async function normalizeInitialOptions(options: InitialOptions) {
       options.entries = await checkbox({
         message: 'Select entrypoints',
         choices: entrypoints,
+        loop: false,
       });
     }
 
@@ -229,18 +270,15 @@ export async function copyEntryFiles(source: string, dest: string, entries?: str
 
   const files = await readdir(source, { withFileTypes: true });
   for (const entry of entries) {
-    let entryName = entry;
-    let custom = false;
-    if (entry.startsWith('contents/')) {
-      entryName = 'content';
-      custom = true;
-    }
+    const item = entrypoints.find((item) => entry.startsWith(item.value));
+    if (!item) continue;
 
-    const file = files.find((item) => item.name.startsWith(entryName));
+    const templateName = item.template;
+    const file = files.find((item) => item.name.startsWith(templateName));
     if (!file) continue;
 
     const { name } = file;
-    const destName = custom ? entry : name;
+    const destName = file.isFile() ? name : entry;
     await cp(resolve(source, name), resolve(dest, destName), { recursive: true });
   }
 }
