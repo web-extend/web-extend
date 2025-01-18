@@ -15,6 +15,9 @@ const shared = defineConfig({
         link: 'https://github.com/web-extend/web-extend',
       },
     ],
+    search: {
+      provider: 'local',
+    },
   },
 });
 
