@@ -1,7 +1,7 @@
 import { defineConfig } from '@rsbuild/core';
 import { pluginVue } from '@rsbuild/plugin-vue';
-import { pluginWebExt } from 'rsbuild-plugin-web-ext';
+import { pluginWebExtend } from '@web-extend/rsbuild-plugin';
 
 export default defineConfig({
-  plugins: [pluginVue(), pluginWebExt()],
+  plugins: [pluginVue(), pluginWebExtend()],
 });

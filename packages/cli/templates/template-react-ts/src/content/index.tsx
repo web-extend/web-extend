@@ -1,6 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import type { ContentScriptConfig } from 'rsbuild-plugin-web-ext';
+import type { ContentScriptConfig } from '@web-extend/rsbuild-plugin';
 import App from './App';
 
 let rootEl = document.getElementById('web-extend-content');
