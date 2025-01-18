@@ -2,8 +2,8 @@ import { existsSync } from 'node:fs';
 import { readFile, rm } from 'node:fs/promises';
 import { extname, resolve } from 'node:path';
 import { createRsbuild } from '@rsbuild/core';
-import { pluginWebExt } from '../src/index.js';
-import type { PluginWebExtOptions } from '../src/index.js';
+import { pluginWebExtend } from '../src/index.js';
+import type { PluginWebExtendOptions } from '../src/index.js';
 import { setTargetEnv } from '../src/manifest/env.js';
 
 export { readManifestFile } from '../src/manifest/index.js';
@@ -20,7 +20,7 @@ export function existsFile(distPath: string, name: string, ext: string) {
 type InitRsbuildOptions = {
   cwd: string;
   mode: 'development' | 'production';
-  pluginOptions?: Partial<PluginWebExtOptions>;
+  pluginOptions?: Partial<PluginWebExtendOptions>;
 };
 
 export async function initRsbuild({ cwd, mode, pluginOptions }: InitRsbuildOptions) {
@@ -31,7 +31,7 @@ export async function initRsbuild({ cwd, mode, pluginOptions }: InitRsbuildOptio
     cwd,
     rsbuildConfig: {
       mode,
-      plugins: [pluginWebExt(pluginOptions)],
+      plugins: [pluginWebExtend(pluginOptions)],
     },
   });
   return rsbuild;

@@ -1,6 +1,6 @@
 import { defineConfig } from '@rsbuild/core';
-import { pluginWebExt } from '../lib';
+import { pluginWebExtend } from '../lib';
 
 export default defineConfig({
-  plugins: [pluginWebExt({})],
+  plugins: [pluginWebExtend({})],
 });

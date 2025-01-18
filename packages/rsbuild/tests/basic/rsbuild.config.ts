@@ -1,10 +1,10 @@
 import { defineConfig } from '@rsbuild/core';
-import { pluginWebExt } from '../../src/index.js';
+import { pluginWebExtend } from '../../src/index.js';
 
 export default defineConfig({
   // mode: 'development',
   plugins: [
-    pluginWebExt({
+    pluginWebExtend({
       target: 'firefox-mv2',
     }),
   ],

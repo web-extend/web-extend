@@ -1,13 +1,13 @@
 {
-  "name": "rsbuild-plugin-web-ext",
-  "version": "0.0.1-alpha.11",
-  "description": "A Rsbuild plugin for developing and building browser extensions, making browser extension development simple and efficient.",
-  "keywords": ["web extensions", "browser extensions", "rsbuild plugin", "web-ext"],
+  "name": "@web-extend/rsbuild-plugin",
+  "version": "0.0.1-alpha.1",
+  "description": "A Rsbuild plugin of WebExtend.",
+  "keywords": ["web extensions", "browser extensions", "rsbuild plugin"],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/xbzhang2020/rsbuild-plugin-web-ext.git"
+    "url": "git+https://github.com/web-extend/web-extend.git"
   },
-  "homepage": "https://github.com/xbzhang2020/rsbuild-plugin-web-ext.git",
+  "homepage": "https://github.com/web-extend/web-extend.git",
   "license": "MIT",
   "type": "module",
   "exports": {

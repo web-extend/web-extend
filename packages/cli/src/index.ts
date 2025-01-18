@@ -7,7 +7,7 @@ import { type ZipOptions, zip } from './zip.js';
 
 function main() {
   program.name('web-extend');
-  
+
   const initCommand = program.command('init').description('create a new project');
   const generateCommand = program.command('generate').alias('g').description('generate entry files');
   const rsbuildDevCommand = program.command('rsbuild:dev').description('start the dev server with rsbuild');

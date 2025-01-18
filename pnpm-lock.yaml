@@ -50,7 +50,14 @@ importers:
 
   examples/with-icons: {}
 
-  examples/with-multi-contents: {}
+  examples/with-multi-contents:
+    devDependencies:
+      '@rsbuild/core':
+        specifier: ^1.1.6
+        version: 1.1.13
+      typescript:
+        specifier: ^5.7.2
+        version: 5.7.3
 
   examples/with-options: {}
 
