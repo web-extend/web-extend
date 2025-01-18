@@ -20,7 +20,7 @@ WebExtend 是一个帮助您使用现代 Web 技术构建浏览器扩展的工�
 
 - 声明式开发。基于文件系统自动解析扩展入口，减少 manifest.json 的配置负担。
 - 无缝的开发体验。支持即时 HMR、自动打开浏览器和运行扩展。
-- 跨浏览器兼容。自动处理 manifest.json 配置差异，轻松实现多浏览器支持。
+- 跨浏览器兼容性。自动处理 manifest.json 配置差异，轻松实现多浏览器支持。
 - TypeScript 支持。TypeScript 开箱即用，无需额外配置。
 - 框架无关。可以自由使用任何前端框架和库，如 React、Vue、Svelte 等。
 - 极速性能。基于 Rsbuild 实现极速开发和构建。
@@ -30,5 +30,5 @@ WebExtend 是一个帮助您使用现代 Web 技术构建浏览器扩展的工�
 
 了解浏览器扩展开发的基础知识，可以参考以下资源。
 
-- [Chrome Extensions](https://developer.chrome.com/docs/extensions/get-started)
-- [Web Extensions](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions)
+- [Chrome Docs](https://developer.chrome.com/docs/extensions/get-started)
+- [MDN Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions)

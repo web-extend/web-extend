@@ -6,13 +6,14 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: '指南', link: '/zh/guide/introduction' },
+      { text: 'API', link: '/zh/api/web-extend' },
       { text: '示例', link: 'https://github.com/web-extend/web-extend/tree/main/examples' },
     ],
 
     sidebar: {
-      '/zh/guide': [
+      '/zh': [
         {
-          text: '开始',
+          text: '指南',
           base: '/zh/guide/',
           collapsed: false,
           items: [
@@ -20,15 +21,17 @@ export default defineConfig({
             { text: '快速上手', link: 'quick-start' },
             { text: '项目结构', link: 'project-structure' },
             { text: '入口', link: 'extension-entrypoints' },
+            { text: '浏览器兼容性', link: 'browser' },
           ],
         },
         {
-          text: '配置',
-          items: [],
-        },
-        {
-          text: 'API',
-          items: [],
+          text: 'API 参考',
+          base: '/zh/api/',
+          collapsed: false,
+          items: [
+            { text: 'CLI', link: 'web-extend' },
+            { text: 'Rsbuild Plugin', link: 'rsbuild-plugin' },
+          ],
         },
         {
           text: '资源',

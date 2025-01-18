@@ -10,7 +10,7 @@ outline: deep
 
 ## 自动安装
 
-推荐使用 `web-extend` 工具创建项目。在命令行界面运行命令：
+推荐使用 `web-extend` 工具自动创建项目。在命令行界面运行命令：
 
 ```shell
 npx web-extend@latest init
@@ -127,9 +127,18 @@ export default {
 
 :::
 
-### 构建运行
+## 运行构建
 
 - 运行 `npm run dev` 命令，启动服务器，自动打开浏览器并运行扩展。
 - 运行 `npm run build` 命令，构建生产版本的扩展。
 
 如果要手动加载扩展，可以去除 dev 命令中的 `--open` 选项，在浏览器扩展页面开启开发者模式，加载 `dist/chrome-mv3-dev` 目录。
+
+## 发布
+
+运行 `npm run zip` 命令压缩扩展，然后在浏览器的应用商店进行发布。
+
+- [Chrome Docs](https://developer.chrome.com/docs/webstore/publish/)
+- [Firefox Docs](https://extensionworkshop.com/documentation/publish/submitting-an-add-on/)
+- [Safari Docs](https://developer.apple.com/documentation/safariservices/converting-a-web-extension-for-safari)
+- [Microsoft Docs](https://learn.microsoft.com/en-us/microsoft-edge/extensions-chromium/publish/publish-extension)
