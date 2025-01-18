@@ -180,8 +180,8 @@ importers:
         specifier: ^8.3.0
         version: 8.3.0
       web-extend:
-        specifier: 0.0.1-alpha.3
-        version: 0.0.1-alpha.3(@rsbuild/core@1.1.12)(@types/node@22.10.5)(web-ext@8.3.0)
+        specifier: 0.0.1-alpha.4
+        version: 0.0.1-alpha.4(@rsbuild/core@1.1.12)(@types/node@22.10.5)(web-ext@8.3.0)
 
   packages/cli/templates/template-svelte-ts:
     dependencies:
@@ -211,8 +211,8 @@ importers:
         specifier: ^8.3.0
         version: 8.3.0
       web-extend:
-        specifier: 0.0.1-alpha.3
-        version: 0.0.1-alpha.3(@rsbuild/core@1.1.13)(@types/node@22.10.5)(web-ext@8.3.0)
+        specifier: 0.0.1-alpha.4
+        version: 0.0.1-alpha.4(@rsbuild/core@1.1.13)(@types/node@22.10.5)(web-ext@8.3.0)
 
   packages/cli/templates/template-vanilla-ts:
     devDependencies:
@@ -232,8 +232,8 @@ importers:
         specifier: ^8.3.0
         version: 8.3.0
       web-extend:
-        specifier: 0.0.1-alpha.3
-        version: 0.0.1-alpha.3(@rsbuild/core@1.1.12)(@types/node@22.10.5)(web-ext@8.3.0)
+        specifier: 0.0.1-alpha.4
+        version: 0.0.1-alpha.4(@rsbuild/core@1.1.12)(@types/node@22.10.5)(web-ext@8.3.0)
 
   packages/cli/templates/template-vue-ts:
     dependencies:
@@ -260,8 +260,8 @@ importers:
         specifier: ^8.3.0
         version: 8.3.0
       web-extend:
-        specifier: 0.0.1-alpha.3
-        version: 0.0.1-alpha.3(@rsbuild/core@1.1.12)(@types/node@22.10.5)(web-ext@8.3.0)
+        specifier: 0.0.1-alpha.4
+        version: 0.0.1-alpha.4(@rsbuild/core@1.1.12)(@types/node@22.10.5)(web-ext@8.3.0)
 
   packages/rsbuild:
     dependencies:
@@ -3543,8 +3543,8 @@ packages:
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
     hasBin: true
 
-  web-extend@0.0.1-alpha.3:
-    resolution: {integrity: sha512-ZufMWgpeCEvOuOKGvPW89ABhA70aSPyC+KgAYr4iXI/Zbj28f33J8NwEzE8ikQoNUIuJCoi7eHlv1wk9NkpkRA==}
+  web-extend@0.0.1-alpha.4:
+    resolution: {integrity: sha512-JLtJX/sDcainYj0NBwE+VPMaynwJFR0Pyr/E9Yd50AL9exh1gpHP1hbt7KL3jvNrWJihumCPUD+JmTp8/cClPg==}
     engines: {node: '>=16.7.0'}
     hasBin: true
     peerDependencies:
@@ -7010,7 +7010,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  web-extend@0.0.1-alpha.3(@rsbuild/core@1.1.12)(@types/node@22.10.5)(web-ext@8.3.0):
+  web-extend@0.0.1-alpha.4(@rsbuild/core@1.1.12)(@types/node@22.10.5)(web-ext@8.3.0):
     dependencies:
       '@inquirer/prompts': 7.2.3(@types/node@22.10.5)
       archiver: 7.0.1
@@ -7024,7 +7024,7 @@ snapshots:
     transitivePeerDependencies:
       - '@types/node'
 
-  web-extend@0.0.1-alpha.3(@rsbuild/core@1.1.13)(@types/node@22.10.5)(web-ext@8.3.0):
+  web-extend@0.0.1-alpha.4(@rsbuild/core@1.1.13)(@types/node@22.10.5)(web-ext@8.3.0):
     dependencies:
       '@inquirer/prompts': 7.2.3(@types/node@22.10.5)
       archiver: 7.0.1
