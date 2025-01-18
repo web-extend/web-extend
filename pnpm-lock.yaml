@@ -48,7 +48,14 @@ importers:
         specifier: ^5.7.2
         version: 5.7.2
 
-  examples/with-icons: {}
+  examples/with-icons:
+    devDependencies:
+      '@rsbuild/core':
+        specifier: ^1.1.6
+        version: 1.1.13
+      typescript:
+        specifier: ^5.7.2
+        version: 5.7.3
 
   examples/with-multi-contents:
     devDependencies:
@@ -59,7 +66,14 @@ importers:
         specifier: ^5.7.2
         version: 5.7.3
 
-  examples/with-options: {}
+  examples/with-options:
+    devDependencies:
+      '@rsbuild/core':
+        specifier: ^1.1.6
+        version: 1.1.13
+      typescript:
+        specifier: ^5.7.2
+        version: 5.7.3
 
   examples/with-popup:
     devDependencies:
@@ -156,9 +170,9 @@ importers:
       '@types/react-dom':
         specifier: ^19.0.0
         version: 19.0.2(@types/react@19.0.1)
-      rsbuild-plugin-web-ext:
-        specifier: 0.0.1-alpha.11
-        version: 0.0.1-alpha.11(@rsbuild/core@1.1.12)
+      '@web-extend/rsbuild-plugin':
+        specifier: 0.0.1-alpha.1
+        version: 0.0.1-alpha.1(@rsbuild/core@1.1.12)
       typescript:
         specifier: ^5.7.2
         version: 5.7.2
@@ -184,9 +198,9 @@ importers:
       '@types/chrome':
         specifier: ^0.0.290
         version: 0.0.290
-      rsbuild-plugin-web-ext:
-        specifier: 0.0.1-alpha.11
-        version: 0.0.1-alpha.11(@rsbuild/core@1.1.13)
+      '@web-extend/rsbuild-plugin':
+        specifier: 0.0.1-alpha.1
+        version: 0.0.1-alpha.1(@rsbuild/core@1.1.13)
       svelte-check:
         specifier: ^4.1.1
         version: 4.1.4(picomatch@4.0.2)(svelte@5.17.3)(typescript@5.7.3)
@@ -208,9 +222,9 @@ importers:
       '@types/chrome':
         specifier: ^0.0.290
         version: 0.0.290
-      rsbuild-plugin-web-ext:
-        specifier: 0.0.1-alpha.11
-        version: 0.0.1-alpha.11(@rsbuild/core@1.1.12)
+      '@web-extend/rsbuild-plugin':
+        specifier: 0.0.1-alpha.1
+        version: 0.0.1-alpha.1(@rsbuild/core@1.1.12)
       typescript:
         specifier: ^5.7.2
         version: 5.7.2
@@ -236,9 +250,9 @@ importers:
       '@types/chrome':
         specifier: ^0.0.290
         version: 0.0.290
-      rsbuild-plugin-web-ext:
-        specifier: 0.0.1-alpha.11
-        version: 0.0.1-alpha.11(@rsbuild/core@1.1.12)
+      '@web-extend/rsbuild-plugin':
+        specifier: 0.0.1-alpha.1
+        version: link:../../../rsbuild
       typescript:
         specifier: ^5.7.2
         version: 5.7.2
@@ -247,7 +261,7 @@ importers:
         version: 8.3.0
       web-extend:
         specifier: 0.0.1-alpha.2
-        version: 0.0.1-alpha.2(@rsbuild/core@1.1.12)(@types/node@22.10.5)(web-ext@8.3.0)
+        version: link:../..
 
   packages/rsbuild:
     dependencies:
@@ -1325,6 +1339,14 @@ packages:
 
   '@vue/shared@3.5.13':
     resolution: {integrity: sha512-/hnE/qP5ZoGpol0a5mDi45bOd7t3tjYJBjsgCsivow7D48cJeV5l05RD82lPqi7gRiphZM37rnhW1l6ZoCNNnQ==}
+
+  '@web-extend/rsbuild-plugin@0.0.1-alpha.1':
+    resolution: {integrity: sha512-kFiigl5FABPPDcBC0MTdo45VNyaH5MgLlEMbP6QWGR/+0UABNox2gZGAvzD93q0SWU7HGugvK5DC2cpwoQiz8g==}
+    peerDependencies:
+      '@rsbuild/core': 1.x
+    peerDependenciesMeta:
+      '@rsbuild/core':
+        optional: true
 
   '@webassemblyjs/ast@1.14.1':
     resolution: {integrity: sha512-nuBEDgQfm1ccRp/8bCQrx1frohyufl4JlbMMZ4P1wpeOfDhF6FQkxZJ1b/e+PLwr6X1Nhw6OLme5usuBWYBvuQ==}
@@ -2920,14 +2942,6 @@ packages:
       '@microsoft/api-extractor':
         optional: true
       typescript:
-        optional: true
-
-  rsbuild-plugin-web-ext@0.0.1-alpha.11:
-    resolution: {integrity: sha512-JwrVCE0d/hA/wWQwz6WDtGovOk3XKUZ97TZwABdMosXaxNHaqd7oWbY0PO1NJdJBEosMDbQ8szJJTTAC6LlY0A==}
-    peerDependencies:
-      '@rsbuild/core': 1.x
-    peerDependenciesMeta:
-      '@rsbuild/core':
         optional: true
 
   run-applescript@5.0.0:
@@ -4641,6 +4655,26 @@ snapshots:
 
   '@vue/shared@3.5.13': {}
 
+  '@web-extend/rsbuild-plugin@0.0.1-alpha.1(@rsbuild/core@1.1.12)':
+    dependencies:
+      '@babel/parser': 7.26.3
+      '@babel/traverse': 7.26.4
+      '@babel/types': 7.26.3
+    optionalDependencies:
+      '@rsbuild/core': 1.1.12
+    transitivePeerDependencies:
+      - supports-color
+
+  '@web-extend/rsbuild-plugin@0.0.1-alpha.1(@rsbuild/core@1.1.13)':
+    dependencies:
+      '@babel/parser': 7.26.3
+      '@babel/traverse': 7.26.4
+      '@babel/types': 7.26.3
+    optionalDependencies:
+      '@rsbuild/core': 1.1.13
+    transitivePeerDependencies:
+      - supports-color
+
   '@webassemblyjs/ast@1.14.1':
     dependencies:
       '@webassemblyjs/helper-numbers': 1.13.2
@@ -6284,26 +6318,6 @@ snapshots:
     optionalDependencies:
       '@microsoft/api-extractor': 7.48.1(@types/node@22.10.5)
       typescript: 5.7.3
-
-  rsbuild-plugin-web-ext@0.0.1-alpha.11(@rsbuild/core@1.1.12):
-    dependencies:
-      '@babel/parser': 7.26.3
-      '@babel/traverse': 7.26.4
-      '@babel/types': 7.26.3
-    optionalDependencies:
-      '@rsbuild/core': 1.1.12
-    transitivePeerDependencies:
-      - supports-color
-
-  rsbuild-plugin-web-ext@0.0.1-alpha.11(@rsbuild/core@1.1.13):
-    dependencies:
-      '@babel/parser': 7.26.3
-      '@babel/traverse': 7.26.4
-      '@babel/types': 7.26.3
-    optionalDependencies:
-      '@rsbuild/core': 1.1.13
-    transitivePeerDependencies:
-      - supports-color
 
   run-applescript@5.0.0:
     dependencies:
