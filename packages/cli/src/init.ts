@@ -10,7 +10,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 export interface InitialOptions {
   projectName?: string;
   template?: string;
-  entry?: string[];
+  entries?: string[];
   override?: boolean;
 }
 
@@ -45,7 +45,7 @@ const variants = [
   },
 ];
 
-const entrypoints = [
+export const entrypoints = [
   {
     name: 'background',
     value: 'background',
@@ -76,7 +76,7 @@ const templates = frameworks.flatMap((framework) =>
   variants.filter((variant) => !variant.disabled).map((variant) => `${framework.value}-${variant.value}`),
 );
 
-export async function normalizeTemplate(text?: string) {
+export async function resolveEntryTemplate(text?: string) {
   let template = '';
   // only support ts template
   const variant = 'ts';
@@ -93,7 +93,6 @@ export async function normalizeTemplate(text?: string) {
   } else {
     const list = text.split('-');
     const framework = list[0];
-    // const variant = list[1] || 'js';
     template = `${framework}-${variant}`;
   }
 
@@ -105,8 +104,6 @@ export async function normalizeTemplate(text?: string) {
 
 export async function normalizeInitialOptions(options: InitialOptions) {
   try {
-    console.log();
-
     if (!options.projectName) {
       options.projectName = await input({ message: 'Project name or path', default: 'my-extension-app' });
     }
@@ -134,11 +131,11 @@ export async function normalizeInitialOptions(options: InitialOptions) {
       }
     }
 
-    options.template = await normalizeTemplate(options.template);
+    options.template = await resolveEntryTemplate(options.template);
 
-    if (!options.entry) {
-      options.entry = await checkbox({
-        message: 'Select entry points',
+    if (!options.entries?.length) {
+      options.entries = await checkbox({
+        message: 'Select entrypoints',
         choices: entrypoints,
       });
     }
@@ -152,7 +149,7 @@ export async function normalizeInitialOptions(options: InitialOptions) {
     return options;
   } catch (error) {
     if (error instanceof Error && error.name === 'ExitPromptError') {
-      console.log(`${chalk.red('✕')} ${chalk.bold('Canceled')}\n`);
+      console.log(`${chalk.red('✕')} ${chalk.bold('Canceled')}`);
       return null;
     }
     throw error;
@@ -171,7 +168,7 @@ export async function createProject(options: InitialOptions) {
     await mkdir(destPath);
   }
   await copyTemplate(templatePath, destPath);
-  await copyEntryFiles(resolve(templatePath, 'src'), resolve(destPath, 'src'), options.entry);
+  await copyEntryFiles(resolve(templatePath, 'src'), resolve(destPath, 'src'), options.entries);
   await modifyPackageJson(destPath, basename(projectName));
 }
 

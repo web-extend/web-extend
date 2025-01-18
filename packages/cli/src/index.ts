@@ -32,11 +32,11 @@ function applyInitCommand(command: Command) {
     .option('-e, --entry <name>', 'specify entrypoints')
     .action(async (projectName, cliOptions) => {
       const { entry, ...otherOptions } = cliOptions;
-      const entrypoints = entry ? entry.split(',') : undefined;
+      const entries = entry ? entry.split(',') : [];
       try {
         await init({
           projectName,
-          entry: entrypoints,
+          entries,
           ...otherOptions,
         });
       } catch (err) {
@@ -49,22 +49,22 @@ function applyInitCommand(command: Command) {
 
 function applyGenerateCommand(command: Command) {
   command
-    .argument('<type>', 'type of entry files')
+    .argument('[entry]', 'specify entrypoints')
     .option('-r, --root <dir>', 'specify the project root directory')
     .option('-t, --template <name>', 'specify the template name or path')
     .option('-o, --out-dir <dir>', 'specify the output directory')
     .option('-n, --filename <name>', 'specify the output filename')
     .option('--size <size>', 'specify sizes of output icons (defaults to 16,32,48,64,128)')
-    .action(async (type, options: GenerateOptions) => {
+    .action(async (entry: string | undefined, options: GenerateOptions) => {
       try {
-        options.type = type;
+        options.entries = entry?.split(',') || [];
         if (!options.root) {
           options.root = process.cwd();
         }
         await generate(options);
-        console.log(`Generated ${type} successfully!`);
+        console.log('Generated successfully!');
       } catch (error) {
-        console.error(`Generated ${type} failed.`);
+        console.error('Generated failed.');
         console.log(error);
         process.exit(1);
       }
