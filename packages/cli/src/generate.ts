@@ -1,8 +1,8 @@
 import { existsSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
-import sharp from 'sharp';
-import { copyEntryFiles, getTemplatePath, resolveEntryTemplate, entrypoints } from './init.js';
 import { checkbox } from '@inquirer/prompts';
+import sharp from 'sharp';
+import { copyEntryFiles, entrypoints, getTemplatePath, resolveEntryTemplate } from './init.js';
 
 export interface GenerateOptions {
   entries: string[];
