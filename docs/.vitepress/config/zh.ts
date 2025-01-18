@@ -33,10 +33,6 @@ export default defineConfig({
             { text: '@web-extend/rsbuild', link: 'rsbuild-plugin' },
           ],
         },
-        {
-          text: '资源',
-          items: [],
-        },
       ],
     },
 

@@ -5,21 +5,38 @@ layout: home
 hero:
   name: "WebExtend"
   text: "The build tool for web extensions"
-  tagline: My great project tagline
+  tagline: "Making web extension development simple, modern and efficient"
   actions:
     - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
+      text: Introduction
+      link: /guide/introduction
     - theme: alt
-      text: API Examples
-      link: /api-examples
+      text: Quick Start
+      link: /guide/quick-start
+  image:
+    src: /logo.svg
+    alt: WebExtend
 
 features:
-  - title: Feature A
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature B
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature C
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+  - icon: 📝
+    title: Declarative Development
+    details: Automatically parse entries based on the file system, reducing manifest.json configuration burden
+    link: /guide/extension-entrypoints
+  - icon: ⚡️
+    title: Seamless Development Experience
+    details: Supports instant HMR, automatic browser opening and extension running
+  - icon: 🧭
+    title: Browser Compatibility
+    details: Automatically handles manifest.json configuration differences for easy multi-browser support
+    link: /guide/browser
+  - icon: 🛠️
+    title: ESM & TypeScript Support
+    details: ESM and TypeScript work out of the box, no extra configuration needed
+  - icon: ✈️
+    title: Framework Agnostic
+    details: Freedom to use any frontend framework and library
+  - icon: 🚀
+    title: Lightning Fast Performance
+    details: Powered by Rsbuild for extremely fast development and building
+    link: https://rsbuild.dev/index
 ---
-
