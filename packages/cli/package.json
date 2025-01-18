@@ -1,6 +1,6 @@
 {
   "name": "web-extend",
-  "version": "0.0.1-alpha.2",
+  "version": "0.0.1-alpha.3",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
@@ -14,7 +14,12 @@
     "prepare": "npm run build"
   },
   "files": ["dist", "bin", "templates"],
-  "keywords": [],
+  "keywords": ["web extensions", "browser extensions", "CLI"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/web-extend/web-extend.git"
+  },
+  "homepage": "https://github.com/web-extend/web-extend.git",
   "author": "",
   "license": "ISC",
   "description": "",
@@ -44,6 +49,10 @@
     "web-ext": {
       "optional": true
     }
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "engines": {
     "node": ">=16.7.0"
