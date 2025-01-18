@@ -14,7 +14,7 @@ export default defineConfig({
       '/': [
         {
           text: 'Guide',
-          base: '/guide',
+          base: '/guide/',
           collapsed: false,
           items: [
             { text: 'Introduction', link: 'introduction' },
