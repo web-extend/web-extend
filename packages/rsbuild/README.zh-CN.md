@@ -1,15 +1,15 @@
-# rsbuild-plugin-web-ext
+# @web-extend/rsbuild-plugin
 
 [English](./README.md) | 简体中文
 
 一个用于开发和构建浏览器扩展的 Rsbuild 插件，让浏览器扩展开发变得简单高效。
 
 <p>
-  <a href="https://npmjs.com/package/rsbuild-plugin-web-ext">
-   <img src="https://img.shields.io/npm/v/rsbuild-plugin-web-ext?style=flat-square&colorA=564341&colorB=EDED91" alt="npm version" />
+  <a href="https://npmjs.com/package/@web-extend/rsbuild-plugin">
+   <img src="https://img.shields.io/npm/v/@web-extend/rsbuild-plugin?style=flat-square&colorA=564341&colorB=EDED91" alt="npm version" />
   </a>
   <img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square&colorA=564341&colorB=EDED91" alt="license" />
-  <a href="https://npmcharts.com/compare/rsbuild-plugin-web-ext?minimal=true"><img src="https://img.shields.io/npm/dm/rsbuild-plugin-web-ext.svg?style=flat-square&colorA=564341&colorB=EDED91" alt="downloads" /></a>
+  <a href="https://npmcharts.com/compare/@web-extend/rsbuild-plugin?minimal=true"><img src="https://img.shields.io/npm/dm/@web-extend/rsbuild-plugin.svg?style=flat-square&colorA=564341&colorB=EDED91" alt="downloads" /></a>
 </p>
 
 ## 特性
@@ -26,7 +26,7 @@
 ### 安装
 
 ```bash
-npm add rsbuild-plugin-web-ext -D
+npm add @web-extend/rsbuild-plugin -D
 ```
 
 ### 项目设置
@@ -43,10 +43,10 @@ src/
 2. 在 `rsbuild.config.ts` 中添加插件：
 
 ```ts
-import { pluginWebExt } from "rsbuild-plugin-web-ext";
+import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
 
 export default {
-  plugins: [pluginWebExt()],
+  plugins: [pluginWebExtend()],
 };
 ```
 
