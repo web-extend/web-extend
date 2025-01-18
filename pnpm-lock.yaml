@@ -18,7 +18,14 @@ importers:
         specifier: ^5.7.2
         version: 5.7.2
 
-  examples/with-background: {}
+  examples/with-background:
+    devDependencies:
+      '@rsbuild/core':
+        specifier: ^1.1.6
+        version: 1.1.13
+      typescript:
+        specifier: ^5.7.2
+        version: 5.7.3
 
   examples/with-content:
     devDependencies:

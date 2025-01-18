@@ -1,14 +1,15 @@
 import { existsSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import sharp from 'sharp';
-import { copyEntryFiles, getTemplatePath, normalizeTemplate } from './init.js';
+import { copyEntryFiles, getTemplatePath, resolveEntryTemplate, entrypoints } from './init.js';
+import { checkbox } from '@inquirer/prompts';
 
 export interface GenerateOptions {
-  type: string;
+  entries: string[];
   root: string;
   template?: string;
   outDir?: string;
-  // only vald for icons
+  // only valid for icons
   filename?: string;
   size?: string;
 }
@@ -32,7 +33,7 @@ function getIconTemplatePath(root: string, template?: string) {
   }
 
   if (!existsSync(templatePath)) {
-    throw new Error(`Cannot find template ${template}`);
+    throw new Error('Cannot find the template of icons');
   }
   return templatePath;
 }
@@ -60,16 +61,36 @@ async function generateIcons({
   }
 }
 
-async function generateEntryFiles({ type, root, template, outDir }: GenerateOptions) {
-  const finalTemplate = await normalizeTemplate(template);
+async function generateEntryFiles({ root, template, outDir, entries }: GenerateOptions) {
+  const finalTemplate = await resolveEntryTemplate(template);
   const templatePath = getTemplatePath(finalTemplate);
   const destPath = outDir ? resolve(root, outDir) : resolve(root, getProjectSrcDir(root));
-  await copyEntryFiles(resolve(templatePath, 'src'), destPath, [type]);
+  await copyEntryFiles(resolve(templatePath, 'src'), destPath, entries);
 }
 
 export async function generate(options: GenerateOptions) {
-  if (options.type === 'icons') {
-    return generateIcons(options);
+  if (!options.entries.length) {
+    options.entries = await checkbox({
+      message: 'Select entrypoints',
+      choices: [{ name: 'icons', value: 'icons' }, ...entrypoints],
+    });
   }
-  return generateEntryFiles(options);
+
+  const { entries = [] } = options;
+
+  if (!entries.length) {
+    throw Error('Please select an entrypoint at least.');
+  }
+
+  if (entries.includes('icons')) {
+    await generateIcons(options);
+  }
+
+  const otherEntries = entries.filter((item) => item !== 'icons');
+  if (otherEntries.length) {
+    await generateEntryFiles({
+      ...options,
+      entries: otherEntries,
+    });
+  }
 }
