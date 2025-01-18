@@ -17,7 +17,7 @@ import {
   normalizeRsbuildEnvironments,
 } from './rsbuild/index.js';
 
-export type PluginWebExtOptions<T = unknown> = {
+export type PluginWebExtendOptions<T = unknown> = {
   manifest?: T;
   target?: ExtensionTarget;
   srcDir?: string;
@@ -26,8 +26,8 @@ export type PluginWebExtOptions<T = unknown> = {
 
 export type { ContentScriptConfig } from './manifest/types.js';
 
-export const pluginWebExt = (options: PluginWebExtOptions = {}): RsbuildPlugin => ({
-  name: 'rsbuild:plugin-web-ext',
+export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPlugin => ({
+  name: 'plugin-web-extend',
   setup: (api) => {
     const rootPath = api.context.rootPath;
     const selfRootPath = __dirname;
