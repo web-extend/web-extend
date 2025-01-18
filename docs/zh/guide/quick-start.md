@@ -76,11 +76,12 @@ npm i -D web-extend @rsbuild/core rsbuild-plugin-web-ext
 ::: code-group
 
 ```js [rsbuild.config.js]
+import { defineConfig } from "@rsbuild/core";
 import { pluginWebExt } from "rsbuild-plugin-web-ext";
 
-export default {
+export default defineConfig({
   plugins: [pluginWebExt()],
-};
+});
 ```
 
 :::
@@ -116,13 +117,14 @@ npx web-extend generate
 ::: code-group
 
 ```js [rsbuild.config.js]
+import { defineConfig } from "@rsbuild/core";
 import { pluginWebExt } from "rsbuild-plugin-web-ext";
 
-export default {
+export default defineConfig({
   plugins: [pluginWebExt({
     manifest: {...} // [!code ++]
   })],
-};
+});
 ```
 
 :::

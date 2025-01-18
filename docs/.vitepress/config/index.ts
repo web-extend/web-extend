@@ -5,7 +5,7 @@ import zh from './zh';
 const shared = defineConfig({
   title: 'WebExtend',
   themeConfig: {
-    logo: { src: '/logo.png', width: 24, height: 24 },
+    logo: { src: '/logo.svg', width: 24, height: 24 },
     socialLinks: [
       {
         icon: 'github',

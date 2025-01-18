@@ -12,6 +12,7 @@ outline: deep
 
 ```js [rsbuild.config.js]
 import { defineConfig } from '@rsbuild/core';
+import { pluginWebExt } from 'rsbuild-plugin-web-ext';
 
 export default defineConfig({
   plugins: [
