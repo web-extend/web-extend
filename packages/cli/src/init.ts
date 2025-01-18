@@ -1,29 +1,35 @@
 import { existsSync } from 'node:fs';
 import { copyFile, cp, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
-import { dirname, relative, resolve } from 'node:path';
+import { basename, dirname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { checkbox, input, select } from '@inquirer/prompts';
+import chalk from 'chalk';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export interface InitialOptions {
   projectName?: string;
   template?: string;
-  entry?: string[];
+  entries?: string[];
+  override?: boolean;
 }
 
 const frameworks = [
   {
-    name: 'Vanilla',
+    name: chalk.yellow('Vanilla'),
     value: 'vanilla',
   },
   {
-    name: 'React',
+    name: chalk.cyan('React'),
     value: 'react',
   },
   {
-    name: 'Vue',
+    name: chalk.green('Vue'),
     value: 'vue',
+  },
+  {
+    name: chalk.red('Svelte'),
+    value: 'svelte',
   },
 ];
 
@@ -39,51 +45,94 @@ const variants = [
   },
 ];
 
-const entrypoints = [
+export type EntryPointType =
+  | 'background'
+  | 'content'
+  | 'popup'
+  | 'options'
+  | 'sidepanel'
+  | 'devtools'
+  | 'newtab'
+  | 'bookmarks'
+  | 'history'
+  | 'sandbox';
+
+export type EntryTemplateType = 'background' | 'content' | 'devtools' | 'web';
+
+export const entrypoints: { name: string; value: EntryPointType; template: EntryTemplateType }[] = [
   {
     name: 'background',
     value: 'background',
+    template: 'background',
   },
   {
     name: 'content',
     value: 'content',
+    template: 'content',
   },
   {
     name: 'popup',
     value: 'popup',
+    template: 'web',
   },
   {
     name: 'options',
     value: 'options',
-  },
-  {
-    name: 'devtools',
-    value: 'devtools',
+    template: 'web',
   },
   {
     name: 'sidepanel',
     value: 'sidepanel',
+    template: 'web',
+  },
+  {
+    name: 'devtools',
+    value: 'devtools',
+    template: 'devtools',
+  },
+  {
+    name: 'newtab',
+    value: 'newtab',
+    template: 'web',
+  },
+  {
+    name: 'bookmarks',
+    value: 'bookmarks',
+    template: 'web',
+  },
+  {
+    name: 'history',
+    value: 'history',
+    template: 'web',
+  },
+  {
+    name: 'sandbox',
+    value: 'sandbox',
+    template: 'web',
   },
 ];
 
-const templates = ['vanilla-js', 'vanilla-ts', 'react-js', 'react-ts', 'vue-js', 'vue-ts'];
+const templates = frameworks.flatMap((framework) =>
+  variants.filter((variant) => !variant.disabled).map((variant) => `${framework.value}-${variant.value}`),
+);
 
-export async function normalizeTemplate(text?: string) {
+export async function resolveEntryTemplate(text?: string) {
   let template = '';
+  // only support ts template
+  const variant = 'ts';
   if (!text) {
     const framework = await select({
       message: 'Select a framework',
       choices: frameworks,
     });
-    const variant = await select({
-      message: 'Select a variant',
-      choices: variants,
-    });
+    // const variant = await select({
+    //   message: 'Select a variant',
+    //   choices: variants,
+    // });
     template = `${framework}-${variant}`;
   } else {
     const list = text.split('-');
     const framework = list[0];
-    const variant = list[1] || 'js';
     template = `${framework}-${variant}`;
   }
 
@@ -95,25 +144,40 @@ export async function normalizeTemplate(text?: string) {
 
 export async function normalizeInitialOptions(options: InitialOptions) {
   try {
-    console.log();
-
     if (!options.projectName) {
-      options.projectName = await input({ message: 'Project name', default: 'my-extension-app' });
+      options.projectName = await input({ message: 'Project name or path', default: 'my-extension-app' });
     }
+
     const root = process.cwd();
     const projectPath = resolve(root, options.projectName);
-
     if (existsSync(projectPath)) {
-      console.log(`${options.projectName} has exist.`);
-      return null;
+      options.override = await select({
+        message: `Target directory ${options.projectName} is not empty, please choose`,
+        choices: [
+          {
+            name: 'Cancel operation',
+            value: false,
+          },
+          {
+            name: 'Continue and override files',
+            value: true,
+          },
+        ],
+      });
+      if (!options.override) {
+        const error = new Error('Cancel operation');
+        error.name = 'ExitPromptError';
+        throw error;
+      }
     }
 
-    options.template = await normalizeTemplate(options.template);
+    options.template = await resolveEntryTemplate(options.template);
 
-    if (!options.entry) {
-      options.entry = await checkbox({
-        message: 'Select entry points',
+    if (!options.entries?.length) {
+      options.entries = await checkbox({
+        message: 'Select entrypoints',
         choices: entrypoints,
+        loop: false,
       });
     }
 
@@ -126,11 +190,10 @@ export async function normalizeInitialOptions(options: InitialOptions) {
     return options;
   } catch (error) {
     if (error instanceof Error && error.name === 'ExitPromptError') {
-      console.log('Canceled\n');
-    } else {
-      throw error;
+      console.log(`${chalk.red('✕')} ${chalk.bold('Canceled')}`);
+      return null;
     }
-    return null;
+    throw error;
   }
 }
 
@@ -142,10 +205,12 @@ export async function createProject(options: InitialOptions) {
   const templatePath = getTemplatePath(template);
   const destPath = resolve(root, projectName);
 
-  await mkdir(destPath);
+  if (!existsSync(destPath)) {
+    await mkdir(destPath);
+  }
   await copyTemplate(templatePath, destPath);
-  await copyEntryFiles(resolve(templatePath, 'src'), resolve(destPath, 'src'), options.entry);
-  await modifyPackageJson(destPath, projectName);
+  await copyEntryFiles(resolve(templatePath, 'src'), resolve(destPath, 'src'), options.entries);
+  await modifyPackageJson(destPath, basename(projectName));
 }
 
 export function getTemplatePath(template: string) {
@@ -166,7 +231,6 @@ async function copyTemplate(source: string, dest: string) {
     const destPath = resolve(dest, name);
 
     if (['node_modules', 'dist'].includes(name)) continue;
-
     if (file.isDirectory()) {
       await cp(srcPath, destPath, {
         recursive: true,
@@ -198,7 +262,7 @@ export async function copyEntryFiles(source: string, dest: string, entries?: str
   if (!entries?.length) return;
 
   if (!existsSync(source)) {
-    throw new Error('Cannot find source');
+    throw new Error("Source directory doesn't exist");
   }
   if (!existsSync(dest)) {
     await mkdir(dest);
@@ -206,18 +270,15 @@ export async function copyEntryFiles(source: string, dest: string, entries?: str
 
   const files = await readdir(source, { withFileTypes: true });
   for (const entry of entries) {
-    let entryName = entry;
-    let custom = false;
-    if (entry.startsWith('contents/')) {
-      entryName = 'content';
-      custom = true;
-    }
+    const item = entrypoints.find((item) => entry.startsWith(item.value));
+    if (!item) continue;
 
-    const file = files.find((item) => item.name.startsWith(entryName));
+    const templateName = item.template;
+    const file = files.find((item) => item.name.startsWith(templateName));
     if (!file) continue;
 
     const { name } = file;
-    const destName = custom ? entry : name;
+    const destName = file.isFile() ? name : entry;
     await cp(resolve(source, name), resolve(dest, destName), { recursive: true });
   }
 }

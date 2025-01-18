@@ -1,5 +1,6 @@
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { readBuildInfo } from './cache.js';
 
 export type TargetType = 'firefox-desktop' | 'firefox-android' | 'chromium';
 
@@ -40,9 +41,25 @@ export interface WebExtRunOptions {
   chromiumProfile?: string;
 }
 
+export interface ExtensionRunner {
+  reloadAllExtensions: () => void;
+  exit: () => void;
+}
+
+export interface PreviewOptions {
+  root?: string;
+  target?: string;
+  outDir?: string;
+}
+
+export function getBrowserTarget(target: string): TargetType {
+  const browser = target?.includes('firefox') ? 'firefox-desktop' : 'chromium';
+  return browser;
+}
+
 const posibleConfigFiles = ['web-ext.config.mjs', 'web-ext.config.cjs', 'web-ext.config.js'];
 
-export async function loadWebExtConfig(root: string) {
+async function loadWebExtConfig(root: string) {
   const configFile = posibleConfigFiles.map((item) => resolve(root, item)).find((item) => existsSync(item));
   if (!configFile) return null;
   try {
@@ -54,15 +71,59 @@ export async function loadWebExtConfig(root: string) {
   }
 }
 
-export async function normalizeWebExtRunConfig(root: string, options: WebExtRunOptions) {
+export async function normalizeRunConfig(
+  root: string,
+  outDir: string,
+  extensionTarget: string,
+  options: WebExtRunOptions = {},
+) {
   const userConfig = await loadWebExtConfig(root);
   const userRunconfig = userConfig?.run || {};
+  const target = getBrowserTarget(extensionTarget);
+  const sourceDir = resolve(root, outDir);
 
   const config: WebExtRunOptions = {
+    target,
+    sourceDir,
     ...options,
-    ...(userRunconfig || {}),
+    ...userRunconfig,
     noReload: true,
   };
 
   return config;
+}
+
+export async function importWebExt() {
+  const webExt = await import('web-ext').then((mod) => mod.default).catch(() => null);
+  return webExt;
+}
+
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+export async function run(webExt: any, config: WebExtRunOptions) {
+  const extensionRunner: ExtensionRunner = await webExt.cmd.run(config, {
+    shouldExitProgram: false,
+  });
+  return extensionRunner;
+}
+
+export async function preview({ root = process.cwd(), outDir, target }: PreviewOptions) {
+  const webExt = await importWebExt();
+  if (!webExt) {
+    throw Error(`Cannot find package 'web-ext', please intsall web-ext first.`);
+  }
+
+  const buildInfo = await readBuildInfo(root);
+  const sourceDir = outDir ? resolve(root, outDir) : buildInfo?.distPath;
+  const extensionTarget = target || buildInfo?.target;
+
+  if (!sourceDir || !existsSync(sourceDir)) {
+    throw Error('The output directory is missing, please build first.');
+  }
+
+  if (!extensionTarget) {
+    throw Error('The extension target is missing, please build first.');
+  }
+
+  const config = await normalizeRunConfig(root, sourceDir, extensionTarget);
+  return run(webExt, config);
 }

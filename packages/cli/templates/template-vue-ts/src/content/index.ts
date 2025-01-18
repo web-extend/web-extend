@@ -1,7 +1,6 @@
+import type { ContentScriptConfig } from '@web-extend/rsbuild-plugin';
 import { createApp } from 'vue';
 import App from './App.vue';
-import './index.css';
-import type { ContentScriptConfig } from 'rsbuild-plugin-web-ext';
 
 let rootEl = document.getElementById('web-extend-content');
 if (!rootEl) {

@@ -2,19 +2,26 @@ import { type Command, program } from 'commander';
 import { type GenerateOptions, generate } from './generate.js';
 import { init } from './init.js';
 import { type StartOptions, startBuild, startDevServer } from './rsbuild.js';
-import { type ZipOptions, zipExtenison } from './zip.js';
+import { type PreviewOptions, preview } from './web-ext.js';
+import { type ZipOptions, zip } from './zip.js';
 
 function main() {
+  program.name('web-extend');
+
   const initCommand = program.command('init').description('create a new project');
-  const generateCommand = program.command('generate').alias('g').description('generate files');
-  const rsbuildDevCommand = program.command('rsbuild:dev').description('execute the dev command of rsbuild');
-  const rsbuildBuildCommand = program.command('rsbuild:build').description('execute the build command of rsbuild');
-  const zipCommand = program.command('zip').description('package an extension into a .zip file for publishing');
+  const generateCommand = program.command('generate').alias('g').description('generate entry files');
+  const rsbuildDevCommand = program.command('rsbuild:dev').description('start the dev server with rsbuild');
+  const rsbuildBuildCommand = program
+    .command('rsbuild:build')
+    .description('build the extension for production with rsbuild');
+  const previewCommand = program.command('preview').description('preview the built extension');
+  const zipCommand = program.command('zip').description('package the built extension into a .zip file for publishing');
 
   applyInitCommand(initCommand);
   applyGenerateCommand(generateCommand);
   applyRsbuildDevCommand(rsbuildDevCommand);
   applyRsbuildBuildCommand(rsbuildBuildCommand);
+  applyPreviewCommand(previewCommand);
   applyZipCommand(zipCommand);
 
   program.parse();
@@ -22,16 +29,16 @@ function main() {
 
 function applyInitCommand(command: Command) {
   command
-    .argument('[project-name]')
+    .argument('[dir]')
     .option('-t, --template <name>', 'specify the template name')
-    .option('-e, --entry <name>', 'specify entry ponts')
+    .option('-e, --entry <name>', 'specify entrypoints')
     .action(async (projectName, cliOptions) => {
       const { entry, ...otherOptions } = cliOptions;
-      const entrypoints = entry ? entry.split(',') : undefined;
+      const entries = entry ? entry.split(',') : [];
       try {
         await init({
           projectName,
-          entry: entrypoints,
+          entries,
           ...otherOptions,
         });
       } catch (err) {
@@ -44,22 +51,22 @@ function applyInitCommand(command: Command) {
 
 function applyGenerateCommand(command: Command) {
   command
-    .argument('<type>', 'type of files')
+    .argument('[entry]', 'specify entrypoints')
     .option('-r, --root <dir>', 'specify the project root directory')
     .option('-t, --template <name>', 'specify the template name or path')
     .option('-o, --out-dir <dir>', 'specify the output directory')
     .option('-n, --filename <name>', 'specify the output filename')
     .option('--size <size>', 'specify sizes of output icons (defaults to 16,32,48,64,128)')
-    .action(async (type, options: GenerateOptions) => {
+    .action(async (entry: string | undefined, options: GenerateOptions) => {
       try {
-        options.type = type;
+        options.entries = entry?.split(',') || [];
         if (!options.root) {
           options.root = process.cwd();
         }
         await generate(options);
-        console.log(`Generated ${type} successfully!`);
+        console.log('Generated successfully!');
       } catch (error) {
-        console.error(`Generated ${type} failed.`);
+        console.error('Generated failed.');
         console.log(error);
         process.exit(1);
       }
@@ -69,7 +76,7 @@ function applyGenerateCommand(command: Command) {
 function applyRsbuildDevCommand(command: Command) {
   applyCommonRunOptions(command);
   command
-    .option('-o, --open [url]', 'open the page in browser on startup')
+    .option('-o, --open [url]', 'open the extension in browser on startup')
     .option('--port <port>', 'specify a port number for server to listen')
     .action(async (options: StartOptions) => {
       try {
@@ -84,7 +91,7 @@ function applyRsbuildDevCommand(command: Command) {
 
 function applyRsbuildBuildCommand(command: Command) {
   applyCommonRunOptions(command);
-  command.option('-z, --zip', 'package the extension after build').action(async (options: StartOptions) => {
+  command.option('-z, --zip', 'package the built extension').action(async (options: StartOptions) => {
     try {
       await startBuild(options);
     } catch (err) {
@@ -105,15 +112,30 @@ function applyCommonRunOptions(command: Command) {
     .option('-t, --target <target>', 'specify the extension target');
 }
 
-function applyZipCommand(command: Command) {
+function applyPreviewCommand(command: Command) {
   command
-    .argument('<source>', 'specify the dist path')
     .option('-r, --root <root>', 'specify the project root directory')
     .option('-o, --out-dir <dir>', 'specify the output directory')
+    .option('-t, --target <target>', 'specify the extension target')
+    .action(async (options: PreviewOptions) => {
+      try {
+        await preview(options);
+      } catch (err) {
+        console.error('Failed to preview.');
+        console.error(err);
+        process.exit(1);
+      }
+    });
+}
+
+function applyZipCommand(command: Command) {
+  command
+    .argument('[source]', 'specify the dist path')
+    .option('-r, --root <root>', 'specify the project root directory')
     .option('-n, --filename <filename>', 'specify the output filename')
     .action(async (source: string, options: ZipOptions) => {
       try {
-        await zipExtenison({ ...options, source });
+        await zip({ ...options, source });
       } catch (err) {
         console.error('Failed to package the extension.');
         console.error(err);

@@ -3,14 +3,17 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "dev": "rsbuild dev",
-    "build": "rsbuild build",
-    "preview": "rsbuild preview"
+    "dev": "web-extend rsbuild:dev --open",
+    "build": "web-extend rsbuild:build",
+    "preview": "web-extend preview",
+    "zip": "web-extend zip"
   },
   "devDependencies": {
     "@rsbuild/core": "^1.1.8",
     "@types/chrome": "^0.0.290",
-    "rsbuild-plugin-web-ext": "0.0.1-alpha.11",
-    "typescript": "^5.7.2"
+    "@web-extend/rsbuild-plugin": "0.0.1-alpha.1",
+    "typescript": "^5.7.2",
+    "web-ext": "^8.3.0",
+    "web-extend": "0.0.1-alpha.4"
   }
 }

@@ -1,11 +1,10 @@
 import { resolve } from 'node:path';
-import { createRsbuild, loadConfig, loadEnv } from '@rsbuild/core';
 import type { RsbuildMode } from '@rsbuild/core';
 import type { FSWatcher } from 'chokidar';
+import { type BuildInfo, writeBuildInfo } from './cache.js';
 import { type RestartCallback, beforeRestart, onBeforeRestart, watchFilesForRestart } from './restart.js';
-import { normalizeWebExtRunConfig } from './web-ext.js';
-import type { TargetType } from './web-ext.js';
-import { zipExtenison } from './zip.js';
+import { type ExtensionRunner, importWebExt, normalizeRunConfig, run } from './web-ext.js';
+import { zip } from './zip.js';
 
 export interface StartOptions {
   target?: string;
@@ -22,11 +21,6 @@ export interface StartOptions {
   zip?: boolean;
 }
 
-interface ExtensionRunner {
-  reloadAllExtensions: () => void;
-  exit: () => void;
-}
-
 let commonOptions: StartOptions = {};
 let extensionRunner: ExtensionRunner | null = null;
 let watchers: FSWatcher[] = [];
@@ -37,6 +31,8 @@ async function init({
   isBuildWatch,
   isDev,
 }: { cliOptions?: StartOptions; isRestart?: boolean; isBuildWatch?: boolean; isDev?: boolean }) {
+  const { createRsbuild, loadConfig, loadEnv } = await import('@rsbuild/core');
+
   if (cliOptions) {
     commonOptions = cliOptions;
   }
@@ -55,6 +51,12 @@ async function init({
     path: commonOptions.config,
     envMode: commonOptions.envMode,
   });
+
+  config.source ||= {};
+  config.source.define = {
+    ...envs.publicVars,
+    ...config.source.define,
+  };
 
   if (commonOptions.root) {
     config.root = root;
@@ -91,52 +93,52 @@ async function init({
     environment: commonOptions.environment,
   });
 
-  // clear all watchers
-  for (const wather of watchers) {
-    await wather?.close();
-  }
-  watchers = [];
-
-  // set watchers
-  const restart = isDev ? restartDevServer : isBuildWatch ? restartBuild : null;
-  rsbuild.onBeforeCreateCompiler(() => {
-    if (!restart) return;
-
-    const files = [...envs.filePaths];
-    if (configFilePath) {
-      files.push(configFilePath);
-    }
-
-    // const config = rsbuild.getNormalizedConfig();
-    // if (config.dev?.watchFiles) {
-    //   const watchFiles = [config.dev.watchFiles].flat().filter((item) => item.type === 'reload-server');
-    //   for (const watchFilesConfig of watchFiles) {
-    //     const paths = [watchFilesConfig.paths].flat();
-    //     if (watchFilesConfig.options) {
-    //       const watcher = watchFilesForRestart({
-    //         files: paths,
-    //         root,
-    //         restart,
-    //         watchOptions: watchFilesConfig.options,
-    //         watchEvents: ['add', 'unlink'],
-    //       });
-    //       if (watcher) {
-    //         watchers.push(watcher);
-    //       }
-    //     } else {
-    //       files.push(...paths);
-    //     }
-    //   }
-    // }
-
-    const watcher = watchFilesForRestart({ files, root, restart });
-    if (watcher) {
-      watchers.push(watcher);
-    }
-  });
-
   rsbuild.onCloseBuild(envs.cleanup);
   rsbuild.onCloseDevServer(envs.cleanup);
+
+  if (isBuildWatch || isDev) {
+    for (const wather of watchers) {
+      await wather?.close();
+    }
+    watchers = [];
+
+    const restart = isDev ? restartDevServer : isBuildWatch ? restartBuild : null;
+    rsbuild.onBeforeCreateCompiler(() => {
+      if (!restart) return;
+
+      const files = [...envs.filePaths];
+      if (configFilePath) {
+        files.push(configFilePath);
+      }
+
+      // const config = rsbuild.getNormalizedConfig();
+      // if (config.dev?.watchFiles) {
+      //   const watchFiles = [config.dev.watchFiles].flat().filter((item) => item.type === 'reload-server');
+      //   for (const watchFilesConfig of watchFiles) {
+      //     const paths = [watchFilesConfig.paths].flat();
+      //     if (watchFilesConfig.options) {
+      //       const watcher = watchFilesForRestart({
+      //         files: paths,
+      //         root,
+      //         restart,
+      //         watchOptions: watchFilesConfig.options,
+      //         watchEvents: ['add', 'unlink'],
+      //       });
+      //       if (watcher) {
+      //         watchers.push(watcher);
+      //       }
+      //     } else {
+      //       files.push(...paths);
+      //     }
+      //   }
+      // }
+
+      const watcher = watchFilesForRestart({ files, root, restart });
+      if (watcher) {
+        watchers.push(watcher);
+      }
+    });
+  }
 
   return rsbuild;
 }
@@ -145,14 +147,11 @@ async function startDevServer(options: StartOptions) {
   prepareRun(options.target);
 
   let webExt = null;
-
   if (options.open) {
-    webExt = await import('web-ext')
-      .then((mod) => mod.default)
-      .catch(() => {
-        console.warn(`Cannot find package 'web-ext', falling back to default open method.`);
-        return null;
-      });
+    webExt = await importWebExt();
+    if (!webExt) {
+      console.warn(`Cannot find package 'web-ext', falling back to default open method.`);
+    }
   }
 
   const rsbuild = await init({
@@ -166,19 +165,15 @@ async function startDevServer(options: StartOptions) {
   if (options.open && webExt) {
     rsbuild.onDevCompileDone(async () => {
       if (extensionRunner !== null) return;
-      const config = await normalizeWebExtRunConfig(options.root || process.cwd(), {
-        target: getBrowserTarget(),
-        startUrl: typeof options.open === 'string' ? options.open : undefined,
-        sourceDir: rsbuild.context.distPath,
-      });
-
-      webExt.cmd
-        .run(config, {
-          shouldExitProgram: false,
-        })
-        .then((runner: ExtensionRunner) => {
-          extensionRunner = runner;
+      // run after manifest.json written in @web-extend/rsbuild-plugin
+      setTimeout(async () => {
+        const { rootPath, distPath } = rsbuild.context;
+        const config = await normalizeRunConfig(rootPath, distPath, getBuildTarget(), {
+          startUrl: typeof options.open === 'string' ? options.open : undefined,
         });
+
+        extensionRunner = await run(webExt, config);
+      }, 200);
     });
 
     rsbuild.onExit(() => {
@@ -213,14 +208,24 @@ async function startBuild(options: StartOptions) {
     isBuildWatch: options.watch,
   });
 
-  if (options.zip) {
-    rsbuild.onAfterBuild(async () => {
-      await zipExtenison({
-        root: options.root,
-        source: rsbuild.context.distPath,
+  // run after manifest.json written in @web-extend/rsbuild-plugin
+  rsbuild.onCloseBuild(async () => {
+    const { rootPath, distPath } = rsbuild.context;
+    const buildInfo: BuildInfo = {
+      rootPath,
+      distPath,
+      target: getBuildTarget(),
+    };
+
+    if (options.zip) {
+      await zip({
+        root: buildInfo.rootPath,
+        source: buildInfo.distPath,
       });
-    });
-  }
+    }
+
+    await writeBuildInfo(buildInfo.rootPath, buildInfo);
+  });
 
   const buildInstance = await rsbuild.build({ watch: options.watch });
   if (options.watch) {
@@ -236,14 +241,23 @@ const restartBuild: RestartCallback = async ({ filePath }) => {
   const rsbuild = await init({ isBuildWatch: true, isRestart: true });
   if (!rsbuild) return;
 
-  if (commonOptions.zip) {
-    rsbuild.onAfterBuild(async () => {
-      await zipExtenison({
-        root: commonOptions.root,
-        source: rsbuild.context.distPath,
+  rsbuild.onCloseBuild(async () => {
+    const { rootPath, distPath } = rsbuild.context;
+    const buildInfo: BuildInfo = {
+      rootPath,
+      distPath,
+      target: getBuildTarget(),
+    };
+
+    if (commonOptions.zip) {
+      await zip({
+        root: buildInfo.rootPath,
+        source: buildInfo.distPath,
       });
-    });
-  }
+    }
+
+    await writeBuildInfo(buildInfo.rootPath, buildInfo);
+  });
 
   const buildInstance = await rsbuild.build({ watch: true });
   onBeforeRestart(buildInstance.close);
@@ -255,10 +269,9 @@ function prepareRun(target: string | undefined) {
   }
 }
 
-function getBrowserTarget(): TargetType {
+function getBuildTarget() {
   const target = process.env.WEB_EXTEND_TARGET || '';
-  const browser = target?.includes('firefox') ? 'firefox-desktop' : 'chromium';
-  return browser;
+  return target;
 }
 
 export { startDevServer, startBuild };

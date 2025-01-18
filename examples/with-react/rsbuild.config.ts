@@ -1,7 +1,7 @@
 import { defineConfig } from '@rsbuild/core';
 import { pluginReact } from '@rsbuild/plugin-react';
-import { pluginWebExt } from '../lib';
+import { pluginWebExtend } from '../lib';
 
 export default defineConfig({
-  plugins: [pluginReact(), pluginWebExt()],
+  plugins: [pluginReact(), pluginWebExtend()],
 });

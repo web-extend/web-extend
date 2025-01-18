@@ -1,6 +1,6 @@
 {
   "name": "web-extend",
-  "version": "0.0.1-alpha.1",
+  "version": "0.0.1-alpha.4",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
@@ -10,37 +10,49 @@
   "scripts": {
     "build": "rslib build",
     "dev": "rslib build --watch",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "npm run build"
   },
   "files": ["dist", "bin", "templates"],
-  "keywords": [],
+  "keywords": ["web extensions", "browser extensions", "CLI"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/web-extend/web-extend.git"
+  },
+  "homepage": "https://github.com/web-extend/web-extend.git",
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@inquirer/prompts": "^7.2.1",
+    "@inquirer/prompts": "^7.2.2",
     "archiver": "^7.0.1",
+    "chalk": "^5.4.1",
     "chokidar": "^4.0.3",
     "commander": "^12.1.0",
     "sharp": "^0.33.5"
   },
   "devDependencies": {
-    "@rsbuild/core": "^1.1.12",
-    "@rslib/core": "^0.1.0",
+    "@rsbuild/core": "^1.1.13",
+    "@rslib/core": "^0.1.5",
     "@types/archiver": "^6.0.3",
-    "typescript": "^5.7.2",
-    "web-ext": "^8.3.0"
-  },
-  "optionalDependencies": {
+    "typescript": "^5.7.3",
     "web-ext": "^8.3.0"
   },
   "peerDependencies": {
-    "@rsbuild/core": "1.x"
+    "@rsbuild/core": "1.x",
+    "web-ext": "^8.3.0"
   },
   "peerDependenciesMeta": {
     "@rsbuild/core": {
       "optional": true
+    },
+    "web-ext": {
+      "optional": true
     }
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "engines": {
     "node": ">=16.7.0"
