@@ -18,7 +18,7 @@ WebExtend 支持以下浏览器目标。默认的构建目标为 `chrome-mv3`，
 ```js [rsbuild.config.js]
 export default defineConfig({
   plugins: [
-    pluginWebExt({
+    pluginWebExtend({
       target: "firefox-mv2", // default: "chrome-mv3"
     }),
   ],

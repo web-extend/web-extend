@@ -171,7 +171,7 @@ export const config = {
 ```
 
 ```ts [src/content.ts]
-import type { ContentScriptConfig } from "rsbuild-plugin-web-ext";
+import type { ContentScriptConfig } from "@web-extend/rsbuild-plugin";
 
 export const config: ContentScriptConfig = {
   matches: ["https://www.google.com/*"],

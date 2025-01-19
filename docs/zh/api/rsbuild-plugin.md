@@ -12,11 +12,11 @@ outline: deep
 
 ```js [rsbuild.config.js]
 import { defineConfig } from '@rsbuild/core';
-import { pluginWebExt } from 'rsbuild-plugin-web-ext';
+import { pluginWebExtend } from '@web-extend/rsbuild-plugin';
 
 export default defineConfig({
   plugins: [
-    pluginWebExt({
+    pluginWebExtend({
       srcDir: "src", // default: "src"
       outDir: "dist", // default: "dist/[target]-[mode]"
       manifest: {...}, // default: {}

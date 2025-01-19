@@ -36,7 +36,7 @@ cd my-extension-app
 npm init -y
 
 # install dev dependencies
-npm i -D web-extend @rsbuild/core rsbuild-plugin-web-ext
+npm i -D web-extend @rsbuild/core @web-extend/rsbuild-plugin
 
 ```
 
@@ -77,10 +77,10 @@ npm i -D web-extend @rsbuild/core rsbuild-plugin-web-ext
 
 ```js [rsbuild.config.js]
 import { defineConfig } from "@rsbuild/core";
-import { pluginWebExt } from "rsbuild-plugin-web-ext";
+import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
 
 export default defineConfig({
-  plugins: [pluginWebExt()],
+  plugins: [pluginWebExtend()],
 });
 ```
 
@@ -118,10 +118,10 @@ npx web-extend generate
 
 ```js [rsbuild.config.js]
 import { defineConfig } from "@rsbuild/core";
-import { pluginWebExt } from "rsbuild-plugin-web-ext";
+import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
 
 export default defineConfig({
-  plugins: [pluginWebExt({
+  plugins: [pluginWebExtend({
     manifest: {...} // [!code ++]
   })],
 });
