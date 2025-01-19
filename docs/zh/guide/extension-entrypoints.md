@@ -2,15 +2,15 @@
 outline: deep
 ---
 
-# 入口
+# 入口 {#extension-entrypoints}
 
-WebExtend 会基于文件系统，自动解析以下入口文件，生成 `manifest.json` 中对应的配置项。
+WebExtend 会基于文件系统自动解析入口文件，生成 `manifest.json` 中对应的配置项。
 
 ::: info 入口说明
 
-入口文件位于 src 源码目录下。除 icons 外，入口支持为目录或文件任意一种形式：
+入口文件位于源码目录下。除 icons 外，入口可以是目录或文件中任意一种形式：
 
-- 入口为文件：仅支持扩展名为 `.js|.jsx|.ts|.tsx` 的文件。构建工具会自动为每个入口注入 HTML 模板，生成对应的 html 文件。
+- 入口为文件：仅支持扩展名为 `.js|.jsx|.ts|.tsx` 的文件。构建工具会自动为每个入口注入 HTML 模板，生成对应的 `.html` 文件。
 - 入口为目录：
   - 如果是单入口，该目录下的 `index.js` 文件将作为入口。
   - 如果是多入口：该目录下的所有一级 `*.js` 或 `*/index.js` 文件将作为入口。目前仅有 `contents`、`sandbox` 和 `devtools/panels` 目录支持多入口。
@@ -19,10 +19,10 @@ WebExtend 会基于文件系统，自动解析以下入口文件，生成 `manif
 
 ## Icons
 
-在 src 目录下创建 `assets/icon-{size}.png` 文件，对应 `manifest.json` 中的 `icons` 和 `action.default_icon` 字段。
-
 - [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest/icons)
 - [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/icons)
+
+在 src 目录下创建 `assets/icon-{size}.png` 文件，对应 `manifest.json` 中的 `icons` 和 `action.default_icon` 字段。
 
 ```
 src/assets/
@@ -33,7 +33,7 @@ src/assets/
 └─ icon-128.png
 ```
 
-`web-extend` 工具支持基于一个高质量图片文件 `assets/icon.png` 作为模板（图片尺寸不小于 128\*128px），自动生成对应尺寸的 icon 文件。运行以下命令。
+`web-extend` 工具支持基于一个高质量图片文件 `assets/icon.png` 作为模板（建议图片尺寸不小于 128\*128px），自动生成对应尺寸的 icon 文件。运行以下命令。
 
 ```shell
 npx web-extend g icons
@@ -148,7 +148,7 @@ npx web-extend g contents/site-one
 
 **添加 CSS**
 
-从 `content` 入口文件直接引入 CSS 文件，对应 `manifest.json` 中的 `content_scripts[index].css` 字段。
+在 `content` 入口文件中直接引入 CSS 文件，对应 `manifest.json` 中的 `content_scripts[index].css` 字段。
 
 ::: code-group
 
@@ -160,17 +160,17 @@ import "./index.css";
 
 **添加 content 配置**
 
-在入口文件中，具名导出一个 `config` 对象，对应 `manifest.json` 中的 `content_scripts` 其他字段。如果使用 TypeScript，WebExtend 提供了一个 `ContentScriptConfig` 类型。示例如下。
+在入口文件中具名导出一个 `config` 对象，对应 `manifest.json` 中 `content_scripts` 的其他字段。如果使用 TypeScript，WebExtend 提供了一个 `ContentScriptConfig` 类型。示例如下。
 
 ::: code-group
 
-```js [src/content.js]
+```js [src/content/index.js]
 export const config = {
   matches: ["https://www.google.com/*"],
 };
 ```
 
-```ts [src/content.ts]
+```ts [src/content/index.ts]
 import type { ContentScriptConfig } from "@web-extend/rsbuild-plugin";
 
 export const config: ContentScriptConfig = {
@@ -194,7 +194,7 @@ npx web-extend g sidepanel
 
 ```
 
-方式二：手动创建 `src/sidepanel.js` 或 `src/sidepanel/index.js` 文件，示例参考 `popup`。
+方式二：手动创建 `src/sidepanel.js` 或 `src/sidepanel/index.js` 文件。
 
 ## Devtools
 
@@ -210,7 +210,7 @@ npx web-extend g devtools
 
 ```
 
-方式二：手动创建 `src/devtools.js` 或 `src/devtools/index.js` 文件，在 `devtools` 入口的同级目录下创建 `panels/my-panels.js` 文件。示例如下：
+方式二：手动创建 `src/devtools.js` 或 `src/devtools/index.js` 文件，在 `devtools` 入口文件的同级目录下创建 `panels/my-panels.js` 文件。示例如下：
 
 ::: code-group
 

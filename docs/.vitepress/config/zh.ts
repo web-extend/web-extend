@@ -30,7 +30,7 @@ export default defineConfig({
           collapsed: false,
           items: [
             { text: 'web-extend CLI', link: 'web-extend' },
-            { text: '@web-extend/rsbuild', link: 'rsbuild-plugin' },
+            { text: '@web-extend/rsbuild-plugin', link: 'rsbuild-plugin' },
           ],
         },
       ],
@@ -47,7 +47,7 @@ export default defineConfig({
 
     footer: {
       message: '基于 MIT 许可发布',
-      copyright: `版权所有 © 2024-${new Date().getFullYear()} ZhangXingBin`,
+      copyright: `版权所有 © 2024-${new Date().getFullYear()} 冰梦`,
     },
 
     lastUpdated: {
