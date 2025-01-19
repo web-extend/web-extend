@@ -2,13 +2,13 @@
 outline: deep
 ---
 
-# 介绍
+# Introduction
 
-## 什么是 WebExtend {#what}
+## What is WebExtend {#what}
 
 WebExtend 是一个帮助您使用现代 Web 技术构建浏览器扩展的工具。
 
-## 为什么选 WebExtend {#why}
+## Why WebExtend {#why}
 
 目前社区中已经有一些类似的构建工具，如 Plasmo、WXT、CRXJS 等。这些珠玉在前，为什么还要推出 WebExtend 呢？它们存在如下几个问题：
 
@@ -16,7 +16,7 @@ WebExtend 是一个帮助您使用现代 Web 技术构建浏览器扩展的工�
 - 较为复杂的 API。
 - 中文不友好，没有官方的中文文档。
 
-## 优势 {#main-features}
+## Main Features {#main-features}
 
 - 声明式开发。基于文件系统自动解析扩展入口，减少 manifest.json 的配置负担。
 - 无缝的开发体验。支持即时 HMR、自动打开浏览器和运行扩展。
@@ -26,7 +26,7 @@ WebExtend 是一个帮助您使用现代 Web 技术构建浏览器扩展的工�
 - 极速性能。基于 Rsbuild 实现极速开发和构建。
 - 脚手架支持。提供模板支持，方便快速创建项目、生成入口文件。
 
-## 预备知识 {#pre-requisite-knowledge}
+## Pre-Requisite Knowledge {#pre-requisite-knowledge}
 
 了解浏览器扩展开发的基础知识，可以参考以下资源。
 

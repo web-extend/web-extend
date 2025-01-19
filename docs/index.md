@@ -34,7 +34,7 @@ features:
     details: ESM and TypeScript work out of the box, no extra configuration needed
   - icon: ✈️
     title: Framework Agnostic
-    details: Freedom to use any frontend framework and library
+    details: Freedom to use any frontend framework or library
   - icon: 🚀
     title: Lightning Fast Performance
     details: Powered by Rsbuild for extremely fast development and building
