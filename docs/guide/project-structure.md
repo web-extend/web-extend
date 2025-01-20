@@ -22,7 +22,7 @@ Top-level are used to organize the following folders or files.
 
 ## Source Folders
 
-Source Foldes are used to organize [entries](./entrypoints.md), components, lib, etc folders or files.
+Source Foldes are used to organize [entrypoints](./entrypoints.md), components, lib, etc folders or files.
 
 | Name                     | Description                                     |
 | ------------------------ | ----------------------------------------------- |
@@ -56,7 +56,7 @@ WebExtend parses entry files and generates `manifest.json` automatically based o
 | `content_scripts`                | `src/content.js` or `src/contents/*.js`          |
 | `options_ui.page`                | `src/options.js` or `src/options/index.js`       |
 | `devtools_page`                  | `src/devtools.js` or `src/devtools/index.js`     |
-| `sandbox`                        | `src/sandbox.js` or `src/sandboxes/*.js`         |
+| `sandbox.pages`                  | `src/sandbox.js` or `src/sandboxes/*.js`         |
 | `chrome_url_overrides.newtab`    | `src/newtab.js` or `src/newtab/index.js`         |
 | `chrome_url_overrides.bookmarks` | `src/bookmarks.js` or `src/bookmarks/index.js`   |
 | `chrome_url_overrides.history`   | `src/history.js` or `src/history/index.js`       |

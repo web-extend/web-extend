@@ -16,7 +16,7 @@ npm intsall -D web-extend
 npx we [options] [command]
 ```
 
-`we` is a shortened form for `web-extend`. They are equal, but the `we` command only can be used after install the `web-extend` tool.
+`we` is a shortened form for `web-extend`. They are equal, but the `we` command only can be used after the `web-extend` tool installed.
 
 ## web-extend init
 

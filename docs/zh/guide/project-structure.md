@@ -2,7 +2,7 @@
 
 ## 顶层目录 {#top-level-folders}
 
-项目根目录用于组织如下目录或文件。
+项目的顶层目录用于组织公共静态资源、源码、项目配置等目录或文件。
 
 | 名称                     | 描述                                                                                        |
 | ------------------------ | ------------------------------------------------------------------------------------------- |
@@ -22,11 +22,11 @@
 
 ## 源码目录 {#source-folders}
 
-项目源码目录用于组织[入口](./entrypoints.md)、组件、库等目录或文件。
+项目的源码目录用于组织[入口](./entrypoints.md)、组件、库等目录或文件。
 
 | 名称                     | 描述                                                      |
 | ------------------------ | --------------------------------------------------------- |
-| `assets/`                 | 静态资源目录，存放 icons 等文件，这些资源会被构建工具处理 |
+| `assets/`                | 静态资源目录，存放 icons 等文件，这些资源会被构建工具处理 |
 | `background`             | background 入口                                           |
 | `content` 或 `contents`  | 单个或多个 content 入口                                   |
 | `popup`                  | popup 入口                                                |
@@ -56,7 +56,7 @@ WebExtend 会基于文件系统自动构建和生成 `manifest.json` 中的配�
 | `content_scripts`                | `src/content.js` 或 `src/contents/*.js`          |
 | `options_ui.page`                | `src/options.js` 或 `src/options/index.js`       |
 | `devtools_page`                  | `src/devtools.js` 或 `src/devtools/index.js`     |
-| `sandbox`                        | `src/sandbox.js` 或 `src/sandboxes/*.js`         |
+| `sandbox.pages`                  | `src/sandbox.js` 或 `src/sandboxes/*.js`         |
 | `chrome_url_overrides.newtab`    | `src/newtab.js` 或 `src/newtab/index.js`         |
 | `chrome_url_overrides.bookmarks` | `src/bookmarks.js` 或 `src/bookmarks/index.js`   |
 | `chrome_url_overrides.history`   | `src/history.js` 或 `src/history/index.js`       |
