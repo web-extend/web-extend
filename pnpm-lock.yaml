@@ -17,10 +17,6 @@ importers:
       typescript:
         specifier: ^5.7.2
         version: 5.7.2
-    devDependencies:
-      vitepress:
-        specifier: ^1.6.0
-        version: 1.6.0(@algolia/client-search@5.19.0)(@types/node@22.10.5)(postcss@8.4.49)(search-insights@2.17.3)(terser@5.37.0)(typescript@5.7.2)
 
   docs:
     devDependencies:
@@ -5327,11 +5323,6 @@ snapshots:
 
   '@ungap/structured-clone@1.2.1': {}
 
-  '@vitejs/plugin-vue@5.2.1(vite@5.4.12(@types/node@22.10.5)(terser@5.37.0))(vue@3.5.13(typescript@5.7.2))':
-    dependencies:
-      vite: 5.4.12(@types/node@22.10.5)(terser@5.37.0)
-      vue: 3.5.13(typescript@5.7.2)
-
   '@vitejs/plugin-vue@5.2.1(vite@5.4.12(@types/node@22.10.5)(terser@5.37.0))(vue@3.5.13(typescript@5.7.3))':
     dependencies:
       vite: 5.4.12(@types/node@22.10.5)(terser@5.37.0)
@@ -5473,31 +5464,12 @@ snapshots:
 
   '@vue/shared@3.5.13': {}
 
-  '@vueuse/core@12.4.0(typescript@5.7.2)':
-    dependencies:
-      '@types/web-bluetooth': 0.0.20
-      '@vueuse/metadata': 12.4.0
-      '@vueuse/shared': 12.4.0(typescript@5.7.2)
-      vue: 3.5.13(typescript@5.7.2)
-    transitivePeerDependencies:
-      - typescript
-
   '@vueuse/core@12.4.0(typescript@5.7.3)':
     dependencies:
       '@types/web-bluetooth': 0.0.20
       '@vueuse/metadata': 12.4.0
       '@vueuse/shared': 12.4.0(typescript@5.7.3)
       vue: 3.5.13(typescript@5.7.3)
-    transitivePeerDependencies:
-      - typescript
-
-  '@vueuse/integrations@12.4.0(focus-trap@7.6.4)(typescript@5.7.2)':
-    dependencies:
-      '@vueuse/core': 12.4.0(typescript@5.7.2)
-      '@vueuse/shared': 12.4.0(typescript@5.7.2)
-      vue: 3.5.13(typescript@5.7.2)
-    optionalDependencies:
-      focus-trap: 7.6.4
     transitivePeerDependencies:
       - typescript
 
@@ -5512,12 +5484,6 @@ snapshots:
       - typescript
 
   '@vueuse/metadata@12.4.0': {}
-
-  '@vueuse/shared@12.4.0(typescript@5.7.2)':
-    dependencies:
-      vue: 3.5.13(typescript@5.7.2)
-    transitivePeerDependencies:
-      - typescript
 
   '@vueuse/shared@12.4.0(typescript@5.7.3)':
     dependencies:
@@ -7806,55 +7772,6 @@ snapshots:
       '@types/node': 22.10.5
       fsevents: 2.3.3
       terser: 5.37.0
-
-  vitepress@1.6.0(@algolia/client-search@5.19.0)(@types/node@22.10.5)(postcss@8.4.49)(search-insights@2.17.3)(terser@5.37.0)(typescript@5.7.2):
-    dependencies:
-      '@docsearch/css': 3.8.2
-      '@docsearch/js': 3.8.2(@algolia/client-search@5.19.0)(search-insights@2.17.3)
-      '@iconify-json/simple-icons': 1.2.20
-      '@shikijs/core': 2.0.3
-      '@shikijs/transformers': 2.0.3
-      '@shikijs/types': 2.0.3
-      '@types/markdown-it': 14.1.2
-      '@vitejs/plugin-vue': 5.2.1(vite@5.4.12(@types/node@22.10.5)(terser@5.37.0))(vue@3.5.13(typescript@5.7.2))
-      '@vue/devtools-api': 7.7.0
-      '@vue/shared': 3.5.13
-      '@vueuse/core': 12.4.0(typescript@5.7.2)
-      '@vueuse/integrations': 12.4.0(focus-trap@7.6.4)(typescript@5.7.2)
-      focus-trap: 7.6.4
-      mark.js: 8.11.1
-      minisearch: 7.1.1
-      shiki: 2.0.3
-      vite: 5.4.12(@types/node@22.10.5)(terser@5.37.0)
-      vue: 3.5.13(typescript@5.7.2)
-    optionalDependencies:
-      postcss: 8.4.49
-    transitivePeerDependencies:
-      - '@algolia/client-search'
-      - '@types/node'
-      - '@types/react'
-      - async-validator
-      - axios
-      - change-case
-      - drauu
-      - fuse.js
-      - idb-keyval
-      - jwt-decode
-      - less
-      - lightningcss
-      - nprogress
-      - qrcode
-      - react
-      - react-dom
-      - sass
-      - sass-embedded
-      - search-insights
-      - sortablejs
-      - stylus
-      - sugarss
-      - terser
-      - typescript
-      - universal-cookie
 
   vitepress@1.6.0(@algolia/client-search@5.19.0)(@types/node@22.10.5)(postcss@8.4.49)(search-insights@2.17.3)(terser@5.37.0)(typescript@5.7.3):
     dependencies:
