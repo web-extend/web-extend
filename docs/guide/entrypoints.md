@@ -1,16 +1,12 @@
----
-outline: deep
----
-
 # Entrypoints
 
-WebExtend uses the file system to parse entry files and generate the corresponding feilds of `manifest.json`. More about [Manifest Mapping](./project-structure.html#manifest-mapping).
+WebExtend uses the file system to parse entry files and generate the corresponding feilds of `manifest.json`. Overview [the mapping relationship](./project-structure.html#manifest-mapping).
 
-::: info The Explanation of Entrypoints
+::: info
 
 All entry files are located in the src directory, which can be a folder or a file except the icons entry.
 
-- When the entry is a file form, it only discovers the file whose extension name is `.js|.jsx|.ts|.tsx`. The build tool will inject a HTML template for every entry if necessary and generate the corresponding `.html` file.
+- When the entry is a file form, only the file ends with `.js|.jsx|.ts|.tsx` will be discovered. The build tool will inject [a HTML template](https://rsbuild.dev/guide/basic/html-template) for every entry if necessary and generate the corresponding `.html` file.
 - When the entry is a folder form,
   - if it has a single-entry, the `index.js` file in the folder will be discovered as an entry.
   - if it has multi-entries, all the direct `*.js` 或 `*/index.js` files in the folder will be discovered as entries. Currently, only file in `contents`、`sandbox` and `devtools/panels` will be discovered as multi entries.
@@ -121,9 +117,9 @@ Method 2: create the `src/options.js` or `src/options/index.js` file manually.
 - [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts)
 - [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_scripts)
 
-**Adding a single content script**
+### Adding a single content script
 
-A single content entry will be reflected to the `content_scripts[0].js` in `manifest.json`. It supports the following creation methods.
+A single content entry will be reflected to the `content_scripts[0].js` field in `manifest.json`. It supports the following creation methods.
 
 Method 1: run the following command to generate the entry automatically.
 
@@ -133,9 +129,9 @@ npx web-extend g content
 
 Method 2: create the `src/content.js` or`src/content/index.js` file manually.
 
-**Adding multiple content scripts**
+### Adding multiple content scripts
 
-Multiple content entries will be reflected to the `content_scripts[index].js` in `manifest.josn` respectively. It supports the following creation methods.
+Multiple content entries will be reflected to the `content_scripts[index].js` field in `manifest.josn` respectively. It supports the following creation methods.
 
 Method 1: run the following command to generate the entry automatically.
 
@@ -146,9 +142,9 @@ npx web-extend g contents/site-one
 
 Method 2: create the `src/contents/*.js` or `src/contents/*/index.js` file manually.
 
-**Adding CSS Files**
+### Adding CSS
 
-Import CSS files directly in the `content` entry file, which will be reflected to the `content_scripts[index].css` feild in `manifest.json`.
+Import CSS files directly in the `content` entry file, which will be reflected to the `content_scripts[index].css` field in `manifest.json`.
 
 ::: code-group
 
@@ -158,9 +154,9 @@ import "./index.css";
 
 :::
 
-**Adding other configuration**
+### Adding config
 
-Export an obejct named `config` in the `content` entry, which will be reflected to other items in `content_scripts[index]`, as follows.
+Export an obejct named `config` in the `content` entry, which will be reflected to other fields in `content_scripts[index]`, as follows.
 
 ::: code-group
 

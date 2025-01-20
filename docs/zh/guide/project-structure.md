@@ -40,7 +40,7 @@
 
 ## Manifest 映射 {#manifest-mapping}
 
-WebExtend 会基于文件系统自动构建和生成 `manifest.json` 中的配置项，对应的映射关系如下。
+WebExtend 中无需手动维护 [`manifest.json`](https://developer.chrome.com/docs/extensions/reference/manifest) 文件，它会基于文件系统自动生成 `manifest.json` 中的配置项，对应的映射关系如下。
 
 | Manifest 字段                    | 映射路径                                         |
 | -------------------------------- | ------------------------------------------------ |

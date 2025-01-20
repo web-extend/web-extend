@@ -10,7 +10,7 @@ WebExtend is a build tool that helps you make web extensions using modern web te
 
 ## Why WebExtend {#why}
 
-Since there have been some similar tools for web extension today, such as Plasmo, WXT, CRXJS etc, why you should select WebExtend?
+Since there have been some similar tools for web extension development today, such as Plasmo, WXT, CRXJS etc, why should you select WebExtend?
 
 These tools might have some of these problems as follows.
 

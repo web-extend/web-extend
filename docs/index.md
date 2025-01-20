@@ -19,8 +19,8 @@ hero:
 
 features:
   - icon: 📝
-    title: Declarative Development
-    details: Automatically parse entries based on the file system, reducing manifest.json configuration burden
+    title: Declarative Entrypoints
+    details: Automatically parse entry files based on the file system, reducing manifest.json configuration burden
     link: /guide/entrypoints
   - icon: ⚡️
     title: Seamless Development Experience

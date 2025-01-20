@@ -1,7 +1,3 @@
----
-outline: deep
----
-
 # 入口 {#entrypoints}
 
 WebExtend 会基于文件系统自动解析入口文件，生成 `manifest.json` 中对应的配置项。
@@ -10,7 +6,7 @@ WebExtend 会基于文件系统自动解析入口文件，生成 `manifest.json`
 
 入口文件位于源码目录下。除 icons 外，入口可以是目录或文件中任意一种形式：
 
-- 入口为文件：仅支持扩展名为 `.js|.jsx|.ts|.tsx` 的文件。构建工具会自动为每个入口注入 HTML 模板，生成对应的 `.html` 文件。
+- 入口为文件：仅支持扩展名为 `.js|.jsx|.ts|.tsx` 的入口文件。构建工具会自动为每个入口注入一个 [HTML 模板](https://rsbuild.dev/guide/basic/html-template)，生成对应的 `.html` 文件。
 - 入口为目录：
   - 如果是单入口，该目录下的 `index.js` 文件将作为入口。
   - 如果是多入口：该目录下的所有一级 `*.js` 或 `*/index.js` 文件将作为入口。目前仅有 `contents`、`sandbox` 和 `devtools/panels` 目录支持多入口。
@@ -121,7 +117,7 @@ npx web-extend g options
 - [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts)
 - [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_scripts)
 
-**添加单个入口**
+### 添加单个入口 {#adding-a-single-content-script}
 
 单个 `content` 入口对应 `manifest.json` 中的 `content_scripts[0].js` 字段。入口支持两种添加方式。
 
@@ -133,7 +129,7 @@ npx web-extend g content
 
 方式二：手动创建 `src/content.js` 或 `src/content/index.js` 文件。
 
-**添加多个入口**
+### 添加多个入口 {#adding-multiple-content-scripts}
 
 多个 `content` 入口分别对应 `manifest.json` 中的 `content_scripts[index].js` 字段。入口支持两种添加方式。
 
@@ -146,7 +142,7 @@ npx web-extend g contents/site-one
 
 方式二：手动创建 `src/contents/*.js` 或 `src/contents/*/index.js` 文件。
 
-**添加 CSS**
+### 添加 CSS {#adding-css}
 
 在 `content` 入口文件中直接引入 CSS 文件，对应 `manifest.json` 中的 `content_scripts[index].css` 字段。
 
@@ -158,7 +154,7 @@ import "./index.css";
 
 :::
 
-**添加 content 配置**
+### 添加 config {#adding-config}
 
 在入口文件中具名导出一个 `config` 对象，对应 `manifest.json` 中 `content_scripts` 的其他字段。如果使用 TypeScript，WebExtend 提供了一个 `ContentScriptConfig` 类型。示例如下。
 

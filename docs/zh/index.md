@@ -19,7 +19,7 @@ hero:
 
 features:
   - icon: 📝
-    title: 声明式开发
+    title: 声明式入口
     details: 基于文件系统自动解析入口，减少 manifest.json 的配置负担
     link: /zh/guide/entrypoints
   - icon: ⚡️

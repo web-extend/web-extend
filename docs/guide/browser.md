@@ -34,25 +34,25 @@ export default defineConfig({
 
 WebExtend uses the file system to parse entry files and reflect them to items in `manifest.json` automatically, so you don't need to care about the campatibility of `manifest.json` between differnent browsers.
 
-Manifest Documents:
+Manifest documents are as follows.
 
 - [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest)
 - [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json)
 
 ## Extension API Compatibility
 
-One thing that's important to note is that WebExtend won't deal with the compatibility of Extension API, so you should do it yourself if necessary.
+One thing that's important to note is that WebExtend won't deal with the compatibility of Extension API for now, so you need to do it yourself.
 
-Extension API Documents：
+Extension API documents are as follows.
 
 - [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api)
 - [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API)
 
-**When the target is Chrome**
+### For Chrome Series
 
 You can use `chrome` API directly. If you use TypeScript, [`@types/chrome`](https://www.npmjs.com/package/@types/chrome) is recommended to be installed.
 
-**When the target is Firefox**
+### For Firefox
 
 It is recommended to install [webextension-polyfill](https://www.npmjs.com/package/webextension-polyfill). If you use TypeScript, [@types/webextension-polyfill](https://www.npmjs.com/package/@types/webextension-polyfill) is also recommended to be installed. An example is as follows.
 
@@ -76,7 +76,7 @@ browser.storage.local
 
 ## Browser Startup
 
-When running the follow commands, the extension will be loaded automatically. If the target is `firefox-mv2` or `firefox-mv3`, Firefox will be opened, otherwise Chrome will be opened.
+When running the following commands, the extension will be loaded automatically. If the target is `firefox-mv2` or `firefox-mv3`, Firefox will be opened, otherwise Chrome will be opened.
 
 ```shell
 # developemnt

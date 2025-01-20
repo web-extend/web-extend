@@ -1,8 +1,8 @@
 # Project Structure
 
-## Top-level Folders
+## Top-level Folder
 
-Top-level are used to organize the following folders or files.
+Top-level folder is used to organize the following files or folders.
 
 | Name                     | Description                                                                 |
 | ------------------------ | --------------------------------------------------------------------------- |
@@ -20,9 +20,9 @@ Top-level are used to organize the following folders or files.
 | `rsbuild.config.js`      | Configuration file for Rsbuild                                              |
 | `tsconfig.json`          | Configuration file for TypeScript                                           |
 
-## Source Folders
+## Source Folder
 
-Source Foldes are used to organize [entrypoints](./entrypoints.md), components, lib, etc folders or files.
+Source folder is used to organize [entrypoints](./entrypoints.md), components, lib, etc folders or files.
 
 | Name                     | Description                                     |
 | ------------------------ | ----------------------------------------------- |
@@ -40,11 +40,11 @@ Source Foldes are used to organize [entrypoints](./entrypoints.md), components, 
 
 ## Manifest Mapping
 
-WebExtend parses entry files and generates `manifest.json` automatically based on the file system. The mapping relationship is as follows.
+There is no need to maintain [`manifest.json`](https://developer.chrome.com/docs/extensions/reference/manifest) manually. WebExtend generates it automatically based on the file system. The mapping relationship is as follows.
 
-| Manifest Keys                    | The Reflection Path                              |
+| Manifest Keys                    | The Mapping Path                                 |
 | -------------------------------- | ------------------------------------------------ |
-| `manifest_version`               | The default is `3`                               |
+| `manifest_version`               | defaults to `3`                                  |
 | `name`                           | `displayName` or `name` in package.json          |
 | `version`                        | `version` in package.json                        |
 | `description`                    | `description` in package.json                    |

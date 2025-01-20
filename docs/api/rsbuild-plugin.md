@@ -27,8 +27,6 @@ export default defineConfig({
 
 Custom `manifest` configuration which defaults to `{}`. WebExtend will merge the `manifest` option and the fields parsed from entry files (the previous is prior), and generate `manifest.json` automatically.
 
-[Manifest Mapping](../guide/project-structure.md#manifest-mapping)
-
 ### target
 
 Custom browser target which suppports the following targets.

@@ -16,18 +16,20 @@ It is recommended to use [`web-extend`](../api/web-extend.md) for creating a pro
 npx web-extend@latest init
 ```
 
-The tool `web-extend` provides these templates, which all use TypeScript. If you want to use JavaScript, please modify the file extension names.
+The tool `web-extend` provides the following templates, which all use TypeScript. If you want to use JavaScript, please modify the file extension names.
 
 - Vanilla
 - [React](https://react.dev/)
 - [Vue](https://vuejs.org/)
 - [Svelte](https://svelte.dev/)
 
+WebExtend is compatible with any frontend framework. For other frameworks, you might need manual installation.
+
 ## Manual Installtion
 
 ### Install Dependencies
 
-Create a project and install dependencies. WebExtend uses [Rsbuild](https://rsbuild.dev/), so which and the [`@web-extend/rsbuild-plugin`](../api/rsbuild-plugin.md) plugin also are needed to be installed.
+Create a project and install dependencies. WebExtend uses [Rsbuild](https://rsbuild.dev/) under the hood, which and the [`@web-extend/rsbuild-plugin`](../api/rsbuild-plugin.md) plugin are also needed to be installed.
 
 ```shell
 # create an empty project
@@ -64,7 +66,7 @@ Add the `"type": "module"` field and the following scripts into `package.json`.
 
 The meanings of the commands above are as follows:
 
-- `dev`: use Rsbuild for developing the extension, and open a browser automatically for running it.
+- `dev`: use Rsbuild for developing the extension. `--open` is used to open a browser automatically for running it.
 - `build`: use Rsbuild for building the extension for production.
 - `preview`: preview the extension for production.
 - `zip`: package the extension for production into a `.zip` file.
@@ -94,7 +96,7 @@ export default defineConfig({
 
 ### Add Entry Files
 
-Create the `src/popup.js` file, whose content is as follows. WebExtend will [pare the entry information automatically](entrypoints.md) based on the file system.
+Create the `src/popup.js` file whose content is as follows. WebExtend will parse the [entrypoint](entrypoints.md) automatically based on the file system.
 
 ::: code-group
 
@@ -118,7 +120,7 @@ Alternatively, you can use the `web-extend` tool to generate entry files. Run th
 npx web-extend generate popup
 ```
 
-Add extra `manifest.json` fields if necessary, such as `name`, `permissions`，etc (Optional).
+Add extra `manifest.json` fields if necessary, such as `name`, `permissions`, and so on (Optional).
 
 ::: code-group
 
@@ -140,7 +142,7 @@ export default defineConfig({
 - execute `npm run dev` for development.
 - execute `npm run build` for production.
 
-If you prefer to run the extension manually, please remove the `--open` option in the `dev` command, enable the deveoplment mode in browser, and then select the `dist/chrome-mv3-dev` or `dist/chrome-mv3-prod` directory.
+If you prefer to run the extension manually, please remove the `--open` option in the `dev` command, enable the deveoplment mode in the browser, and then load the `dist/chrome-mv3-dev` or `dist/chrome-mv3-prod` directory.
 
 ## Publish
 
