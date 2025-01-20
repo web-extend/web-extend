@@ -20,7 +20,7 @@ export default defineConfig({
             { text: '介绍', link: 'introduction' },
             { text: '快速上手', link: 'quick-start' },
             { text: '项目结构', link: 'project-structure' },
-            { text: '入口', link: 'extension-entrypoints' },
+            { text: '入口', link: 'entrypoints' },
             { text: '浏览器兼容性', link: 'browser' },
           ],
         },
@@ -34,6 +34,11 @@ export default defineConfig({
           ],
         },
       ],
+    },
+
+    editLink: {
+      pattern: 'https://github.com/web-extend/web-extend/docs/:path',
+      text: '在 GitHub 上编辑此页面',
     },
 
     docFooter: {

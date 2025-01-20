@@ -1,0 +1,303 @@
+---
+outline: deep
+---
+
+# Entrypoints
+
+WebExtend uses the file system to parse entry files and generate the corresponding feilds of `manifest.json`. More about [Manifest Mapping](./project-structure.html#manifest-mapping).
+
+::: info The Explanation of Entrypoints
+
+All entry files are located in the src directory, which can be a folder or a file except the icons entry.
+
+- When the entry is a file form, it only discovers the file whose extension name is `.js|.jsx|.ts|.tsx`. The build tool will inject a HTML template for every entry if necessary and generate the corresponding `.html` file.
+- When the entry is a folder form,
+  - if it has a single-entry, the `index.js` file in the folder will be discovered as an entry.
+  - if it has multi-entries, all the direct `*.js` 或 `*/index.js` files in the folder will be discovered as entries. Currently, only file in `contents`、`sandbox` and `devtools/panels` will be discovered as multi entries.
+
+:::
+
+## Icons
+
+- [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest/icons)
+- [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/icons)
+
+Create the `assets/icon-{size}.png` files under the `src` directory as follows, which will be reflected to the `icons` and `action.default_icons` fields in `manifest.json`.
+
+```
+src/assets/
+├─ icon-16.png
+├─ icon-32.png
+├─ icon-48.png
+├─ icon-64.png
+└─ icon-128.png
+```
+
+Alternatively, you can use `web-extend` to generate the corressponding sized icons files, which needs a high quality image `assets/icon.png` as the template.
+
+```shell
+npx web-extend g icons
+
+```
+
+## Background
+
+- [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest/background)
+- [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/background)
+
+The background entry will be reflected to the `background.service_worker` or `background.scripts` feild in `manifest.json`. It supports the following creation methods.
+
+Method 1: run the following command to generate the entry automatically.
+
+```shell
+npx web-extend g background
+
+```
+
+Method 2: create the `src/background.js` file manually whose content is as follows:
+
+::: code-group
+
+```js [src/background.js]
+console.log("This is a background script.");
+```
+
+:::
+
+## Popup
+
+- [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/action)
+- [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/action)
+
+The popup entry will be reflected to the `action.default_popup` feild in `manifest.json`. It supports the following creation methods.
+
+Method 1: run the following command to generate the entry automatically.
+
+```shell
+npx web-extend g popup
+
+```
+
+Method 2: create the `src/popup.js` or `src/popup/index.js` file manually whose content is as follows:
+
+::: code-group
+
+```tsx [src/popup/index.jsx]
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import App from "./App";
+
+const rootEl = document.getElementById("root");
+if (rootEl) {
+  const root = createRoot(rootEl);
+  root.render(
+    <StrictMode>
+      <App />
+    </StrictMode>
+  );
+}
+```
+
+:::
+
+## Options
+
+- [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/options-page)
+- [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/options_ui)
+
+The options entry will be reflected to the `options_ui.page` feild in `manifest.json`. It supports the following creation methods.
+
+Method 1: run the following command to generate the entry automatically.
+
+```shell
+npx web-extend g options
+
+```
+
+Method 2: create the `src/options.js` or `src/options/index.js` file manually.
+
+## Content Scripts
+
+- [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts)
+- [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_scripts)
+
+**Adding a single content script**
+
+A single content entry will be reflected to the `content_scripts[0].js` in `manifest.json`. It supports the following creation methods.
+
+Method 1: run the following command to generate the entry automatically.
+
+```shell
+npx web-extend g content
+```
+
+Method 2: create the `src/content.js` or`src/content/index.js` file manually.
+
+**Adding multiple content scripts**
+
+Multiple content entries will be reflected to the `content_scripts[index].js` in `manifest.josn` respectively. It supports the following creation methods.
+
+Method 1: run the following command to generate the entry automatically.
+
+```shell
+npx web-extend g contents/site-one
+
+```
+
+Method 2: create the `src/contents/*.js` or `src/contents/*/index.js` file manually.
+
+**Adding CSS Files**
+
+Import CSS files directly in the `content` entry file, which will be reflected to the `content_scripts[index].css` feild in `manifest.json`.
+
+::: code-group
+
+```js [src/content/index.js]
+import "./index.css";
+```
+
+:::
+
+**Adding other configuration**
+
+Export an obejct named `config` in the `content` entry, which will be reflected to other items in `content_scripts[index]`, as follows.
+
+::: code-group
+
+```js [src/content/index.js]
+export const config = {
+  matches: ["https://www.google.com/*"],
+};
+```
+
+```ts [src/content/index.ts]
+import type { ContentScriptConfig } from "@web-extend/rsbuild-plugin";
+
+export const config: ContentScriptConfig = {
+  matches: ["https://www.google.com/*"],
+};
+```
+
+:::
+
+## Sidepanel
+
+- [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/sidePanel)
+- [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Sidebars)
+
+The sidepanel entry will be reflected to the `side_panel.default_path` or `sidebar_action.default_panel` feild in `manifest.json`. It supports the following creation methods.
+
+Method 1: run the following command to generate the entry automatically.
+
+```shell
+npx web-extend g sidepanel
+
+```
+
+Method 2: create the `src/sidepanel.js` or `src/sidepanel/index.js` file manually.
+
+## Devtools
+
+- [Chrome Docs](https://developer.chrome.com/docs/extensions/how-to/devtools/extend-devtools)
+- [Firefox Docs](https://wxt.dev/guide/essentials/entrypoints.html#devtools)
+
+The devtools entry will be reflected to the `devtools_page` field in `manifest.json`. It supports the following creation methods.
+
+Method 1: run the following command to generate the entry automatically.
+
+```shell
+npx web-extend g devtools
+
+```
+
+Method 2: create the `src/devtools.js` or `src/devtools/index.js` file and the `panels/my-panels.js` file in the parent directory of the `devtools` entry manually.
+
+::: code-group
+
+```js [src/devtools/index.js]
+chrome.devtools.panels.create("Font Picker", "", "font-picker.html");
+```
+
+```js [src/devtools/panels/font-picker/index.js]
+import "./index.css";
+
+const rootEl = document.querySelector("#root");
+if (rootEl) {
+  rootEl.innerHTML = `
+  <div class="content">
+    <h1>Vanilla WebExtend</h1>
+    <p>This is a panel page.</p>
+  </div>
+  `;
+}
+```
+
+:::
+
+## Newtab
+
+- [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages)
+- [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/chrome_url_overrides)
+
+The newtab entry will be reflected to the `chrome_url_overrides.newtab` field in `manifest.json`. It supports the following creation methods.
+
+Method 1: run the following command to generate the entry automatically.
+
+```shell
+npx web-extend g newtab
+
+```
+
+Method 2: create the `src/newtab.js` or `src/newtab/index.js` file manually.
+
+## Bookmarks
+
+- [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages)
+- Firefox doesn't support bookmarks.
+
+The bookmarks entry will be reflected to the `chrome_url_overrides.bookmarks` field in `manifest.json`. It supports the following creation methods.
+
+Method 1: run the following command to generate the entry automatically.
+
+```shell
+npx web-extend g bookmarks
+
+```
+
+Method 2: create the `src/bookmarks.js` or `src/bookmarks/index.js` file manually.
+
+## History
+
+- [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages)
+- Firefox doesn't support history.
+
+The history entry will be reflected to the `chrome_url_overrides.history` field in `manifest.json`. It supports the following creation methods.
+
+Method 1: run the following command to generate the entry automatically.
+
+```shell
+npx web-extend g history
+
+```
+
+Method 2: create the `src/history.js` or `src/history/index.js` file manually.
+
+## Sandbox
+
+- [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest/sandbox)
+- Firefox doesn't support sandbox.
+
+The sandbox entry will be reflected to the `sandbox.pages` field in `manifest.json`. It supports the following creation methods.
+
+Method 1: run the following command to generate the entry automatically.
+
+```shell
+# generate a single entry
+npx web-extend g sandbox
+
+# generate multiple entries
+npx web-extend g sandboxes/sandbox-one
+
+```
+
+Method 2: create the `src/sandbox.js` or `src/sandboxes/*.js` file manually.

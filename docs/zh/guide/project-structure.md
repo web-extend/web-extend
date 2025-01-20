@@ -2,26 +2,31 @@
 
 ## 顶层目录 {#top-level-folders}
 
-项目根目录通常存放如下目录或文件。
+项目根目录用于组织如下目录或文件。
 
-| 名称                | 描述                                                 |
-| ------------------- | ---------------------------------------------------- |
-| `public`            | 公共的静态资源，这些资源会被直接拷贝到构建产物目录下 |
-| `src`               | 源码目录                                             |
-| `.web-extend`       | WebExtend 临时目录，存放构建信息                     |
-| `.env`、`.env.*`    | 环境变量配置文件                                     |
-| `.gitignore`        | 定义 git 忽略文件                                    |
-| `package.json`      | 项目的依赖和脚本                                     |
-| `rsbuild.config.js` | Rsbuild 配置文件                                     |
-| `tsconfig.json`     | TypeScript 配置文件                                  |
+| 名称                     | 描述                                                                                        |
+| ------------------------ | ------------------------------------------------------------------------------------------- |
+| `public/`                | 公共的静态资源，这些资源会被直接拷贝到构建产物目录下                                        |
+| `src/`                   | 源码目录                                                                                    |
+| `.web-extend/`           | WebExtend 临时目录，存放构建信息                                                            |
+| `.env`                   | 公共环境变量文件                                                                            |
+| `.env.local`             | 本地的公共环境变量文件，需要添加到 .gitignore 中                                            |
+| `.env.development`       | 环境变量文件，在 process.env.NODE_ENV 为 'development' 时有效                               |
+| `.env.production`        | 环境变量文件，在 process.env.NODE_ENV 为 'production' 时有效                                |
+| `.env.development.local` | 本地环境变量文件，在 process.env.NODE_ENV 为 'development' 时有效，需要添加到 .gitignore 中 |
+| `.env.production.local`  | 本地环境变量文件，在 process.env.NODE_ENV 为 'production' 时有效，需要添加到 .gitignore 中  |
+| `.gitignore`             | Git 的忽略文件                                                                              |
+| `package.json`           | 项目的依赖和脚本                                                                            |
+| `rsbuild.config.js`      | Rsbuild 配置文件                                                                            |
+| `tsconfig.json`          | TypeScript 配置文件                                                                         |
 
 ## 源码目录 {#source-folders}
 
-项目源码目录通常存放[入口](./extension-entrypoints.md)、组件等代码文件。
+项目源码目录用于组织[入口](./entrypoints.md)、组件、库等目录或文件。
 
 | 名称                     | 描述                                                      |
 | ------------------------ | --------------------------------------------------------- |
-| `assets`                 | 静态资源目录，存放 icons 等文件，这些资源会被构建工具处理 |
+| `assets/`                 | 静态资源目录，存放 icons 等文件，这些资源会被构建工具处理 |
 | `background`             | background 入口                                           |
 | `content` 或 `contents`  | 单个或多个 content 入口                                   |
 | `popup`                  | popup 入口                                                |

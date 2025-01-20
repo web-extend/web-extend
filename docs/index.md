@@ -21,7 +21,7 @@ features:
   - icon: 📝
     title: Declarative Development
     details: Automatically parse entries based on the file system, reducing manifest.json configuration burden
-    link: /guide/extension-entrypoints
+    link: /guide/entrypoints
   - icon: ⚡️
     title: Seamless Development Experience
     details: Supports instant HMR, automatic browser opening and extension running

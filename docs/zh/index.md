@@ -21,7 +21,7 @@ features:
   - icon: 📝
     title: 声明式开发
     details: 基于文件系统自动解析入口，减少 manifest.json 的配置负担
-    link: /zh/guide/extension-entrypoints
+    link: /zh/guide/entrypoints
   - icon: ⚡️
     title: 无缝的开发体验
     details: 支持即时 HMR、自动打开浏览器和运行扩展

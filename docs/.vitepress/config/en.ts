@@ -20,7 +20,7 @@ export default defineConfig({
             { text: 'Introduction', link: 'introduction' },
             { text: 'Quick Start', link: 'quick-start' },
             { text: 'Project Structure', link: 'project-structure' },
-            { text: 'Extension Entrypoints', link: 'extension-entrypoints' },
+            { text: 'Entrypoints', link: 'entrypoints' },
             { text: 'Browser Compatibility', link: 'browser' },
           ],
         },
@@ -30,10 +30,20 @@ export default defineConfig({
           collapsed: false,
           items: [
             { text: 'web-extend CLI', link: 'web-extend' },
-            { text: '@web-extend/rsbuild', link: 'rsbuild-plugin' },
+            { text: '@web-extend/rsbuild-plugin', link: 'rsbuild-plugin' },
           ],
         },
       ],
+    },
+
+    editLink: {
+      pattern: 'https://github.com/web-extend/web-extend/docs/:path',
+      text: 'Edit this page on GitHub',
+    },
+
+    footer: {
+      message: 'Released under the MIT License.',
+      copyright: 'Copyright © 2024-present IceDream',
     },
   },
 });

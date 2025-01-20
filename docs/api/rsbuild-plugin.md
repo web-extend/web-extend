@@ -2,43 +2,38 @@
 outline: deep
 ---
 
-# @web-extend/rsbuild
+# @web-extend/rsbuild-plugin
 
-`@web-extend/rsbuild` 是 Rsbuild 的一个插件。WebExtend 使用 Rsbuild 作为底层构建工具，该插件用于对扩展的入口文件进行构建。
+[`@web-extend/rsbuild-plugin`](https://www.npmjs.com/package/@web-extend/rsbuild-plugin) is a Rsbuild plugin used to parse entry files, build the extension, etc.
 
-## 使用
+## Usage
 
 ::: code-group
 
 ```js [rsbuild.config.js]
-import { defineConfig } from '@rsbuild/core';
-import { pluginWebExtend } from '@web-extend/rsbuild-plugin';
+import { defineConfig } from "@rsbuild/core";
+import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
 
 export default defineConfig({
-  plugins: [
-    pluginWebExtend({
-      srcDir: "src", // default: "src"
-      outDir: "dist", // default: "dist/[target]-[mode]"
-      manifest: {...}, // default: {}
-      target: "firefox-mv2", // default: "chrome-mv3"
-    }),
-  ],
+  plugins: [pluginWebExtend()],
 });
 ```
 
 :::
 
-## 选项
+## Options
 
 ### manifest
 
-显示配置 `manifest`，默认为 `{}`。WebExtend 会结合 `manifest` 选项和入口文件，在构建时自动生成 `manifest.json`。
+Custom `manifest` configuration which defaults to `{}`. WebExtend will merge the `manifest` option and the fields parsed from entry files (the previous is prior), and generate `manifest.json` automatically.
+
+[Manifest Mapping](../guide/project-structure.md#manifest-mapping)
 
 ### target
 
-设置目标浏览器，支持：
+Custom browser target which suppports the following targets.
 
-- `chrome-mv3` (默认)
+- `chrome-mv3` (default)
 - `firefox-mv3`
 - `firefox-mv2`
 - `safari-mv3`
@@ -47,8 +42,8 @@ export default defineConfig({
 
 ### srcDir
 
-设置源码目录，默认为项目跟路径下的 `src` 目录，如果 `./src` 目录不存在，则默认为项目根目录。
+Custom source directory which defaults to the `./src` directory, falling back to the project root path `.` if `./src` doesn't exists.
 
 ### outDir
 
-设置构建产物目录，默认为 `dist/[target]-[mode]`，比如 `dist/chrome-mv3-dev`（开发环境）、`dist/chrome-mv3-prod`（生成环境）。
+Custom dist path which defaults to the `dist/[target]-[mode]` directory, such as `dist/chrome-mv3-dev` (development mode), `dist/chrome-mv3-prod` (production mode).

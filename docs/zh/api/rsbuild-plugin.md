@@ -4,7 +4,7 @@ outline: deep
 
 # @web-extend/rsbuild-plugin
 
-[`@web-extend/rsbuild`](https://www.npmjs.com/package/@web-extend/rsbuild-plugin) 是 WebExtend 提供的一个 Rsbuild 插件，用于解析入口、构建扩展等。
+[`@web-extend/rsbuild-plugin`](https://www.npmjs.com/package/@web-extend/rsbuild-plugin) 是一个 Rsbuild 插件，用于解析入口、构建扩展等。
 
 ## 使用 {#usage}
 

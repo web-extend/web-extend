@@ -4,7 +4,7 @@ outline: deep
 
 # web-extend CLI
 
-[`web-extend`](https://www.npmjs.com/package/web-extend) 是 WebExtend 提供的一个命令行工具，用于创建项目、生成入口、运行和构建扩展等。
+[`web-extend`](https://www.npmjs.com/package/web-extend) 是一个命令行工具，用于创建项目、生成入口、运行和构建扩展等。
 
 使用：
 

@@ -2,32 +2,32 @@
 outline: deep
 ---
 
-# 快速上手 {#quick-start}
+# Quick Start
 
-## 准备环境 {#preparation}
+## Environment Preparation
 
-[Node.js >= 16](https://nodejs.org/en/download)，推荐使用 Node LTS 版本。
+[Node.js >= 16](https://nodejs.org/en/download), and the Node.js LTS version is recommended.
 
-## 自动安装 {#automatic-installation}
+## Automatic Installation
 
-推荐使用 [`web-extend`](../api/web-extend.md) 工具自动创建项目。在命令行界面运行命令：
+It is recommended to use [`web-extend`](../api/web-extend.md) for creating a project automatically. Just run the following command on the CLI:
 
 ```shell
 npx web-extend@latest init
 ```
 
-`web-extend` 内置了以下模板。这些模板都使用 TypeScript，如果需要使用 JavaScript，可以在生成项目后手动将 `.ts` 文件后缀名改为 `.js`。
+The tool `web-extend` provides these templates, which all use TypeScript. If you want to use JavaScript, please modify the file extension names.
 
 - Vanilla
 - [React](https://react.dev/)
 - [Vue](https://vuejs.org/)
 - [Svelte](https://svelte.dev/)
 
-## 手动安装 {#manual-installation}
+## Manual Installtion
 
-### 安装依赖项 {#install-dependencies}
+### Install Dependencies
 
-创建项目并安装依赖项。WebExtend 使用 [Rsbuild](https://rsbuild.dev/) 作为底层构建工具，因此还需要安装它和一个 [`@web-extend/rsbuild-plugin`](../api/rsbuild-plugin.md) 插件。
+Create a project and install dependencies. WebExtend uses [Rsbuild](https://rsbuild.dev/), so which and the [`@web-extend/rsbuild-plugin`](../api/rsbuild-plugin.md) plugin also are needed to be installed.
 
 ```shell
 # create an empty project
@@ -40,11 +40,11 @@ npm i -D web-extend @rsbuild/core @web-extend/rsbuild-plugin
 
 ```
 
-推荐安装 TypeScript、React/Vue、Eslint/Prettier/Biome 等前端工具，提升开发体验（可选）。
+It is also recommended to install TypeScript、React/Vue、Eslint/Prettier/Biome etc, for enhancing the development experience (Optional).
 
-### 添加脚本命令 {#add-scripts}
+### Add Scripts
 
-修改 `package.json`，添加 `"type": "module"` 字段及如下命令：
+Add the `"type": "module"` field and the following scripts into `package.json`.
 
 ::: code-group
 
@@ -62,22 +62,22 @@ npm i -D web-extend @rsbuild/core @web-extend/rsbuild-plugin
 
 :::
 
-上述命令的含义如下：
+The meanings of the commands above are as follows:
 
-- `dev`: 使用 Rsbuild 在开发环境构建扩展，同时打开浏览器运行扩展。
-- `build`: 使用 Rsbuild 构建生产版本的扩展。
-- `preview`: 预览生产版本的扩展。需要先执行 `build` 命令。
-- `zip`: 将生产版本的扩展压缩为一个 `.zip` 文件，以备发布。需要先执行 `build` 命令。
+- `dev`: use Rsbuild for developing the extension, and open a browser automatically for running it.
+- `build`: use Rsbuild for building the extension for production.
+- `preview`: preview the extension for production.
+- `zip`: package the extension for production into a `.zip` file.
 
-其中，在浏览器中运行扩展的功能基于 [`web-ext`](https://github.com/mozilla/web-ext) 工具实现。如果要使用这项功能，请在项目中额外安装该工具。
+The feature of running the extension in a browser is based on [`web-ext`](https://github.com/mozilla/web-ext). If you want to use the feature, please install it additionally.
 
 ```shell
 npm install -D web-ext
 ```
 
-### 添加 Rsbuild 配置 {#add-rsbuild-configuration}
+### Add Rsbuild Configuration
 
-创建 `rsbuild.config.js`，添加如下内容。
+Create the `rsbuild.config.js` file and add the following content.
 
 ::: code-group
 
@@ -92,9 +92,9 @@ export default defineConfig({
 
 :::
 
-### 添加入口文件 {#add-entry-files}
+### Add Entry Files
 
-创建 src 源码目录，并创建 `popup.js` 文件，文件内容如下。WebExtend 将基于文件系统[自动解析入口](extension-entrypoints.md)。
+Create the `src/popup.js` file, whose content is as follows. WebExtend will [pare the entry information automatically](entrypoints.md) based on the file system.
 
 ::: code-group
 
@@ -112,13 +112,13 @@ if (rootEl) {
 
 :::
 
-`web-extend` 工具提供了自动生成入口文件的功能，也可以使用它来添加入口文件，运行命令。
+Alternatively, you can use the `web-extend` tool to generate entry files. Run the following command.
 
 ```shell
 npx web-extend generate popup
 ```
 
-添加额外的 `manifest.json` 配置项，比如 `name` 、`permissions` 等。（可选）
+Add extra `manifest.json` fields if necessary, such as `name`, `permissions`，etc (Optional).
 
 ::: code-group
 
@@ -135,16 +135,16 @@ export default defineConfig({
 
 :::
 
-## 运行和构建 {#run-and-build}
+## Run & Build
 
-- 执行 `npm run dev` 命令，启动服务器，自动打开浏览器并运行扩展。
-- 执行 `npm run build` 命令，构建生产版本的扩展。
+- execute `npm run dev` for development.
+- execute `npm run build` for production.
 
-如果需要手动加载扩展，请移除 `dev` 命令中的 `--open` 选项，在浏览器扩展页面开启开发者模式，加载 `dist/chrome-mv3-dev` 目录。
+If you prefer to run the extension manually, please remove the `--open` option in the `dev` command, enable the deveoplment mode in browser, and then select the `dist/chrome-mv3-dev` or `dist/chrome-mv3-prod` directory.
 
-## 发布 {#publish}
+## Publish
 
-执行 `npm run zip` 命令压缩生产版本的扩展，在浏览器的应用商店进行发布。
+Execute `npm run zip` for packaging the extension, and then publish it on browser stores. More information about publish refers to:
 
 - [Chrome Docs](https://developer.chrome.com/docs/webstore/publish/)
 - [Firefox Docs](https://extensionworkshop.com/documentation/publish/submitting-an-add-on/)

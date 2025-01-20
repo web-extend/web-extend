@@ -1,69 +1,72 @@
-# 项目结构
+# Project Structure
 
-## 顶层目录
+## Top-level Folders
 
-项目根目录通常存放如下目录或文件。
+Top-level are used to organize the following folders or files.
 
-| 名称                | 描述                                                 |
-| ------------------- | ---------------------------------------------------- |
-| `public`            | 公共的静态资源，这些资源会被直接拷贝到构建产物目录下 |
-| `src`               | 源码目录                                             |
-| `.web-extend`       | WebExtend 临时目录，存放构建信息                     |
-| `.env`、`.env.*`    | 环境变量配置文件                                     |
-| `.gitignore`        | 定义 git 忽略文件                                    |
-| `package.json`      | 项目的依赖和脚本                                     |
-| `rsbuild.config.js` | Rsbuild 配置文件                                     |
-| `tsconfig.json`     | TypeScript 配置文件                                  |
+| Name                     | Description                                                                 |
+| ------------------------ | --------------------------------------------------------------------------- |
+| `public/`                | Static assets to be copyed to dist directly                                 |
+| `src/`                   | Source folders                                                              |
+| `.web-extend/`           | Temp folder for WebExtend                                                   |
+| `.env`                   | Loaded by default in all scenarios.                                         |
+| `.env.local`             | Local usage of the .env file, should be added to `.gitignore`               |
+| `.env.development`       | Read when `process.env.NODE_ENV` is 'development'                           |
+| `.env.production`        | Read when `process.env.NODE_ENV` is 'production'                            |
+| `.env.development.local` | Local usage of the `.env.development` file, should be added to `.gitignore` |
+| `.env.production.local`  | Local usage of the `.env.production` file, should be added to `.gitignore`  |
+| `.gitignore`             | Git files and folders to ignore                                             |
+| `package.json`           | Project dependencies and scripts                                            |
+| `rsbuild.config.js`      | Configuration file for Rsbuild                                              |
+| `tsconfig.json`          | Configuration file for TypeScript                                           |
 
-## 源码目录
+## Source Folders
 
-项目源码目录通常存放入口文件等代码。
+Source Foldes are used to organize [entries](./entrypoints.md), components, lib, etc folders or files.
 
-| 名称                     | 描述                                                      |
-| ------------------------ | --------------------------------------------------------- |
-| `assets`                 | 静态资源目录，存放 icons 等文件，这些资源会被构建工具处理 |
-| `background`             | background 入口                                           |
-| `content` 或 `contents`  | 单个或多个 content 入口                                   |
-| `popup`                  | popup 入口                                                |
-| `options`                | options 入口                                              |
-| `sidepanel`              | sidepanel 入口                                            |
-| `devtools`               | devtools 入口                                             |
-| `sandbox` 或 `sandboxes` | 单个或多个 sandbox 入口                                   |
-| `newtab`                 | newtab 入口                                               |
-| `bookmarks`              | bookmarks 入口                                            |
-| `history`                | history 入口                                              |
+| Name                     | Description                                     |
+| ------------------------ | ----------------------------------------------- |
+| `assets/`                | Static assets to be processed by the build tool |
+| `background`             | Background entry                                |
+| `content` or `contents`  | Content entry                                   |
+| `popup`                  | Popup entry                                     |
+| `options`                | Options entry                                   |
+| `sidepanel`              | Sidepanel entry                                 |
+| `devtools`               | Devtools entry                                  |
+| `sandbox` or `sandboxes` | Sandbox entry                                   |
+| `newtab`                 | Newtab entry                                    |
+| `bookmarks`              | Bookmarks entry                                 |
+| `history`                | History entry                                   |
 
-[什么是入口](./extension-entrypoints.md)
+## Manifest Mapping
 
-## Manifest 映射
+WebExtend parses entry files and generates `manifest.json` automatically based on the file system. The mapping relationship is as follows.
 
-WebExtend 会基于文件系统自动构建和生成 `manifest.json` 中的配置项，对应的映射关系如下。
-
-| Manifest 字段                    | 映射路径                                         |
+| Manifest Keys                    | The Reflection Path                              |
 | -------------------------------- | ------------------------------------------------ |
-| `manifest_version`               | 默认为 `3`                                       |
-| `name`                           | `package.json` 的 `displayName` 或 `name` 字段   |
-| `version`                        | `package.json` 的 `version` 字段                 |
-| `description`                    | `package.json` 的 `description` 字段             |
-| `author`                         | `package.json` 的 `author` 字段                  |
-| `homepage_url`                   | `package.json` 的 `homepage` 字段                |
+| `manifest_version`               | The default is `3`                               |
+| `name`                           | `displayName` or `name` in package.json          |
+| `version`                        | `version` in package.json                        |
+| `description`                    | `description` in package.json                    |
+| `author`                         | `author` in package.json                         |
+| `homepage_url`                   | `homepage` in package.json                       |
 | `icons` 、`action.default_icon`  | `src/assets/icon-[size].png`                     |
-| `action.default_popup`           | `src/popup.js` 或 `src/popup/index.js`           |
-| `background.service_worker`      | `src/background.js` 或 `src/background/index.js` |
-| `content_scripts`                | `src/content.js` 或 `src/contents/*.js`          |
-| `options_ui.page`                | `src/options.js` 或 `src/options/index.js`       |
-| `devtools_page`                  | `src/devtools.js` 或 `src/devtools/index.js`     |
-| `sandbox`                        | `src/sandbox.js` 或 `src/sandboxes/*.js`         |
-| `chrome_url_overrides.newtab`    | `src/newtab.js` 或 `src/newtab/index.js`         |
-| `chrome_url_overrides.bookmarks` | `src/bookmarks.js` 或 `src/bookmarks/index.js`   |
-| `chrome_url_overrides.history`   | `src/history.js` 或 `src/history/index.js`       |
-| `side_panel.default_path`        | `src/sidepanel.js` 或 `src/sidepanel/index.js`   |
+| `action.default_popup`           | `src/popup.js` or `src/popup/index.js`           |
+| `background.service_worker`      | `src/background.js` or `src/background/index.js` |
+| `content_scripts`                | `src/content.js` or `src/contents/*.js`          |
+| `options_ui.page`                | `src/options.js` or `src/options/index.js`       |
+| `devtools_page`                  | `src/devtools.js` or `src/devtools/index.js`     |
+| `sandbox`                        | `src/sandbox.js` or `src/sandboxes/*.js`         |
+| `chrome_url_overrides.newtab`    | `src/newtab.js` or `src/newtab/index.js`         |
+| `chrome_url_overrides.bookmarks` | `src/bookmarks.js` or `src/bookmarks/index.js`   |
+| `chrome_url_overrides.history`   | `src/history.js` or `src/history/index.js`       |
+| `side_panel.default_path`        | `src/sidepanel.js` or `src/sidepanel/index.js`   |
 | `_locales`                       | `public/_locales/*`                              |
 | `web_accessible_resources`       | `public/*`                                       |
 
-## 自定义配置
+## Custom Configuration
 
-WebExtend 支持自定义项目中的源码目录、输出目录，和传递 `manifest.json` 中其他配置项。
+WebExtend also supports custom settings for the source folder, the dist folder, etc.
 
 ::: code-group
 

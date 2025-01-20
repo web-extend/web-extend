@@ -4,51 +4,52 @@ outline: deep
 
 # web-extend CLI
 
-`web-extend` 是一个命令行工具，用于创建项目、生成入口、运行和构建扩展等。
+[`web-extend`](https://www.npmjs.com/package/web-extend) is a CIL tool for creating a project, generate entry files, etc.
+
+Usage:
+
+```shell
+npx web-extend [options] [command]
+
+# or
+npm intsall -D web-extend
+npx we [options] [command]
+```
+
+`we` is a shortened form for `web-extend`. They are equal, but the `we` command only can be used after install the `web-extend` tool.
 
 ## web-extend init
 
-`init` 命令用于初始化一个项目，内置了 Vanilla、React、Vue、Sevlte 几种项目模板。
+The `init` command is used to create a project.
 
-基础使用：
+Usage:
 
 ```shell
 npx web-extend@latest init [options] [dir]
 ```
 
-选项设置：
+Options:
 
 ```
-Usage: web-extend init [options] [dir]
-
-create a new project
-
 Options:
   -t, --template <name>  specify the template name
-  -e, --entry <name>     specify entry ponts
+  -e, --entry <name>     specify entrypoints
   -h, --help             display help for command
 ```
 
 ## web-extend generate
 
-`generate` 命令用于生成入口文件。
+The `generate` command is used to generate entry files.
 
-基础使用：
+Usage:
 
 ```shell
-npx web-extend generate
+npx web-extend generate|g [options] [entry]
 ```
 
-选项设置：
+Options:
 
 ```
-Usage: web-extend generate|g [options] <type>
-
-generate entry files
-
-Arguments:
-  type                   type of files
-
 Options:
   -r, --root <dir>       specify the project root directory
   -t, --template <name>  specify the template name or path
@@ -60,21 +61,17 @@ Options:
 
 ## web-extend rsbuild:dev
 
-`rsbuild:dev` 命令使用 Rsbuild 作为构建工具，启动 dev 环境。
+The `rsbuild:dev` command uses Rsbuild to build and run the extension in the development environment.
 
-基础使用：
+Usage:
 
 ```shell
-npx web-extend rsbuild:dev
+npx web-extend rsbuild:dev [options]
 ```
 
-选项设置：
+Options:
 
 ```
-Usage: web-extend rsbuild:dev [options]
-
-execute the dev command of rsbuild
-
 Options:
   -r, --root <root>      specify the project root directory
   -c --config <config>   specify the configuration file
@@ -82,28 +79,24 @@ Options:
   --env-mode <mode>      specify the env mode to load the `.env.[mode]` file
   --env-dir <dir>        specify the directory to load `.env` files
   -t, --target <target>  specify the extension target
-  -o, --open [url]       open the page in browser on startup
+  -o, --open [url]       open the extension in browser on startup
   --port <port>          specify a port number for server to listen
   -h, --help             display help for command
 ```
 
 ## web-extend rsbuild:build
 
-`rsbuild:build` 命令使用 Rsbuild 作为构建工具，构建生产版本的扩展。
+The `rsbuild:dev` command uses Rsbuild to build the extension in the production environment.
 
-基础使用：
+Usage:
 
 ```shell
-npx web-extend rsbuild:build
+npx web-extend rsbuild:build [options]
 ```
 
-选项设置：
+Options:
 
 ```
-Usage: web-extend rsbuild:build [options]
-
-execute the build command of rsbuild
-
 Options:
   -r, --root <root>      specify the project root directory
   -c --config <config>   specify the configuration file
@@ -111,43 +104,45 @@ Options:
   --env-mode <mode>      specify the env mode to load the `.env.[mode]` file
   --env-dir <dir>        specify the directory to load `.env` files
   -t, --target <target>  specify the extension target
-  -z, --zip              package the extension after build
+  -z, --zip              package the built extension
   -h, --help             display help for command
 ```
 
 ## web-extend preview
 
-`preview` 命令用于预览生产版本的扩展。
+The `preview` command is used to preview the extension for production.
 
-基础使用：
+Usage:
 
 ```shell
-npx web-extend preview
+npx web-extend preview [options]
+```
+
+Options:
+
+```
+Options:
+  -r, --root <root>      specify the project root directory
+  -o, --out-dir <dir>    specify the output directory
+  -t, --target <target>  specify the extension target
+  -h, --help             display help for command
 ```
 
 ## web-extend zip
 
-`zip` 命令用于压缩生产版本的扩展。
+The `zip` command is used to package the extension for production.
 
-基础使用：
+Usage:
 
 ```shell
-npx web-extend zip
+npx web-extend zip [options] [source]
 ```
-
-选项设置：
-
-```
-Usage: web-extend zip [options] [source]
-
-package an extension into a .zip file for publishing
-
-Arguments:
-  source                     specify the dist path
 
 Options:
+
+```
+Options:
   -r, --root <root>          specify the project root directory
-  -o, --out-dir <dir>        specify the output directory
   -n, --filename <filename>  specify the output filename
   -h, --help                 display help for command
 ```

@@ -94,7 +94,7 @@ export default defineConfig({
 
 ### 添加入口文件 {#add-entry-files}
 
-创建 src 源码目录，并创建 `popup.js` 文件，文件内容如下。WebExtend 将基于文件系统[自动解析入口](extension-entrypoints.md)。
+创建 src 源码目录，并创建 `popup.js` 文件，文件内容如下。WebExtend 将基于文件系统[自动解析入口](entrypoints.md)。
 
 ::: code-group
 
@@ -140,7 +140,7 @@ export default defineConfig({
 - 执行 `npm run dev` 命令，启动服务器，自动打开浏览器并运行扩展。
 - 执行 `npm run build` 命令，构建生产版本的扩展。
 
-如果需要手动加载扩展，请移除 `dev` 命令中的 `--open` 选项，在浏览器扩展页面开启开发者模式，加载 `dist/chrome-mv3-dev` 目录。
+如果需要手动加载扩展，请移除 `dev` 命令中的 `--open` 选项，在浏览器扩展页面开启开发者模式，加载 `dist/chrome-mv3-dev` 或 `dist/chrome-mv3-prod` 目录。
 
 ## 发布 {#publish}
 

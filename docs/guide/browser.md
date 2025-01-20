@@ -1,21 +1,24 @@
-# 浏览器兼容性
+# Browser Compatibility
 
-## 构建目标
+## Browser Target
 
-WebExtend 支持以下浏览器目标。默认的构建目标为 `chrome-mv3`，对应的构建产物可以在 chrome 系列中的浏览器中使用（包括 Chrome、Edge、Opera 等）。
+WebExtend supports the following browser targets.
 
-- `chrome-mv3` (默认)
+- `chrome-mv3` (default)
 - `firefox-mv3`
 - `firefox-mv2`
 - `safari-mv3`
 - `edge-mv3`
 - `opera-mv3`
 
-自定义浏览器目标的示例如下：
+An example of custom browser target is as follows.
 
 ::: code-group
 
 ```js [rsbuild.config.js]
+import { defineConfig } from "@rsbuild/core";
+import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
+
 export default defineConfig({
   plugins: [
     pluginWebExtend({
@@ -27,31 +30,31 @@ export default defineConfig({
 
 :::
 
-## Manifest 兼容
+## Manifest Compatibility
 
-WebExtend 会基于文件系统和构建目标，自动解析和生成 `manifest.json`，因此无需额外处理不同浏览器之间 Manifest 配置的差异性。
+WebExtend uses the file system to parse entry files and reflect them to items in `manifest.json` automatically, so you don't need to care about the campatibility of `manifest.json` between differnent browsers.
 
-Manifest 文档：
+Manifest Documents:
 
 - [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest)
 - [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json)
 
-## Extension API 兼容
+## Extension API Compatibility
 
-WebExtend 不会处理 Extension API，如果需要兼容多个浏览器，需要在源码中手动处理。
+One thing that's important to note is that WebExtend won't deal with the compatibility of Extension API, so you should do it yourself if necessary.
 
-Extension API 文档：
+Extension API Documents：
 
 - [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api)
 - [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API)
 
-**目标为 Chrome 系列浏览器**
+**When the target is Chrome**
 
-可以直接使用 `chrome` API。如果使用 TypeScript，推荐安装 [`@types/chrome`](https://www.npmjs.com/package/@types/chrome)。
+You can use `chrome` API directly. If you use TypeScript, [`@types/chrome`](https://www.npmjs.com/package/@types/chrome) is recommended to be installed.
 
-**目标为 Firefox 浏览器**
+**When the target is Firefox**
 
-如果需要支持或兼容 Firefox 浏览器，推荐使用 [webextension-polyfill](https://www.npmjs.com/package/webextension-polyfill)，提供了统一的浏览器扩展 API。如果使用 TypeScript，需推荐安装 [@types/webextension-polyfill](https://www.npmjs.com/package/@types/webextension-polyfill)。示例如下。
+It is recommended to install [webextension-polyfill](https://www.npmjs.com/package/webextension-polyfill). If you use TypeScript, [@types/webextension-polyfill](https://www.npmjs.com/package/@types/webextension-polyfill) is also recommended to be installed. An example is as follows.
 
 ::: code-group
 
@@ -71,9 +74,9 @@ browser.storage.local
 
 :::
 
-## 运行扩展
+## Browser Startup
 
-WebExtend 基于 [`web-ext`](https://github.com/mozilla/web-ext)，实现了自动打开浏览器并运行扩展的功能。运行以下命令。
+When running the follow commands, the extension will be loaded automatically. If the target is `firefox-mv2` or `firefox-mv3`, Firefox will be opened, otherwise Chrome will be opened.
 
 ```shell
 # developemnt
@@ -82,5 +85,3 @@ npx web-extend rsbuild:dev --open
 # production preview
 npx web-extend preview
 ```
-
-WebExtend 会自动根据构建目标和构建目录，自动运行扩展。如果目标为 `firefox-mv2` 或 `firefox-mv3`，会打开 Firefox 浏览器，否则会打开 Chrome 浏览器。
