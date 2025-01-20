@@ -4,7 +4,7 @@ import zh from './zh';
 
 const shared = defineConfig({
   title: 'WebExtend',
-  base: '/',
+  base: '/web-extend/',
   head: [['link', { rel: 'icon', href: '/favicon.ico' }]],
   lastUpdated: true,
   themeConfig: {
