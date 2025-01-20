@@ -20,7 +20,7 @@ These tools might have some of these problems as follows.
 ## Main Features {#main-features}
 
 - **Declarative Development.** Automatically parse entries based on the file system, reducing manifest.json configuration burden.
-- **Seamless Development Experience.** Supports instant HMR, automatic browser opening and extension running
+- **Seamless Development Experience.** Supports instant HMR for popup/options/**content_scripts**..., automatic browser opening and extension running
 - **Browser Compatibility.** Automatically handles manifest.json configuration differences for easy multi-browser support.
 - **ESM & TypeScript Support.** ESM and TypeScript work out of the box, no extra configuration needed.
 - **Framework Agnostic.** Freedom to use any frontend framework or library, such as React、Vue、Svelte etc.
