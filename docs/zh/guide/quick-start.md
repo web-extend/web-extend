@@ -23,6 +23,8 @@ npx web-extend@latest init
 - [Vue](https://vuejs.org/)
 - [Svelte](https://svelte.dev/)
 
+WebExtend 兼容任何前端框架，如需在其他框架中使用，请参考手动安装的部分。
+
 ## 手动安装 {#manual-installation}
 
 ### 安装依赖项 {#install-dependencies}
