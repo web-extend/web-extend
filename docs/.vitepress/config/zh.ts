@@ -37,7 +37,7 @@ export default defineConfig({
     },
 
     editLink: {
-      pattern: 'https://github.com/web-extend/web-extend/docs/:path',
+      pattern: 'https://github.com/web-extend/web-extend/blob/main/docs/:path',
       text: '在 GitHub 上编辑此页面',
     },
 
