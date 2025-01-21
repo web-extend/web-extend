@@ -9,9 +9,7 @@ export interface GenerateOptions {
   root: string;
   template?: string;
   outDir?: string;
-  // only valid for icons
-  filename?: string;
-  size?: string;
+  size?: string; // just for icons
 }
 
 const getProjectSrcDir = (rootPath: string, srcDir?: string | undefined) => {
@@ -38,16 +36,11 @@ function getIconTemplatePath(root: string, template?: string) {
   return templatePath;
 }
 
-const ICON_SIZES = [16, 32, 48, 64, 128];
+const ICON_SIZES = [16, 32, 48, 128];
 
-async function generateIcons({
-  root,
-  template,
-  outDir,
-  size = ICON_SIZES.join(','),
-  filename = 'icon-{size}.png',
-}: GenerateOptions) {
+async function generateIcons({ root, template, outDir, size = ICON_SIZES.join(',') }: GenerateOptions) {
   const templatePath = getIconTemplatePath(root, template);
+  const filename = 'icon-{size}.png';
 
   const sizes = size
     .split(',')

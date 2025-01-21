@@ -54,8 +54,7 @@ Options:
   -r, --root <dir>       specify the project root directory
   -t, --template <name>  specify the template name or path
   -o, --out-dir <dir>    specify the output directory
-  -n, --filename <name>  specify the output filename
-  --size <size>          specify sizes of output icons (defaults to 16,32,48,64,128)
+  --size <size>          specify sizes of output icons (defaults to 16,32,48,128)
   -h, --help             display help for command
 ```
 
@@ -79,7 +78,7 @@ Options:
   --env-mode <mode>      specify the env mode to load the `.env.[mode]` file
   --env-dir <dir>        specify the directory to load `.env` files
   -t, --target <target>  specify the extension target
-  -o, --open [url]       open the extension in browser on startup
+  --open [url]       open the extension in browser on startup
   --port <port>          specify a port number for server to listen
   -h, --help             display help for command
 ```
@@ -115,7 +114,7 @@ Options:
 使用：
 
 ```shell
-npx web-extend preview [options]
+npx web-extend preview [options] [dir]
 ```
 
 选项：
@@ -123,7 +122,6 @@ npx web-extend preview [options]
 ```
 Options:
   -r, --root <root>      specify the project root directory
-  -o, --out-dir <dir>    specify the output directory
   -t, --target <target>  specify the extension target
   -h, --help             display help for command
 ```
@@ -135,7 +133,7 @@ Options:
 使用：
 
 ```shell
-npx web-extend zip [options] [source]
+npx web-extend zip [options] [dir]
 ```
 
 选项：

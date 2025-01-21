@@ -5,12 +5,12 @@ import { readBuildInfo } from './cache.js';
 
 export interface ZipOptions {
   root?: string;
-  source?: string;
+  outDir?: string;
   filename?: string;
 }
 
-export async function zip({ filename, source, root = process.cwd() }: ZipOptions) {
-  let sourceDir = source;
+export async function zip({ filename, outDir, root = process.cwd() }: ZipOptions) {
+  let sourceDir = outDir;
   if (!sourceDir) {
     const data = await readBuildInfo(root);
     if (data?.distPath) {
