@@ -77,10 +77,10 @@ import { pluginWebExtend } from '@web-extend/rsbuild-plugin';
 export default defineConfig({
   plugins: [
     pluginWebExtend({
-      srcDir: "src", // default: "src" // [!code highlight]
-      outDir: "dist", // default: "dist/[target]-[mode]" // [!code highlight]
-      manifest: {...}, // default: {} // [!code highlight]
-      target: "firefox-mv2", // default: "chrome-mv3" // [!code highlight]
+      srcDir: "src", // default: "src" [!code highlight]
+      outDir: "dist", // default: "dist/[target]-[mode]" [!code highlight]
+      manifest: {...}, // default: {}  [!code highlight]
+      target: "firefox-mv2", // default: "chrome-mv3" [!code highlight]
     }),
   ],
 });
