@@ -243,6 +243,9 @@ importers:
 
   packages/cli/templates/template-vanilla-ts:
     devDependencies:
+      '@eslint/js':
+        specifier: ^9.18.0
+        version: 9.18.0
       '@rsbuild/core':
         specifier: ^1.1.8
         version: 1.1.12
@@ -252,9 +255,21 @@ importers:
       '@web-extend/rsbuild-plugin':
         specifier: 0.0.1-alpha.1
         version: 0.0.1-alpha.1(@rsbuild/core@1.1.12)
+      eslint:
+        specifier: ^9.18.0
+        version: 9.18.0
+      globals:
+        specifier: ^15.14.0
+        version: 15.14.0
+      prettier:
+        specifier: ^3.4.2
+        version: 3.4.2
       typescript:
         specifier: ^5.7.2
         version: 5.7.2
+      typescript-eslint:
+        specifier: ^8.21.0
+        version: 8.21.0(eslint@9.18.0)(typescript@5.7.2)
       web-ext:
         specifier: ^8.3.0
         version: 8.3.0
