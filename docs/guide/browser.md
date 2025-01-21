@@ -41,7 +41,7 @@ Manifest documents are as follows.
 
 ## Extension API Compatibility
 
-One thing that's important to note is that WebExtend won't deal with the compatibility of Extension API for now, so you need to do it yourself.
+One thing that's important to note is that WebExtend won't deal with the compatibility of Extension APIs for now, so you need to do it yourself.
 
 Extension API documents are as follows.
 
@@ -54,7 +54,7 @@ You can use `chrome` API directly. If you use TypeScript, [`@types/chrome`](http
 
 ### For Firefox
 
-It is recommended to install [webextension-polyfill](https://www.npmjs.com/package/webextension-polyfill). If you use TypeScript, [@types/webextension-polyfill](https://www.npmjs.com/package/@types/webextension-polyfill) is also recommended to be installed. An example is as follows.
+It is recommended to install [webextension-polyfill](https://www.npmjs.com/package/webextension-polyfill). If you use TypeScript, [@types/webextension-polyfill](https://www.npmjs.com/package/@types/webextension-polyfill) is also recommended. An example is as follows.
 
 ::: code-group
 

@@ -40,8 +40,8 @@ Custom browser target which suppports the following targets.
 
 ### srcDir
 
-Custom source directory which defaults to the `./src` directory, falling back to the project root path `.` if `./src` doesn't exists.
+Custom source directory which defaults to the `./src` directory, falling back to the project root path if `./src` doesn't exists.
 
 ### outDir
 
-Custom dist path which defaults to the `dist/[target]-[mode]` directory, such as `dist/chrome-mv3-dev` (development mode), `dist/chrome-mv3-prod` (production mode).
+Custom dist path which defaults to the `dist/[target]-[mode]` directory, such as `dist/chrome-mv3-dev` (in development mode) or`dist/chrome-mv3-prod` (in production mode).
