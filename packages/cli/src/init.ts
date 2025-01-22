@@ -7,14 +7,14 @@ import chalk from 'chalk';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-type ProjectTool = 'eslint' | 'prettier';
+type ProjectToolType = 'eslint' | 'prettier';
 
 export interface InitialOptions {
   projectName?: string;
   template?: string;
   entries?: string[];
   override?: boolean;
-  tools?: ProjectTool[];
+  tools?: ProjectToolType[];
 }
 
 const frameworks = [
@@ -48,7 +48,7 @@ const variants = [
   },
 ];
 
-const tools: { name: string; value: ProjectTool }[] = [
+const tools: { name: string; value: ProjectToolType }[] = [
   {
     name: 'Add ESLint for code linting',
     value: 'eslint',
@@ -251,18 +251,18 @@ async function copyTemplate(source: string, dest: string, options: InitialOption
   const ingoredEntrypoints = entrypoints.map((item) => item.value);
   const { tools = [] } = options;
 
+  const ignores = ['node_modules', 'dist', '.web-extend'];
+  if (!tools.includes('eslint')) {
+    ignores.push('eslint.config.js');
+  }
+  if (!tools.includes('prettier')) {
+    ignores.push('.prettierrc', '.prettierignore');
+  }
+
   for (const file of files) {
     const { name } = file;
     const srcPath = resolve(source, name);
     const destPath = resolve(dest, name);
-
-    const ignores = ['node_modules', 'dist', '.web-extend'];
-    if (!tools.includes('eslint')) {
-      ignores.push('eslint.config.js');
-    }
-    if (!tools.includes('prettier')) {
-      ignores.push('.prettierrc', '.prettierignore');
-    }
 
     if (ignores.includes(name)) continue;
 
@@ -271,7 +271,6 @@ async function copyTemplate(source: string, dest: string, options: InitialOption
         recursive: true,
         filter: (s) => {
           if (name === 'src') {
-            // exclude all entrypoints
             const entryPath = relative(srcPath, s);
             const ignored = ingoredEntrypoints.some((item) => entryPath.includes(item));
             return !ignored;
