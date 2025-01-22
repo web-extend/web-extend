@@ -7,11 +7,14 @@ import chalk from 'chalk';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+type ProjectTool = 'eslint' | 'prettier';
+
 export interface InitialOptions {
   projectName?: string;
   template?: string;
   entries?: string[];
   override?: boolean;
+  tools?: ProjectTool[];
 }
 
 const frameworks = [
@@ -42,6 +45,17 @@ const variants = [
     name: 'JavaScript',
     value: 'js',
     disabled: true,
+  },
+];
+
+const tools: { name: string; value: ProjectTool }[] = [
+  {
+    name: 'Add ESLint for code linting',
+    value: 'eslint',
+  },
+  {
+    name: 'Add Prettier for code formatting',
+    value: 'prettier',
   },
 ];
 
@@ -144,6 +158,8 @@ export async function resolveEntryTemplate(text?: string) {
 
 export async function normalizeInitialOptions(options: InitialOptions) {
   try {
+    console.log('\nWelcome to web-extend\n');
+
     if (!options.projectName) {
       options.projectName = await input({ message: 'Project name or path', default: 'my-extension-app' });
     }
@@ -181,16 +197,25 @@ export async function normalizeInitialOptions(options: InitialOptions) {
       });
     }
 
+    if (!options.tools?.length) {
+      options.tools = await checkbox({
+        message: 'Select additional tools',
+        choices: tools,
+        loop: false,
+      });
+    }
+
     console.log('\nDone. Next step:');
     console.group();
     console.log(`cd ${options.projectName}`);
     console.log('npm install');
     console.log('npm run dev');
     console.groupEnd();
+    console.log();
     return options;
   } catch (error) {
     if (error instanceof Error && error.name === 'ExitPromptError') {
-      console.log(`${chalk.red('✕')} ${chalk.bold('Canceled')}`);
+      console.log(`${chalk.red('✕')} ${chalk.bold('Canceled\n')}`);
       return null;
     }
     throw error;
@@ -208,9 +233,9 @@ export async function createProject(options: InitialOptions) {
   if (!existsSync(destPath)) {
     await mkdir(destPath);
   }
-  await copyTemplate(templatePath, destPath);
+  await copyTemplate(templatePath, destPath, options);
   await copyEntryFiles(resolve(templatePath, 'src'), resolve(destPath, 'src'), options.entries);
-  await modifyPackageJson(destPath, basename(projectName));
+  await modifyPackageJson(destPath, options);
 }
 
 export function getTemplatePath(template: string) {
@@ -221,16 +246,26 @@ export function getTemplatePath(template: string) {
   return templatePath;
 }
 
-async function copyTemplate(source: string, dest: string) {
+async function copyTemplate(source: string, dest: string, options: InitialOptions) {
   const files = await readdir(source, { withFileTypes: true });
   const ingoredEntrypoints = entrypoints.map((item) => item.value);
+  const { tools = [] } = options;
 
   for (const file of files) {
     const { name } = file;
     const srcPath = resolve(source, name);
     const destPath = resolve(dest, name);
 
-    if (['node_modules', 'dist'].includes(name)) continue;
+    const ignores = ['node_modules', 'dist', '.web-extend'];
+    if (!tools.includes('eslint')) {
+      ignores.push('eslint.config.js');
+    }
+    if (!tools.includes('prettier')) {
+      ignores.push('.prettierrc', '.prettierignore');
+    }
+
+    if (ignores.includes(name)) continue;
+
     if (file.isDirectory()) {
       await cp(srcPath, destPath, {
         recursive: true,
@@ -250,11 +285,37 @@ async function copyTemplate(source: string, dest: string) {
   }
 }
 
-async function modifyPackageJson(root: string, projectName: string) {
+async function modifyPackageJson(root: string, options: InitialOptions) {
+  const { projectName, tools = [] } = options;
   const pkgPath = resolve(root, 'package.json');
   const content = await readFile(pkgPath, 'utf-8');
   const newContent = JSON.parse(content);
-  newContent.name = projectName;
+
+  if (projectName) {
+    newContent.name = basename(projectName);
+  }
+
+  const scripts: Record<string, string | undefined> = newContent.scripts || {};
+  const devDependencies: Record<string, string | undefined> = newContent.devDependencies || {};
+
+  if (!tools.includes('eslint')) {
+    scripts.lint = undefined;
+    for (const key in devDependencies) {
+      if (key.includes('eslint') || key === 'globals') {
+        devDependencies[key] = undefined;
+      }
+    }
+  }
+
+  if (!tools.includes('prettier')) {
+    scripts.format = undefined;
+    for (const key in devDependencies) {
+      if (key.includes('prettier')) {
+        devDependencies[key] = undefined;
+      }
+    }
+  }
+
   await writeFile(pkgPath, JSON.stringify(newContent, null, 2), 'utf-8');
 }
 
