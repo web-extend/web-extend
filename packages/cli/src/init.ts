@@ -248,7 +248,7 @@ export function getTemplatePath(template: string) {
 
 async function copyTemplate(source: string, dest: string, options: InitialOptions) {
   const files = await readdir(source, { withFileTypes: true });
-  const ingoredEntrypoints = entrypoints.map((item) => item.value);
+  const entryNames = [...entrypoints.map((item) => item.value), 'web'];
   const { tools = [] } = options;
 
   const ignores = ['node_modules', 'dist', '.web-extend'];
@@ -272,7 +272,7 @@ async function copyTemplate(source: string, dest: string, options: InitialOption
         filter: (s) => {
           if (name === 'src') {
             const entryPath = relative(srcPath, s);
-            const ignored = ingoredEntrypoints.some((item) => entryPath.includes(item));
+            const ignored = entryNames.some((item) => entryPath.includes(item));
             return !ignored;
           }
           return true;

@@ -78,7 +78,7 @@ Options:
   --env-mode <mode>      specify the env mode to load the `.env.[mode]` file
   --env-dir <dir>        specify the directory to load `.env` files
   -t, --target <target>  specify the extension target
-  --open [url]       open the extension in browser on startup
+  --open [url]           open the extension in browser on startup
   --port <port>          specify a port number for server to listen
   -h, --help             display help for command
 ```
