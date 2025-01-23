@@ -2,7 +2,7 @@
 
 ## 浏览器目标 {#browser-target}
 
-WebExtend 支持以下浏览器目标。默认的构建目标为 `chrome-mv3`，对应的构建产物可以在 chrome 系列中的浏览器中使用（包括 Chrome、Edge、Opera 等）。
+WebExtend 支持以下浏览器目标。默认的构建目标为 `chrome-mv3`，对应的构建产物可以在 chrome 系列的浏览器中使用（包括 Chrome、Edge、Opera 等）。
 
 - `chrome-mv3` (默认)
 - `firefox-mv3`
@@ -48,11 +48,11 @@ Extension API 文档：
 - [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api)
 - [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API)
 
-**目标为 Chrome 系列浏览器**
+**目标为 Chrome 系列**
 
 可以直接使用 `chrome` API。如果使用 TypeScript，推荐安装 [`@types/chrome`](https://www.npmjs.com/package/@types/chrome)。
 
-**目标为 Firefox 浏览器**
+**目标为 Firefox**
 
 如果需要支持或兼容 Firefox 浏览器，推荐使用 [webextension-polyfill](https://www.npmjs.com/package/webextension-polyfill)，它提供了统一的浏览器扩展 API。如果使用 TypeScript，还需要安装 [@types/webextension-polyfill](https://www.npmjs.com/package/@types/webextension-polyfill)。示例如下。
 

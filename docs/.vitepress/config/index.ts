@@ -5,7 +5,7 @@ import zh from './zh';
 const shared = defineConfig({
   title: 'WebExtend',
   base: '/web-extend/',
-  head: [['link', { rel: 'icon', href: '/favicon.ico' }]],
+  head: [['link', { rel: 'icon', href: '/web-extend/favicon.ico' }]],
   lastUpdated: true,
   themeConfig: {
     logo: { src: '/logo.svg', width: 24, height: 24 },

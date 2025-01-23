@@ -28,7 +28,9 @@ function render(root: HTMLElement) {
   </div>`;
 
   const handleClick = () => {
-    const el = document.getElementsByClassName('web-extend-content')[0] as HTMLElement;
+    const el = document.getElementsByClassName(
+      'web-extend-content',
+    )[0] as HTMLElement;
     if (el) {
       el.style.display = el.style.display === 'none' ? 'block' : 'none';
     }

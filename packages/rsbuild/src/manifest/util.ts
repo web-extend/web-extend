@@ -70,8 +70,3 @@ export async function readPackageJson(rootPath: string) {
   const content = await readFile(filePath, 'utf-8');
   return JSON.parse(content);
 }
-
-export async function getFileContent(rootPath: string, filePath: string) {
-  const code = await readFile(resolve(rootPath, filePath), 'utf-8');
-  return code;
-}

@@ -16,7 +16,7 @@ It is recommended to use [`web-extend`](../api/web-extend.md) for creating a pro
 npx web-extend@latest init
 ```
 
-The tool `web-extend` provides the following templates, which all use TypeScript. If you want to use JavaScript, please modify the file extension names.
+The `web-extend` tool provides the following templates, which all use TypeScript. If you want to use JavaScript, please modify the file extension names.
 
 - Vanilla
 - [React](https://react.dev/)

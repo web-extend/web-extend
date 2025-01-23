@@ -1,6 +1,6 @@
 # Entrypoints
 
-WebExtend uses the file system to parse entry files and generate the corresponding feilds of `manifest.json`. Overview [the mapping relationship](./project-structure.html#manifest-mapping).
+WebExtend uses the file system to parse entry files and generate the corresponding feilds for `manifest.json`.
 
 ::: info
 
@@ -25,7 +25,6 @@ src/assets/
 ├─ icon-16.png
 ├─ icon-32.png
 ├─ icon-48.png
-├─ icon-64.png
 └─ icon-128.png
 ```
 

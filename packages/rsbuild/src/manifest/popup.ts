@@ -1,6 +1,9 @@
+import { existsSync } from 'node:fs';
+import { readFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
 import { parseExportObject } from './parser/export.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
-import { getFileContent, getSingleEntryFile } from './util.js';
+import { getSingleEntryFile } from './util.js';
 
 const key = 'popup';
 
@@ -40,16 +43,18 @@ const writePopupEntry: ManifestEntryProcessor['write'] = async ({ manifest, root
   const pointer = manifest_version === 2 ? browser_action : action;
   if (!pointer) return;
 
+  pointer.default_popup = `${name}.html`;
+
   const { default_title } = pointer;
-  if (!default_title && input?.[0]) {
-    const code = await getFileContent(rootPath, input[0]);
+  const entryMain = input?.[0];
+  const entryManinPath = resolve(rootPath, entryMain || '');
+  if (!default_title && entryMain && existsSync(entryManinPath)) {
+    const code = await readFile(entryManinPath, 'utf-8');
     const title = parseExportObject<string>(code, 'title');
     if (title) {
       pointer.default_title = title;
     }
   }
-
-  pointer.default_popup = `${name}.html`;
 };
 
 const popupProcessor: ManifestEntryProcessor = {

@@ -2,23 +2,32 @@
   "name": "template-svelte-ts",
   "private": true,
   "version": "1.0.0",
+  "type": "module",
   "scripts": {
     "dev": "web-extend rsbuild:dev --open",
     "build": "web-extend rsbuild:build",
     "preview": "web-extend preview",
     "zip": "web-extend zip",
-    "svelte-check": "svelte-check --tsconfig ./tsconfig.json"
+    "svelte-check": "svelte-check --tsconfig ./tsconfig.json",
+    "lint": "eslint .",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "svelte": "^5.8.1"
   },
   "devDependencies": {
+    "@eslint/js": "^9.18.0",
     "@rsbuild/core": "^1.1.8",
     "@rsbuild/plugin-svelte": "^1.0.5",
     "@types/chrome": "^0.0.290",
     "@web-extend/rsbuild-plugin": "0.0.1-alpha.1",
+    "eslint": "^9.18.0",
+    "eslint-plugin-svelte": "^2.46.1",
+    "globals": "^15.14.0",
+    "prettier": "^3.4.2",
     "svelte-check": "^4.1.1",
     "typescript": "^5.7.2",
+    "typescript-eslint": "^8.21.0",
     "web-ext": "^8.3.0",
     "web-extend": "0.0.1-alpha.4"
   }

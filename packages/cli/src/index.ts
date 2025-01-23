@@ -54,9 +54,8 @@ function applyGenerateCommand(command: Command) {
     .argument('[entry]', 'specify entrypoints')
     .option('-r, --root <dir>', 'specify the project root directory')
     .option('-t, --template <name>', 'specify the template name or path')
-    .option('-o, --out-dir <dir>', 'specify the output directory')
-    .option('-n, --filename <name>', 'specify the output filename')
-    .option('--size <size>', 'specify sizes of output icons (defaults to 16,32,48,64,128)')
+    .option('-o, --out-dir <dir>', 'specify the output directory, defaults to `src`')
+    .option('--size <size>', 'specify sizes for output icons, defaults to 16,32,48,128')
     .action(async (entry: string | undefined, options: GenerateOptions) => {
       try {
         options.entries = entry?.split(',') || [];
@@ -76,7 +75,7 @@ function applyGenerateCommand(command: Command) {
 function applyRsbuildDevCommand(command: Command) {
   applyCommonRunOptions(command);
   command
-    .option('-o, --open [url]', 'open the extension in browser on startup')
+    .option('--open [url]', 'open the extension in browser on startup')
     .option('--port <port>', 'specify a port number for server to listen')
     .action(async (options: StartOptions) => {
       try {
@@ -114,12 +113,12 @@ function applyCommonRunOptions(command: Command) {
 
 function applyPreviewCommand(command: Command) {
   command
+    .argument('[dir]', 'specify the dist path')
     .option('-r, --root <root>', 'specify the project root directory')
-    .option('-o, --out-dir <dir>', 'specify the output directory')
     .option('-t, --target <target>', 'specify the extension target')
-    .action(async (options: PreviewOptions) => {
+    .action(async (outDir: string, options: PreviewOptions) => {
       try {
-        await preview(options);
+        await preview({ ...options, outDir });
       } catch (err) {
         console.error('Failed to preview.');
         console.error(err);
@@ -130,12 +129,12 @@ function applyPreviewCommand(command: Command) {
 
 function applyZipCommand(command: Command) {
   command
-    .argument('[source]', 'specify the dist path')
+    .argument('[dir]', 'specify the dist path')
     .option('-r, --root <root>', 'specify the project root directory')
     .option('-n, --filename <filename>', 'specify the output filename')
-    .action(async (source: string, options: ZipOptions) => {
+    .action(async (outDir: string, options: ZipOptions) => {
       try {
-        await zip({ ...options, source });
+        await zip({ ...options, outDir });
       } catch (err) {
         console.error('Failed to package the extension.');
         console.error(err);

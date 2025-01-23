@@ -1,10 +1,10 @@
 import { existsSync } from 'node:fs';
-import { copyFile, mkdir } from 'node:fs/promises';
+import { copyFile, mkdir, readFile } from 'node:fs/promises';
 import { basename, dirname, join, resolve } from 'node:path';
 import { isDevMode } from './env.js';
 import { parseExportObject } from './parser/export.js';
 import type { ContentScriptConfig, ManifestEntryInput, ManifestEntryProcessor } from './types.js';
-import { getFileContent, getMultipleEntryFiles, getSingleEntryFile } from './util.js';
+import { getMultipleEntryFiles, getSingleEntryFile } from './util.js';
 
 const key = 'content';
 
@@ -81,8 +81,9 @@ const writeContentEntry: ManifestEntryProcessor['write'] = async ({
   content_scripts[index] = JSON.parse(JSON.stringify(normalizedContentScript));
 
   const entryMain = input?.[0];
-  if (entryMain) {
-    const code = await getFileContent(rootPath, resolve(rootPath, entryMain));
+  const entryManinPath = resolve(rootPath, entryMain || '');
+  if (entryMain && existsSync(entryManinPath)) {
+    const code = await readFile(entryManinPath, 'utf-8');
     const config = parseExportObject<ContentScriptConfig>(code, 'config') || {
       matches: ['<all_urls>'],
     };
