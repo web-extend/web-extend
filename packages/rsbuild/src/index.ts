@@ -13,7 +13,7 @@ import {
 import type { ExtensionTarget, ManifestEntryOutput, WebExtensionManifest } from './manifest/types.js';
 import {
   clearOutdatedHotUpdateFiles,
-  getRsbuildEntryImport,
+  getRsbuildEntryFiles,
   isDevMode,
   normalizeRsbuildEnvironments,
 } from './rsbuild/index.js';
@@ -41,18 +41,15 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       if (config.mode) {
         mode = config.mode;
       }
-
       const target = resolveTarget(options.target);
-      setTargetEnv(target);
-
       const srcDir = resolveSrcDir(rootPath, options.srcDir);
-
       const outDir = resolveOutDir({
         outdir: options.outDir,
         distPath: config.output?.distPath?.root,
         target,
         mode,
       });
+      setTargetEnv(target);
 
       manifest = await normalizeManifest({
         rootPath,
@@ -62,9 +59,11 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         target,
         mode,
       });
+      normalizedManifest = JSON.parse(JSON.stringify(manifest));
 
       const manifestEntries = await readManifestEntries(manifest);
       const environments = await normalizeRsbuildEnvironments({ manifestEntries, config, selfRootPath });
+
       const extraConfig: RsbuildConfig = {
         environments,
         dev: {
@@ -85,7 +84,6 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         },
       };
 
-      normalizedManifest = JSON.parse(JSON.stringify(manifest));
       // extraConfig must be at the end, for dev.writeToDisk
       return mergeRsbuildConfig(config, extraConfig);
     });
@@ -126,7 +124,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
 
       const manifestEntry: ManifestEntryOutput = {};
       for (const [entryName, entrypoint] of Object.entries(entrypoints)) {
-        const input = [getRsbuildEntryImport(environment.entry, entryName)].flat();
+        const input = getRsbuildEntryFiles(environment.entry, entryName);
 
         const { assets = [], auxiliaryAssets = [] } = entrypoint;
         const output = [...assets, ...auxiliaryAssets]

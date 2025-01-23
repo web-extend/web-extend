@@ -22,12 +22,30 @@ function transformManifestEntry(entry: ManifestEntryInput | undefined) {
   return res;
 }
 
-export function getRsbuildEntryImport(entries: RsbuildEntry, key: string) {
+export function getRsbuildEntryFiles(entries: RsbuildEntry, key: string) {
   const entry = entries[key];
-  if (typeof entry === 'string' || Array.isArray(entry)) {
-    return entry;
+  const res: string[] = [];
+  if (typeof entry === 'string') {
+    res.push(entry);
+  } else if (Array.isArray(entry)) {
+    res.push(...entry);
+  } else {
+    res.push(...[entry.import].flat());
   }
-  return entry.import;
+  return res;
+}
+
+export function getRsbuildAllEntryFiles(environments: RsbuildConfig['environments']) {
+  const res: string[] = [];
+  if (!environments) return [];
+  for (const key in environments) {
+    const entry = environments[key]?.source?.entry;
+    if (!entry) continue;
+    for (const entryName in entry) {
+      res.push(...getRsbuildEntryFiles(entry, entryName));
+    }
+  }
+  return res;
 }
 
 export async function normalizeRsbuildEnvironments({
