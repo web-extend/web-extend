@@ -1,14 +1,14 @@
 import type { RsbuildConfig, RsbuildPlugin } from '@rsbuild/core';
 import {
   copyPublicFiles,
+  normalizeManifest,
+  readManifestEntries,
   resolveOutDir,
   resolveSrcDir,
   resolveTarget,
-  normalizeManifest,
   setTargetEnv,
   writeManifestEntries,
   writeManifestFile,
-  readManifestEntries,
 } from './manifest/index.js';
 import type { ExtensionTarget, ManifestEntryOutput, WebExtensionManifest } from './manifest/types.js';
 import {

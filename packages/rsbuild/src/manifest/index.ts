@@ -13,12 +13,12 @@ import sandboxProcessor from './sandbox.js';
 import sidepanelProcessor from './sidepanel.js';
 import type {
   ExtensionTarget,
+  ManifestEnties,
   ManifestEntryProcessor,
   NormalizeManifestProps,
   WebExtensionManifest,
   WriteMainfestEntriesProps,
   WriteManifestFileProps,
-  ManifestEnties,
 } from './types.js';
 import { readPackageJson } from './util.js';
 
