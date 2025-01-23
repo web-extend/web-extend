@@ -97,3 +97,7 @@ export interface WriteManifestFileProps {
   manifest: WebExtensionManifest;
   mode: string | undefined;
 }
+
+export type ManifestEnties = {
+  [key in ManifestEntryKey]: ManifestEntryInput;
+};

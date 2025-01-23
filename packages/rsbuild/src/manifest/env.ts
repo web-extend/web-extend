@@ -18,9 +18,9 @@ const EXTENSION_TARGETS: ExtensionTarget[] = [
   'edge-mv3',
   'opera-mv3',
 ];
-const DEFAULT_TARGET: ExtensionTarget = 'chrome-mv3';
+const DEFAULT_EXTENSION_TARGET: ExtensionTarget = 'chrome-mv3';
 
-export function getTarget(target?: string): ExtensionTarget {
+export function resolveTarget(target?: string): ExtensionTarget {
   const envTarget = process.env.WEB_EXTEND_TARGET as ExtensionTarget;
   if (envTarget && EXTENSION_TARGETS.includes(envTarget)) {
     return envTarget;
@@ -30,7 +30,7 @@ export function getTarget(target?: string): ExtensionTarget {
   if (optionTarget && EXTENSION_TARGETS.includes(optionTarget)) {
     return optionTarget;
   }
-  return DEFAULT_TARGET;
+  return DEFAULT_EXTENSION_TARGET;
 }
 
 export function setTargetEnv(target: string) {
@@ -39,9 +39,9 @@ export function setTargetEnv(target: string) {
   }
 }
 
-export function getSrcDir(rootPath: string, srcDir: string | undefined) {
+export function resolveSrcDir(rootPath: string, srcDir: string | undefined) {
   if (srcDir) return srcDir;
-  return existsSync(resolve(rootPath, './src/')) ? './src' : './';
+  return existsSync(resolve(rootPath, './src')) ? './src' : './';
 }
 
 interface GetOutDirProps {
@@ -52,7 +52,7 @@ interface GetOutDirProps {
   tag?: string | undefined;
 }
 
-export function getOutDir({ outdir, distPath, target, mode, tag }: GetOutDirProps) {
+export function resolveOutDir({ outdir, distPath, target, mode, tag }: GetOutDirProps) {
   const envOutdir = process.env.WEB_EXTEND_OUT_DIR;
   if (envOutdir) return envOutdir;
 
@@ -70,7 +70,7 @@ export function getOutDir({ outdir, distPath, target, mode, tag }: GetOutDirProp
   } else {
     postfix = mode || '';
   }
-  const subDir = [target || DEFAULT_TARGET, postfix].filter(Boolean).join('-');
+  const subDir = [target || DEFAULT_EXTENSION_TARGET, postfix].filter(Boolean).join('-');
   return join(dir, subDir);
 }
 

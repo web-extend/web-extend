@@ -13,16 +13,16 @@ import sandboxProcessor from './sandbox.js';
 import sidepanelProcessor from './sidepanel.js';
 import type {
   ExtensionTarget,
-  ManifestEntryInput,
   ManifestEntryProcessor,
   NormalizeManifestProps,
   WebExtensionManifest,
   WriteMainfestEntriesProps,
   WriteManifestFileProps,
+  ManifestEnties,
 } from './types.js';
 import { readPackageJson } from './util.js';
 
-export { getTarget, setTargetEnv, getOutDir, getSrcDir, setOutDirEnv } from './env.js';
+export { resolveTarget, setTargetEnv, resolveOutDir, resolveSrcDir, setOutDirEnv } from './env.js';
 
 const entryProcessors: ManifestEntryProcessor[] = [
   backgroundProcessor,
@@ -124,10 +124,12 @@ async function getDefaultManifest(rootPath: string, target?: ExtensionTarget) {
 }
 
 export async function readManifestEntries(manifest: WebExtensionManifest) {
-  const res = {} as Record<ManifestEntryProcessor['key'], ManifestEntryInput | null>;
+  const res = {} as ManifestEnties;
   for (const processor of entryProcessors) {
     const entry = await processor.read(manifest);
-    res[processor.key] = entry;
+    if (entry) {
+      res[processor.key] = entry;
+    }
   }
   return res;
 }

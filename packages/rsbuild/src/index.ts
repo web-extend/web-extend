@@ -1,13 +1,14 @@
 import type { RsbuildConfig, RsbuildPlugin } from '@rsbuild/core';
 import {
   copyPublicFiles,
-  getOutDir,
-  getSrcDir,
-  getTarget,
+  resolveOutDir,
+  resolveSrcDir,
+  resolveTarget,
   normalizeManifest,
   setTargetEnv,
   writeManifestEntries,
   writeManifestFile,
+  readManifestEntries,
 } from './manifest/index.js';
 import type { ExtensionTarget, ManifestEntryOutput, WebExtensionManifest } from './manifest/types.js';
 import {
@@ -41,12 +42,12 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         mode = config.mode;
       }
 
-      const target = getTarget(options.target);
+      const target = resolveTarget(options.target);
       setTargetEnv(target);
 
-      const srcDir = getSrcDir(rootPath, options.srcDir);
+      const srcDir = resolveSrcDir(rootPath, options.srcDir);
 
-      const outDir = getOutDir({
+      const outDir = resolveOutDir({
         outdir: options.outDir,
         distPath: config.output?.distPath?.root,
         target,
@@ -62,7 +63,8 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         mode,
       });
 
-      const environments = await normalizeRsbuildEnvironments({ manifest, config, selfRootPath });
+      const manifestEntries = await readManifestEntries(manifest);
+      const environments = await normalizeRsbuildEnvironments({ manifestEntries, config, selfRootPath });
       const extraConfig: RsbuildConfig = {
         environments,
         dev: {

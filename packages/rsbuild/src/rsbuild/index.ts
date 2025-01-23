@@ -2,8 +2,7 @@ import { existsSync } from 'node:fs';
 import { readdir, unlink } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import type { EnvironmentConfig, RsbuildConfig, RsbuildEntry, Rspack } from '@rsbuild/core';
-import { readManifestEntries } from '../manifest/index.js';
-import type { ManifestEntryInput, WebExtensionManifest } from '../manifest/types.js';
+import type { ManifestEntryInput, ManifestEnties } from '../manifest/types.js';
 import type { EnviromentKey } from './types.js';
 
 export function isDevMode(mode: string | undefined) {
@@ -31,14 +30,16 @@ export function getRsbuildEntryImport(entries: RsbuildEntry, key: string) {
   return entry.import;
 }
 
-interface NormalizeEnvironmentProps {
-  manifest: WebExtensionManifest;
+export async function normalizeRsbuildEnvironments({
+  manifestEntries,
+  config,
+  selfRootPath,
+}: {
   config: RsbuildConfig;
   selfRootPath: string;
-}
-
-export async function normalizeRsbuildEnvironments({ manifest, config, selfRootPath }: NormalizeEnvironmentProps) {
-  const { icons, background, content, ...others } = await readManifestEntries(manifest);
+  manifestEntries: ManifestEnties;
+}) {
+  const { icons, background, content, ...others } = manifestEntries;
   const mode = config.mode || process.env.NODE_ENV;
 
   const environments: {
