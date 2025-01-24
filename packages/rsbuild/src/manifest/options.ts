@@ -7,7 +7,7 @@ const normalizeOptionsEntry: ManifestEntryProcessor['normalize'] = async ({ mani
   const { options_ui, options_page } = manifest;
   if (options_ui?.page || options_page) return;
 
-  const entryPath = await getSingleEntryFile(srcPath, files, key);
+  const entryPath = await getSingleEntryFile(key, files, srcPath);
   if (entryPath) {
     manifest.options_ui = {
       open_in_tab: true,

@@ -10,7 +10,7 @@ const normalizeSidepanelEntry: ManifestEntryProcessor['normalize'] = async ({ ma
     return;
   }
 
-  const entryPath = await getSingleEntryFile(srcPath, files, key);
+  const entryPath = await getSingleEntryFile(key, files, srcPath);
   if (entryPath) {
     if (target.includes('firefox')) {
       manifest.sidebar_action = {

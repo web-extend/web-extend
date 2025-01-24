@@ -10,7 +10,7 @@ const key = 'popup';
 const normalizePopupEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, srcPath, files }) => {
   const { manifest_version } = manifest;
 
-  const entryPath = await getSingleEntryFile(srcPath, files, key);
+  const entryPath = await getSingleEntryFile(key, files, srcPath);
   if (entryPath) {
     if (manifest_version === 2) {
       manifest.browser_action ??= {};

@@ -17,7 +17,7 @@ const getDeclarativeIcons = (assetFiles: string[]) => {
 };
 
 const normalizeIconsEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, files, srcPath }) => {
-  const assetFiles = await getAssetFiles(srcPath, files);
+  const assetFiles = await getAssetFiles('assets', files, srcPath);
   const declarativeIcons = getDeclarativeIcons(assetFiles);
   if (!declarativeIcons) return;
 

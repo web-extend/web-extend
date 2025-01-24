@@ -9,7 +9,7 @@ const normalizeOverridesEntry: ManifestEntryProcessor['normalize'] = async ({ ma
   if (Object.keys(chrome_url_overrides).length) return;
 
   for (const key of overrides) {
-    const entryPath = await getSingleEntryFile(srcPath, files, key);
+    const entryPath = await getSingleEntryFile(key, files, srcPath);
     if (entryPath) {
       manifest.chrome_url_overrides = {
         ...(manifest.chrome_url_overrides || {}),

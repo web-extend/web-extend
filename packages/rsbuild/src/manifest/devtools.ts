@@ -9,7 +9,7 @@ const normalizeDevtoolsEntry: ManifestEntryProcessor['normalize'] = async ({ man
   const { devtools_page } = manifest;
   if (devtools_page) return;
 
-  const entryPath = await getSingleEntryFile(srcPath, files, key);
+  const entryPath = await getSingleEntryFile(key, files, srcPath);
   if (entryPath) {
     manifest.devtools_page = entryPath;
   }
@@ -28,7 +28,7 @@ const readDevtoolsEntry: ManifestEntryProcessor['read'] = async (manifest) => {
 
   const srcPath = dirname(devtools_page);
   const files = await readdir(srcPath, { recursive: true });
-  const panels = await getMultipleEntryFiles(srcPath, files, 'panels');
+  const panels = await getMultipleEntryFiles('panels', files, srcPath);
   for (const file of panels) {
     const res = file.match(/([^\\/]+)([\\/]index)?\.(ts|tsx|js|jsx|mjs|cjs)$/);
     const name = res?.[1];

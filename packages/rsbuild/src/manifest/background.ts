@@ -22,7 +22,7 @@ const normalizeBackgroundEntry: ManifestEntryProcessor['normalize'] = async ({
   } else if (background && 'scripts' in background && background.scripts) {
     scripts.push(...background.scripts);
   } else {
-    const entryPath = await getSingleEntryFile(srcPath, files, key);
+    const entryPath = await getSingleEntryFile(key, files, srcPath);
     if (entryPath) {
       scripts.push(entryPath);
     }

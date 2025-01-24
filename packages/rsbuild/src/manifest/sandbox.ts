@@ -8,11 +8,11 @@ const normalizeSandboxEntry: ManifestEntryProcessor['normalize'] = async ({ mani
   if (pages?.length || target.includes('firefox')) return;
 
   const entryPath: string[] = [];
-  const singleEntry = await getSingleEntryFile(srcPath, files, key);
+  const singleEntry = await getSingleEntryFile(key, files, srcPath);
   if (singleEntry) {
     entryPath.push(singleEntry);
   }
-  const multipleEntry = await getMultipleEntryFiles(srcPath, files, 'sandboxes');
+  const multipleEntry = await getMultipleEntryFiles('sandboxes', files, srcPath);
   if (multipleEntry.length) {
     entryPath.push(...multipleEntry);
   }

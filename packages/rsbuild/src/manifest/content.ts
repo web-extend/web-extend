@@ -17,11 +17,11 @@ const normalizeContentEntry: ManifestEntryProcessor['normalize'] = async ({
 }) => {
   if (!manifest.content_scripts?.length) {
     const entryPath: string[] = [];
-    const singleEntry = await getSingleEntryFile(srcPath, files, key);
+    const singleEntry = await getSingleEntryFile(key, files, srcPath);
     if (singleEntry) {
       entryPath.push(singleEntry);
     }
-    const multipleEntry = await getMultipleEntryFiles(srcPath, files, 'contents');
+    const multipleEntry = await getMultipleEntryFiles('contents', files, srcPath);
     if (multipleEntry.length) {
       entryPath.push(...multipleEntry);
     }
