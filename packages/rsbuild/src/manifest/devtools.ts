@@ -27,7 +27,7 @@ const readDevtoolsEntry: ManifestEntryProcessor['read'] = async (manifest) => {
   };
 
   const srcPath = dirname(devtools_page);
-  const files = await readdir(srcPath, { withFileTypes: true });
+  const files = await readdir(srcPath, { recursive: true });
   const panels = await getMultipleEntryFiles(srcPath, files, 'panels');
   for (const file of panels) {
     const res = file.match(/([^\\/]+)([\\/]index)?\.(ts|tsx|js|jsx|mjs|cjs)$/);

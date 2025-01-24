@@ -16,7 +16,9 @@ import {
   getRsbuildEntryFiles,
   isDevMode,
   normalizeRsbuildEnvironments,
+  // getRsbuildAllEntryFiles,
 } from './rsbuild/index.js';
+// import { resolve } from 'node:path';
 
 export type PluginWebExtendOptions<T = unknown> = {
   manifest?: T;
@@ -61,8 +63,11 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       });
       normalizedManifest = JSON.parse(JSON.stringify(manifest));
 
+      // const srcPath = resolve(rootPath, srcDir);
       const manifestEntries = await readManifestEntries(manifest);
       const environments = await normalizeRsbuildEnvironments({ manifestEntries, config, selfRootPath });
+      // const allEntryFiles = getRsbuildAllEntryFiles(environments);
+      // console.log('allEntryFiles', allEntryFiles);
 
       const extraConfig: RsbuildConfig = {
         environments,
@@ -73,6 +78,25 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
             port: '<port>',
             protocol: 'ws',
           },
+          // watchFiles: [
+          //   {
+          //     type: 'reload-server',
+          //     paths: ['src/test.txt'],
+          //     options: {
+          //       cwd: rootPath,
+          //       ignored: (file, stats) => {
+          //         if (file === srcPath) return false;
+          //         if (stats?.size === 0) return true;
+          //         // TODO: 判断入口文件是否为 entry 文件
+          //         console.log('file', file, stats?.size);
+          //         if (allEntryFiles.includes(file)) {
+          //           return true;
+          //         }
+          //         return false;
+          //       },
+          //     },
+          //   },
+          // ],
         },
         server: {
           printUrls: false,
