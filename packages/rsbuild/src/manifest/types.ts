@@ -29,15 +29,15 @@ export interface ContentScriptConfig {
 export type PageToOverride = 'newtab' | 'history' | 'bookmarks';
 
 export type ManifestEntryKey =
+  | 'icons'
   | 'background'
   | 'content'
   | 'popup'
   | 'options'
   | 'devtools'
   | 'sandbox'
-  | 'icons'
-  | 'overrides'
-  | 'sidepanel';
+  | 'sidepanel'
+  | PageToOverride;
 
 interface ManifestEntryItem {
   input: string[];

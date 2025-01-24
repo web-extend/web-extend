@@ -1,4 +1,4 @@
-import { resolve, basename } from 'node:path';
+import { basename, resolve } from 'node:path';
 import type { Manifest } from 'webextension-polyfill';
 import type { ManifestEntryInput, ManifestEntryProcessor, WebExtensionManifest } from './types.js';
 

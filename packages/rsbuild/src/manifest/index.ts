@@ -31,7 +31,7 @@ const entryProcessors: ManifestEntryProcessor[] = [
   devtoolsProcessor,
   sandboxProcessor,
   iconsProcessor,
-  overrideProcessor,
+  ...overrideProcessor,
   sidepanelProcessor,
 ];
 
