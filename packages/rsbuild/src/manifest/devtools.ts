@@ -1,17 +1,18 @@
 import { readdir } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
-import { matchDeclarativeMultipleEntry, matchDeclarativeSingleEntry } from './common.js';
+import { matchDeclarativeMultipleEntryFile, matchDeclarativeSingleEntryFile } from './common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'devtools';
+
+const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
+  matchDeclarativeSingleEntryFile(key, file);
 
 const normalizeDevtoolsEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, files, srcPath }) => {
   const { devtools_page } = manifest;
   if (devtools_page) return;
 
-  const entryPath = files
-    .filter((file) => matchDeclarativeSingleEntry(key, file))
-    .map((file) => resolve(srcPath, file))[0];
+  const entryPath = files.filter(matchDeclarativeEntryFile).map((file) => resolve(srcPath, file))[0];
   if (entryPath) {
     manifest.devtools_page = entryPath;
   }
@@ -31,7 +32,9 @@ const readDevtoolsEntry: ManifestEntryProcessor['read'] = async (manifest) => {
   const srcPath = dirname(devtools_page);
   const files = await readdir(srcPath, { recursive: true });
   const panels = files
-    .filter((file) => matchDeclarativeSingleEntry('panel', file) || matchDeclarativeMultipleEntry('panels', file))
+    .filter(
+      (file) => matchDeclarativeSingleEntryFile('panel', file) || matchDeclarativeMultipleEntryFile('panels', file),
+    )
     .map((file) => resolve(srcPath, file));
 
   for (const file of panels) {
@@ -54,7 +57,8 @@ const writeDevtoolsEntry: ManifestEntryProcessor['write'] = ({ manifest, name })
 
 const devtoolsProcessor: ManifestEntryProcessor = {
   key,
-  match: (entryName) => entryName === 'devtools',
+  matchDeclarativeEntryFile,
+  matchEntryName: (entryName) => entryName === key,
   normalize: normalizeDevtoolsEntry,
   read: readDevtoolsEntry,
   write: writeDevtoolsEntry,

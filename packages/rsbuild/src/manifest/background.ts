@@ -1,9 +1,12 @@
 import { resolve } from 'node:path';
 import type { Manifest } from 'webextension-polyfill';
-import { isDevMode, matchDeclarativeSingleEntry } from './common.js';
+import { isDevMode, matchDeclarativeSingleEntryFile } from './common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor, WebExtensionManifest } from './types.js';
 
 const key = 'background';
+
+const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
+  matchDeclarativeSingleEntryFile(key, file);
 
 const normalizeBackgroundEntry: ManifestEntryProcessor['normalize'] = async ({
   manifest,
@@ -21,9 +24,7 @@ const normalizeBackgroundEntry: ManifestEntryProcessor['normalize'] = async ({
   } else if (background && 'scripts' in background && background.scripts) {
     scripts.push(...background.scripts);
   } else {
-    const entryPath = files
-      .filter((file) => matchDeclarativeSingleEntry(key, file))
-      .map((file) => resolve(srcPath, file))[0];
+    const entryPath = files.filter((file) => matchDeclarativeEntryFile(file)).map((file) => resolve(srcPath, file))[0];
     if (entryPath) {
       scripts.push(entryPath);
     }
@@ -79,7 +80,8 @@ const writeBackgroundEntry: ManifestEntryProcessor['write'] = ({ manifest, outpu
 
 const backgroundProcessor: ManifestEntryProcessor = {
   key,
-  match: (entryName) => entryName === key,
+  matchDeclarativeEntryFile,
+  matchEntryName: (entryName) => entryName === key,
   normalize: normalizeBackgroundEntry,
   read: readBackgroundEntry,
   write: writeBackgroundEntry,

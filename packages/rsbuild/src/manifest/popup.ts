@@ -1,18 +1,19 @@
 import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import { matchDeclarativeSingleEntry } from './common.js';
+import { matchDeclarativeSingleEntryFile } from './common.js';
 import { parseExportObject } from './parser/export.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'popup';
 
+const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
+  matchDeclarativeSingleEntryFile(key, file);
+
 const normalizePopupEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, srcPath, files }) => {
   const { manifest_version } = manifest;
 
-  const entryPath = files
-    .filter((file) => matchDeclarativeSingleEntry(key, file))
-    .map((file) => resolve(srcPath, file))[0];
+  const entryPath = files.filter(matchDeclarativeEntryFile).map((file) => resolve(srcPath, file))[0];
 
   if (entryPath) {
     if (manifest_version === 2) {
@@ -62,7 +63,8 @@ const writePopupEntry: ManifestEntryProcessor['write'] = async ({ manifest, root
 
 const popupProcessor: ManifestEntryProcessor = {
   key,
-  match: (entryName) => entryName === key,
+  matchDeclarativeEntryFile,
+  matchEntryName: (entryName) => entryName === key,
   normalize: normalizePopupEntry,
   read: readPopupEntry,
   write: writePopupEntry,

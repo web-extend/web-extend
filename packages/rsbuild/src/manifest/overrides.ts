@@ -1,9 +1,18 @@
 import { resolve } from 'node:path';
 import type { Manifest } from 'webextension-polyfill';
-import { matchDeclarativeSingleEntry } from './common.js';
+import { matchDeclarativeSingleEntryFile } from './common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor, PageToOverride } from './types.js';
 
+const key = 'overrides';
 const overrides: PageToOverride[] = ['newtab', 'history', 'bookmarks'];
+
+const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) => {
+  for (const key of overrides) {
+    const item = matchDeclarativeSingleEntryFile(key, file);
+    if (item) return item;
+  }
+  return null;
+};
 
 const normalizeOverridesEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, srcPath, files }) => {
   const { chrome_url_overrides = {} } = manifest;
@@ -11,7 +20,7 @@ const normalizeOverridesEntry: ManifestEntryProcessor['normalize'] = async ({ ma
 
   for (const key of overrides) {
     const entryPath = files
-      .filter((file) => matchDeclarativeSingleEntry(key, file))
+      .filter((file) => matchDeclarativeSingleEntryFile(key, file))
       .map((file) => resolve(srcPath, file))[0];
 
     if (entryPath) {
@@ -51,8 +60,9 @@ const writeOverridesEntry: ManifestEntryProcessor['write'] = ({ manifest, name }
 };
 
 const overrideProcessors: ManifestEntryProcessor = {
-  key: 'overrides',
-  match: (entryName) => overrides.includes(entryName as PageToOverride),
+  key,
+  matchDeclarativeEntryFile,
+  matchEntryName: (entryName) => overrides.includes(entryName as PageToOverride),
   normalize: normalizeOverridesEntry,
   read: readOverridesEntry,
   write: writeOverridesEntry,

@@ -35,6 +35,14 @@ const entryProcessors: ManifestEntryProcessor[] = [
   sidepanelProcessor,
 ];
 
+export function matchDeclarativeEntryFile(file: string) {
+  for (const processor of entryProcessors) {
+    const item = processor.matchDeclarativeEntryFile(file);
+    if (item) return item;
+  }
+  return null;
+}
+
 export async function normalizeManifest({
   rootPath,
   selfRootPath,
@@ -140,7 +148,7 @@ export async function writeManifestEntries({
   entry,
 }: WriteMainfestEntriesProps) {
   for (const entryName in entry) {
-    const processor = entryProcessors.find((item) => item.match(entryName));
+    const processor = entryProcessors.find((item) => item.matchEntryName(entryName));
     if (!processor) continue;
     await processor.write({
       normalizedManifest,

@@ -1,13 +1,25 @@
-import { resolve } from 'node:path';
+import { resolve, basename } from 'node:path';
 import type { Manifest } from 'webextension-polyfill';
 import type { ManifestEntryInput, ManifestEntryProcessor, WebExtensionManifest } from './types.js';
 
 const key = 'icons';
+const pattern = /^assets[\\/]icon-?(\d+)\.png$/;
+
+const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) => {
+  if (pattern.test(file)) {
+    return {
+      key,
+      name: basename(file),
+      ext: '.png',
+    };
+  }
+  return null;
+};
 
 const getDeclarativeIcons = (files: string[], srcPath: string) => {
   const res: WebExtensionManifest['icons'] = {};
   for (const file of files) {
-    const match = file.match(/^assets[\\/]icon-?(\d+)\.png$/);
+    const match = file.match(pattern);
     const size = match ? Number(match[1]) : null;
     if (size) {
       res[size] = resolve(srcPath, file);
@@ -99,7 +111,8 @@ const writeIconsEntry: ManifestEntryProcessor['write'] = ({ manifest, output, na
 
 const iconsProcessor: ManifestEntryProcessor = {
   key,
-  match: (entryName) => entryName.startsWith('icon'),
+  matchDeclarativeEntryFile,
+  matchEntryName: (entryName) => entryName.startsWith('icon'),
   normalize: normalizeIconsEntry,
   read: readIconsEntry,
   write: writeIconsEntry,

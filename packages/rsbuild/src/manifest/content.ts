@@ -1,11 +1,14 @@
 import { existsSync } from 'node:fs';
 import { copyFile, mkdir, readFile } from 'node:fs/promises';
 import { basename, dirname, join, resolve } from 'node:path';
-import { isDevMode, matchDeclarativeMultipleEntry, matchDeclarativeSingleEntry } from './common.js';
+import { isDevMode, matchDeclarativeMultipleEntryFile, matchDeclarativeSingleEntryFile } from './common.js';
 import { parseExportObject } from './parser/export.js';
 import type { ContentScriptConfig, ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'content';
+
+const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
+  matchDeclarativeSingleEntryFile(key, file) || matchDeclarativeMultipleEntryFile('contents', file);
 
 const normalizeContentEntry: ManifestEntryProcessor['normalize'] = async ({
   manifest,
@@ -15,9 +18,7 @@ const normalizeContentEntry: ManifestEntryProcessor['normalize'] = async ({
   srcPath,
 }) => {
   if (!manifest.content_scripts?.length) {
-    const entryPath = files
-      .filter((file) => matchDeclarativeSingleEntry(key, file) || matchDeclarativeMultipleEntry('contents', file))
-      .map((file) => resolve(srcPath, file));
+    const entryPath = files.filter((file) => matchDeclarativeEntryFile(file)).map((file) => resolve(srcPath, file));
 
     if (entryPath.length) {
       manifest.content_scripts ??= [];
@@ -133,7 +134,8 @@ const onAfterBuild: ManifestEntryProcessor['onAfterBuild'] = async ({ distPath, 
 
 const contentProcessor: ManifestEntryProcessor = {
   key,
-  match: (entryName) => entryName.startsWith('content'),
+  matchDeclarativeEntryFile,
+  matchEntryName: (entryName) => entryName.startsWith('content'),
   normalize: normalizeContentEntry,
   read: readContentEntry,
   write: writeContentEntry,

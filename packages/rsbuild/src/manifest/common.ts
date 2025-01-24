@@ -1,11 +1,11 @@
 import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
-import { extname, join, resolve, sep } from 'node:path';
+import { extname, join, resolve, sep, basename } from 'node:path';
 import type { ExtensionTarget } from './types.js';
 
 const jsFileExts = ['.ts', '.js', '.tsx', '.jsx', '.mts', '.cts', '.mjs', '.cjs'];
 
-export const matchDeclarativeSingleEntry = (key: string, file: string) => {
+export const matchDeclarativeSingleEntryFile = (key: string, file: string) => {
   const ext = extname(file);
   if (!jsFileExts.includes(ext)) return null;
 
@@ -13,29 +13,32 @@ export const matchDeclarativeSingleEntry = (key: string, file: string) => {
   const patterns = [`${key}${ext}`, `${key}/index${ext}`];
   if (patterns.includes(file)) {
     return {
-      name: patterns[0],
+      key,
+      name: key,
       ext,
     };
   }
   return null;
 };
 
-export const matchDeclarativeMultipleEntry = (key: string, file: string) => {
+export const matchDeclarativeMultipleEntryFile = (key: string, file: string) => {
   const ext = extname(file);
   if (!jsFileExts.includes(ext)) return null;
 
   // match [key]/*.js or [key]/*/index.js
-  const slices = file.split(sep);
-  if (slices[0] !== key) return null;
-
   let name = '';
-  if (slices.length === 2) {
-    name = `${key}-${slices[2]}`;
-  } else if (slices.length === 3 && slices[2] === `index${ext}`) {
-    name = `${key}-${slices[2]}${ext}`;
+  const slices = file.split(sep);
+  if (slices[0] === key) {
+    if (slices.length === 2) {
+      name = `${key}-${basename(slices[1], ext)}`;
+    } else if (slices.length === 3 && slices[2] === `index${ext}`) {
+      name = `${key}-${slices[2]}`;
+    }
   }
+
   return name
     ? {
+        key,
         name,
         ext,
       }

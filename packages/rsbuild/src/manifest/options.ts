@@ -1,16 +1,17 @@
 import { resolve } from 'node:path';
-import { matchDeclarativeSingleEntry } from './common.js';
+import { matchDeclarativeSingleEntryFile } from './common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'options';
+
+const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
+  matchDeclarativeSingleEntryFile(key, file);
 
 const normalizeOptionsEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, srcPath, files }) => {
   const { options_ui, options_page } = manifest;
   if (options_ui?.page || options_page) return;
 
-  const entryPath = files
-    .filter((file) => matchDeclarativeSingleEntry(key, file))
-    .map((file) => resolve(srcPath, file))[0];
+  const entryPath = files.filter((file) => matchDeclarativeEntryFile(file)).map((file) => resolve(srcPath, file))[0];
 
   if (entryPath) {
     manifest.options_ui = {
@@ -47,7 +48,8 @@ const writeOptionsEntry: ManifestEntryProcessor['write'] = ({ manifest, name }) 
 
 const optionsProcessor: ManifestEntryProcessor = {
   key,
-  match: (entryName) => entryName === 'options',
+  matchDeclarativeEntryFile,
+  matchEntryName: (entryName) => entryName === key,
   normalize: normalizeOptionsEntry,
   read: readOptionsEntry,
   write: writeOptionsEntry,
