@@ -1,6 +1,6 @@
+import { resolve } from 'node:path';
 import type { Manifest } from 'webextension-polyfill';
 import type { ManifestEntryInput, ManifestEntryProcessor, WebExtensionManifest } from './types.js';
-import { resolve } from 'node:path';
 
 const key = 'icons';
 

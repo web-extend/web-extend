@@ -1,6 +1,6 @@
-import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
-import { matchDeclarativeSingleEntry } from './common.js';
 import { resolve } from 'node:path';
+import { matchDeclarativeSingleEntry } from './common.js';
+import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'options';
 

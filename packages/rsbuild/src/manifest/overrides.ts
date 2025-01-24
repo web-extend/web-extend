@@ -1,7 +1,7 @@
-import type { Manifest } from 'webextension-polyfill';
-import type { ManifestEntryInput, ManifestEntryProcessor, PageToOverride } from './types.js';
-import { matchDeclarativeSingleEntry } from './common.js';
 import { resolve } from 'node:path';
+import type { Manifest } from 'webextension-polyfill';
+import { matchDeclarativeSingleEntry } from './common.js';
+import type { ManifestEntryInput, ManifestEntryProcessor, PageToOverride } from './types.js';
 
 const overrides: PageToOverride[] = ['newtab', 'history', 'bookmarks'];
 

@@ -1,7 +1,7 @@
 import { resolve } from 'node:path';
 import type { Manifest } from 'webextension-polyfill';
+import { isDevMode, matchDeclarativeSingleEntry } from './common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor, WebExtensionManifest } from './types.js';
-import { matchDeclarativeSingleEntry, isDevMode } from './common.js';
 
 const key = 'background';
 

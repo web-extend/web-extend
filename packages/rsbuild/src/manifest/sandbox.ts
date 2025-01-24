@@ -1,6 +1,6 @@
-import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
-import { matchDeclarativeSingleEntry, matchDeclarativeMultipleEntry } from './common.js';
 import { resolve } from 'node:path';
+import { matchDeclarativeMultipleEntry, matchDeclarativeSingleEntry } from './common.js';
+import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'sandbox';
 

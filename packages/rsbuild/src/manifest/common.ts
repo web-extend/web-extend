@@ -1,6 +1,6 @@
-import { readFile } from 'node:fs/promises';
-import { extname, resolve, sep, join } from 'node:path';
 import { existsSync } from 'node:fs';
+import { readFile } from 'node:fs/promises';
+import { extname, join, resolve, sep } from 'node:path';
 import type { ExtensionTarget } from './types.js';
 
 const jsFileExts = ['.ts', '.js', '.tsx', '.jsx', '.mts', '.cts', '.mjs', '.cjs'];

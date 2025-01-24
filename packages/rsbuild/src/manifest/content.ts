@@ -1,9 +1,9 @@
 import { existsSync } from 'node:fs';
 import { copyFile, mkdir, readFile } from 'node:fs/promises';
 import { basename, dirname, join, resolve } from 'node:path';
+import { isDevMode, matchDeclarativeMultipleEntry, matchDeclarativeSingleEntry } from './common.js';
 import { parseExportObject } from './parser/export.js';
 import type { ContentScriptConfig, ManifestEntryInput, ManifestEntryProcessor } from './types.js';
-import { matchDeclarativeSingleEntry, matchDeclarativeMultipleEntry, isDevMode } from './common.js';
 
 const key = 'content';
 

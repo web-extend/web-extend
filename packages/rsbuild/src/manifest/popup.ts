@@ -1,9 +1,9 @@
 import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { matchDeclarativeSingleEntry } from './common.js';
 import { parseExportObject } from './parser/export.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
-import { matchDeclarativeSingleEntry } from './common.js';
 
 const key = 'popup';
 

@@ -2,6 +2,7 @@ import { existsSync } from 'node:fs';
 import { cp, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import backgroundProcessor from './background.js';
+import { isDevMode, readPackageJson } from './common.js';
 import contentProcessor from './content.js';
 import devtoolsProcessor from './devtools.js';
 import iconsProcessor from './icons.js';
@@ -19,7 +20,6 @@ import type {
   WriteMainfestEntriesProps,
   WriteManifestFileProps,
 } from './types.js';
-import { readPackageJson, isDevMode } from './common.js';
 
 export { resolveTarget, setTargetEnv, resolveOutDir, resolveSrcDir, setOutDirEnv } from './common.js';
 
