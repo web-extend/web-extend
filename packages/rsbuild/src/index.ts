@@ -1,6 +1,8 @@
+import { relative, resolve } from 'node:path';
 import type { RsbuildConfig, RsbuildPlugin } from '@rsbuild/core';
 import {
   copyPublicFiles,
+  matchDeclarativeEntryFile,
   normalizeManifest,
   readManifestEntries,
   resolveOutDir,
@@ -9,17 +11,15 @@ import {
   setTargetEnv,
   writeManifestEntries,
   writeManifestFile,
-  matchDeclarativeEntryFile,
 } from './manifest/index.js';
 import type { ExtensionTarget, ManifestEntryOutput, WebExtensionManifest } from './manifest/types.js';
 import {
   clearOutdatedHotUpdateFiles,
+  getAllRsbuildEntryFiles,
   getRsbuildEntryFiles,
   isDevMode,
   normalizeRsbuildEnvironments,
-  getAllRsbuildEntryFiles,
 } from './rsbuild/index.js';
-import { relative, resolve } from 'node:path';
 
 export type PluginWebExtendOptions<T = unknown> = {
   manifest?: T;
