@@ -32,7 +32,7 @@ export const matchDeclarativeMultipleEntryFile = (key: string, file: string) => 
     if (slices.length === 2) {
       name = `${key}-${basename(slices[1], ext)}`;
     } else if (slices.length === 3 && slices[2] === `index${ext}`) {
-      name = `${key}-${slices[2]}`;
+      name = `${key}-${slices[1]}`;
     }
   }
 

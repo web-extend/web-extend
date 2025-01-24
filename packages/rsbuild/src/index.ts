@@ -9,6 +9,7 @@ import {
   setTargetEnv,
   writeManifestEntries,
   writeManifestFile,
+  matchDeclarativeEntryFile,
 } from './manifest/index.js';
 import type { ExtensionTarget, ManifestEntryOutput, WebExtensionManifest } from './manifest/types.js';
 import {
@@ -16,9 +17,9 @@ import {
   getRsbuildEntryFiles,
   isDevMode,
   normalizeRsbuildEnvironments,
-  // getRsbuildAllEntryFiles,
+  getAllRsbuildEntryFiles,
 } from './rsbuild/index.js';
-// import { resolve } from 'node:path';
+import { relative, resolve } from 'node:path';
 
 export type PluginWebExtendOptions<T = unknown> = {
   manifest?: T;
@@ -63,11 +64,14 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       });
       normalizedManifest = JSON.parse(JSON.stringify(manifest));
 
-      // const srcPath = resolve(rootPath, srcDir);
+      const srcPath = resolve(rootPath, srcDir);
       const manifestEntries = await readManifestEntries(manifest);
       const environments = await normalizeRsbuildEnvironments({ manifestEntries, config, selfRootPath });
-      // const allEntryFiles = getRsbuildAllEntryFiles(environments);
-      // console.log('allEntryFiles', allEntryFiles);
+
+      // TODO: 这里有问题，应该在 manifest 中判断是否需要监听
+      const entryNames = getAllRsbuildEntryFiles(environments)
+        .map((file) => matchDeclarativeEntryFile(relative(srcPath, file))?.name || '')
+        .filter(Boolean);
 
       const extraConfig: RsbuildConfig = {
         environments,
@@ -78,25 +82,27 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
             port: '<port>',
             protocol: 'ws',
           },
-          // watchFiles: [
-          //   {
-          //     type: 'reload-server',
-          //     paths: ['src/test.txt'],
-          //     options: {
-          //       cwd: rootPath,
-          //       ignored: (file, stats) => {
-          //         if (file === srcPath) return false;
-          //         if (stats?.size === 0) return true;
-          //         // TODO: 判断入口文件是否为 entry 文件
-          //         console.log('file', file, stats?.size);
-          //         if (allEntryFiles.includes(file)) {
-          //           return true;
-          //         }
-          //         return false;
-          //       },
-          //     },
-          //   },
-          // ],
+          watchFiles: [
+            {
+              type: 'reload-server',
+              paths: [srcDir],
+              options: {
+                cwd: rootPath,
+                ignored: (file, stats) => {
+                  if (file.startsWith(srcPath)) {
+                    if (stats?.isFile()) {
+                      if (stats.size === 0) return true;
+                      const entry = matchDeclarativeEntryFile(relative(srcPath, file));
+                      if (!entry || entryNames.includes(entry.name)) return true;
+                      return false;
+                    }
+                    return false;
+                  }
+                  return true;
+                },
+              },
+            },
+          ],
         },
         server: {
           printUrls: false,

@@ -6,11 +6,12 @@ const key = 'icons';
 const pattern = /^assets[\\/]icon-?(\d+)\.png$/;
 
 const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) => {
+  const ext = '.png';
   if (pattern.test(file)) {
     return {
       key,
-      name: basename(file),
-      ext: '.png',
+      name: basename(file, ext),
+      ext,
     };
   }
   return null;

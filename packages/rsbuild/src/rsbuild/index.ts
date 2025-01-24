@@ -35,7 +35,7 @@ export function getRsbuildEntryFiles(entries: RsbuildEntry, key: string) {
   return res;
 }
 
-export function getRsbuildAllEntryFiles(environments: RsbuildConfig['environments']) {
+export function getAllRsbuildEntryFiles(environments: RsbuildConfig['environments']) {
   const res: string[] = [];
   if (!environments) return [];
   for (const key in environments) {
