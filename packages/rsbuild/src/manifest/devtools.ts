@@ -1,7 +1,7 @@
 import { readdir } from 'node:fs/promises';
-import { dirname } from 'node:path';
+import { dirname, resolve } from 'node:path';
 import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
-import { getMultipleEntryFiles, getSingleEntryFile } from './util.js';
+import { matchDeclarativeSingleEntry, matchDeclarativeMultipleEntry } from './common.js';
 
 const key = 'devtools';
 
@@ -9,7 +9,9 @@ const normalizeDevtoolsEntry: ManifestEntryProcessor['normalize'] = async ({ man
   const { devtools_page } = manifest;
   if (devtools_page) return;
 
-  const entryPath = await getSingleEntryFile(key, files, srcPath);
+  const entryPath = files
+    .filter((file) => matchDeclarativeSingleEntry(key, file))
+    .map((file) => resolve(srcPath, file))[0];
   if (entryPath) {
     manifest.devtools_page = entryPath;
   }
@@ -28,7 +30,10 @@ const readDevtoolsEntry: ManifestEntryProcessor['read'] = async (manifest) => {
 
   const srcPath = dirname(devtools_page);
   const files = await readdir(srcPath, { recursive: true });
-  const panels = await getMultipleEntryFiles('panels', files, srcPath);
+  const panels = files
+    .filter((file) => matchDeclarativeSingleEntry('panel', file) || matchDeclarativeMultipleEntry('panels', file))
+    .map((file) => resolve(srcPath, file));
+
   for (const file of panels) {
     const res = file.match(/([^\\/]+)([\\/]index)?\.(ts|tsx|js|jsx|mjs|cjs)$/);
     const name = res?.[1];

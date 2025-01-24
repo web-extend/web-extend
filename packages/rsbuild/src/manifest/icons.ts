@@ -1,24 +1,23 @@
 import type { Manifest } from 'webextension-polyfill';
 import type { ManifestEntryInput, ManifestEntryProcessor, WebExtensionManifest } from './types.js';
-import { getAssetFiles } from './util.js';
+import { resolve } from 'node:path';
 
 const key = 'icons';
 
-const getDeclarativeIcons = (assetFiles: string[]) => {
+const getDeclarativeIcons = (files: string[], srcPath: string) => {
   const res: WebExtensionManifest['icons'] = {};
-  for (const filePath of assetFiles) {
-    const match = filePath.match(/icon-?(\d+)\.png$/);
+  for (const file of files) {
+    const match = file.match(/^assets[\\/]icon-?(\d+)\.png$/);
     const size = match ? Number(match[1]) : null;
     if (size) {
-      res[size] = filePath;
+      res[size] = resolve(srcPath, file);
     }
   }
   return Object.keys(res).length ? res : null;
 };
 
 const normalizeIconsEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, files, srcPath }) => {
-  const assetFiles = await getAssetFiles('assets', files, srcPath);
-  const declarativeIcons = getDeclarativeIcons(assetFiles);
+  const declarativeIcons = getDeclarativeIcons(files, srcPath);
   if (!declarativeIcons) return;
 
   manifest.icons = {

@@ -1,5 +1,6 @@
 import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
-import { getMultipleEntryFiles, getSingleEntryFile } from './util.js';
+import { matchDeclarativeSingleEntry, matchDeclarativeMultipleEntry } from './common.js';
+import { resolve } from 'node:path';
 
 const key = 'sandbox';
 
@@ -7,15 +8,9 @@ const normalizeSandboxEntry: ManifestEntryProcessor['normalize'] = async ({ mani
   const pages = manifest.sandbox?.pages;
   if (pages?.length || target.includes('firefox')) return;
 
-  const entryPath: string[] = [];
-  const singleEntry = await getSingleEntryFile(key, files, srcPath);
-  if (singleEntry) {
-    entryPath.push(singleEntry);
-  }
-  const multipleEntry = await getMultipleEntryFiles('sandboxes', files, srcPath);
-  if (multipleEntry.length) {
-    entryPath.push(...multipleEntry);
-  }
+  const entryPath = files
+    .filter((file) => matchDeclarativeSingleEntry(key, file) || matchDeclarativeMultipleEntry('sandboxes', file))
+    .map((file) => resolve(srcPath, file));
 
   if (entryPath.length) {
     manifest.sandbox = {

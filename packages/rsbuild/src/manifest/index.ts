@@ -4,7 +4,6 @@ import { join, resolve } from 'node:path';
 import backgroundProcessor from './background.js';
 import contentProcessor from './content.js';
 import devtoolsProcessor from './devtools.js';
-import { isDevMode } from './env.js';
 import iconsProcessor from './icons.js';
 import optionsProcessor from './options.js';
 import overrideProcessor from './overrides.js';
@@ -20,9 +19,9 @@ import type {
   WriteMainfestEntriesProps,
   WriteManifestFileProps,
 } from './types.js';
-import { readPackageJson } from './util.js';
+import { readPackageJson, isDevMode } from './common.js';
 
-export { resolveTarget, setTargetEnv, resolveOutDir, resolveSrcDir, setOutDirEnv } from './env.js';
+export { resolveTarget, setTargetEnv, resolveOutDir, resolveSrcDir, setOutDirEnv } from './common.js';
 
 const entryProcessors: ManifestEntryProcessor[] = [
   backgroundProcessor,

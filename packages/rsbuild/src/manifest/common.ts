@@ -1,6 +1,52 @@
+import { readFile } from 'node:fs/promises';
+import { extname, resolve, sep, join } from 'node:path';
 import { existsSync } from 'node:fs';
-import { join, resolve } from 'node:path';
 import type { ExtensionTarget } from './types.js';
+
+const jsFileExts = ['.ts', '.js', '.tsx', '.jsx', '.mts', '.cts', '.mjs', '.cjs'];
+
+export const matchDeclarativeSingleEntry = (key: string, file: string) => {
+  const ext = extname(file);
+  if (!jsFileExts.includes(ext)) return null;
+
+  // match [key].js or [key]/index.js
+  const patterns = [`${key}${ext}`, `${key}/index${ext}`];
+  if (patterns.includes(file)) {
+    return {
+      name: patterns[0],
+      ext,
+    };
+  }
+  return null;
+};
+
+export const matchDeclarativeMultipleEntry = (key: string, file: string) => {
+  const ext = extname(file);
+  if (!jsFileExts.includes(ext)) return null;
+
+  // match [key]/*.js or [key]/*/index.js
+  const slices = file.split(sep);
+  if (slices[0] !== key) return null;
+
+  let name = '';
+  if (slices.length === 2) {
+    name = `${key}-${slices[2]}`;
+  } else if (slices.length === 3 && slices[2] === `index${ext}`) {
+    name = `${key}-${slices[2]}${ext}`;
+  }
+  return name
+    ? {
+        name,
+        ext,
+      }
+    : null;
+};
+
+export async function readPackageJson(rootPath: string) {
+  const filePath = resolve(rootPath, './package.json');
+  const content = await readFile(filePath, 'utf-8');
+  return JSON.parse(content);
+}
 
 export function isDevMode(mode?: string) {
   return mode === 'development';

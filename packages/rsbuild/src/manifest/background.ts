@@ -1,8 +1,7 @@
 import { resolve } from 'node:path';
 import type { Manifest } from 'webextension-polyfill';
-import { isDevMode } from './env.js';
 import type { ManifestEntryInput, ManifestEntryProcessor, WebExtensionManifest } from './types.js';
-import { getSingleEntryFile } from './util.js';
+import { matchDeclarativeSingleEntry, isDevMode } from './common.js';
 
 const key = 'background';
 
@@ -22,7 +21,9 @@ const normalizeBackgroundEntry: ManifestEntryProcessor['normalize'] = async ({
   } else if (background && 'scripts' in background && background.scripts) {
     scripts.push(...background.scripts);
   } else {
-    const entryPath = await getSingleEntryFile(key, files, srcPath);
+    const entryPath = files
+      .filter((file) => matchDeclarativeSingleEntry(key, file))
+      .map((file) => resolve(srcPath, file))[0];
     if (entryPath) {
       scripts.push(entryPath);
     }
@@ -32,6 +33,7 @@ const normalizeBackgroundEntry: ManifestEntryProcessor['normalize'] = async ({
   }
 
   if (!scripts.length) return;
+
   manifest.background ??= {} as WebExtensionManifest['background'];
   // Firefox only supports background.scripts
   if (target.includes('firefox')) {
@@ -53,6 +55,7 @@ const readBackgroundEntry: ManifestEntryProcessor['read'] = (manifest) => {
   }
 
   if (!input.length) return null;
+
   const entry: ManifestEntryInput = {
     background: {
       input,

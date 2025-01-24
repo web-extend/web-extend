@@ -1,5 +1,6 @@
 import type { ManifestEntryInput, ManifestEntryProcessor, WebExtensionManifest } from './types.js';
-import { getSingleEntryFile } from './util.js';
+import { matchDeclarativeSingleEntry } from './common.js';
+import { resolve } from 'node:path';
 
 const key = 'sidepanel';
 
@@ -10,7 +11,10 @@ const normalizeSidepanelEntry: ManifestEntryProcessor['normalize'] = async ({ ma
     return;
   }
 
-  const entryPath = await getSingleEntryFile(key, files, srcPath);
+  const entryPath = files
+    .filter((file) => matchDeclarativeSingleEntry(key, file))
+    .map((file) => resolve(srcPath, file))[0];
+
   if (entryPath) {
     if (target.includes('firefox')) {
       manifest.sidebar_action = {

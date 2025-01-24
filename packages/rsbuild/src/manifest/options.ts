@@ -1,5 +1,6 @@
 import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
-import { getSingleEntryFile } from './util.js';
+import { matchDeclarativeSingleEntry } from './common.js';
+import { resolve } from 'node:path';
 
 const key = 'options';
 
@@ -7,7 +8,10 @@ const normalizeOptionsEntry: ManifestEntryProcessor['normalize'] = async ({ mani
   const { options_ui, options_page } = manifest;
   if (options_ui?.page || options_page) return;
 
-  const entryPath = await getSingleEntryFile(key, files, srcPath);
+  const entryPath = files
+    .filter((file) => matchDeclarativeSingleEntry(key, file))
+    .map((file) => resolve(srcPath, file))[0];
+
   if (entryPath) {
     manifest.options_ui = {
       open_in_tab: true,

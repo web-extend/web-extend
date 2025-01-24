@@ -3,14 +3,17 @@ import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { parseExportObject } from './parser/export.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
-import { getSingleEntryFile } from './util.js';
+import { matchDeclarativeSingleEntry } from './common.js';
 
 const key = 'popup';
 
 const normalizePopupEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, srcPath, files }) => {
   const { manifest_version } = manifest;
 
-  const entryPath = await getSingleEntryFile(key, files, srcPath);
+  const entryPath = files
+    .filter((file) => matchDeclarativeSingleEntry(key, file))
+    .map((file) => resolve(srcPath, file))[0];
+
   if (entryPath) {
     if (manifest_version === 2) {
       manifest.browser_action ??= {};

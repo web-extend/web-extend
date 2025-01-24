@@ -1,6 +1,7 @@
 import type { Manifest } from 'webextension-polyfill';
 import type { ManifestEntryInput, ManifestEntryProcessor, PageToOverride } from './types.js';
-import { getSingleEntryFile } from './util.js';
+import { matchDeclarativeSingleEntry } from './common.js';
+import { resolve } from 'node:path';
 
 const overrides: PageToOverride[] = ['newtab', 'history', 'bookmarks'];
 
@@ -9,7 +10,10 @@ const normalizeOverridesEntry: ManifestEntryProcessor['normalize'] = async ({ ma
   if (Object.keys(chrome_url_overrides).length) return;
 
   for (const key of overrides) {
-    const entryPath = await getSingleEntryFile(key, files, srcPath);
+    const entryPath = files
+      .filter((file) => matchDeclarativeSingleEntry(key, file))
+      .map((file) => resolve(srcPath, file))[0];
+
     if (entryPath) {
       manifest.chrome_url_overrides = {
         ...(manifest.chrome_url_overrides || {}),

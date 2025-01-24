@@ -1,10 +1,9 @@
 import { existsSync } from 'node:fs';
 import { copyFile, mkdir, readFile } from 'node:fs/promises';
 import { basename, dirname, join, resolve } from 'node:path';
-import { isDevMode } from './env.js';
 import { parseExportObject } from './parser/export.js';
 import type { ContentScriptConfig, ManifestEntryInput, ManifestEntryProcessor } from './types.js';
-import { getMultipleEntryFiles, getSingleEntryFile } from './util.js';
+import { matchDeclarativeSingleEntry, matchDeclarativeMultipleEntry, isDevMode } from './common.js';
 
 const key = 'content';
 
@@ -16,15 +15,9 @@ const normalizeContentEntry: ManifestEntryProcessor['normalize'] = async ({
   srcPath,
 }) => {
   if (!manifest.content_scripts?.length) {
-    const entryPath: string[] = [];
-    const singleEntry = await getSingleEntryFile(key, files, srcPath);
-    if (singleEntry) {
-      entryPath.push(singleEntry);
-    }
-    const multipleEntry = await getMultipleEntryFiles('contents', files, srcPath);
-    if (multipleEntry.length) {
-      entryPath.push(...multipleEntry);
-    }
+    const entryPath = files
+      .filter((file) => matchDeclarativeSingleEntry(key, file) || matchDeclarativeMultipleEntry('contents', file))
+      .map((file) => resolve(srcPath, file));
 
     if (entryPath.length) {
       manifest.content_scripts ??= [];
