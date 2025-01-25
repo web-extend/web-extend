@@ -52,7 +52,7 @@ export type MaybePromise<T = unknown> = T | Promise<T>;
 
 export interface ManifestEntryProcessor {
   key: ManifestEntryKey;
-  matchDeclarativeEntryFile: (file: string) => null | { key: string; name: string; ext: string };
+  matchDeclarativeEntryFile: (file: string) => null | { name: string; ext: string };
   matchEntryName: (name: string) => boolean;
   normalize: (props: NormalizeMainfestEntryProps) => MaybePromise<void>;
   read: (manifest?: WebExtensionManifest) => MaybePromise<ManifestEntryInput | null>;
@@ -99,5 +99,5 @@ export interface WriteManifestFileProps {
 }
 
 export type ManifestEnties = {
-  [key in ManifestEntryKey]: ManifestEntryInput;
+  [key in ManifestEntryKey]?: ManifestEntryInput;
 };

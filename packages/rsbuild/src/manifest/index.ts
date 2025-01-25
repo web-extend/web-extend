@@ -21,7 +21,14 @@ import type {
   WriteManifestFileProps,
 } from './types.js';
 
-export { resolveTarget, setTargetEnv, resolveOutDir, resolveSrcDir, setOutDirEnv } from './common.js';
+export {
+  resolveTarget,
+  setTargetEnv,
+  resolveOutDir,
+  resolveSrcDir,
+  setOutDirEnv,
+  getEntryFileVariants,
+} from './common.js';
 
 const entryProcessors: ManifestEntryProcessor[] = [
   backgroundProcessor,

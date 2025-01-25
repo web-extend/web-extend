@@ -4,13 +4,14 @@ import {
   copyPublicFiles,
   matchDeclarativeEntryFile,
   normalizeManifest,
-  readManifestEntries,
   resolveOutDir,
   resolveSrcDir,
   resolveTarget,
   setTargetEnv,
+  readManifestEntries,
   writeManifestEntries,
   writeManifestFile,
+  getEntryFileVariants,
 } from './manifest/index.js';
 import type { ExtensionTarget, ManifestEntryOutput, WebExtensionManifest } from './manifest/types.js';
 import {
@@ -46,6 +47,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       }
       const target = resolveTarget(options.target);
       const srcDir = resolveSrcDir(rootPath, options.srcDir);
+      const srcPath = resolve(rootPath, srcDir);
       const outDir = resolveOutDir({
         outdir: options.outDir,
         distPath: config.output?.distPath?.root,
@@ -64,14 +66,9 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       });
       normalizedManifest = JSON.parse(JSON.stringify(manifest));
 
-      const srcPath = resolve(rootPath, srcDir);
       const manifestEntries = await readManifestEntries(manifest);
       const environments = await normalizeRsbuildEnvironments({ manifestEntries, config, selfRootPath });
-
-      // TODO: 这里有问题，应该在 manifest 中判断是否需要监听
-      const entryNames = getAllRsbuildEntryFiles(environments)
-        .map((file) => matchDeclarativeEntryFile(relative(srcPath, file))?.name || '')
-        .filter(Boolean);
+      const entryPaths = getAllRsbuildEntryFiles(environments);
 
       const extraConfig: RsbuildConfig = {
         environments,
@@ -90,11 +87,18 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
                 cwd: rootPath,
                 ignored: (file, stats) => {
                   if (file.startsWith(srcPath)) {
+                    const relativePath = relative(srcPath, file);
                     if (stats?.isFile()) {
                       if (stats.size === 0) return true;
-                      const entry = matchDeclarativeEntryFile(relative(srcPath, file));
-                      if (!entry || entryNames.includes(entry.name)) return true;
-                      return false;
+
+                      const entry = matchDeclarativeEntryFile(relativePath);
+                      if (!entry) return true;
+
+                      const entryFileVariants = getEntryFileVariants(entry.name, entry.ext).map((file) =>
+                        resolve(srcPath, file),
+                      );
+                      const hasEntry = entryFileVariants.some((file) => entryPaths.includes(file));
+                      if (hasEntry) return true;
                     }
                     return false;
                   }

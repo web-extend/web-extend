@@ -5,6 +5,13 @@ import type { ExtensionTarget } from './types.js';
 
 const jsFileExts = ['.ts', '.js', '.tsx', '.jsx', '.mts', '.cts', '.mjs', '.cjs'];
 
+export function getEntryFileVariants(name: string, ext: string) {
+  if (!jsFileExts.includes(ext)) {
+    return [`${name}${ext}`];
+  }
+  return jsFileExts.flatMap((item) => [`${name}${item}`, `${name}/index${item}`]);
+}
+
 export const matchDeclarativeSingleEntryFile = (key: string, file: string) => {
   const ext = extname(file);
   if (!jsFileExts.includes(ext)) return null;
@@ -13,7 +20,6 @@ export const matchDeclarativeSingleEntryFile = (key: string, file: string) => {
   const patterns = [`${key}${ext}`, `${key}/index${ext}`];
   if (patterns.includes(file)) {
     return {
-      key,
       name: key,
       ext,
     };
@@ -30,15 +36,14 @@ export const matchDeclarativeMultipleEntryFile = (key: string, file: string) => 
   const slices = file.split(sep);
   if (slices[0] === key) {
     if (slices.length === 2) {
-      name = `${key}-${basename(slices[1], ext)}`;
+      name = `${key}/${basename(slices[1], ext)}`;
     } else if (slices.length === 3 && slices[2] === `index${ext}`) {
-      name = `${key}-${slices[1]}`;
+      name = `${key}/${slices[1]}`;
     }
   }
 
   return name
     ? {
-        key,
         name,
         ext,
       }
