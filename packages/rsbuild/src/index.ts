@@ -2,16 +2,16 @@ import { relative, resolve } from 'node:path';
 import type { RsbuildConfig, RsbuildPlugin } from '@rsbuild/core';
 import {
   copyPublicFiles,
+  getEntryFileVariants,
   matchDeclarativeEntryFile,
   normalizeManifest,
+  readManifestEntries,
   resolveOutDir,
   resolveSrcDir,
   resolveTarget,
   setTargetEnv,
-  readManifestEntries,
   writeManifestEntries,
   writeManifestFile,
-  getEntryFileVariants,
 } from './manifest/index.js';
 import type { ExtensionTarget, ManifestEntryOutput, WebExtensionManifest } from './manifest/types.js';
 import {

@@ -1,8 +1,8 @@
 import { basename } from 'node:path';
+import chalk from 'chalk';
 import chokidar from 'chokidar';
 import type { ChokidarOptions } from 'chokidar';
 import { debounce } from './util.js';
-import chalk from 'chalk';
 
 export type RestartCallback = (props: { filePath: string }) => Promise<unknown> | unknown;
 
