@@ -3,15 +3,16 @@ import type { Manifest } from 'webextension-polyfill';
 import type { ManifestEntryInput, ManifestEntryProcessor, WebExtensionManifest } from './types.js';
 
 const key = 'icons';
-const pattern = /^assets[\\/]icon-?(\d+)\.png$/;
 
-const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) => {
+const matchDeclarativeEntryFile = (file: string) => {
   const ext = '.png';
-  if (pattern.test(file)) {
+  const match = file.match(/^assets[\\/]icon-?(\d+)\.png$/);
+  const size = match ? Number(match[1]) : null;
+  if (size) {
     return {
-      key,
       name: basename(file, ext),
       ext,
+      size,
     };
   }
   return null;
@@ -20,8 +21,7 @@ const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFi
 const getDeclarativeIcons = (files: string[], srcPath: string) => {
   const res: WebExtensionManifest['icons'] = {};
   for (const file of files) {
-    const match = file.match(pattern);
-    const size = match ? Number(match[1]) : null;
+    const size = matchDeclarativeEntryFile(file)?.size || null;
     if (size) {
       res[size] = resolve(srcPath, file);
     }
