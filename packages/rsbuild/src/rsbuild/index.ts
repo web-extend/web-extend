@@ -14,8 +14,9 @@ function transformManifestEntry(entry: ManifestEntryInput | undefined) {
   const res: RsbuildEntry = {};
   for (const key in entry) {
     const { input, html } = entry[key];
+    const files = key.startsWith('icons') ? input.map((file) => `${file}?url`) : input;
     res[key] = {
-      import: input,
+      import: files,
       html,
     };
   }
@@ -57,25 +58,13 @@ export async function normalizeRsbuildEnvironments({
   selfRootPath: string;
   manifestEntries: ManifestEnties;
 }) {
-  const { icons, background, content, ...others } = manifestEntries;
+  const { background, content, ...others } = manifestEntries;
   const mode = config.mode || process.env.NODE_ENV;
 
   const environments: {
     [key in EnviromentKey]?: EnvironmentConfig;
   } = {};
   let defaultEnvironment: EnvironmentConfig | null = null;
-
-  if (icons) {
-    defaultEnvironment = environments.icons = {
-      source: {
-        entry: transformManifestEntry(icons),
-      },
-      output: {
-        target: 'web',
-        dataUriLimit: 0,
-      },
-    };
-  }
 
   if (background) {
     defaultEnvironment = environments.background = {
@@ -111,7 +100,7 @@ export async function normalizeRsbuildEnvironments({
   }
 
   const webEntry = Object.values(others)
-    .filter((entry) => !!entry)
+    .filter(Boolean)
     .reduce((res, cur) => Object.assign(res, cur), {});
   if (Object.values(webEntry).length) {
     defaultEnvironment = environments.web = {
@@ -126,7 +115,7 @@ export async function normalizeRsbuildEnvironments({
 
   if (!defaultEnvironment) {
     // void the empty entry error
-    defaultEnvironment = environments.icons = {
+    defaultEnvironment = environments.web = {
       source: {
         entry: {
           empty: {

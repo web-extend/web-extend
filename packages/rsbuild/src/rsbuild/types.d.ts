@@ -1,1 +1,1 @@
-export type EnviromentKey = 'web' | 'content' | 'background' | 'icons';
+export type EnviromentKey = 'web' | 'content' | 'background';

@@ -60,14 +60,13 @@ const readIconsEntry: ManifestEntryProcessor['read'] = (manifest) => {
   const { icons, action, browser_action, manifest_version } = manifest || {};
   const pointer = manifest_version === 2 ? browser_action : action;
   const entry: ManifestEntryInput = {};
-
   function helper(icons?: WebExtensionManifest['icons']) {
     if (!icons) return;
-    for (const key in icons) {
-      const entryName = `icon${key}`;
+    for (const size in icons) {
+      const entryName = `${key}-${size}`;
       entry[entryName] = {
         html: false,
-        input: [icons[key]],
+        input: [icons[size]],
       };
     }
   }
@@ -75,7 +74,7 @@ const readIconsEntry: ManifestEntryProcessor['read'] = (manifest) => {
   helper(icons);
 
   if (typeof pointer?.default_icon === 'string') {
-    entry.icon_default = {
+    entry[`${key}-default`] = {
       html: false,
       input: [pointer.default_icon],
     };
@@ -87,25 +86,26 @@ const readIconsEntry: ManifestEntryProcessor['read'] = (manifest) => {
 };
 
 const writeIconsEntry: ManifestEntryProcessor['write'] = ({ manifest, output, name }) => {
-  if (!output?.length) return;
+  const file = output?.find((item) => item.endsWith('.png'));
+  if (!file) return;
 
   const { icons, action, browser_action, manifest_version } = manifest;
   const pointer = manifest_version === 2 ? browser_action : action;
 
-  if (name === 'icon_default') {
+  if (name === `${key}-default`) {
     if (pointer) {
-      pointer.default_icon = output[0];
+      pointer.default_icon = file;
     }
     return;
   }
 
-  const size = Number(name.replace('icon', ''));
+  const size = Number(name.replace(`${key}-`, ''));
   if (size) {
     if (icons) {
-      icons[size] = output[0];
+      icons[size] = file;
     }
     if (typeof pointer?.default_icon === 'object') {
-      pointer.default_icon[size] = output[0];
+      pointer.default_icon[size] = file;
     }
   }
 };

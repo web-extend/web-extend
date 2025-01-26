@@ -123,15 +123,6 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
     });
 
     api.processAssets({ stage: 'additional' }, async ({ assets, compilation, environment, sources }) => {
-      if (environment.name === 'icons') {
-        for (const name in assets) {
-          if (name.endsWith('.js')) {
-            compilation.deleteAsset(name);
-          }
-        }
-        return;
-      }
-
       // support content hmr in dev mode
       if (isDevMode(mode) && environment.name === 'content') {
         const entries = Object.keys(environment.entry);
@@ -146,6 +137,16 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
             );
             const source = new sources.RawSource(newContent);
             compilation.updateAsset(name, source);
+          }
+        }
+      }
+    });
+
+    api.processAssets({ stage: 'optimize' }, async ({ assets, compilation, environment }) => {
+      if (environment.name === 'web') {
+        for (const name in assets) {
+          if (name.endsWith('.js') && (name.includes('icons') || name.includes('empty'))) {
+            compilation.deleteAsset(name);
           }
         }
       }
