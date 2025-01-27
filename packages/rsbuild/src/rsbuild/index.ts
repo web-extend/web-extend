@@ -102,27 +102,18 @@ export async function normalizeRsbuildEnvironments({
   const webEntry = Object.values(others)
     .filter(Boolean)
     .reduce((res, cur) => Object.assign(res, cur), {});
-  if (Object.values(webEntry).length) {
+  if (Object.values(webEntry).length || !defaultEnvironment) {
     defaultEnvironment = environments.web = {
       source: {
-        entry: transformManifestEntry(webEntry),
-      },
-      output: {
-        target: 'web',
-      },
-    };
-  }
-
-  if (!defaultEnvironment) {
-    // void the empty entry error
-    defaultEnvironment = environments.web = {
-      source: {
-        entry: {
-          empty: {
-            import: resolve(selfRootPath, './static/empty_entry.js'),
-            html: false,
-          },
-        },
+        entry: Object.values(webEntry).length
+          ? transformManifestEntry(webEntry)
+          : {
+              // void the empty entry error
+              empty: {
+                import: resolve(selfRootPath, './static/empty_entry.js'),
+                html: false,
+              },
+            },
       },
       output: {
         target: 'web',

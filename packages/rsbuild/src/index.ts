@@ -122,7 +122,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       return mergeRsbuildConfig(config, extraConfig);
     });
 
-    api.processAssets({ stage: 'additional' }, async ({ assets, compilation, environment, sources }) => {
+    api.processAssets({ stage: 'additions' }, async ({ assets, compilation, environment, sources }) => {
       // support content hmr in dev mode
       if (isDevMode(mode) && environment.name === 'content') {
         const entries = Object.keys(environment.entry);
