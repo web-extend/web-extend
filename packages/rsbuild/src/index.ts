@@ -1,6 +1,6 @@
 import { relative, resolve } from 'node:path';
 import type { RsbuildConfig, RsbuildPlugin } from '@rsbuild/core';
-import { resolveOutDir, resolveSrcDir, resolveTarget, setTargetEnv, ManifestManager } from './manifest/index.js';
+import { ManifestManager, resolveOutDir, resolveSrcDir, resolveTarget, setTargetEnv } from './manifest/index.js';
 import type { ExtensionTarget, ManifestEntryOutput, WebExtensionManifest } from './manifest/types.js';
 import {
   clearOutdatedHotUpdateFiles,

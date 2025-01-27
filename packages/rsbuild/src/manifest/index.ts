@@ -2,7 +2,7 @@ import { existsSync } from 'node:fs';
 import { cp, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import backgroundProcessor from './background.js';
-import { isDevMode, readPackageJson, getEntryFileVariants } from './common.js';
+import { getEntryFileVariants, isDevMode, readPackageJson } from './common.js';
 import contentProcessor from './content.js';
 import devtoolsProcessor from './devtools.js';
 import iconsProcessor from './icons.js';
@@ -13,13 +13,13 @@ import sandboxProcessor from './sandbox.js';
 import sidepanelProcessor from './sidepanel.js';
 import type {
   ExtensionTarget,
+  ManifestContext,
   ManifestEnties,
+  ManifestEntryOutput,
   ManifestEntryProcessor,
   NormalizeManifestProps,
   WebExtensionManifest,
   WriteManifestFileProps,
-  ManifestContext,
-  ManifestEntryOutput,
 } from './types.js';
 
 export {
