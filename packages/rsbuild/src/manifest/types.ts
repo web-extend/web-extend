@@ -101,7 +101,7 @@ export interface WriteManifestFileProps {
   distPath: string;
   manifest: WebExtensionManifest;
   mode: string | undefined;
-  runtime: ManifestRuntime
+  runtime: ManifestRuntime;
 }
 
 export type ManifestEnties = {

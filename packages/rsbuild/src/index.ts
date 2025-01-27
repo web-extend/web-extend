@@ -13,7 +13,7 @@ import {
   writeManifestEntries,
   writeManifestFile,
 } from './manifest/index.js';
-import type { ExtensionTarget, ManifestEntryOutput, WebExtensionManifest, ManifestRuntime } from './manifest/types.js';
+import type { ExtensionTarget, ManifestEntryOutput, ManifestRuntime, WebExtensionManifest } from './manifest/types.js';
 import {
   clearOutdatedHotUpdateFiles,
   getAllRsbuildEntryFiles,
