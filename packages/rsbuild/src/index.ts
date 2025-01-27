@@ -13,7 +13,7 @@ import {
   writeManifestEntries,
   writeManifestFile,
 } from './manifest/index.js';
-import type { ExtensionTarget, ManifestEntryOutput, WebExtensionManifest } from './manifest/types.js';
+import type { ExtensionTarget, ManifestEntryOutput, WebExtensionManifest, ManifestRuntime } from './manifest/types.js';
 import {
   clearOutdatedHotUpdateFiles,
   getAllRsbuildEntryFiles,
@@ -38,6 +38,11 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
     const selfRootPath = __dirname;
     let mode = process.env.NODE_ENV as RsbuildConfig['mode'];
 
+    const manifestRuntime: ManifestRuntime = {
+      background: resolve(selfRootPath, 'static/background-runtime.js'),
+      contentLoad: resolve(selfRootPath, 'static/content-load.js'),
+      contentBridge: resolve(selfRootPath, 'static/content-bridge.js'),
+    };
     let normalizedManifest = {} as WebExtensionManifest;
     let manifest = {} as WebExtensionManifest;
 
@@ -58,11 +63,11 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
 
       manifest = await normalizeManifest({
         rootPath,
-        selfRootPath,
         manifest: options.manifest as WebExtensionManifest,
         srcDir,
         target,
         mode,
+        runtime: manifestRuntime,
       });
       normalizedManifest = JSON.parse(JSON.stringify(manifest));
 
@@ -183,7 +188,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
     api.onDevCompileDone(async ({ stats }) => {
       const distPath = api.context.distPath;
       await copyPublicFiles(rootPath, distPath);
-      await writeManifestFile({ distPath, manifest, mode, selfRootPath });
+      await writeManifestFile({ distPath, manifest, mode, runtime: manifestRuntime });
 
       // clear outdated hmr files
       const statsList = 'stats' in stats ? stats.stats : [stats];
@@ -194,7 +199,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
 
     api.onAfterBuild(async () => {
       const distPath = api.context.distPath;
-      await writeManifestFile({ distPath, manifest, mode, selfRootPath });
+      await writeManifestFile({ distPath, manifest, mode, runtime: manifestRuntime });
 
       console.log('Built the extension successfully');
     });

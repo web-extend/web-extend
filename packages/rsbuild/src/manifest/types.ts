@@ -60,22 +60,28 @@ export interface ManifestEntryProcessor {
   onAfterBuild?: (props: WriteManifestFileProps) => MaybePromise<void>;
 }
 
+export interface ManifestRuntime {
+  background?: string;
+  contentLoad?: string;
+  contentBridge?: string;
+}
+
 export interface NormalizeManifestProps {
   rootPath: string;
-  selfRootPath: string;
   mode: string | undefined;
   manifest: WebExtensionManifest;
   srcDir: string;
   target: ExtensionTarget;
+  runtime: ManifestRuntime;
 }
 
 export interface NormalizeMainfestEntryProps {
   srcPath: string;
-  selfRootPath: string;
   mode: string | undefined;
   manifest: WebExtensionManifest;
   target: ExtensionTarget;
   files: string[];
+  runtime?: ManifestRuntime;
 }
 
 export interface WriteMainfestEntriesProps {
@@ -92,10 +98,10 @@ export interface WriteMainfestEntryItemProps extends Omit<WriteMainfestEntriesPr
 }
 
 export interface WriteManifestFileProps {
-  selfRootPath: string;
   distPath: string;
   manifest: WebExtensionManifest;
   mode: string | undefined;
+  runtime: ManifestRuntime
 }
 
 export type ManifestEnties = {

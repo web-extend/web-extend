@@ -52,11 +52,11 @@ export function matchDeclarativeEntryFile(file: string) {
 
 export async function normalizeManifest({
   rootPath,
-  selfRootPath,
   mode,
   srcDir,
   manifest = {} as WebExtensionManifest,
   target,
+  runtime,
 }: NormalizeManifestProps) {
   const defaultManifest = await getDefaultManifest(rootPath, target);
   const finalManifest = {
@@ -100,12 +100,12 @@ export async function normalizeManifest({
     const files = await readdir(srcPath, { recursive: true });
     for (const processor of entryProcessors) {
       await processor.normalize({
-        selfRootPath,
         manifest: finalManifest,
         target,
         srcPath,
         mode,
         files,
+        runtime,
       });
     }
   } catch (err) {
@@ -174,14 +174,14 @@ export async function readManifestFile(distPath: string) {
   return manifest;
 }
 
-export async function writeManifestFile({ distPath, manifest, mode, selfRootPath }: WriteManifestFileProps) {
+export async function writeManifestFile({ distPath, manifest, mode, runtime }: WriteManifestFileProps) {
   if (!existsSync(distPath)) {
     await mkdir(distPath, { recursive: true });
   }
 
   for (const processor of entryProcessors) {
     if (processor.onAfterBuild) {
-      await processor.onAfterBuild({ distPath, manifest, mode, selfRootPath });
+      await processor.onAfterBuild({ distPath, manifest, mode, runtime });
     }
   }
 

@@ -13,9 +13,9 @@ const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFi
 const normalizeContentEntry: ManifestEntryProcessor['normalize'] = async ({
   manifest,
   mode,
-  selfRootPath,
   files,
   srcPath,
+  runtime,
 }) => {
   if (!manifest.content_scripts?.length) {
     const entryPath = files.filter((file) => matchDeclarativeEntryFile(file)).map((file) => resolve(srcPath, file));
@@ -32,11 +32,13 @@ const normalizeContentEntry: ManifestEntryProcessor['normalize'] = async ({
   }
 
   // inject content runtime script for each entry in dev mode
-  if (isDevMode(mode) && manifest.content_scripts?.length) {
-    const contentLoadPath = resolve(selfRootPath, 'static/content_load.js');
-
-    manifest.content_scripts.forEach((item) => {
-      item.js?.push(contentLoadPath);
+  if (isDevMode(mode) && runtime?.contentLoad) {
+    const contentLoad = runtime.contentLoad;
+    manifest.content_scripts?.forEach((item) => {
+      if (!item.js) {
+        item.js = [];
+      }
+      item.js.push(contentLoad);
     });
   }
 };
@@ -91,7 +93,7 @@ const writeContentEntry: ManifestEntryProcessor['write'] = async ({
   content_scripts[index].css = output.filter((item) => item.endsWith('.css'));
 };
 
-const onAfterBuild: ManifestEntryProcessor['onAfterBuild'] = async ({ distPath, manifest, mode, selfRootPath }) => {
+const onAfterBuild: ManifestEntryProcessor['onAfterBuild'] = async ({ distPath, manifest, mode, runtime }) => {
   const { content_scripts = [] } = manifest;
   if (!content_scripts.length) return;
 
@@ -118,12 +120,12 @@ const onAfterBuild: ManifestEntryProcessor['onAfterBuild'] = async ({ distPath, 
     }
   }
 
-  if (isDevMode(mode)) {
-    const contentbridgeName = 'content_bridge.js';
-    const contentBridgePath = resolve(selfRootPath, 'static', contentbridgeName);
+  if (isDevMode(mode) && runtime?.contentBridge) {
+    const contentBridgePath = runtime.contentBridge;
+    const contentbridgeName = basename(contentBridgePath);
     await copyFile(contentBridgePath, resolve(distPath, contentbridgeName));
-    const hasExisted = ioslatedScripts.find((item) => item.endsWith(contentbridgeName));
-    if (!hasExisted) {
+    const exists = ioslatedScripts.find((item) => item.endsWith(contentbridgeName));
+    if (!exists) {
       content_scripts.push({
         matches: ['<all_urls>'],
         js: [contentbridgeName],

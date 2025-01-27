@@ -14,9 +14,14 @@ function transformManifestEntry(entry: ManifestEntryInput | undefined) {
   const res: RsbuildEntry = {};
   for (const key in entry) {
     const { input, html } = entry[key];
-    const files = key.startsWith('icons') ? input.map((file) => `${file}?url`) : input;
+    let imports = input;
+
+    if (key.startsWith('icons')) {
+      imports = input.map((file) => `${file}?url`);
+    }
+
     res[key] = {
-      import: files,
+      import: imports,
       html,
     };
   }
@@ -110,7 +115,7 @@ export async function normalizeRsbuildEnvironments({
           : {
               // void the empty entry error
               empty: {
-                import: resolve(selfRootPath, './static/empty_entry.js'),
+                import: resolve(selfRootPath, './static/empty-entry.js'),
                 html: false,
               },
             },

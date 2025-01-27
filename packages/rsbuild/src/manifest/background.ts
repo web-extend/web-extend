@@ -12,9 +12,9 @@ const normalizeBackgroundEntry: ManifestEntryProcessor['normalize'] = async ({
   manifest,
   target,
   mode,
-  selfRootPath,
   files,
   srcPath,
+  runtime,
 }) => {
   const { background } = manifest;
   const scripts: string[] = [];
@@ -29,8 +29,8 @@ const normalizeBackgroundEntry: ManifestEntryProcessor['normalize'] = async ({
       scripts.push(entryPath);
     }
   }
-  if (isDevMode(mode)) {
-    scripts.push(resolve(selfRootPath, 'static/background_runtime.js'));
+  if (isDevMode(mode) && runtime?.background) {
+    scripts.push(runtime.background);
   }
 
   if (!scripts.length) return;
