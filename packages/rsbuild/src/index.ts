@@ -1,14 +1,14 @@
 import { relative, resolve } from 'node:path';
 import type { RsbuildConfig, RsbuildPlugin } from '@rsbuild/core';
-import { ManifestManager, resolveOutDir, resolveSrcDir, resolveTarget, setTargetEnv } from './manifest/index.js';
-import type { ExtensionTarget, ManifestEntryOutput, WebExtensionManifest } from './manifest/types.js';
+import { ManifestManager, resolveOutDir, resolveSrcDir, resolveTarget, setTargetEnv } from '@web-extend/manifest';
+import type { ExtensionTarget, ManifestEntryOutput, WebExtensionManifest } from '@web-extend/manifest';
 import {
   clearOutdatedHotUpdateFiles,
   getAllRsbuildEntryFiles,
   getRsbuildEntryFiles,
   isDevMode,
   normalizeRsbuildEnvironments,
-} from './rsbuild/index.js';
+} from './helper.js';
 
 export type PluginWebExtendOptions<T = unknown> = {
   manifest?: T;
@@ -17,7 +17,7 @@ export type PluginWebExtendOptions<T = unknown> = {
   outDir?: string;
 };
 
-export type { ContentScriptConfig } from './manifest/types.js';
+export type { ContentScriptConfig } from '@web-extend/manifest';
 
 export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPlugin => ({
   name: 'plugin-web-extend',

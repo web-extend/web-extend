@@ -22,6 +22,8 @@ import type {
   WriteManifestFileProps,
 } from './types.js';
 
+export * from './types.js';
+
 export {
   resolveTarget,
   setTargetEnv,

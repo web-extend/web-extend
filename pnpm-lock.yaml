@@ -341,6 +341,34 @@ importers:
         specifier: 0.0.1-alpha.4
         version: 0.0.1-alpha.4(@rsbuild/core@1.1.12)(@types/node@22.10.5)(web-ext@8.3.0)
 
+  packages/manifest:
+    dependencies:
+      '@babel/parser':
+        specifier: ^7.26.2
+        version: 7.26.3
+      '@babel/traverse':
+        specifier: ^7.25.9
+        version: 7.26.4
+      '@babel/types':
+        specifier: ^7.26.0
+        version: 7.26.3
+    devDependencies:
+      '@types/babel__traverse':
+        specifier: ^7.20.6
+        version: 7.20.6
+      '@types/node':
+        specifier: ^22.8.6
+        version: 22.10.5
+      '@types/webextension-polyfill':
+        specifier: ^0.12.1
+        version: 0.12.1
+      typescript:
+        specifier: ^5.7.2
+        version: 5.7.3
+      webextension-polyfill:
+        specifier: ^0.12.0
+        version: 0.12.0
+
   packages/rsbuild:
     dependencies:
       '@babel/parser':
@@ -377,6 +405,9 @@ importers:
       '@vitest/coverage-v8':
         specifier: ^2.1.8
         version: 2.1.8(vitest@2.1.8(@types/node@22.10.1)(terser@5.37.0))
+      '@web-extend/manifest':
+        specifier: workspace:*
+        version: link:../manifest
       simple-git-hooks:
         specifier: ^2.11.1
         version: 2.11.1
@@ -5717,7 +5748,7 @@ snapshots:
 
   '@types/yauzl@2.10.3':
     dependencies:
-      '@types/node': 22.10.1
+      '@types/node': 22.10.5
 
   '@typescript-eslint/eslint-plugin@8.21.0(@typescript-eslint/parser@8.21.0(eslint@9.18.0)(typescript@5.7.2))(eslint@9.18.0)(typescript@5.7.2)':
     dependencies:
@@ -6463,7 +6494,7 @@ snapshots:
 
   chrome-launcher@1.1.2:
     dependencies:
-      '@types/node': 22.10.1
+      '@types/node': 22.10.5
       escape-string-regexp: 4.0.0
       is-wsl: 2.2.0
       lighthouse-logger: 2.0.1
@@ -7350,7 +7381,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 22.10.1
+      '@types/node': 22.10.5
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
