@@ -2,9 +2,9 @@ import { existsSync } from 'node:fs';
 import { readFile, rm } from 'node:fs/promises';
 import { extname, resolve } from 'node:path';
 import { createRsbuild } from '@rsbuild/core';
+import { setTargetEnv } from '@web-extend/manifest';
 import { pluginWebExtend } from '../src/index.js';
 import type { PluginWebExtendOptions } from '../src/index.js';
-import { setTargetEnv } from '@web-extend/manifest';
 
 export { readManifestFile } from '@web-extend/manifest';
 
