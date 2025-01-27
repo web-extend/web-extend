@@ -2,7 +2,7 @@ import { existsSync } from 'node:fs';
 import { cp, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import backgroundProcessor from './background.js';
-import { isDevMode, readPackageJson } from './common.js';
+import { isDevMode, readPackageJson, getEntryFileVariants } from './common.js';
 import contentProcessor from './content.js';
 import devtoolsProcessor from './devtools.js';
 import iconsProcessor from './icons.js';
@@ -17,8 +17,9 @@ import type {
   ManifestEntryProcessor,
   NormalizeManifestProps,
   WebExtensionManifest,
-  WriteMainfestEntriesProps,
   WriteManifestFileProps,
+  ManifestContext,
+  ManifestEntryOutput,
 } from './types.js';
 
 export {
@@ -27,7 +28,6 @@ export {
   resolveOutDir,
   resolveSrcDir,
   setOutDirEnv,
-  getEntryFileVariants,
 } from './common.js';
 
 const entryProcessors: ManifestEntryProcessor[] = [
@@ -41,14 +41,6 @@ const entryProcessors: ManifestEntryProcessor[] = [
   ...overrideProcessor,
   sidepanelProcessor,
 ];
-
-export function matchDeclarativeEntryFile(file: string) {
-  for (const processor of entryProcessors) {
-    const item = processor.matchDeclarativeEntryFile(file);
-    if (item) return item;
-  }
-  return null;
-}
 
 export async function normalizeManifest({
   rootPath,
@@ -137,37 +129,6 @@ async function getDefaultManifest(rootPath: string, target?: ExtensionTarget) {
   return manifest;
 }
 
-export async function readManifestEntries(manifest: WebExtensionManifest) {
-  const res = {} as ManifestEnties;
-  for (const processor of entryProcessors) {
-    const entry = await processor.read(manifest);
-    if (entry) {
-      res[processor.key] = entry;
-    }
-  }
-  return res;
-}
-
-export async function writeManifestEntries({
-  normalizedManifest,
-  manifest,
-  rootPath,
-  entry,
-}: WriteMainfestEntriesProps) {
-  for (const entryName in entry) {
-    const processor = entryProcessors.find((item) => item.matchEntryName(entryName));
-    if (!processor) continue;
-    await processor.write({
-      normalizedManifest,
-      manifest,
-      rootPath,
-      name: entryName,
-      input: entry[entryName].input,
-      output: entry[entryName].output,
-    });
-  }
-}
-
 export async function readManifestFile(distPath: string) {
   const manifestPath = resolve(distPath, 'manifest.json');
   const manifest = JSON.parse(await readFile(manifestPath, 'utf-8')) as WebExtensionManifest;
@@ -189,8 +150,73 @@ export async function writeManifestFile({ distPath, manifest, mode, runtime }: W
   await writeFile(join(distPath, 'manifest.json'), data);
 }
 
-export async function copyPublicFiles(rootPath: string, distPath: string) {
-  const publicPath = resolve(rootPath, 'public');
-  if (!existsSync(publicPath) || !existsSync(distPath)) return;
-  await cp(publicPath, distPath, { recursive: true, dereference: true });
+export class ManifestManager {
+  private context = {} as ManifestContext;
+  private manifest = {} as WebExtensionManifest;
+  private normalizedManifest = {} as WebExtensionManifest;
+
+  async normalize({ manifest, ...context }: ManifestContext & { manifest?: WebExtensionManifest }) {
+    this.context = context;
+    const { rootPath, srcDir, target, mode, runtime } = context;
+    this.manifest = await normalizeManifest({
+      rootPath,
+      manifest,
+      srcDir,
+      target,
+      mode,
+      runtime,
+    });
+    this.normalizedManifest = JSON.parse(JSON.stringify(this.manifest));
+  }
+
+  async readEntries() {
+    const manifest = this.normalizedManifest;
+    const res = {} as ManifestEnties;
+    for (const processor of entryProcessors) {
+      const entry = await processor.read(manifest);
+      if (entry) {
+        res[processor.key] = entry;
+      }
+    }
+    return res;
+  }
+
+  async writeEntries(result: ManifestEntryOutput) {
+    for (const entryName in result) {
+      const processor = entryProcessors.find((item) => item.matchEntryName(entryName));
+      if (!processor) continue;
+      await processor.write({
+        normalizedManifest: this.normalizedManifest,
+        manifest: this.manifest,
+        rootPath: this.context.rootPath,
+        name: entryName,
+        input: result[entryName].input,
+        output: result[entryName].output,
+      });
+    }
+  }
+
+  writeManifestFile() {
+    const { rootPath, outDir, mode, runtime } = this.context;
+    const distPath = resolve(rootPath, outDir);
+    return writeManifestFile({ distPath, manifest: this.manifest, mode, runtime });
+  }
+
+  async copyPublicFiles() {
+    const { rootPath, outDir } = this.context;
+    const publicPath = resolve(rootPath, 'public');
+    const distPath = resolve(rootPath, outDir);
+    if (!existsSync(publicPath) || !existsSync(distPath)) return;
+    await cp(publicPath, distPath, { recursive: true, dereference: true });
+  }
+
+  static matchDeclarativeEntryFile(file: string) {
+    for (const processor of entryProcessors) {
+      const item = processor.matchDeclarativeEntryFile(file);
+      if (item) return item;
+    }
+    return null;
+  }
+
+  static getEntryFileVariants = getEntryFileVariants;
 }

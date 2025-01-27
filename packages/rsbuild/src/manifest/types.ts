@@ -60,6 +60,15 @@ export interface ManifestEntryProcessor {
   onAfterBuild?: (props: WriteManifestFileProps) => MaybePromise<void>;
 }
 
+export interface ManifestContext {
+  target: ExtensionTarget;
+  mode: string;
+  rootPath: string;
+  srcDir: string;
+  outDir: string;
+  runtime: ManifestRuntime;
+}
+
 export interface ManifestRuntime {
   background?: string;
   contentLoad?: string;
@@ -69,7 +78,7 @@ export interface ManifestRuntime {
 export interface NormalizeManifestProps {
   rootPath: string;
   mode: string | undefined;
-  manifest: WebExtensionManifest;
+  manifest?: WebExtensionManifest;
   srcDir: string;
   target: ExtensionTarget;
   runtime: ManifestRuntime;

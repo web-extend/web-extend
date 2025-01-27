@@ -1,19 +1,7 @@
 import { relative, resolve } from 'node:path';
 import type { RsbuildConfig, RsbuildPlugin } from '@rsbuild/core';
-import {
-  copyPublicFiles,
-  getEntryFileVariants,
-  matchDeclarativeEntryFile,
-  normalizeManifest,
-  readManifestEntries,
-  resolveOutDir,
-  resolveSrcDir,
-  resolveTarget,
-  setTargetEnv,
-  writeManifestEntries,
-  writeManifestFile,
-} from './manifest/index.js';
-import type { ExtensionTarget, ManifestEntryOutput, ManifestRuntime, WebExtensionManifest } from './manifest/types.js';
+import { resolveOutDir, resolveSrcDir, resolveTarget, setTargetEnv, ManifestManager } from './manifest/index.js';
+import type { ExtensionTarget, ManifestEntryOutput, WebExtensionManifest } from './manifest/types.js';
 import {
   clearOutdatedHotUpdateFiles,
   getAllRsbuildEntryFiles,
@@ -34,22 +22,13 @@ export type { ContentScriptConfig } from './manifest/types.js';
 export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPlugin => ({
   name: 'plugin-web-extend',
   setup: (api) => {
-    const rootPath = api.context.rootPath;
-    const selfRootPath = __dirname;
-    let mode = process.env.NODE_ENV as RsbuildConfig['mode'];
-
-    const manifestRuntime: ManifestRuntime = {
-      background: resolve(selfRootPath, 'static/background-runtime.js'),
-      contentLoad: resolve(selfRootPath, 'static/content-load.js'),
-      contentBridge: resolve(selfRootPath, 'static/content-bridge.js'),
-    };
-    let normalizedManifest = {} as WebExtensionManifest;
-    let manifest = {} as WebExtensionManifest;
+    const manifestManager = new ManifestManager();
+    let mode = '';
 
     api.modifyRsbuildConfig(async (config, { mergeRsbuildConfig }) => {
-      if (config.mode) {
-        mode = config.mode;
-      }
+      mode = config.mode || process.env.NODE_ENV || 'none';
+      const rootPath = api.context.rootPath;
+      const selfRootPath = __dirname;
       const target = resolveTarget(options.target);
       const srcDir = resolveSrcDir(rootPath, options.srcDir);
       const srcPath = resolve(rootPath, srcDir);
@@ -61,17 +40,21 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       });
       setTargetEnv(target);
 
-      manifest = await normalizeManifest({
-        rootPath,
-        manifest: options.manifest as WebExtensionManifest,
-        srcDir,
-        target,
+      await manifestManager.normalize({
         mode,
-        runtime: manifestRuntime,
+        target,
+        srcDir,
+        outDir,
+        rootPath,
+        runtime: {
+          background: resolve(selfRootPath, 'static/background-runtime.js'),
+          contentLoad: resolve(selfRootPath, 'static/content-load.js'),
+          contentBridge: resolve(selfRootPath, 'static/content-bridge.js'),
+        },
+        manifest: options.manifest as WebExtensionManifest,
       });
-      normalizedManifest = JSON.parse(JSON.stringify(manifest));
 
-      const manifestEntries = await readManifestEntries(manifest);
+      const manifestEntries = await manifestManager.readEntries();
       const environments = await normalizeRsbuildEnvironments({ manifestEntries, config, selfRootPath });
       const entryPaths = getAllRsbuildEntryFiles(environments);
 
@@ -96,11 +79,11 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
                     if (stats?.isFile()) {
                       if (stats.size === 0) return true;
 
-                      const entry = matchDeclarativeEntryFile(relativePath);
+                      const entry = ManifestManager.matchDeclarativeEntryFile(relativePath);
                       if (!entry) return true;
 
-                      const entryFileVariants = getEntryFileVariants(entry.name, entry.ext).map((file) =>
-                        resolve(srcPath, file),
+                      const entryFileVariants = ManifestManager.getEntryFileVariants(entry.name, entry.ext).map(
+                        (file) => resolve(srcPath, file),
                       );
                       const hasEntry = entryFileVariants.some((file) => entryPaths.includes(file));
                       if (hasEntry) return true;
@@ -177,30 +160,22 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         };
       }
 
-      await writeManifestEntries({
-        normalizedManifest,
-        manifest,
-        rootPath,
-        entry: manifestEntry,
-      });
+      await manifestManager.writeEntries(manifestEntry);
     });
 
     api.onDevCompileDone(async ({ stats }) => {
-      const distPath = api.context.distPath;
-      await copyPublicFiles(rootPath, distPath);
-      await writeManifestFile({ distPath, manifest, mode, runtime: manifestRuntime });
+      await manifestManager.copyPublicFiles();
+      await manifestManager.writeManifestFile();
 
       // clear outdated hmr files
       const statsList = 'stats' in stats ? stats.stats : [stats];
-      clearOutdatedHotUpdateFiles(distPath, statsList);
+      clearOutdatedHotUpdateFiles(api.context.distPath, statsList);
 
       console.log('Built the extension successfully');
     });
 
     api.onAfterBuild(async () => {
-      const distPath = api.context.distPath;
-      await writeManifestFile({ distPath, manifest, mode, runtime: manifestRuntime });
-
+      await manifestManager.writeManifestFile();
       console.log('Built the extension successfully');
     });
   },
