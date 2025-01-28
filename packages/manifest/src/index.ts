@@ -6,8 +6,8 @@ import {
   getEntryFileVariants,
   isDevMode,
   readPackageJson,
-  resolveSrcDir,
   resolveOutDir,
+  resolveSrcDir,
   resolveTarget,
   setTargetEnv,
 } from './common.js';
