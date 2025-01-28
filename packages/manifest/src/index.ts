@@ -15,7 +15,7 @@ import contentProcessor from './content.js';
 import devtoolsProcessor from './devtools.js';
 import iconsProcessor from './icons.js';
 import optionsProcessor from './options.js';
-import overrideProcessor from './overrides.js';
+import overrideProcessors from './overrides.js';
 import popupProcessor from './popup.js';
 import sandboxProcessor from './sandbox.js';
 import sidepanelProcessor from './sidepanel.js';
@@ -42,7 +42,7 @@ const entryProcessors: ManifestEntryProcessor[] = [
   devtoolsProcessor,
   sandboxProcessor,
   iconsProcessor,
-  ...overrideProcessor,
+  ...overrideProcessors,
   sidepanelProcessor,
 ];
 
