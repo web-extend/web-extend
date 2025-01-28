@@ -88,9 +88,7 @@ export function resolveTarget(target?: string): ExtensionTarget {
 }
 
 export function setTargetEnv(target: string) {
-  if (target) {
-    process.env.WEB_EXTEND_TARGET = target;
-  }
+  process.env.WEB_EXTEND_TARGET = target;
 }
 
 export function resolveSrcDir(rootPath: string, srcDir: string | undefined) {

@@ -13,8 +13,16 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "npm run build"
   },
-  "files": ["dist", "bin", "templates"],
-  "keywords": ["web extensions", "browser extensions", "CLI"],
+  "files": [
+    "dist",
+    "bin",
+    "templates"
+  ],
+  "keywords": [
+    "web extensions",
+    "browser extensions",
+    "CLI"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/web-extend/web-extend.git"
@@ -35,6 +43,7 @@
     "@rsbuild/core": "^1.1.13",
     "@rslib/core": "^0.1.5",
     "@types/archiver": "^6.0.3",
+    "@types/node": "^22.8.6",
     "typescript": "^5.7.3",
     "web-ext": "^8.3.0"
   },

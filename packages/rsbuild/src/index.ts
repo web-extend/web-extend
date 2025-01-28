@@ -1,6 +1,6 @@
 import { relative, resolve } from 'node:path';
 import type { RsbuildConfig, RsbuildPlugin } from '@rsbuild/core';
-import { ManifestManager, resolveOutDir, resolveSrcDir, resolveTarget, setTargetEnv } from '@web-extend/manifest';
+import { ManifestManager } from '@web-extend/manifest';
 import type { ExtensionTarget, ManifestEntryOutput, WebExtensionManifest } from '@web-extend/manifest';
 import {
   clearOutdatedHotUpdateFiles,
@@ -23,28 +23,16 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
   name: 'plugin-web-extend',
   setup: (api) => {
     const manifestManager = new ManifestManager();
-    let mode = '';
 
     api.modifyRsbuildConfig(async (config, { mergeRsbuildConfig }) => {
-      mode = config.mode || process.env.NODE_ENV || 'none';
       const rootPath = api.context.rootPath;
       const selfRootPath = __dirname;
-      const target = resolveTarget(options.target);
-      const srcDir = resolveSrcDir(rootPath, options.srcDir);
-      const srcPath = resolve(rootPath, srcDir);
-      const outDir = resolveOutDir({
-        outdir: options.outDir,
-        distPath: config.output?.distPath?.root,
-        target,
-        mode,
-      });
-      setTargetEnv(target);
 
       await manifestManager.normalize({
-        mode,
-        target,
-        srcDir,
-        outDir,
+        mode: config.mode,
+        target: options.target,
+        srcDir: options.srcDir,
+        outDir: options.outDir,
         rootPath,
         runtime: {
           background: resolve(selfRootPath, 'static/background-runtime.js'),
@@ -57,6 +45,8 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       const manifestEntries = await manifestManager.readEntries();
       const environments = await normalizeRsbuildEnvironments({ manifestEntries, config, selfRootPath });
       const entryPaths = getAllRsbuildEntryFiles(environments);
+      const srcDir = manifestManager.context.srcDir;
+      const srcPath = resolve(rootPath, srcDir);
 
       const extraConfig: RsbuildConfig = {
         environments,
@@ -101,7 +91,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         },
         output: {
           distPath: {
-            root: outDir,
+            root: manifestManager.context.outDir,
           },
         },
       };
@@ -112,6 +102,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
 
     api.processAssets({ stage: 'additions' }, async ({ assets, compilation, environment, sources }) => {
       // support content hmr in dev mode
+      const mode = manifestManager.context.mode;
       if (isDevMode(mode) && environment.name === 'content') {
         const entries = Object.keys(environment.entry);
         for (const name in assets) {

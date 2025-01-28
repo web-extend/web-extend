@@ -2,7 +2,15 @@ import { existsSync } from 'node:fs';
 import { cp, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import backgroundProcessor from './background.js';
-import { getEntryFileVariants, isDevMode, readPackageJson } from './common.js';
+import {
+  getEntryFileVariants,
+  isDevMode,
+  readPackageJson,
+  resolveSrcDir,
+  resolveOutDir,
+  resolveTarget,
+  setTargetEnv,
+} from './common.js';
 import contentProcessor from './content.js';
 import devtoolsProcessor from './devtools.js';
 import iconsProcessor from './icons.js';
@@ -22,15 +30,9 @@ import type {
   WriteManifestFileProps,
 } from './types.js';
 
-export * from './types.js';
+export { setTargetEnv } from './common.js';
 
-export {
-  resolveTarget,
-  setTargetEnv,
-  resolveOutDir,
-  resolveSrcDir,
-  setOutDirEnv,
-} from './common.js';
+export * from './types.js';
 
 const entryProcessors: ManifestEntryProcessor[] = [
   backgroundProcessor,
@@ -153,20 +155,40 @@ export async function writeManifestFile({ distPath, manifest, mode, runtime }: W
 }
 
 export class ManifestManager {
-  private context = {} as ManifestContext;
+  public context = {} as ManifestContext;
   private manifest = {} as WebExtensionManifest;
   private normalizedManifest = {} as WebExtensionManifest;
 
-  async normalize({ manifest, ...context }: ManifestContext & { manifest?: WebExtensionManifest }) {
-    this.context = context;
-    const { rootPath, srcDir, target, mode, runtime } = context;
+  async normalize(options: Partial<ManifestContext> & { manifest?: WebExtensionManifest; distPath?: string }) {
+    const mode = options.mode || process.env.NODE_ENV || 'none';
+    const target = resolveTarget(options.target);
+    setTargetEnv(target);
+
+    const rootPath = options.rootPath || process.cwd();
+    const srcDir = resolveSrcDir(rootPath, options.srcDir);
+    const outDir = resolveOutDir({
+      outdir: options.outDir,
+      distPath: options.distPath,
+      target,
+      mode,
+    });
+
+    this.context = {
+      mode,
+      target,
+      rootPath,
+      srcDir,
+      outDir,
+      runtime: options?.runtime,
+    };
+
     this.manifest = await normalizeManifest({
       rootPath,
-      manifest,
+      manifest: options.manifest,
       srcDir,
       target,
       mode,
-      runtime,
+      runtime: options.runtime,
     });
     this.normalizedManifest = JSON.parse(JSON.stringify(this.manifest));
   }

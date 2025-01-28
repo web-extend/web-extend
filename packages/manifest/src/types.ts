@@ -66,7 +66,7 @@ export interface ManifestContext {
   rootPath: string;
   srcDir: string;
   outDir: string;
-  runtime: ManifestRuntime;
+  runtime?: ManifestRuntime;
 }
 
 export interface ManifestRuntime {
@@ -81,7 +81,7 @@ export interface NormalizeManifestProps {
   manifest?: WebExtensionManifest;
   srcDir: string;
   target: ExtensionTarget;
-  runtime: ManifestRuntime;
+  runtime?: ManifestRuntime;
 }
 
 export interface NormalizeMainfestEntryProps {
@@ -110,7 +110,7 @@ export interface WriteManifestFileProps {
   distPath: string;
   manifest: WebExtensionManifest;
   mode: string | undefined;
-  runtime: ManifestRuntime;
+  runtime?: ManifestRuntime;
 }
 
 export type ManifestEnties = {
