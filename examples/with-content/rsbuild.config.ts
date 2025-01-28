@@ -7,7 +7,4 @@ export default defineConfig({
       target: 'chrome-mv3',
     }),
   ],
-  dev: {
-    liveReload: false,
-  },
 });

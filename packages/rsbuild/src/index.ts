@@ -116,6 +116,22 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
             );
             const source = new sources.RawSource(newContent);
             compilation.updateAsset(name, source);
+          } else if (name.includes('rsbuild')) {
+            const oldContent = assets[name].source() as string;
+            const reloadExtensionCode = `
+            const bridgeEl = document.getElementById('web-extend-content-bridge');
+            if (bridgeEl) {
+              bridgeEl.dataset.contentChanged = 'true';
+            }`;
+            const newContent = oldContent.replace(
+              /(window\.)?location\.reload\(\);?/g,
+              `{
+                ${reloadExtensionCode}
+                $&
+              }`,
+            );
+            const source = new sources.RawSource(newContent);
+            compilation.updateAsset(name, source);
           }
         }
       }
