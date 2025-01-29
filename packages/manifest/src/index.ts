@@ -67,7 +67,7 @@ export async function normalizeManifest({
   }
 
   if (isDevMode(mode)) {
-    finalManifest.version_name ??= `${finalManifest.version} (development)`;
+    finalManifest.version_name ??= `${finalManifest.version} (dev)`;
     finalManifest.permissions ??= [];
     finalManifest.host_permissions ??= [];
 

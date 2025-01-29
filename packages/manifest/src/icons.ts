@@ -1,6 +1,6 @@
 import { basename, resolve } from 'node:path';
 import type { Manifest } from 'webextension-polyfill';
-import type { ManifestEntryInput, ManifestEntryProcessor, WebExtensionManifest } from './types.js';
+import type { ManifestEntryProcessor, WebExtensionManifest } from './types.js';
 
 const key = 'icons';
 
@@ -33,10 +33,11 @@ const normalizeIconsEntry: ManifestEntryProcessor['normalize'] = async ({ manife
   const declarativeIcons = getDeclarativeIcons(files, srcPath);
   if (!declarativeIcons) return;
 
-  manifest.icons = {
-    ...declarativeIcons,
-    ...(manifest.icons || {}),
-  };
+  if (!manifest.icons) {
+    manifest.icons = {
+      ...declarativeIcons,
+    };
+  }
 
   const { manifest_version } = manifest;
   let pointer: Manifest.ActionManifest | undefined = undefined;
@@ -48,10 +49,9 @@ const normalizeIconsEntry: ManifestEntryProcessor['normalize'] = async ({ manife
     pointer = manifest.action;
   }
 
-  if (typeof pointer.default_icon !== 'string') {
+  if (!pointer.default_icon) {
     pointer.default_icon = {
       ...declarativeIcons,
-      ...(pointer.default_icon || {}),
     };
   }
 };
@@ -59,54 +59,63 @@ const normalizeIconsEntry: ManifestEntryProcessor['normalize'] = async ({ manife
 const readIconsEntry: ManifestEntryProcessor['read'] = (manifest) => {
   const { icons, action, browser_action, manifest_version } = manifest || {};
   const pointer = manifest_version === 2 ? browser_action : action;
-  const entry: ManifestEntryInput = {};
+  const files = new Set<string>();
   function helper(icons?: WebExtensionManifest['icons']) {
     if (!icons) return;
     for (const size in icons) {
-      const entryName = `${key}-${size}`;
-      entry[entryName] = {
-        html: false,
-        input: [icons[size]],
-      };
+      files.add(icons[size]);
     }
   }
 
   helper(icons);
 
   if (typeof pointer?.default_icon === 'string') {
-    entry[`${key}-default`] = {
-      html: false,
-      input: [pointer.default_icon],
-    };
+    files.add(pointer.default_icon);
   } else {
     helper(pointer?.default_icon);
   }
 
-  return Object.keys(entry).length ? entry : null;
+  return files.size
+    ? {
+        [key]: {
+          input: Array.from(files),
+          html: false,
+        },
+      }
+    : null;
 };
 
-const writeIconsEntry: ManifestEntryProcessor['write'] = ({ manifest, output, name }) => {
-  const file = output?.find((item) => item.endsWith('.png'));
-  if (!file) return;
+const getIconOutputName = (input: string, output: string[]) => {
+  const name = basename(input).split('.')[0];
+  return output.find((item) => item.endsWith('.png') && basename(item).split('.')[0] === name);
+};
+
+const writeIconsEntry: ManifestEntryProcessor['write'] = ({ manifest, output }) => {
+  if (!output?.length) return;
+
+  function helper(icons: WebExtensionManifest['icons']) {
+    if (!icons) return;
+    for (const size in icons) {
+      const res = getIconOutputName(icons[size], output || []);
+      if (res) {
+        icons[size] = res;
+      } else {
+        delete icons[size];
+      }
+    }
+  }
 
   const { icons, action, browser_action, manifest_version } = manifest;
   const pointer = manifest_version === 2 ? browser_action : action;
 
-  if (name === `${key}-default`) {
-    if (pointer) {
-      pointer.default_icon = file;
-    }
-    return;
+  if (icons) {
+    helper(icons);
   }
 
-  const size = Number(name.replace(`${key}-`, ''));
-  if (size) {
-    if (icons) {
-      icons[size] = file;
-    }
-    if (typeof pointer?.default_icon === 'object') {
-      pointer.default_icon[size] = file;
-    }
+  if (typeof pointer?.default_icon === 'string') {
+    pointer.default_icon = getIconOutputName(pointer.default_icon, output || []);
+  } else if (typeof pointer?.default_icon === 'object') {
+    helper(pointer.default_icon);
   }
 };
 
