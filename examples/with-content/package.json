@@ -14,7 +14,7 @@
   "license": "ISC",
   "description": "A basic browser extension",
   "devDependencies": {
-    "@rsbuild/core": "^1.1.6",
+    "@rsbuild/core": "^1.2.3",
     "typescript": "^5.7.2"
   }
 }
