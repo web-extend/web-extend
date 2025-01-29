@@ -13,8 +13,7 @@
     "lint:write": "biome check . --write",
     "docs:dev": "cd docs && pnpm dev",
     "docs:build": "cd docs && pnpm build",
-    "docs:preview": "cd docs && pnpm preview",
-    "change": "changeset"
+    "docs:preview": "cd docs && pnpm preview"
   },
   "simple-git-hooks": {
     "pre-commit": "npm run lint:write"
