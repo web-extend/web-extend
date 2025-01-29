@@ -6,8 +6,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "npx rsbuild dev",
-    "build": "npx rsbuild build"
+    "dev": "web-extend rsbuild:dev",
+    "build": "web-extend rsbuild:build"
   },
   "keywords": [],
   "author": "xbzhang",

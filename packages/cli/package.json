@@ -13,8 +13,16 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "npm run build"
   },
-  "files": ["dist", "bin", "templates"],
-  "keywords": ["web extensions", "browser extensions", "CLI"],
+  "files": [
+    "dist",
+    "bin",
+    "templates"
+  ],
+  "keywords": [
+    "web extensions",
+    "browser extensions",
+    "CLI"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/web-extend/web-extend.git"
@@ -24,7 +32,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@inquirer/prompts": "^7.2.2",
+    "@inquirer/prompts": "^7.2.4",
     "archiver": "^7.0.1",
     "chalk": "^5.4.1",
     "chokidar": "^4.0.3",
@@ -32,10 +40,10 @@
     "sharp": "^0.33.5"
   },
   "devDependencies": {
-    "@rsbuild/core": "^1.1.13",
+    "@rsbuild/core": "^1.2.3",
     "@rslib/core": "^0.1.5",
     "@types/archiver": "^6.0.3",
-    "@types/node": "^22.8.6",
+    "@types/node": "^22.12.0",
     "typescript": "^5.7.3",
     "web-ext": "^8.3.0"
   },

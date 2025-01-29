@@ -143,7 +143,7 @@ async function init({
 }
 
 async function startDevServer(options: StartOptions) {
-  prepareRun(options.target);
+  prepareEnv('dev', options.target);
 
   let webExt = null;
   if (options.open) {
@@ -200,7 +200,7 @@ const restartDevServer: RestartCallback = async ({ filePath }) => {
 };
 
 async function startBuild(options: StartOptions) {
-  prepareRun(options.target);
+  prepareEnv('build', options.target);
 
   const rsbuild = await init({
     cliOptions: options,
@@ -262,7 +262,11 @@ const restartBuild: RestartCallback = async ({ filePath }) => {
   onBeforeRestart(buildInstance.close);
 };
 
-function prepareRun(target: string | undefined) {
+function prepareEnv(command: 'dev' | 'build', target: string | undefined) {
+  if (!process.env.NODE_ENV) {
+    process.env.NODE_ENV = command === 'build' ? 'production' : 'development';
+  }
+
   if (target) {
     process.env.WEB_EXTEND_TARGET = target;
   }
