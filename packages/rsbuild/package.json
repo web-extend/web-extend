@@ -2,7 +2,11 @@
   "name": "@web-extend/rsbuild-plugin",
   "version": "0.0.1-alpha.1",
   "description": "A Rsbuild plugin of WebExtend.",
-  "keywords": ["web extensions", "browser extensions", "rsbuild plugin"],
+  "keywords": [
+    "web extensions",
+    "browser extensions",
+    "rsbuild plugin"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/web-extend/web-extend.git"
@@ -20,7 +24,9 @@
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "rslib build",
     "dev": "rslib build --watch",
@@ -36,21 +42,21 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@microsoft/api-extractor": "^7.48.1",
-    "@rsbuild/core": "^1.1.10",
+    "@microsoft/api-extractor": "^7.49.1",
+    "@rsbuild/core": "^1.2.3",
     "@rslib/core": "^0.1.5",
     "@types/babel__traverse": "^7.20.6",
-    "@types/node": "^22.8.6",
+    "@types/node": "^22.12.0",
     "@types/webextension-polyfill": "^0.12.1",
     "@vitest/coverage-v8": "^2.1.8",
     "@web-extend/manifest": "workspace:*",
     "simple-git-hooks": "^2.11.1",
-    "typescript": "^5.7.2",
+    "typescript": "^5.7.3",
     "vitest": "^2.1.8",
     "webextension-polyfill": "^0.12.0"
   },
   "peerDependencies": {
-    "@rsbuild/core": "1.x"
+    "@rsbuild/core": "^1.2.0"
   },
   "peerDependenciesMeta": {
     "@rsbuild/core": {
@@ -63,8 +69,8 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@babel/parser": "^7.26.2",
-    "@babel/traverse": "^7.25.9",
-    "@babel/types": "^7.26.0"
+    "@babel/parser": "^7.26.7",
+    "@babel/traverse": "^7.26.7",
+    "@babel/types": "^7.26.7"
   }
 }
