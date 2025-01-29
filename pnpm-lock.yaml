@@ -27,97 +27,6 @@ importers:
         specifier: ^1.6.1
         version: 1.6.1(@algolia/client-search@5.19.0)(@types/node@22.12.0)(postcss@8.5.1)(search-insights@2.17.3)(terser@5.37.0)(typescript@5.7.3)
 
-  examples/with-background:
-    devDependencies:
-      '@rsbuild/core':
-        specifier: ^1.2.3
-        version: 1.2.3
-      typescript:
-        specifier: ^5.7.2
-        version: 5.7.3
-
-  examples/with-content:
-    devDependencies:
-      '@rsbuild/core':
-        specifier: ^1.2.3
-        version: 1.2.3
-      typescript:
-        specifier: ^5.7.2
-        version: 5.7.2
-
-  examples/with-devtools:
-    devDependencies:
-      '@rsbuild/core':
-        specifier: ^1.2.3
-        version: 1.2.3
-      '@types/chrome':
-        specifier: ^0.0.290
-        version: 0.0.290
-      typescript:
-        specifier: ^5.7.2
-        version: 5.7.2
-
-  examples/with-icons:
-    devDependencies:
-      '@rsbuild/core':
-        specifier: ^1.2.3
-        version: 1.2.3
-      typescript:
-        specifier: ^5.7.2
-        version: 5.7.3
-
-  examples/with-multi-contents:
-    devDependencies:
-      '@rsbuild/core':
-        specifier: ^1.2.3
-        version: 1.2.3
-      typescript:
-        specifier: ^5.7.2
-        version: 5.7.3
-
-  examples/with-options:
-    devDependencies:
-      '@rsbuild/core':
-        specifier: ^1.2.3
-        version: 1.2.3
-      typescript:
-        specifier: ^5.7.2
-        version: 5.7.3
-
-  examples/with-popup:
-    devDependencies:
-      '@rsbuild/core':
-        specifier: ^1.2.3
-        version: 1.2.3
-      typescript:
-        specifier: ^5.7.2
-        version: 5.7.2
-
-  examples/with-react:
-    dependencies:
-      react:
-        specifier: ^19.0.0
-        version: 19.0.0
-      react-dom:
-        specifier: ^19.0.0
-        version: 19.0.0(react@19.0.0)
-    devDependencies:
-      '@rsbuild/core':
-        specifier: ^1.2.3
-        version: 1.2.3
-      '@rsbuild/plugin-react':
-        specifier: ^1.0.7
-        version: 1.1.0(@rsbuild/core@1.2.3)
-      '@types/react':
-        specifier: ^19.0.0
-        version: 19.0.1
-      '@types/react-dom':
-        specifier: ^19.0.0
-        version: 19.0.2(@types/react@19.0.1)
-      typescript:
-        specifier: ^5.7.2
-        version: 5.7.2
-
   packages/cli:
     dependencies:
       '@inquirer/prompts':
@@ -320,8 +229,8 @@ importers:
         specifier: ^0.0.290
         version: 0.0.290
       '@web-extend/rsbuild-plugin':
-        specifier: 0.0.1-beta.1
-        version: 0.0.1-beta.1(@rsbuild/core@1.2.3)
+        specifier: 0.0.1-alpha.1
+        version: 0.0.1-alpha.1(@rsbuild/core@1.2.3)
       eslint:
         specifier: ^9.18.0
         version: 9.18.0
@@ -344,8 +253,8 @@ importers:
         specifier: ^8.3.0
         version: 8.3.0
       web-extend:
-        specifier: 0.0.1-beta.1
-        version: 0.0.1-beta.1(@rsbuild/core@1.2.3)(@types/node@22.12.0)(web-ext@8.3.0)
+        specifier: 0.0.1-alpha.4
+        version: 0.0.1-alpha.4(@rsbuild/core@1.2.3)(@types/node@22.12.0)(web-ext@8.3.0)
 
   packages/manifest:
     dependencies:
@@ -1942,6 +1851,14 @@ packages:
 
   '@vueuse/shared@12.4.0':
     resolution: {integrity: sha512-9yLgbHVIF12OSCojnjTIoZL1+UA10+O4E1aD6Hpfo/DKVm5o3SZIwz6CupqGy3+IcKI8d6Jnl26EQj/YucnW0Q==}
+
+  '@web-extend/rsbuild-plugin@0.0.1-alpha.1':
+    resolution: {integrity: sha512-kFiigl5FABPPDcBC0MTdo45VNyaH5MgLlEMbP6QWGR/+0UABNox2gZGAvzD93q0SWU7HGugvK5DC2cpwoQiz8g==}
+    peerDependencies:
+      '@rsbuild/core': 1.x
+    peerDependenciesMeta:
+      '@rsbuild/core':
+        optional: true
 
   '@web-extend/rsbuild-plugin@0.0.1-beta.1':
     resolution: {integrity: sha512-hXLN1NjgKkT6vZ9jJu9FaEATiEciwVLSmiXbA5sGBhfahwaCnZiX0Abg5MOrvVPPDOhavckL/l057eiLQQhtnQ==}
@@ -4595,6 +4512,19 @@ packages:
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
     hasBin: true
 
+  web-extend@0.0.1-alpha.4:
+    resolution: {integrity: sha512-JLtJX/sDcainYj0NBwE+VPMaynwJFR0Pyr/E9Yd50AL9exh1gpHP1hbt7KL3jvNrWJihumCPUD+JmTp8/cClPg==}
+    engines: {node: '>=16.7.0'}
+    hasBin: true
+    peerDependencies:
+      '@rsbuild/core': 1.x
+      web-ext: ^8.3.0
+    peerDependenciesMeta:
+      '@rsbuild/core':
+        optional: true
+      web-ext:
+        optional: true
+
   web-extend@0.0.1-beta.1:
     resolution: {integrity: sha512-NS3yZGKfdYZfX0slUEiEP9fTkoEpe3pQ3wNYmdD0BqEMo6KQFAebeSomxJ7CW/NEa/eOYE5zSFSaPqS4qGNA7Q==}
     engines: {node: '>=16.7.0'}
@@ -6421,6 +6351,16 @@ snapshots:
       vue: 3.5.13(typescript@5.7.3)
     transitivePeerDependencies:
       - typescript
+
+  '@web-extend/rsbuild-plugin@0.0.1-alpha.1(@rsbuild/core@1.2.3)':
+    dependencies:
+      '@babel/parser': 7.26.7
+      '@babel/traverse': 7.26.7
+      '@babel/types': 7.26.7
+    optionalDependencies:
+      '@rsbuild/core': 1.2.3
+    transitivePeerDependencies:
+      - supports-color
 
   '@web-extend/rsbuild-plugin@0.0.1-beta.1(@rsbuild/core@1.2.3)':
     dependencies:
@@ -9220,6 +9160,20 @@ snapshots:
       - safe-compare
       - supports-color
       - utf-8-validate
+
+  web-extend@0.0.1-alpha.4(@rsbuild/core@1.2.3)(@types/node@22.12.0)(web-ext@8.3.0):
+    dependencies:
+      '@inquirer/prompts': 7.2.4(@types/node@22.12.0)
+      archiver: 7.0.1
+      chalk: 5.4.1
+      chokidar: 4.0.3
+      commander: 12.1.0
+      sharp: 0.33.5
+    optionalDependencies:
+      '@rsbuild/core': 1.2.3
+      web-ext: 8.3.0
+    transitivePeerDependencies:
+      - '@types/node'
 
   web-extend@0.0.1-beta.1(@rsbuild/core@1.2.3)(@types/node@22.12.0)(web-ext@8.3.0):
     dependencies:
