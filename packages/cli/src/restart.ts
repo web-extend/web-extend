@@ -1,4 +1,5 @@
 import { basename } from 'node:path';
+import chalk from 'chalk';
 import chokidar from 'chokidar';
 import type { ChokidarOptions } from 'chokidar';
 import { debounce } from './util.js';
@@ -63,7 +64,7 @@ export async function beforeRestart({
 
   if (filePath) {
     const filename = basename(filePath);
-    console.info(`Restart ${id} because ${filename} is changed.\n`);
+    console.info(`Restart ${id} because ${chalk.yellow(filename)} is changed.\n`);
   } else {
     console.info(`Restarting ${id}...\n`);
   }

@@ -2,11 +2,11 @@ import { existsSync } from 'node:fs';
 import { readFile, rm } from 'node:fs/promises';
 import { extname, resolve } from 'node:path';
 import { createRsbuild } from '@rsbuild/core';
+import { setTargetEnv } from '@web-extend/manifest';
 import { pluginWebExtend } from '../src/index.js';
 import type { PluginWebExtendOptions } from '../src/index.js';
-import { setTargetEnv } from '../src/manifest/env.js';
 
-export { readManifestFile } from '../src/manifest/index.js';
+export { readManifestFile } from '@web-extend/manifest';
 
 export function getFileContent(distPath: string, name: string) {
   return readFile(resolve(distPath, name), 'utf-8');

@@ -111,27 +111,26 @@ async function init({
         files.push(configFilePath);
       }
 
-      // const config = rsbuild.getNormalizedConfig();
-      // if (config.dev?.watchFiles) {
-      //   const watchFiles = [config.dev.watchFiles].flat().filter((item) => item.type === 'reload-server');
-      //   for (const watchFilesConfig of watchFiles) {
-      //     const paths = [watchFilesConfig.paths].flat();
-      //     if (watchFilesConfig.options) {
-      //       const watcher = watchFilesForRestart({
-      //         files: paths,
-      //         root,
-      //         restart,
-      //         watchOptions: watchFilesConfig.options,
-      //         watchEvents: ['add', 'unlink'],
-      //       });
-      //       if (watcher) {
-      //         watchers.push(watcher);
-      //       }
-      //     } else {
-      //       files.push(...paths);
-      //     }
-      //   }
-      // }
+      const config = rsbuild.getNormalizedConfig();
+      if (config.dev?.watchFiles) {
+        const watchFiles = [config.dev.watchFiles].flat().filter((item) => item.type === 'reload-server');
+        for (const watchFilesConfig of watchFiles) {
+          const paths = [watchFilesConfig.paths].flat();
+          if (watchFilesConfig.options) {
+            const watcher = watchFilesForRestart({
+              files: paths,
+              root,
+              restart,
+              watchOptions: watchFilesConfig.options,
+            });
+            if (watcher) {
+              watchers.push(watcher);
+            }
+          } else {
+            files.push(...paths);
+          }
+        }
+      }
 
       const watcher = watchFilesForRestart({ files, root, restart });
       if (watcher) {
@@ -144,7 +143,7 @@ async function init({
 }
 
 async function startDevServer(options: StartOptions) {
-  prepareRun(options.target);
+  prepareEnv('dev', options.target);
 
   let webExt = null;
   if (options.open) {
@@ -201,7 +200,7 @@ const restartDevServer: RestartCallback = async ({ filePath }) => {
 };
 
 async function startBuild(options: StartOptions) {
-  prepareRun(options.target);
+  prepareEnv('build', options.target);
 
   const rsbuild = await init({
     cliOptions: options,
@@ -220,7 +219,7 @@ async function startBuild(options: StartOptions) {
     if (options.zip) {
       await zip({
         root: buildInfo.rootPath,
-        source: buildInfo.distPath,
+        outDir: buildInfo.distPath,
       });
     }
 
@@ -252,7 +251,7 @@ const restartBuild: RestartCallback = async ({ filePath }) => {
     if (commonOptions.zip) {
       await zip({
         root: buildInfo.rootPath,
-        source: buildInfo.distPath,
+        outDir: buildInfo.distPath,
       });
     }
 
@@ -263,7 +262,11 @@ const restartBuild: RestartCallback = async ({ filePath }) => {
   onBeforeRestart(buildInstance.close);
 };
 
-function prepareRun(target: string | undefined) {
+function prepareEnv(command: 'dev' | 'build', target: string | undefined) {
+  if (!process.env.NODE_ENV) {
+    process.env.NODE_ENV = command === 'build' ? 'production' : 'development';
+  }
+
   if (target) {
     process.env.WEB_EXTEND_TARGET = target;
   }

@@ -1,16 +1,11 @@
 {
-  "name": "web-extend",
+  "name": "web-extend-monorepo",
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
   "private": "true",
   "directories": {
     "example": "examples"
-  },
-  "dependencies": {
-    "@biomejs/biome": "^1.9.4",
-    "simple-git-hooks": "^2.11.1",
-    "typescript": "^5.7.2"
   },
   "scripts": {
     "test": "echo skip",
@@ -34,5 +29,11 @@
   },
   "homepage": "https://github.com/web-infra-dev/rsbuild#readme",
   "description": "",
-  "packageManager": "pnpm@9.12.3"
+  "packageManager": "pnpm@9.12.3",
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@changesets/cli": "^2.27.12",
+    "simple-git-hooks": "^2.11.1",
+    "typescript": "^5.7.3"
+  }
 }

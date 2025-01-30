@@ -7,7 +7,7 @@ export default defineConfig({
     nav: [
       { text: '指南', link: '/zh/guide/introduction' },
       { text: 'API', link: '/zh/api/web-extend' },
-      { text: '示例', link: 'https://github.com/web-extend/web-extend/tree/main/examples' },
+      { text: '示例', link: 'https://github.com/web-extend/examples' },
     ],
 
     sidebar: {

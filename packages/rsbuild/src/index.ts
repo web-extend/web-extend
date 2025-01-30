@@ -1,21 +1,14 @@
+import { relative, resolve } from 'node:path';
 import type { RsbuildConfig, RsbuildPlugin } from '@rsbuild/core';
-import {
-  copyPublicFiles,
-  getOutDir,
-  getSrcDir,
-  getTarget,
-  normalizeManifest,
-  setTargetEnv,
-  writeManifestEntries,
-  writeManifestFile,
-} from './manifest/index.js';
-import type { ExtensionTarget, ManifestEntryOutput, WebExtensionManifest } from './manifest/types.js';
+import { ManifestManager } from '@web-extend/manifest';
+import type { ExtensionTarget, ManifestEntryOutput, WebExtensionManifest } from '@web-extend/manifest';
 import {
   clearOutdatedHotUpdateFiles,
-  getRsbuildEntryImport,
+  getAllRsbuildEntryFiles,
+  getRsbuildEntryFiles,
   isDevMode,
   normalizeRsbuildEnvironments,
-} from './rsbuild/index.js';
+} from './helper.js';
 
 export type PluginWebExtendOptions<T = unknown> = {
   manifest?: T;
@@ -24,45 +17,37 @@ export type PluginWebExtendOptions<T = unknown> = {
   outDir?: string;
 };
 
-export type { ContentScriptConfig } from './manifest/types.js';
+export type { ContentScriptConfig } from '@web-extend/manifest';
 
 export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPlugin => ({
   name: 'plugin-web-extend',
   setup: (api) => {
-    const rootPath = api.context.rootPath;
-    const selfRootPath = __dirname;
-    let mode = process.env.NODE_ENV as RsbuildConfig['mode'];
-
-    let normalizedManifest = {} as WebExtensionManifest;
-    let manifest = {} as WebExtensionManifest;
+    const manifestManager = new ManifestManager();
 
     api.modifyRsbuildConfig(async (config, { mergeRsbuildConfig }) => {
-      if (config.mode) {
-        mode = config.mode;
-      }
+      const rootPath = api.context.rootPath;
+      const selfRootPath = __dirname;
 
-      const target = getTarget(options.target);
-      setTargetEnv(target);
-
-      const srcDir = getSrcDir(rootPath, options.srcDir);
-
-      const outDir = getOutDir({
-        outdir: options.outDir,
-        distPath: config.output?.distPath?.root,
-        target,
-        mode,
-      });
-
-      manifest = await normalizeManifest({
+      await manifestManager.normalize({
+        mode: config.mode,
+        target: options.target,
+        srcDir: options.srcDir,
+        outDir: options.outDir,
         rootPath,
-        selfRootPath,
+        runtime: {
+          background: resolve(selfRootPath, 'static/background-runtime.js'),
+          contentLoad: resolve(selfRootPath, 'static/content-load.js'),
+          contentBridge: resolve(selfRootPath, 'static/content-bridge.js'),
+        },
         manifest: options.manifest as WebExtensionManifest,
-        srcDir,
-        target,
-        mode,
       });
 
-      const environments = await normalizeRsbuildEnvironments({ manifest, config, selfRootPath });
+      const manifestEntries = await manifestManager.readEntries();
+      const environments = await normalizeRsbuildEnvironments({ manifestEntries, config, selfRootPath });
+      const entryPaths = getAllRsbuildEntryFiles(environments);
+      const srcDir = manifestManager.context.srcDir;
+      const srcPath = resolve(rootPath, srcDir);
+
       const extraConfig: RsbuildConfig = {
         environments,
         dev: {
@@ -72,33 +57,52 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
             port: '<port>',
             protocol: 'ws',
           },
+          watchFiles: [
+            {
+              type: 'reload-server',
+              paths: [srcDir],
+              options: {
+                cwd: rootPath,
+                ignored: (file, stats) => {
+                  if (file.startsWith(srcPath)) {
+                    const relativePath = relative(srcPath, file);
+                    if (stats?.isFile()) {
+                      if (stats.size === 0) return true;
+
+                      const entry = ManifestManager.matchDeclarativeEntryFile(relativePath);
+                      if (!entry) return true;
+
+                      const entryFileVariants = ManifestManager.getEntryFileVariants(entry.name, entry.ext).map(
+                        (file) => resolve(srcPath, file),
+                      );
+                      const hasEntry = entryFileVariants.some((file) => entryPaths.includes(file));
+                      if (hasEntry) return true;
+                    }
+                    return false;
+                  }
+                  return true;
+                },
+              },
+            },
+          ],
         },
         server: {
           printUrls: false,
         },
         output: {
           distPath: {
-            root: outDir,
+            root: manifestManager.context.outDir,
           },
         },
       };
 
-      normalizedManifest = JSON.parse(JSON.stringify(manifest));
       // extraConfig must be at the end, for dev.writeToDisk
       return mergeRsbuildConfig(config, extraConfig);
     });
 
-    api.processAssets({ stage: 'additional' }, async ({ assets, compilation, environment, sources }) => {
-      if (environment.name === 'icons') {
-        for (const name in assets) {
-          if (name.endsWith('.js')) {
-            compilation.deleteAsset(name);
-          }
-        }
-        return;
-      }
-
+    api.processAssets({ stage: 'additions' }, async ({ assets, compilation, environment, sources }) => {
       // support content hmr in dev mode
+      const mode = manifestManager.context.mode;
       if (isDevMode(mode) && environment.name === 'content') {
         const entries = Object.keys(environment.entry);
         for (const name in assets) {
@@ -112,6 +116,32 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
             );
             const source = new sources.RawSource(newContent);
             compilation.updateAsset(name, source);
+          } else if (name.includes('rsbuild')) {
+            const oldContent = assets[name].source() as string;
+            const reloadExtensionCode = `
+            const bridgeEl = document.getElementById('web-extend-content-bridge');
+            if (bridgeEl) {
+              bridgeEl.dataset.contentChanged = 'true';
+            }`;
+            const newContent = oldContent.replace(
+              /(window\.)?location\.reload\(\);?/g,
+              `{
+                ${reloadExtensionCode}
+                $&
+              }`,
+            );
+            const source = new sources.RawSource(newContent);
+            compilation.updateAsset(name, source);
+          }
+        }
+      }
+    });
+
+    api.processAssets({ stage: 'optimize' }, async ({ assets, compilation, environment }) => {
+      if (environment.name === 'web') {
+        for (const name in assets) {
+          if (name.endsWith('.js') && (name.includes('icons') || name.includes('empty'))) {
+            compilation.deleteAsset(name);
           }
         }
       }
@@ -124,7 +154,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
 
       const manifestEntry: ManifestEntryOutput = {};
       for (const [entryName, entrypoint] of Object.entries(entrypoints)) {
-        const input = [getRsbuildEntryImport(environment.entry, entryName)].flat();
+        const input = getRsbuildEntryFiles(environment.entry, entryName);
 
         const { assets = [], auxiliaryAssets = [] } = entrypoint;
         const output = [...assets, ...auxiliaryAssets]
@@ -137,30 +167,22 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         };
       }
 
-      await writeManifestEntries({
-        normalizedManifest,
-        manifest,
-        rootPath,
-        entry: manifestEntry,
-      });
+      await manifestManager.writeEntries(manifestEntry);
     });
 
     api.onDevCompileDone(async ({ stats }) => {
-      const distPath = api.context.distPath;
-      await copyPublicFiles(rootPath, distPath);
-      await writeManifestFile({ distPath, manifest, mode, selfRootPath });
+      await manifestManager.copyPublicFiles();
+      await manifestManager.writeManifestFile();
 
       // clear outdated hmr files
       const statsList = 'stats' in stats ? stats.stats : [stats];
-      clearOutdatedHotUpdateFiles(distPath, statsList);
+      clearOutdatedHotUpdateFiles(api.context.distPath, statsList);
 
       console.log('Built the extension successfully');
     });
 
     api.onAfterBuild(async () => {
-      const distPath = api.context.distPath;
-      await writeManifestFile({ distPath, manifest, mode, selfRootPath });
-
+      await manifestManager.writeManifestFile();
       console.log('Built the extension successfully');
     });
   },
