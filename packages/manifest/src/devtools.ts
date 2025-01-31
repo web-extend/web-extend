@@ -1,6 +1,6 @@
 import { readdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import { matchDeclarativeMultipleEntryFile, matchDeclarativeSingleEntryFile, getEntryFileName } from './common.js';
+import { getEntryFileName, matchDeclarativeMultipleEntryFile, matchDeclarativeSingleEntryFile } from './common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'devtools';

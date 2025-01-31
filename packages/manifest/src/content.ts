@@ -1,15 +1,15 @@
 import { existsSync } from 'node:fs';
 import { copyFile, mkdir, readFile } from 'node:fs/promises';
 import { basename, dirname, join, resolve } from 'node:path';
+import type { Manifest } from 'webextension-polyfill';
 import {
+  getEntryFileName,
   isDevMode,
   matchDeclarativeMultipleEntryFile,
   matchDeclarativeSingleEntryFile,
-  getEntryFileName,
 } from './common.js';
 import { parseExportObject } from './parser/export.js';
 import type { ContentScriptConfig, ManifestEntryInput, ManifestEntryProcessor } from './types.js';
-import type { Manifest } from 'webextension-polyfill';
 
 const key = 'content';
 
