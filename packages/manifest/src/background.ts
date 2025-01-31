@@ -8,14 +8,8 @@ const key = 'background';
 const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
   matchDeclarativeSingleEntryFile(key, file);
 
-const normalizeBackgroundEntry: ManifestEntryProcessor['normalize'] = async ({
-  manifest,
-  target,
-  mode,
-  files,
-  srcPath,
-  runtime,
-}) => {
+const normalizeBackgroundEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, files, context }) => {
+  const { rootPath, srcDir, mode, target, runtime } = context;
   const { background } = manifest;
   const scripts: string[] = [];
 
@@ -24,7 +18,9 @@ const normalizeBackgroundEntry: ManifestEntryProcessor['normalize'] = async ({
   } else if (background && 'scripts' in background && background.scripts) {
     scripts.push(...background.scripts);
   } else {
-    const entryPath = files.filter((file) => matchDeclarativeEntryFile(file)).map((file) => resolve(srcPath, file))[0];
+    const entryPath = files
+      .filter((file) => matchDeclarativeEntryFile(file))
+      .map((file) => resolve(rootPath, srcDir, file))[0];
     if (entryPath) {
       scripts.push(entryPath);
     }
@@ -44,7 +40,7 @@ const normalizeBackgroundEntry: ManifestEntryProcessor['normalize'] = async ({
   }
 };
 
-const readBackgroundEntry: ManifestEntryProcessor['read'] = (manifest) => {
+const readBackgroundEntry: ManifestEntryProcessor['read'] = ({ manifest }) => {
   const { background } = manifest || {};
   if (!background) return null;
 

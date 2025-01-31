@@ -9,13 +9,14 @@ const overrideProcessors = overrides.map((key) => {
   const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
     matchDeclarativeSingleEntryFile(key, file);
 
-  const normalizeOverridesEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, srcPath, files }) => {
+  const normalizeOverridesEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, context, files }) => {
+    const { rootPath, srcDir } = context;
     const { chrome_url_overrides = {} } = manifest;
     if (Object.keys(chrome_url_overrides).length) return;
 
     const entryPath = files
       .filter((file) => matchDeclarativeSingleEntryFile(key, file))
-      .map((file) => resolve(srcPath, file))[0];
+      .map((file) => resolve(rootPath, srcDir, file))[0];
 
     if (entryPath) {
       manifest.chrome_url_overrides = {
@@ -25,7 +26,7 @@ const overrideProcessors = overrides.map((key) => {
     }
   };
 
-  const readOverridesEntry: ManifestEntryProcessor['read'] = (manifest) => {
+  const readOverridesEntry: ManifestEntryProcessor['read'] = ({ manifest }) => {
     const { chrome_url_overrides } = manifest || {};
     if (!chrome_url_overrides) return null;
 

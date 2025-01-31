@@ -46,14 +46,8 @@ const entryProcessors: ManifestEntryProcessor[] = [
   sidepanelProcessor,
 ];
 
-export async function normalizeManifest({
-  rootPath,
-  mode,
-  srcDir,
-  manifest = {} as WebExtensionManifest,
-  target,
-  runtime,
-}: NormalizeManifestProps) {
+async function normalizeManifest({ manifest = {} as WebExtensionManifest, context }: NormalizeManifestProps) {
+  const { rootPath, target, mode, srcDir } = context;
   const defaultManifest = await getDefaultManifest(rootPath, target);
   const finalManifest = {
     ...defaultManifest,
@@ -97,11 +91,8 @@ export async function normalizeManifest({
     for (const processor of entryProcessors) {
       await processor.normalize({
         manifest: finalManifest,
-        target,
-        srcPath,
-        mode,
         files,
-        runtime,
+        context,
       });
     }
   } catch (err) {
@@ -133,13 +124,7 @@ async function getDefaultManifest(rootPath: string, target?: ExtensionTarget) {
   return manifest;
 }
 
-export async function readManifestFile(distPath: string) {
-  const manifestPath = resolve(distPath, 'manifest.json');
-  const manifest = JSON.parse(await readFile(manifestPath, 'utf-8')) as WebExtensionManifest;
-  return manifest;
-}
-
-export async function writeManifestFile({ distPath, manifest, mode, runtime }: WriteManifestFileProps) {
+async function writeManifestFile({ distPath, manifest, mode, runtime }: WriteManifestFileProps) {
   if (!existsSync(distPath)) {
     await mkdir(distPath, { recursive: true });
   }
@@ -183,12 +168,8 @@ export class ManifestManager {
     };
 
     this.manifest = await normalizeManifest({
-      rootPath,
       manifest: options.manifest,
-      srcDir,
-      target,
-      mode,
-      runtime: options.runtime,
+      context: this.context,
     });
     this.normalizedManifest = JSON.parse(JSON.stringify(this.manifest));
   }
@@ -197,7 +178,10 @@ export class ManifestManager {
     const manifest = this.normalizedManifest;
     const res = {} as ManifestEnties;
     for (const processor of entryProcessors) {
-      const entry = await processor.read(manifest);
+      const entry = await processor.read({
+        manifest,
+        context: this.context,
+      });
       if (entry) {
         res[processor.key] = entry;
       }
@@ -216,6 +200,7 @@ export class ManifestManager {
         name: entryName,
         input: result[entryName].input,
         output: result[entryName].output,
+        context: this.context,
       });
     }
   }

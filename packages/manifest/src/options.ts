@@ -7,11 +7,14 @@ const key = 'options';
 const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
   matchDeclarativeSingleEntryFile(key, file);
 
-const normalizeOptionsEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, srcPath, files }) => {
+const normalizeOptionsEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, context, files }) => {
+  const { rootPath, srcDir } = context;
   const { options_ui, options_page } = manifest;
   if (options_ui?.page || options_page) return;
 
-  const entryPath = files.filter((file) => matchDeclarativeEntryFile(file)).map((file) => resolve(srcPath, file))[0];
+  const entryPath = files
+    .filter((file) => matchDeclarativeEntryFile(file))
+    .map((file) => resolve(rootPath, srcDir, file))[0];
 
   if (entryPath) {
     manifest.options_ui = {
@@ -22,7 +25,7 @@ const normalizeOptionsEntry: ManifestEntryProcessor['normalize'] = async ({ mani
   }
 };
 
-const readOptionsEntry: ManifestEntryProcessor['read'] = (manifest) => {
+const readOptionsEntry: ManifestEntryProcessor['read'] = ({ manifest }) => {
   const { options_ui, options_page } = manifest || {};
   const input = options_ui?.page || options_page;
   if (!input) return null;

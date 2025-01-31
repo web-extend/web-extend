@@ -1,9 +1,22 @@
 import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
-import { basename, extname, join, resolve, sep } from 'node:path';
+import { basename, extname, join, resolve, sep, isAbsolute, relative } from 'node:path';
 import type { ExtensionTarget } from './types.js';
 
 const jsFileExts = ['.ts', '.js', '.tsx', '.jsx', '.mts', '.cts', '.mjs', '.cjs'];
+
+export function getEntryFileName(file: string, rootPath: string, srcDir: string) {
+  const filePath = isAbsolute(file) ? file : resolve(rootPath, file);
+  const srcPath = isAbsolute(srcDir) ? srcDir : resolve(rootPath, srcDir);
+  const relativeFilePath = filePath.startsWith(srcPath)
+    ? relative(srcPath, filePath)
+    : filePath.startsWith(rootPath)
+      ? relative(rootPath, filePath)
+      : basename(filePath);
+  const ext = extname(relativeFilePath);
+  const name = relativeFilePath.replace(ext, '').replace(/[\\/]index$/, '');
+  return name;
+}
 
 export function getEntryFileVariants(name: string, ext: string) {
   if (!jsFileExts.includes(ext)) {

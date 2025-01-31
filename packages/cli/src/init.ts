@@ -66,6 +66,7 @@ export type EntryPointType =
   | 'options'
   | 'sidepanel'
   | 'devtools'
+  | 'panel'
   | 'newtab'
   | 'bookmarks'
   | 'history'
@@ -103,6 +104,11 @@ export const entrypoints: { name: string; value: EntryPointType; template: Entry
     name: 'devtools',
     value: 'devtools',
     template: 'devtools',
+  },
+  {
+    name: 'panel',
+    value: 'panel',
+    template: 'web',
   },
   {
     name: 'newtab',

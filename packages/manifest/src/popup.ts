@@ -10,10 +10,11 @@ const key = 'popup';
 const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
   matchDeclarativeSingleEntryFile(key, file);
 
-const normalizePopupEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, srcPath, files }) => {
+const normalizePopupEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, context, files }) => {
+  const { rootPath, srcDir } = context;
   const { manifest_version } = manifest;
 
-  const entryPath = files.filter(matchDeclarativeEntryFile).map((file) => resolve(srcPath, file))[0];
+  const entryPath = files.filter(matchDeclarativeEntryFile).map((file) => resolve(rootPath, srcDir, file))[0];
 
   if (entryPath) {
     if (manifest_version === 2) {
@@ -27,7 +28,7 @@ const normalizePopupEntry: ManifestEntryProcessor['normalize'] = async ({ manife
   }
 };
 
-const readPopupEntry: ManifestEntryProcessor['read'] = (manifest) => {
+const readPopupEntry: ManifestEntryProcessor['read'] = ({ manifest }) => {
   const { manifest_version, action, browser_action } = manifest || {};
   const pointer = manifest_version === 2 ? browser_action : action;
   const input = pointer?.default_popup;
