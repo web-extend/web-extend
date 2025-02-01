@@ -106,16 +106,16 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         const hmr = resourcePath.endsWith('hmr.js');
         if (environment.name === 'content' && liveReload && hmr) {
           const reloadExtensionCode = `
-          const bridgeEl = document.getElementById('web-extend-content-bridge');
-          if (bridgeEl) {
-            bridgeEl.dataset.contentChanged = 'true';
+            const bridgeEl = document.getElementById('web-extend-content-bridge');
+            if (bridgeEl) {
+              bridgeEl.dataset.contentChanged = 'true';
             }`;
           const newCode = code.replace(
             /(window\.)?location\.reload\(\);?/g,
             `{
                 ${reloadExtensionCode}
                 $&
-                }`,
+              }`,
           );
           return newCode;
         }
