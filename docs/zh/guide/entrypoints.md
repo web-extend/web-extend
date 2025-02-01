@@ -203,7 +203,7 @@ npx web-extend g sidepanel
 
 ## Devtools
 
-[Chrome Docs](https://developer.chrome.com/docs/extensions/how-to/devtools/extend-devtools) | [Firefox Docs](https://wxt.dev/guide/essentials/entrypoints.html#devtools)
+[Chrome Docs](https://developer.chrome.com/docs/extensions/how-to/devtools/extend-devtools) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/devtools_page)
 
 Devtools 入口对应了 `manifest.json` 中的 `devtools_page` 字段。其支持两种添加方式。
 

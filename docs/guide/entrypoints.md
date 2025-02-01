@@ -205,7 +205,7 @@ See [with-sidepanel](https://github.com/web-extend/examples/tree/main/with-sidep
 
 ## Devtools
 
-[Chrome Docs](https://developer.chrome.com/docs/extensions/how-to/devtools/extend-devtools) | [Firefox Docs](https://wxt.dev/guide/essentials/entrypoints.html#devtools)
+[Chrome Docs](https://developer.chrome.com/docs/extensions/how-to/devtools/extend-devtools) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/devtools_page)
 
 The devtools entry will be reflected to the `devtools_page` field in `manifest.json`. It supports the following creation methods.
 
