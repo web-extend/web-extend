@@ -1,3 +1,7 @@
+---
+outline: deep
+---
+
 # 浏览器兼容性 {#browser-compatibility}
 
 ## 浏览器目标 {#browser-target}
@@ -48,13 +52,13 @@ Extension API 文档：
 - [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api)
 - [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API)
 
-**目标为 Chrome 系列**
+### 适用于 Chrome 系列
 
 可以直接使用 `chrome` API。如果使用 TypeScript，推荐安装 [`@types/chrome`](https://www.npmjs.com/package/@types/chrome)。
 
-**目标为 Firefox**
+### 适用于 Firefox
 
-如果需要支持或兼容 Firefox 浏览器，推荐使用 [webextension-polyfill](https://www.npmjs.com/package/webextension-polyfill)，它提供了统一的浏览器扩展 API。如果使用 TypeScript，还需要安装 [@types/webextension-polyfill](https://www.npmjs.com/package/@types/webextension-polyfill)。示例如下。
+如果需要支持或兼容 Firefox 浏览器，推荐使用 [webextension-polyfill](https://www.npmjs.com/package/webextension-polyfill)，它提供了统一的浏览器扩展 API，兼容 Firefox 和 Chrome 系列。如果使用 TypeScript，还需要安装 [@types/webextension-polyfill](https://www.npmjs.com/package/@types/webextension-polyfill)。示例如下。
 
 ::: code-group
 

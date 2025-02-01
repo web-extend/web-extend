@@ -1,3 +1,7 @@
+---
+outline: deep
+---
+
 # Browser Compatibility
 
 ## Browser Target
