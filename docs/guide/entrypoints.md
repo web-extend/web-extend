@@ -13,7 +13,7 @@ All entry files are located in the src directory, which can be a folder or a fil
 - When the entry is a file, only the file ends with `.js|.jsx|.ts|.tsx` will be discovered. The build tool will inject [a HTML template](https://rsbuild.dev/guide/basic/html-template) for every entry if necessary and generate the corresponding `.html` file.
 - When the entry is a folder,
   - if it has a single-entry, the `index.js` file in the folder will be discovered as an entry.
-  - if it has multi-entries, all the direct `*.js` or `*/index.js` files in the folder will be discovered as entries. Currently, only files in `contents`、`sandboxes` and `panels` will be discovered as multi entries.
+  - if it has multi-entries, all the direct `*.js` or `*/index.js` files in the folder will be discovered as entries. Currently, only files in `contents`、`sandboxes` and `panels` will be discovered as multiple entries.
 
 :::
 
