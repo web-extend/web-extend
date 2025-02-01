@@ -4,7 +4,7 @@ outline: deep
 
 # web-extend CLI
 
-[`web-extend`](https://www.npmjs.com/package/web-extend) is a CLI tool for creating a project, generate entry files, etc.
+[`web-extend`](https://www.npmjs.com/package/web-extend) is a CLI tool for creating a project, and generating entry files, etc.
 
 Usage:
 
