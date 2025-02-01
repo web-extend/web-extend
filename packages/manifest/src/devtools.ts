@@ -22,7 +22,7 @@ const normalizeDevtoolsEntry: ManifestEntryProcessor['normalize'] = async ({ man
 const readDevtoolsEntry: ManifestEntryProcessor['read'] = async ({ manifest, context }) => {
   const { devtools_page } = manifest || {};
   if (!devtools_page) return null;
-  const { rootPath, srcDir } = context;
+
   const entry: ManifestEntryInput = {
     devtools: {
       input: [devtools_page],
@@ -30,6 +30,7 @@ const readDevtoolsEntry: ManifestEntryProcessor['read'] = async ({ manifest, con
     },
   };
 
+  const { rootPath, srcDir } = context;
   const srcPath = resolve(rootPath, srcDir);
   const files = await readdir(srcPath, { recursive: true });
   const panels = files

@@ -11,7 +11,7 @@ import {
 } from './helper.js';
 
 export type PluginWebExtendOptions<T = unknown> = {
-  manifest?: T;
+  manifest?: T | ((props: { target: ExtensionTarget; mode: string }) => T);
   target?: ExtensionTarget;
   srcDir?: string;
   outDir?: string;

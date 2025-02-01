@@ -144,7 +144,12 @@ export class ManifestManager {
   private manifest = {} as WebExtensionManifest;
   private normalizedManifest = {} as WebExtensionManifest;
 
-  async normalize(options: Partial<ManifestContext> & { manifest?: WebExtensionManifest; distPath?: string }) {
+  async normalize(
+    options: Partial<ManifestContext> & {
+      manifest?: WebExtensionManifest | ((props: { target: ExtensionTarget; mode: string }) => WebExtensionManifest);
+      distPath?: string;
+    },
+  ) {
     const mode = options.mode || process.env.NODE_ENV || 'none';
     const target = resolveTarget(options.target);
     setTargetEnv(target);
@@ -167,8 +172,11 @@ export class ManifestManager {
       runtime: options?.runtime,
     };
 
+    const optionManifest =
+      typeof options.manifest === 'function' ? options.manifest({ target, mode }) : options.manifest;
+
     this.manifest = await normalizeManifest({
-      manifest: options.manifest,
+      manifest: optionManifest,
       context: this.context,
     });
     this.normalizedManifest = JSON.parse(JSON.stringify(this.manifest));
