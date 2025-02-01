@@ -19,6 +19,7 @@ export interface StartOptions {
   port?: number;
   watch?: boolean;
   zip?: boolean;
+  outDir?: string;
 }
 
 let commonOptions: StartOptions = {};
@@ -143,7 +144,7 @@ async function init({
 }
 
 async function startDevServer(options: StartOptions) {
-  prepareEnv('dev', options.target);
+  prepareEnv('dev', options);
 
   let webExt = null;
   if (options.open) {
@@ -200,7 +201,7 @@ const restartDevServer: RestartCallback = async ({ filePath }) => {
 };
 
 async function startBuild(options: StartOptions) {
-  prepareEnv('build', options.target);
+  prepareEnv('build', options);
 
   const rsbuild = await init({
     cliOptions: options,
@@ -262,13 +263,18 @@ const restartBuild: RestartCallback = async ({ filePath }) => {
   onBeforeRestart(buildInstance.close);
 };
 
-function prepareEnv(command: 'dev' | 'build', target: string | undefined) {
+function prepareEnv(command: 'dev' | 'build', options: StartOptions) {
+  const { target, outDir } = options;
   if (!process.env.NODE_ENV) {
     process.env.NODE_ENV = command === 'build' ? 'production' : 'development';
   }
 
   if (target) {
     process.env.WEB_EXTEND_TARGET = target;
+  }
+
+  if (outDir) {
+    process.env.WEB_EXTEND_OUT_DIR = outDir;
   }
 }
 

@@ -74,6 +74,7 @@ Options:
 Options:
   -r, --root <root>      specify the project root directory
   -c --config <config>   specify the configuration file
+  -o, --out-dir <dir>    specify the output directory
   -m --mode <mode>       specify the build mode, can be `development`, `production` or `none`
   --env-mode <mode>      specify the env mode to load the `.env.[mode]` file
   --env-dir <dir>        specify the directory to load `.env` files
@@ -99,6 +100,7 @@ Options:
 Options:
   -r, --root <root>      specify the project root directory
   -c --config <config>   specify the configuration file
+  -o, --out-dir <dir>    specify the output directory
   -m --mode <mode>       specify the build mode, can be `development`, `production` or `none`
   --env-mode <mode>      specify the env mode to load the `.env.[mode]` file
   --env-dir <dir>        specify the directory to load `.env` files
