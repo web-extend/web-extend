@@ -40,7 +40,7 @@
     "web-ext": "^8.3.0"
   },
   "peerDependencies": {
-    "@rsbuild/core": "^1.2.0",
+    "@rsbuild/core": "^1.1.6",
     "web-ext": "^8.3.0"
   },
   "peerDependenciesMeta": {
