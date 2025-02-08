@@ -98,8 +98,8 @@ importers:
         specifier: ^19.0.0
         version: 19.0.2(@types/react@19.0.1)
       '@web-extend/rsbuild-plugin':
-        specifier: 0.0.1-beta.1
-        version: 0.0.1-beta.1(@rsbuild/core@1.2.3)
+        specifier: 0.0.1-beta.2
+        version: 0.0.1-beta.2(@rsbuild/core@1.2.3)
       eslint:
         specifier: ^9.18.0
         version: 9.18.0
@@ -125,8 +125,8 @@ importers:
         specifier: ^8.3.0
         version: 8.3.0
       web-extend:
-        specifier: 0.0.1-beta.1
-        version: 0.0.1-beta.1(@rsbuild/core@1.2.3)(@types/node@22.12.0)(web-ext@8.3.0)
+        specifier: 0.0.1-beta.2
+        version: 0.0.1-beta.2(@rsbuild/core@1.2.3)(@types/node@22.12.0)(web-ext@8.3.0)
 
   packages/cli/templates/template-svelte-ts:
     dependencies:
@@ -147,8 +147,8 @@ importers:
         specifier: ^0.0.290
         version: 0.0.290
       '@web-extend/rsbuild-plugin':
-        specifier: 0.0.1-beta.1
-        version: 0.0.1-beta.1(@rsbuild/core@1.2.3)
+        specifier: 0.0.1-beta.2
+        version: 0.0.1-beta.2(@rsbuild/core@1.2.3)
       eslint:
         specifier: ^9.18.0
         version: 9.18.0
@@ -174,8 +174,8 @@ importers:
         specifier: ^8.3.0
         version: 8.3.0
       web-extend:
-        specifier: 0.0.1-beta.1
-        version: 0.0.1-beta.1(@rsbuild/core@1.2.3)(@types/node@22.12.0)(web-ext@8.3.0)
+        specifier: 0.0.1-beta.2
+        version: 0.0.1-beta.2(@rsbuild/core@1.2.3)(@types/node@22.12.0)(web-ext@8.3.0)
 
   packages/cli/templates/template-vanilla-ts:
     devDependencies:
@@ -189,8 +189,8 @@ importers:
         specifier: ^0.0.290
         version: 0.0.290
       '@web-extend/rsbuild-plugin':
-        specifier: 0.0.1-beta.1
-        version: 0.0.1-beta.1(@rsbuild/core@1.2.3)
+        specifier: 0.0.1-beta.2
+        version: 0.0.1-beta.2(@rsbuild/core@1.2.3)
       eslint:
         specifier: ^9.18.0
         version: 9.18.0
@@ -210,8 +210,8 @@ importers:
         specifier: ^8.3.0
         version: 8.3.0
       web-extend:
-        specifier: 0.0.1-beta.1
-        version: 0.0.1-beta.1(@rsbuild/core@1.2.3)(@types/node@22.12.0)(web-ext@8.3.0)
+        specifier: 0.0.1-beta.2
+        version: 0.0.1-beta.2(@rsbuild/core@1.2.3)(@types/node@22.12.0)(web-ext@8.3.0)
 
   packages/cli/templates/template-vue-ts:
     dependencies:
@@ -232,8 +232,8 @@ importers:
         specifier: ^0.0.290
         version: 0.0.290
       '@web-extend/rsbuild-plugin':
-        specifier: 0.0.1-beta.1
-        version: 0.0.1-beta.1(@rsbuild/core@1.2.3)
+        specifier: 0.0.1-beta.2
+        version: 0.0.1-beta.2(@rsbuild/core@1.2.3)
       eslint:
         specifier: ^9.18.0
         version: 9.18.0
@@ -256,8 +256,8 @@ importers:
         specifier: ^8.3.0
         version: 8.3.0
       web-extend:
-        specifier: 0.0.1-beta.1
-        version: 0.0.1-beta.1(@rsbuild/core@1.2.3)(@types/node@22.12.0)(web-ext@8.3.0)
+        specifier: 0.0.1-beta.2
+        version: 0.0.1-beta.2(@rsbuild/core@1.2.3)(@types/node@22.12.0)(web-ext@8.3.0)
 
   packages/manifest:
     dependencies:
@@ -1847,10 +1847,10 @@ packages:
   '@vueuse/shared@12.4.0':
     resolution: {integrity: sha512-9yLgbHVIF12OSCojnjTIoZL1+UA10+O4E1aD6Hpfo/DKVm5o3SZIwz6CupqGy3+IcKI8d6Jnl26EQj/YucnW0Q==}
 
-  '@web-extend/rsbuild-plugin@0.0.1-beta.1':
-    resolution: {integrity: sha512-hXLN1NjgKkT6vZ9jJu9FaEATiEciwVLSmiXbA5sGBhfahwaCnZiX0Abg5MOrvVPPDOhavckL/l057eiLQQhtnQ==}
+  '@web-extend/rsbuild-plugin@0.0.1-beta.2':
+    resolution: {integrity: sha512-aAXpLZ4OlBJETlmVLwHFR7SllDiunXJ1SIFnnQbAiYG0Sq/UlFJGKDAc+IkGQ805Q7VxjpFft4S70vBeJyV8ag==}
     peerDependencies:
-      '@rsbuild/core': ^1.2.0
+      '@rsbuild/core': ^1.1.6
     peerDependenciesMeta:
       '@rsbuild/core':
         optional: true
@@ -4502,12 +4502,12 @@ packages:
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
     hasBin: true
 
-  web-extend@0.0.1-beta.1:
-    resolution: {integrity: sha512-NS3yZGKfdYZfX0slUEiEP9fTkoEpe3pQ3wNYmdD0BqEMo6KQFAebeSomxJ7CW/NEa/eOYE5zSFSaPqS4qGNA7Q==}
+  web-extend@0.0.1-beta.2:
+    resolution: {integrity: sha512-6Rv7am6tcZBoljf0dFlbJMo5GRL97duYHjG3Ti8bhAvLMk1HCQ2x11sWdWc7yjiBP+s2iT8xFEDTU2ZkMy74Ww==}
     engines: {node: '>=16.7.0'}
     hasBin: true
     peerDependencies:
-      '@rsbuild/core': ^1.2.0
+      '@rsbuild/core': ^1.1.6
       web-ext: ^8.3.0
     peerDependenciesMeta:
       '@rsbuild/core':
@@ -6329,7 +6329,7 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  '@web-extend/rsbuild-plugin@0.0.1-beta.1(@rsbuild/core@1.2.3)':
+  '@web-extend/rsbuild-plugin@0.0.1-beta.2(@rsbuild/core@1.2.3)':
     dependencies:
       '@babel/parser': 7.26.7
       '@babel/traverse': 7.26.7
@@ -9128,7 +9128,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  web-extend@0.0.1-beta.1(@rsbuild/core@1.2.3)(@types/node@22.12.0)(web-ext@8.3.0):
+  web-extend@0.0.1-beta.2(@rsbuild/core@1.2.3)(@types/node@22.12.0)(web-ext@8.3.0):
     dependencies:
       '@inquirer/prompts': 7.2.4(@types/node@22.12.0)
       archiver: 7.0.1
