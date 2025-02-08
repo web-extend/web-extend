@@ -53,7 +53,6 @@ describe('basic for firefox', () => {
     const manifest = await readManifestFile(distPath);
     const { manifest_version, browser_action, icons } = manifest as Manifest.WebExtensionManifest;
 
-    console.log(manifest_version, distPath);
     expect(manifest_version).toBe(2);
 
     expect(existsFile(distPath, browser_action?.default_popup || '', '.html')).toBeTruthy();

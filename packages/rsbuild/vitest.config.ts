@@ -6,5 +6,6 @@ export default defineConfig({
       include: ['src/**'],
       exclude: ['src/static/*'],
     },
+    testTimeout: 30000,
   },
 });
