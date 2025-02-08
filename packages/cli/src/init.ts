@@ -66,6 +66,7 @@ export type EntryPointType =
   | 'options'
   | 'sidepanel'
   | 'devtools'
+  | 'panel'
   | 'newtab'
   | 'bookmarks'
   | 'history'
@@ -103,6 +104,11 @@ export const entrypoints: { name: string; value: EntryPointType; template: Entry
     name: 'devtools',
     value: 'devtools',
     template: 'devtools',
+  },
+  {
+    name: 'panel',
+    value: 'panel',
+    template: 'web',
   },
   {
     name: 'newtab',
@@ -291,7 +297,7 @@ async function modifyPackageJson(root: string, options: InitialOptions) {
   const newContent = JSON.parse(content);
 
   if (projectName) {
-    newContent.name = basename(projectName);
+    newContent.name = basename(resolve(root, projectName));
   }
 
   const scripts: Record<string, string | undefined> = newContent.scripts || {};

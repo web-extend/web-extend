@@ -1,6 +1,6 @@
 import { readdir } from 'node:fs/promises';
-import { dirname, resolve } from 'node:path';
-import { matchDeclarativeMultipleEntryFile, matchDeclarativeSingleEntryFile } from './common.js';
+import { resolve } from 'node:path';
+import { getEntryFileName, matchDeclarativeMultipleEntryFile, matchDeclarativeSingleEntryFile } from './common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'devtools';
@@ -8,17 +8,18 @@ const key = 'devtools';
 const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
   matchDeclarativeSingleEntryFile(key, file);
 
-const normalizeDevtoolsEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, files, srcPath }) => {
+const normalizeDevtoolsEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, files, context }) => {
+  const { rootPath, srcDir } = context;
   const { devtools_page } = manifest;
   if (devtools_page) return;
 
-  const entryPath = files.filter(matchDeclarativeEntryFile).map((file) => resolve(srcPath, file))[0];
+  const entryPath = files.filter(matchDeclarativeEntryFile).map((file) => resolve(rootPath, srcDir, file))[0];
   if (entryPath) {
     manifest.devtools_page = entryPath;
   }
 };
 
-const readDevtoolsEntry: ManifestEntryProcessor['read'] = async (manifest) => {
+const readDevtoolsEntry: ManifestEntryProcessor['read'] = async ({ manifest, context }) => {
   const { devtools_page } = manifest || {};
   if (!devtools_page) return null;
 
@@ -29,7 +30,8 @@ const readDevtoolsEntry: ManifestEntryProcessor['read'] = async (manifest) => {
     },
   };
 
-  const srcPath = dirname(devtools_page);
+  const { rootPath, srcDir } = context;
+  const srcPath = resolve(rootPath, srcDir);
   const files = await readdir(srcPath, { recursive: true });
   const panels = files
     .filter(
@@ -38,8 +40,9 @@ const readDevtoolsEntry: ManifestEntryProcessor['read'] = async (manifest) => {
     .map((file) => resolve(srcPath, file));
 
   for (const file of panels) {
-    const res = file.match(/([^\\/]+)([\\/]index)?\.(ts|tsx|js|jsx|mjs|cjs)$/);
-    const name = res?.[1];
+    // const res = file.match(/([^\\/]+)([\\/]index)?\.(ts|tsx|js|jsx|mjs|cjs)$/);
+    // const name = res?.[1];
+    const name = getEntryFileName(file, rootPath, srcDir);
     if (name) {
       entry[name] = {
         input: [file],

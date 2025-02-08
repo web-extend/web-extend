@@ -11,7 +11,7 @@ import {
 } from './helper.js';
 
 export type PluginWebExtendOptions<T = unknown> = {
-  manifest?: T;
+  manifest?: T | ((props: { target: ExtensionTarget; mode: string }) => T);
   target?: ExtensionTarget;
   srcDir?: string;
   outDir?: string;
@@ -100,6 +100,29 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       return mergeRsbuildConfig(config, extraConfig);
     });
 
+    api.onBeforeStartDevServer(() => {
+      api.transform({ test: /\.js$/ }, ({ resourcePath, code, environment }) => {
+        const liveReload = api.getNormalizedConfig().dev.liveReload;
+        const hmr = resourcePath.endsWith('hmr.js');
+        if (environment.name === 'content' && liveReload && hmr) {
+          const reloadExtensionCode = `
+            const bridgeEl = document.getElementById('web-extend-content-bridge');
+            if (bridgeEl) {
+              bridgeEl.dataset.contentChanged = 'true';
+            }`;
+          const newCode = code.replace(
+            /(window\.)?location\.reload\(\);?/g,
+            `{
+                ${reloadExtensionCode}
+                $&
+              }`,
+          );
+          return newCode;
+        }
+        return code;
+      });
+    });
+
     api.processAssets({ stage: 'additions' }, async ({ assets, compilation, environment, sources }) => {
       // support content hmr in dev mode
       const mode = manifestManager.context.mode;
@@ -107,28 +130,13 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         const entries = Object.keys(environment.entry);
         for (const name in assets) {
           if (!name.endsWith('.js')) continue;
+
           const entryName = entries.find((item) => name.includes(item));
           if (entryName) {
             const oldContent = assets[name].source() as string;
             const newContent = oldContent.replaceAll(
               'webpackHotUpdateWebExtend_content',
               `webpackHotUpdateWebExtend_${entryName}`,
-            );
-            const source = new sources.RawSource(newContent);
-            compilation.updateAsset(name, source);
-          } else if (name.includes('rsbuild')) {
-            const oldContent = assets[name].source() as string;
-            const reloadExtensionCode = `
-            const bridgeEl = document.getElementById('web-extend-content-bridge');
-            if (bridgeEl) {
-              bridgeEl.dataset.contentChanged = 'true';
-            }`;
-            const newContent = oldContent.replace(
-              /(window\.)?location\.reload\(\);?/g,
-              `{
-                ${reloadExtensionCode}
-                $&
-              }`,
             );
             const source = new sources.RawSource(newContent);
             compilation.updateAsset(name, source);

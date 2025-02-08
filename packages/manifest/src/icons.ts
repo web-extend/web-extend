@@ -29,8 +29,9 @@ const getDeclarativeIcons = (files: string[], srcPath: string) => {
   return Object.keys(res).length ? res : null;
 };
 
-const normalizeIconsEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, files, srcPath }) => {
-  const declarativeIcons = getDeclarativeIcons(files, srcPath);
+const normalizeIconsEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, files, context }) => {
+  const { rootPath, srcDir } = context;
+  const declarativeIcons = getDeclarativeIcons(files, resolve(rootPath, srcDir));
   if (!declarativeIcons) return;
 
   if (!manifest.icons) {
@@ -56,7 +57,7 @@ const normalizeIconsEntry: ManifestEntryProcessor['normalize'] = async ({ manife
   }
 };
 
-const readIconsEntry: ManifestEntryProcessor['read'] = (manifest) => {
+const readIconsEntry: ManifestEntryProcessor['read'] = ({ manifest }) => {
   const { icons, action, browser_action, manifest_version } = manifest || {};
   const pointer = manifest_version === 2 ? browser_action : action;
   const files = new Set<string>();

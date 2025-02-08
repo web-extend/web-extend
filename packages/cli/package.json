@@ -1,6 +1,6 @@
 {
   "name": "web-extend",
-  "version": "0.0.1-beta.1",
+  "version": "0.0.1-beta.2",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
@@ -19,7 +19,7 @@
     "type": "git",
     "url": "git+https://github.com/web-extend/web-extend.git"
   },
-  "homepage": "https://github.com/web-extend/web-extend.git",
+  "homepage": "https://web-extend.github.io/web-extend/",
   "author": "",
   "license": "ISC",
   "description": "",
@@ -40,7 +40,7 @@
     "web-ext": "^8.3.0"
   },
   "peerDependencies": {
-    "@rsbuild/core": "^1.2.0",
+    "@rsbuild/core": "^1.1.6",
     "web-ext": "^8.3.0"
   },
   "peerDependenciesMeta": {

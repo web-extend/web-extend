@@ -1,5 +1,5 @@
 import { resolve } from 'node:path';
-import { matchDeclarativeMultipleEntryFile, matchDeclarativeSingleEntryFile } from './common.js';
+import { getEntryFileName, matchDeclarativeMultipleEntryFile, matchDeclarativeSingleEntryFile } from './common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'sandbox';
@@ -7,7 +7,9 @@ const key = 'sandbox';
 const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
   matchDeclarativeSingleEntryFile(key, file) || matchDeclarativeMultipleEntryFile('sandboxes', file);
 
-const normalizeSandboxEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, srcPath, target, files }) => {
+const normalizeSandboxEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, files, context }) => {
+  const { srcDir, rootPath, target } = context;
+  const srcPath = resolve(rootPath, srcDir);
   const pages = manifest.sandbox?.pages;
   if (pages?.length || target.includes('firefox')) return;
 
@@ -20,13 +22,14 @@ const normalizeSandboxEntry: ManifestEntryProcessor['normalize'] = async ({ mani
   }
 };
 
-const readSandboxEntry: ManifestEntryProcessor['read'] = (manifest) => {
+const readSandboxEntry: ManifestEntryProcessor['read'] = ({ manifest, context }) => {
   const pages = manifest?.sandbox?.pages || [];
   if (!pages.length) return null;
 
   const entry: ManifestEntryInput = {};
-  pages.forEach((page, index) => {
-    const name = `sandbox${pages.length === 1 ? '' : index}`;
+  pages.forEach((page) => {
+    // const name = `sandbox${pages.length === 1 ? '' : index}`;
+    const name = getEntryFileName(page, context.rootPath, context.srcDir);
     entry[name] = {
       input: [page],
       html: true,
@@ -35,11 +38,15 @@ const readSandboxEntry: ManifestEntryProcessor['read'] = (manifest) => {
   return entry;
 };
 
-const writeSandboxEntry: ManifestEntryProcessor['write'] = ({ manifest, name }) => {
+const writeSandboxEntry: ManifestEntryProcessor['write'] = ({ manifest, name, normalizedManifest, context }) => {
   const pages = manifest?.sandbox?.pages || [];
   if (!pages.length) return;
+  const index = (normalizedManifest.sandbox?.pages || []).findIndex((file) =>
+    getEntryFileName(file, context.rootPath, context.srcDir),
+  );
+  if (index === -1) return;
 
-  const index = Number(name.replace('sandbox', '') || '0');
+  // const index = Number(name.replace('sandbox', '') || '0');
   if (pages[index]) {
     pages[index] = `${name}.html`;
   }

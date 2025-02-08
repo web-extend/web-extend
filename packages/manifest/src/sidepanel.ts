@@ -7,14 +7,15 @@ const key = 'sidepanel';
 const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
   matchDeclarativeSingleEntryFile(key, file);
 
-const normalizeSidepanelEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, srcPath, target, files }) => {
+const normalizeSidepanelEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, context, files }) => {
+  const { rootPath, srcDir, target } = context;
   const { side_panel, sidebar_action } = manifest;
   if (side_panel?.default_path || sidebar_action?.default_panel) {
     addSidepanelPermission(manifest);
     return;
   }
 
-  const entryPath = files.filter(matchDeclarativeEntryFile).map((file) => resolve(srcPath, file))[0];
+  const entryPath = files.filter(matchDeclarativeEntryFile).map((file) => resolve(rootPath, srcDir, file))[0];
 
   if (entryPath) {
     if (target.includes('firefox')) {
@@ -33,7 +34,7 @@ const normalizeSidepanelEntry: ManifestEntryProcessor['normalize'] = async ({ ma
   }
 };
 
-const readSidepanelEntry: ManifestEntryProcessor['read'] = (manifest) => {
+const readSidepanelEntry: ManifestEntryProcessor['read'] = ({ manifest }) => {
   const { side_panel, sidebar_action } = manifest || {};
   const input = side_panel?.default_path || sidebar_action?.default_panel;
   if (!input) return null;

@@ -20,7 +20,7 @@
     "@rsbuild/core": "^1.2.3",
     "@rsbuild/plugin-svelte": "^1.0.5",
     "@types/chrome": "^0.0.290",
-    "@web-extend/rsbuild-plugin": "0.0.1-beta.1",
+    "@web-extend/rsbuild-plugin": "0.0.1-beta.2",
     "eslint": "^9.18.0",
     "eslint-plugin-svelte": "^2.46.1",
     "globals": "^15.14.0",
@@ -29,6 +29,6 @@
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.21.0",
     "web-ext": "^8.3.0",
-    "web-extend": "0.0.1-beta.1"
+    "web-extend": "0.0.1-beta.2"
   }
 }

@@ -1,22 +1,25 @@
+---
+outline: deep
+---
+
 # Entrypoints
 
-WebExtend uses the file system to parse entry files and generate the corresponding feilds for `manifest.json`.
+WebExtend uses the file system to parse entry files and generates the corresponding feilds for `manifest.json`.
 
 ::: info
 
 All entry files are located in the src directory, which can be a folder or a file except the icons entry.
 
-- When the entry is a file form, only the file ends with `.js|.jsx|.ts|.tsx` will be discovered. The build tool will inject [a HTML template](https://rsbuild.dev/guide/basic/html-template) for every entry if necessary and generate the corresponding `.html` file.
-- When the entry is a folder form,
+- When the entry is a file, only the file ends with `.js|.jsx|.ts|.tsx` will be discovered. The build tool will inject [a HTML template](https://rsbuild.dev/guide/basic/html-template) for every entry if necessary and generate the corresponding `.html` file.
+- When the entry is a folder,
   - if it has a single-entry, the `index.js` file in the folder will be discovered as an entry.
-  - if it has multi-entries, all the direct `*.js` 或 `*/index.js` files in the folder will be discovered as entries. Currently, only file in `contents`、`sandbox` and `devtools/panels` will be discovered as multi entries.
+  - if it has multi-entries, all the direct `*.js` or `*/index.js` files in the folder will be discovered as entries. Currently, only files in `contents`、`sandboxes` and `panels` will be discovered as multiple entries.
 
 :::
 
 ## Icons
 
-- [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest/icons)
-- [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/icons)
+[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest/icons) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/icons)
 
 Create the `assets/icon-{size}.png` files under the `src` directory as follows, which will be reflected to the `icons` and `action.default_icons` fields in `manifest.json`.
 
@@ -28,21 +31,22 @@ src/assets/
 └─ icon-128.png
 ```
 
-Alternatively, you can use `web-extend` to generate the corressponding sized icons files, which needs a high quality image `assets/icon.png` as the template.
+Alternatively, you can use `web-extend` to generate the corressponding sized icons files, which needs a high quality image `assets/icon.png` (>= 128 * 128 px) as the template.
 
 ```shell
 npx web-extend g icons
 
 ```
 
+See [with-icons](https://github.com/web-extend/examples/tree/main/with-icons).
+
 ## Background
 
-- [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest/background)
-- [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/background)
+[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest/background) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/background)
 
 The background entry will be reflected to the `background.service_worker` or `background.scripts` feild in `manifest.json`. It supports the following creation methods.
 
-Method 1: run the following command to generate the entry automatically.
+Method 1: generate the entry automatically.
 
 ```shell
 npx web-extend g background
@@ -59,14 +63,15 @@ console.log("This is a background script.");
 
 :::
 
+See [with-background](https://github.com/web-extend/examples/tree/main/with-background).
+
 ## Popup
 
-- [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/action)
-- [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/action)
+[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/action) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/action)
 
 The popup entry will be reflected to the `action.default_popup` feild in `manifest.json`. It supports the following creation methods.
 
-Method 1: run the following command to generate the entry automatically.
+Method 1: generate the entry automatically.
 
 ```shell
 npx web-extend g popup
@@ -95,14 +100,15 @@ if (rootEl) {
 
 :::
 
+See [with-popup](https://github.com/web-extend/examples/tree/main/with-popup).
+
 ## Options
 
-- [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/options-page)
-- [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/options_ui)
+[Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/options-page) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/options_ui)
 
 The options entry will be reflected to the `options_ui.page` feild in `manifest.json`. It supports the following creation methods.
 
-Method 1: run the following command to generate the entry automatically.
+Method 1: generate the entry automatically.
 
 ```shell
 npx web-extend g options
@@ -111,16 +117,17 @@ npx web-extend g options
 
 Method 2: create the `src/options.js` or `src/options/index.js` file manually.
 
+See [with-options](https://github.com/web-extend/examples/tree/main/with-options).
+
 ## Content Scripts
 
-- [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts)
-- [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_scripts)
+[Chrome Docs](https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_scripts)
 
 ### Adding a single content script
 
 A single content entry will be reflected to the `content_scripts[0].js` field in `manifest.json`. It supports the following creation methods.
 
-Method 1: run the following command to generate the entry automatically.
+Method 1: generate the entry automatically.
 
 ```shell
 npx web-extend g content
@@ -132,10 +139,10 @@ Method 2: create the `src/content.js` or`src/content/index.js` file manually.
 
 Multiple content entries will be reflected to the `content_scripts[index].js` field in `manifest.josn` respectively. It supports the following creation methods.
 
-Method 1: run the following command to generate the entry automatically.
+Method 1: generate the entry automatically.
 
 ```shell
-npx web-extend g contents/site-one
+npx web-extend g contents/site-one,contents/site-two
 
 ```
 
@@ -152,6 +159,8 @@ import "./index.css";
 ```
 
 :::
+
+Alternatively, you can use [CSS Modules](https://rsbuild.dev/guide/basic/css-modules), [Tailwind CSS](https://rsbuild.dev/guide/basic/tailwindcss), [UnoCSS](https://rsbuild.dev/guide/basic/unocss) or [CSS-in-JS](https://rsbuild.dev/guide/framework/react#css-in-js) for styling.
 
 ### Adding config
 
@@ -175,14 +184,15 @@ export const config: ContentScriptConfig = {
 
 :::
 
+See [with-content](https://github.com/web-extend/examples/tree/main/with-content), [with-multi-contents](https://github.com/web-extend/examples/tree/main/with-multi-contents).
+
 ## Sidepanel
 
-- [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/sidePanel)
-- [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Sidebars)
+[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/sidePanel) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Sidebars)
 
 The sidepanel entry will be reflected to the `side_panel.default_path` or `sidebar_action.default_panel` feild in `manifest.json`. It supports the following creation methods.
 
-Method 1: run the following command to generate the entry automatically.
+Method 1: generate the entry automatically.
 
 ```shell
 npx web-extend g sidepanel
@@ -191,52 +201,62 @@ npx web-extend g sidepanel
 
 Method 2: create the `src/sidepanel.js` or `src/sidepanel/index.js` file manually.
 
+See [with-sidepanel](https://github.com/web-extend/examples/tree/main/with-sidepanel).
+
 ## Devtools
 
-- [Chrome Docs](https://developer.chrome.com/docs/extensions/how-to/devtools/extend-devtools)
-- [Firefox Docs](https://wxt.dev/guide/essentials/entrypoints.html#devtools)
+[Chrome Docs](https://developer.chrome.com/docs/extensions/how-to/devtools/extend-devtools) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/devtools_page)
 
 The devtools entry will be reflected to the `devtools_page` field in `manifest.json`. It supports the following creation methods.
 
-Method 1: run the following command to generate the entry automatically.
+Method 1: generate the entry automatically.
 
 ```shell
 npx web-extend g devtools
 
 ```
 
-Method 2: create the `src/devtools.js` or `src/devtools/index.js` file and the `panels/my-panels.js` file in the parent directory of the `devtools` entry manually.
+Method 2: create the `src/devtools.js` file manually.
+
+### Adding panels
+
+The devtools page is composed of a single panel or multiple panels. There are two methods to create panels.
+
+Method 1: generate the panel automatically.
+
+```shell
+# create a single panel
+npx web-extend g panel
+
+# create multiple panels
+npx web-extend g panels/panel1,panels/panel2
+```
+
+Method 2: create `src/panel/index.js` file for a single panel, or create `src/panels/my-panel/index.js` for multiple panels.
+
+Then you can use the panel in the detools entry, as follows.
 
 ::: code-group
 
-```js [src/devtools/index.js]
-chrome.devtools.panels.create("Font Picker", "", "font-picker.html");
-```
+```js [src/devtools.js]
+// for a single panel
+chrome.devtools.panels.create("My panel", "", "panel.html");
 
-```js [src/devtools/panels/font-picker/index.js]
-import "./index.css";
-
-const rootEl = document.querySelector("#root");
-if (rootEl) {
-  rootEl.innerHTML = `
-  <div class="content">
-    <h1>Vanilla WebExtend</h1>
-    <p>This is a panel page.</p>
-  </div>
-  `;
-}
+// for multiple panels
+chrome.devtools.panels.create("My panel", "", "panels/my-panel.html");
 ```
 
 :::
 
+See [with-devtools](https://github.com/web-extend/examples/tree/main/with-devtools).
+
 ## Newtab
 
-- [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages)
-- [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/chrome_url_overrides)
+[Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/chrome_url_overrides)
 
 The newtab entry will be reflected to the `chrome_url_overrides.newtab` field in `manifest.json`. It supports the following creation methods.
 
-Method 1: run the following command to generate the entry automatically.
+Method 1: generate the entry automatically.
 
 ```shell
 npx web-extend g newtab
@@ -247,12 +267,11 @@ Method 2: create the `src/newtab.js` or `src/newtab/index.js` file manually.
 
 ## Bookmarks
 
-- [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages)
-- Firefox doesn't support bookmarks.
+[Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages), Firefox doesn't support bookmarks.
 
 The bookmarks entry will be reflected to the `chrome_url_overrides.bookmarks` field in `manifest.json`. It supports the following creation methods.
 
-Method 1: run the following command to generate the entry automatically.
+Method 1: generate the entry automatically.
 
 ```shell
 npx web-extend g bookmarks
@@ -263,12 +282,11 @@ Method 2: create the `src/bookmarks.js` or `src/bookmarks/index.js` file manuall
 
 ## History
 
-- [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages)
-- Firefox doesn't support history.
+[Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages), Firefox doesn't support history.
 
 The history entry will be reflected to the `chrome_url_overrides.history` field in `manifest.json`. It supports the following creation methods.
 
-Method 1: run the following command to generate the entry automatically.
+Method 1: generate the entry automatically.
 
 ```shell
 npx web-extend g history
@@ -279,20 +297,39 @@ Method 2: create the `src/history.js` or `src/history/index.js` file manually.
 
 ## Sandbox
 
-- [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest/sandbox)
-- Firefox doesn't support sandbox.
+[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest/sandbox), Firefox doesn't support sandbox.
 
 The sandbox entry will be reflected to the `sandbox.pages` field in `manifest.json`. It supports the following creation methods.
 
-Method 1: run the following command to generate the entry automatically.
+Method 1: generate the entry automatically.
 
 ```shell
-# generate a single entry
+# create a single entry
 npx web-extend g sandbox
 
-# generate multiple entries
-npx web-extend g sandboxes/sandbox-one
+# create multiple entries
+npx web-extend g sandboxes/sandbox1,sandboxes/sandbox2
 
 ```
 
 Method 2: create the `src/sandbox.js` or `src/sandboxes/*.js` file manually.
+
+To use the sandbox, you can embed it as an iframe inside another extension page.
+
+::: code-group
+
+```js [src/popup/index.js]
+document.querySelector("#root").innerHTML = `
+  <div class="content">
+    <!-- embed a single sandbox -->
+    <iframe id="sandboxFrame1" src="sandbox.html"></iframe>
+    <!-- embed multiple sandboxes -->
+    <iframe id="sandboxFrame1" src="sandboxes/sandbox1.html"></iframe>
+  </div>
+  `;
+}
+```
+
+:::
+
+See [with-sandbox](https://github.com/web-extend/examples/tree/main/with-sandbox), [with-multi-sandboxes](https://github.com/web-extend/examples/tree/main/with-multi-sandboxes).

@@ -55,7 +55,10 @@ export interface ManifestEntryProcessor {
   matchDeclarativeEntryFile: (file: string) => null | { name: string; ext: string };
   matchEntryName: (name: string) => boolean;
   normalize: (props: NormalizeMainfestEntryProps) => MaybePromise<void>;
-  read: (manifest?: WebExtensionManifest) => MaybePromise<ManifestEntryInput | null>;
+  read: (props: {
+    manifest: WebExtensionManifest;
+    context: ManifestContext;
+  }) => MaybePromise<ManifestEntryInput | null>;
   write: (props: WriteMainfestEntryItemProps) => MaybePromise<void>;
   onAfterBuild?: (props: WriteManifestFileProps) => MaybePromise<void>;
 }
@@ -76,21 +79,14 @@ export interface ManifestRuntime {
 }
 
 export interface NormalizeManifestProps {
-  rootPath: string;
-  mode: string | undefined;
   manifest?: WebExtensionManifest;
-  srcDir: string;
-  target: ExtensionTarget;
-  runtime?: ManifestRuntime;
+  context: ManifestContext;
 }
 
 export interface NormalizeMainfestEntryProps {
-  srcPath: string;
-  mode: string | undefined;
   manifest: WebExtensionManifest;
-  target: ExtensionTarget;
   files: string[];
-  runtime?: ManifestRuntime;
+  context: ManifestContext;
 }
 
 export interface WriteMainfestEntriesProps {
@@ -101,6 +97,7 @@ export interface WriteMainfestEntriesProps {
 }
 
 export interface WriteMainfestEntryItemProps extends Omit<WriteMainfestEntriesProps, 'entry'> {
+  context: ManifestContext;
   name: string;
   input?: ManifestEntryItem['input'];
   output?: ManifestEntryItem['output'];
