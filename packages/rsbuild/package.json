@@ -1,6 +1,6 @@
 {
   "name": "@web-extend/rsbuild-plugin",
-  "version": "0.0.1-beta.1",
+  "version": "0.0.1-beta.2",
   "description": "A Rsbuild plugin of WebExtend.",
   "keywords": ["web extensions", "browser extensions", "rsbuild plugin"],
   "repository": {
