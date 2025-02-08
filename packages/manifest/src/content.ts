@@ -84,7 +84,6 @@ const writeContentEntry: ManifestEntryProcessor['write'] = async ({
   output,
   context,
 }) => {
-  console.log('output', output);
   const { content_scripts } = manifest;
   if (!content_scripts?.length || !output?.length) return;
 
