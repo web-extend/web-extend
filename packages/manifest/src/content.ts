@@ -35,15 +35,17 @@ const normalizeContentEntry: ManifestEntryProcessor['normalize'] = async ({ mani
     }
   }
 
-  // inject content runtime script for each entry in dev mode
-  if (isDevMode(mode) && runtime?.contentLoad) {
-    const contentLoad = runtime.contentLoad;
-    manifest.content_scripts?.forEach((item) => {
-      if (!item.js) {
-        item.js = [];
-      }
-      item.js.push(contentLoad);
-    });
+  if (isDevMode(mode) && manifest.content_scripts?.length) {
+    const { contentLoad } = runtime || {};
+    // inject content runtime script for each entry in dev mode including content bridge
+    if (contentLoad) {
+      manifest.content_scripts.forEach((item) => {
+        if (!item.js) {
+          item.js = [];
+        }
+        item.js.push(contentLoad);
+      });
+    }
   }
 };
 
@@ -54,7 +56,7 @@ function getContentScriptInfo(contentScript: Manifest.ContentScript, rootPath: s
   const name = getEntryFileName(input[0], rootPath, resolve(rootPath, srcDir));
   return {
     input,
-    name,
+    name: name.replaceAll('/', '-'),
   };
 }
 

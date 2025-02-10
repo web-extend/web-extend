@@ -148,16 +148,15 @@ export async function clearOutdatedHotUpdateFiles(distPath: string, statsList: R
   const reservedFiles = getHotUpdateAssets(statsList);
 
   const files = await readdir(distPath, {
-    withFileTypes: true,
+    recursive: true,
   });
   const outdatedFiles: string[] = [];
 
   for (const file of files) {
-    const { name } = file;
-    if (file.isFile() && name.includes('.hot-update.')) {
-      const item = reservedFiles.find((prefix) => name.includes(prefix));
+    if (file.includes('.hot-update.')) {
+      const item = reservedFiles.find((prefix) => file.includes(prefix));
       if (!item) {
-        outdatedFiles.push(file.name);
+        outdatedFiles.push(file);
       }
     }
   }
