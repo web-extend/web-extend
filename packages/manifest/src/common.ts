@@ -15,29 +15,19 @@ export function getEntryFileName(file: string, rootPath: string, srcDir: string)
       : basename(filePath);
   const ext = extname(relativeFilePath);
   const name = relativeFilePath.replace(ext, '').replace(/[\\/]index$/, '');
-  return name;
+  return name.split(sep).join('/');
 }
 
 export function getEntryFileVariants(name: string, ext: string) {
   if (!jsFileExts.includes(ext)) {
     return [`${name}${ext}`];
   }
-  return jsFileExts.flatMap((item) => [`${name}${item}`, `${name}/index${item}`]);
+  return jsFileExts.flatMap((item) => [`${name}${item}`, `${name}${sep}index${item}`]);
 }
 
 export const matchDeclarativeSingleEntryFile = (key: string, file: string) => {
-  const ext = extname(file);
-  if (!jsFileExts.includes(ext)) return null;
-
-  // match [key].js or [key]/index.js
-  const patterns = [`${key}${ext}`, `${key}/index${ext}`];
-  if (patterns.includes(file)) {
-    return {
-      name: key,
-      ext,
-    };
-  }
-  return null;
+  const res = getEntryFileVariants(key, '.js').includes(file);
+  return res ? { name: key, ext: extname(file) } : null;
 };
 
 export const matchDeclarativeMultipleEntryFile = (key: string, file: string) => {

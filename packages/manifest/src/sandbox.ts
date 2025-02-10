@@ -28,7 +28,6 @@ const readSandboxEntry: ManifestEntryProcessor['read'] = ({ manifest, context })
 
   const entry: ManifestEntryInput = {};
   pages.forEach((page) => {
-    // const name = `sandbox${pages.length === 1 ? '' : index}`;
     const name = getEntryFileName(page, context.rootPath, context.srcDir);
     entry[name] = {
       input: [page],
@@ -46,7 +45,6 @@ const writeSandboxEntry: ManifestEntryProcessor['write'] = ({ manifest, name, no
   );
   if (index === -1) return;
 
-  // const index = Number(name.replace('sandbox', '') || '0');
   if (pages[index]) {
     pages[index] = `${name}.html`;
   }

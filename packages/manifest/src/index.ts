@@ -1,5 +1,5 @@
 import { existsSync } from 'node:fs';
-import { cp, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
+import { cp, mkdir, readdir, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import backgroundProcessor from './background.js';
 import {

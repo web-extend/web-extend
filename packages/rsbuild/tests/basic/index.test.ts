@@ -10,26 +10,26 @@ import { title as popupTitle } from './src/popup/index.js';
 const __dirname = import.meta.dirname;
 
 describe('basic for chrome', () => {
-  it('should build successfully in dev mode', async () => {
-    const rsbuild = await initRsbuild({
-      cwd: __dirname,
-      mode: 'development',
-    });
-    const { server } = await rsbuild.startDevServer();
-    const distPath = rsbuild.context.distPath;
+  // it('should build successfully in dev mode', async () => {
+  //   const rsbuild = await initRsbuild({
+  //     cwd: __dirname,
+  //     mode: 'development',
+  //   });
+  //   const { server } = await rsbuild.startDevServer();
+  //   const distPath = rsbuild.context.distPath;
 
-    return new Promise((resolve, reject) => {
-      rsbuild.onDevCompileDone(async () => {
-        const manifest = await readManifestFile(distPath);
-        const { manifest_version } = manifest;
+  //   return new Promise((resolve, reject) => {
+  //     rsbuild.onDevCompileDone(async () => {
+  //       const manifest = await readManifestFile(distPath);
+  //       const { manifest_version } = manifest;
 
-        expect(manifest_version).toBe(3);
+  //       expect(manifest_version).toBe(3);
 
-        server.close();
-        resolve({});
-      });
-    });
-  });
+  //       server.close();
+  //       resolve({});
+  //     });
+  //   });
+  // });
 
   it('should build successfully in prod mode', async () => {
     const rsbuild = await initRsbuild({

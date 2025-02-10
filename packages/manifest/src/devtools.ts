@@ -40,8 +40,6 @@ const readDevtoolsEntry: ManifestEntryProcessor['read'] = async ({ manifest, con
     .map((file) => resolve(srcPath, file));
 
   for (const file of panels) {
-    // const res = file.match(/([^\\/]+)([\\/]index)?\.(ts|tsx|js|jsx|mjs|cjs)$/);
-    // const name = res?.[1];
     const name = getEntryFileName(file, rootPath, srcDir);
     if (name) {
       entry[name] = {
