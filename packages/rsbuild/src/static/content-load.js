@@ -37,7 +37,7 @@ if (__webpack_require__.l && !__webpack_require__.l.origin) {
       const CHUNK_LOAD_TIMEOUT = 120000;
       setTimeout(onScriptComplete, CHUNK_LOAD_TIMEOUT);
 
-      const file = url.split('/').at(-1);
+      const file = new URL(url).pathname.replace(/^\//, '');
       browser.runtime
         .sendMessage({ type: 'web-extend:execute-script', file })
         .then(onScriptComplete)
