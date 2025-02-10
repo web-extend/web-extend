@@ -1,6 +1,6 @@
 import { existsSync } from 'node:fs';
 import { copyFile, mkdir, readFile } from 'node:fs/promises';
-import { basename, resolve, posix } from 'node:path';
+import { basename, posix, resolve } from 'node:path';
 import type { Manifest } from 'webextension-polyfill';
 import {
   getEntryFileName,
