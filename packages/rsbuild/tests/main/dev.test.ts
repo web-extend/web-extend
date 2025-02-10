@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { initRsbuild, readManifestFile } from '../helper.js';
 import type { Manifest } from 'webextension-polyfill';
+import { initRsbuild, readManifestFile } from '../helper.js';
 
 describe('test dev for chrome', () => {
   it('should build successfully in dev mode', async () => {

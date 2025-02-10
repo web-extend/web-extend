@@ -179,6 +179,8 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
     });
 
     api.onDevCompileDone(async ({ stats }) => {
+      if (stats?.hasErrors()) return;
+
       await manifestManager.copyPublicFiles();
       await manifestManager.writeManifestFile();
 
@@ -189,7 +191,9 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       console.log('Built the extension successfully');
     });
 
-    api.onAfterBuild(async () => {
+    api.onAfterBuild(async ({ stats }) => {
+      if (stats?.hasErrors()) return;
+
       await manifestManager.writeManifestFile();
       console.log('Built the extension successfully');
     });
