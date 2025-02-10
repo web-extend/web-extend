@@ -5,7 +5,7 @@ import { existsFile, initRsbuild, readManifestFile } from '../helper.js';
 
 const __dirname = import.meta.dirname;
 
-describe('basic for firefox', () => {
+describe('test build for firefox', () => {
   it('should build firefox-mv3-prod successfully', async () => {
     const defaultIcon = './src/assets/icon-128.png';
     const rsbuild = await initRsbuild({
