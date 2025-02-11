@@ -53,7 +53,9 @@ const readEntry: ManifestEntryProcessor['readEntry'] = async ({ manifest, contex
 };
 
 const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, name }) => {
-  manifest.devtools_page = `${name}.html`;
+  if (name === 'devtools') {
+    manifest.devtools_page = `${name}.html`;
+  }
 };
 
 const devtoolsProcessor: ManifestEntryProcessor = {

@@ -34,9 +34,9 @@ export type ManifestEntryKey =
   | 'content'
   | 'popup'
   | 'options'
+  | 'sidepanel'
   | 'devtools'
   | 'sandbox'
-  | 'sidepanel'
   | PageToOverride;
 
 interface ManifestEntryItem {

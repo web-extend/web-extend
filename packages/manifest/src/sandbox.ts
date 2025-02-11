@@ -39,15 +39,14 @@ const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest, context }) =
 
 const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, name, normalizedManifest, context }) => {
   const pages = manifest?.sandbox?.pages || [];
-  if (!pages.length) return;
-  const index = (normalizedManifest.sandbox?.pages || []).findIndex((file) =>
-    getEntryName(file, context.rootPath, context.srcDir),
-  );
-  if (index === -1) return;
+  const normalizedPages = normalizedManifest.sandbox?.pages || [];
+  if (!pages.length || !normalizedPages.length) return;
 
-  if (pages[index]) {
-    pages[index] = `${name}.html`;
-  }
+  normalizedPages.forEach((page, index) => {
+    if (getEntryName(page, context.rootPath, context.srcDir) === name) {
+      pages[index] = `${name}.html`;
+    }
+  });
 };
 
 const sandboxProcessor: ManifestEntryProcessor = {

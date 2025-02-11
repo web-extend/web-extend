@@ -68,7 +68,6 @@ const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest, context }) =
   content_scripts.forEach((contentScript, index) => {
     const info = getContentScriptInfo(contentScript, context.rootPath, context.srcDir);
     if (!info) return;
-    // TODO: 有问题，必须是以 content 开头，才可以被找到。
     const { name, input } = info;
     entry[name] = {
       input,
