@@ -52,7 +52,6 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, name }) =>
 const optionsProcessor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntryFile,
-  matchEntryName: (entryName) => entryName === key,
   normalize: normalizeOptionsEntry,
   readEntry,
   writeEntry,

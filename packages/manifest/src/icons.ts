@@ -123,7 +123,6 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, output }) 
 const iconsProcessor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntryFile,
-  matchEntryName: (entryName) => entryName.startsWith('icon'),
   normalize: normalizeIconsEntry,
   readEntry,
   writeEntry,

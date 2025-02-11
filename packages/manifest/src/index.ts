@@ -14,7 +14,7 @@ import sidepanelProcessor from './sidepanel.js';
 import type {
   ExtensionTarget,
   ManifestContext,
-  ManifestEnties,
+  ManifestEntries,
   ManifestEntryOutput,
   ManifestEntryProcessor,
   NormalizeManifestProps,
@@ -119,6 +119,7 @@ export class ManifestManager {
   public context = {} as ManifestContext;
   private manifest = {} as WebExtensionManifest;
   private normalizedManifest = {} as WebExtensionManifest;
+  private entries: ManifestEntries | undefined;
 
   async normalize(
     options: Partial<ManifestContext> & {
@@ -160,7 +161,7 @@ export class ManifestManager {
 
   async readEntries() {
     const manifest = this.normalizedManifest;
-    const res = {} as ManifestEnties;
+    const res = {} as ManifestEntries;
     for (const processor of entryProcessors) {
       const entry = await processor.readEntry({
         manifest,
@@ -170,22 +171,27 @@ export class ManifestManager {
         res[processor.key] = entry;
       }
     }
+    this.entries = res;
     return res;
   }
 
   async writeEntries(result: ManifestEntryOutput) {
+    if (!this.entries) return;
     for (const entryName in result) {
-      const processor = entryProcessors.find((item) => item.matchEntryName(entryName));
-      if (!processor) continue;
-      await processor.writeEntry({
-        normalizedManifest: this.normalizedManifest,
-        manifest: this.manifest,
-        rootPath: this.context.rootPath,
-        name: entryName,
-        input: result[entryName].input,
-        output: result[entryName].output,
-        context: this.context,
-      });
+      for (const processor of entryProcessors) {
+        const entry = this.entries[processor.key];
+        if (!entry || !Object.hasOwn(entry, entryName)) continue;
+
+        await processor.writeEntry({
+          normalizedManifest: this.normalizedManifest,
+          manifest: this.manifest,
+          rootPath: this.context.rootPath,
+          name: entryName,
+          input: result[entryName].input,
+          output: result[entryName].output,
+          context: this.context,
+        });
+      }
     }
   }
 

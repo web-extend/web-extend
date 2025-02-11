@@ -69,7 +69,6 @@ function addSidepanelPermission(manifest: WebExtensionManifest) {
 const sidepanelProcessor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntryFile,
-  matchEntryName: (entryName) => entryName === key,
   normalize: normalizeSidepanelEntry,
   readEntry,
   writeEntry,

@@ -77,7 +77,6 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, output }) 
 const backgroundProcessor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntryFile,
-  matchEntryName: (entryName) => entryName === key,
   normalize: normalizeBackgroundEntry,
   readEntry,
   writeEntry,

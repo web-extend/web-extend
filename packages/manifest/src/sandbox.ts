@@ -53,7 +53,6 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, name, norm
 const sandboxProcessor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntryFile,
-  matchEntryName: (entryName) => entryName.startsWith(key),
   normalize: normalizeSandboxEntry,
   readEntry,
   writeEntry,

@@ -178,7 +178,6 @@ const onAfterBuild: ManifestEntryProcessor['onAfterBuild'] = async ({ distPath, 
 const contentProcessor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntryFile,
-  matchEntryName: (entryName) => entryName.startsWith('content'),
   normalize: normalizeContentEntry,
   readEntry,
   writeEntry,

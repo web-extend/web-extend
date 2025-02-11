@@ -65,7 +65,6 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = async ({ manifest, root
 const popupProcessor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntryFile,
-  matchEntryName: (entryName) => entryName === key,
   normalize: normalizePopupEntry,
   readEntry,
   writeEntry,

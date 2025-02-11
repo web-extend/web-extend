@@ -54,7 +54,6 @@ const overrideProcessors = overrides.map((key) => {
   return {
     key,
     matchDeclarativeEntryFile,
-    matchEntryName: (entryName) => entryName === key,
     normalize: normalizeOverridesEntry,
     readEntry,
     writeEntry,
