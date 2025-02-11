@@ -5,6 +5,7 @@ import backgroundProcessor from './background.js';
 import { isDevMode, readPackageJson, resolveOutDir, resolveSrcDir, resolveTarget, setTargetEnv } from './common.js';
 import contentProcessor from './content.js';
 import devtoolsProcessor from './devtools.js';
+import panelProcessor from './panel.js';
 import iconsProcessor from './icons.js';
 import optionsProcessor from './options.js';
 import overrideProcessors from './overrides.js';
