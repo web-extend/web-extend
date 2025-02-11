@@ -17,19 +17,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/web-infra-dev/rsbuild.git"
+    "url": "git+https://github.com/web-extend/web-extend.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/web-infra-dev/rsbuild/issues"
+    "url": "https://github.com/web-extend/web-extend/issues"
   },
-  "homepage": "https://github.com/web-infra-dev/rsbuild#readme",
+  "homepage": "https://github.com/web-extend/web-extend#readme",
   "description": "",
   "packageManager": "pnpm@10.0.0",
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@changesets/cli": "^2.27.12",
     "simple-git-hooks": "^2.11.1",
     "typescript": "^5.7.3",
     "vitest": "^3.0.5"

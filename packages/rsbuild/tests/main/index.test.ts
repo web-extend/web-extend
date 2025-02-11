@@ -3,7 +3,7 @@ import { readdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import type { Manifest } from 'webextension-polyfill';
-import { validateDistFile, initRsbuild, readManifestFile } from '../helper.js';
+import { initRsbuild, readManifestFile, validateDistFile } from '../helper.js';
 import { config as contentConfig } from './src/content.js';
 import { title as popupTitle } from './src/popup/index.js';
 
