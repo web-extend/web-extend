@@ -77,6 +77,8 @@ describe('test build for chrome', () => {
 
     // sandbox
     expect(sandbox?.pages.length).toBe(2);
+    expect(sandbox?.pages[0]).toBe('sandbox.html');
+    expect(sandbox?.pages[1]).toBe('sandboxes/sandbox1.html');
     sandbox?.pages.forEach((page) => {
       expect(validateDistFile(distPath, page, '.html')).toBeTruthy();
     });
@@ -84,6 +86,10 @@ describe('test build for chrome', () => {
     // devtools
     expect(devtools_page).toBe('devtools.html');
     expect(validateDistFile(distPath, devtools_page || '', '.html')).toBeTruthy();
+
+    // panel
+    expect(validateDistFile(distPath, 'panel.html', '.html')).toBeTruthy();
+    expect(validateDistFile(distPath, 'panels/panel1.html', '.html')).toBeTruthy();
 
     // newtab
     expect(chrome_url_overrides?.newtab).toBe('newtab.html');

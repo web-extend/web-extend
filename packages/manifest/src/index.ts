@@ -5,6 +5,7 @@ import backgroundProcessor from './background.js';
 import { isDevMode, readPackageJson, resolveOutDir, resolveSrcDir, resolveTarget, setTargetEnv } from './common.js';
 import contentProcessor from './content.js';
 import devtoolsProcessor from './devtools.js';
+import panelProcessor from './panel.js';
 import iconsProcessor from './icons.js';
 import optionsProcessor from './options.js';
 import overrideProcessors from './overrides.js';
@@ -30,11 +31,12 @@ const entryProcessors: ManifestEntryProcessor[] = [
   contentProcessor,
   popupProcessor,
   optionsProcessor,
+  sidepanelProcessor,
   devtoolsProcessor,
+  panelProcessor,
   sandboxProcessor,
   iconsProcessor,
   ...overrideProcessors,
-  sidepanelProcessor,
 ];
 
 async function normalizeManifest({ manifest = {} as WebExtensionManifest, context }: NormalizeManifestProps) {
@@ -80,6 +82,7 @@ async function normalizeManifest({ manifest = {} as WebExtensionManifest, contex
     const srcPath = resolve(rootPath, srcDir);
     const files = await readdir(srcPath, { recursive: true });
     for (const processor of entryProcessors) {
+      if (!processor.normalize) continue;
       await processor.normalize({
         manifest: finalManifest,
         files,
@@ -163,6 +166,7 @@ export class ManifestManager {
     const manifest = this.normalizedManifest;
     const res = {} as ManifestEntries;
     for (const processor of entryProcessors) {
+      if (!processor.readEntry) continue;
       const entry = await processor.readEntry({
         manifest,
         context: this.context,
@@ -180,7 +184,7 @@ export class ManifestManager {
     for (const entryName in result) {
       for (const processor of entryProcessors) {
         const entry = this.entries[processor.key];
-        if (!entry || !Object.hasOwn(entry, entryName)) continue;
+        if (!entry || !Object.hasOwn(entry, entryName) || !processor.writeEntry) continue;
 
         await processor.writeEntry({
           normalizedManifest: this.normalizedManifest,
@@ -224,6 +228,7 @@ export class ManifestManager {
 
   static matchDeclarativeEntryFile(file: string) {
     for (const processor of entryProcessors) {
+      if (!processor.matchDeclarativeEntryFile) continue;
       const item = processor.matchDeclarativeEntryFile(file);
       if (item) return item;
     }

@@ -36,6 +36,7 @@ export type ManifestEntryKey =
   | 'options'
   | 'sidepanel'
   | 'devtools'
+  | 'panel'
   | 'sandbox'
   | PageToOverride;
 
@@ -52,10 +53,10 @@ export type MaybePromise<T = unknown> = T | Promise<T>;
 
 export interface ManifestEntryProcessor {
   key: ManifestEntryKey;
-  matchDeclarativeEntryFile: (file: string) => null | { name: string; ext: string };
-  normalize: (props: NormalizeMainfestEntryProps) => MaybePromise<void>;
-  readEntry: (props: ReadManifestEntryItemProps) => MaybePromise<ManifestEntryInput | null>;
-  writeEntry: (props: WriteMainfestEntryItemProps) => MaybePromise<void>;
+  matchDeclarativeEntryFile?: (file: string) => null | { name: string; ext: string };
+  normalize?: (props: NormalizeMainfestEntryProps) => MaybePromise<void>;
+  readEntry?: (props: ReadManifestEntryItemProps) => MaybePromise<ManifestEntryInput | null>;
+  writeEntry?: (props: WriteMainfestEntryItemProps) => MaybePromise<void>;
   onAfterBuild?: (props: WriteManifestFileProps) => MaybePromise<void>;
 }
 
