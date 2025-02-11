@@ -34,7 +34,7 @@ const normalizeSidepanelEntry: ManifestEntryProcessor['normalize'] = async ({ ma
   }
 };
 
-const readSidepanelEntry: ManifestEntryProcessor['read'] = ({ manifest }) => {
+const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest }) => {
   const { side_panel, sidebar_action } = manifest || {};
   const input = side_panel?.default_path || sidebar_action?.default_panel;
   if (!input) return null;
@@ -48,7 +48,7 @@ const readSidepanelEntry: ManifestEntryProcessor['read'] = ({ manifest }) => {
   return entry;
 };
 
-const writeSidepanelEntry: ManifestEntryProcessor['write'] = ({ manifest, name }) => {
+const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, name }) => {
   const output = `${name}.html`;
   const { side_panel, sidebar_action } = manifest;
   if (side_panel) {
@@ -71,8 +71,8 @@ const sidepanelProcessor: ManifestEntryProcessor = {
   matchDeclarativeEntryFile,
   matchEntryName: (entryName) => entryName === key,
   normalize: normalizeSidepanelEntry,
-  read: readSidepanelEntry,
-  write: writeSidepanelEntry,
+  readEntry,
+  writeEntry,
 };
 
 export default sidepanelProcessor;

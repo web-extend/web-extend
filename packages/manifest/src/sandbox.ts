@@ -22,7 +22,7 @@ const normalizeSandboxEntry: ManifestEntryProcessor['normalize'] = async ({ mani
   }
 };
 
-const readSandboxEntry: ManifestEntryProcessor['read'] = ({ manifest, context }) => {
+const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest, context }) => {
   const pages = manifest?.sandbox?.pages || [];
   if (!pages.length) return null;
 
@@ -37,7 +37,7 @@ const readSandboxEntry: ManifestEntryProcessor['read'] = ({ manifest, context })
   return entry;
 };
 
-const writeSandboxEntry: ManifestEntryProcessor['write'] = ({ manifest, name, normalizedManifest, context }) => {
+const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, name, normalizedManifest, context }) => {
   const pages = manifest?.sandbox?.pages || [];
   if (!pages.length) return;
   const index = (normalizedManifest.sandbox?.pages || []).findIndex((file) =>
@@ -55,8 +55,8 @@ const sandboxProcessor: ManifestEntryProcessor = {
   matchDeclarativeEntryFile,
   matchEntryName: (entryName) => entryName.startsWith(key),
   normalize: normalizeSandboxEntry,
-  read: readSandboxEntry,
-  write: writeSandboxEntry,
+  readEntry,
+  writeEntry,
 };
 
 export default sandboxProcessor;

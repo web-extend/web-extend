@@ -162,7 +162,7 @@ export class ManifestManager {
     const manifest = this.normalizedManifest;
     const res = {} as ManifestEnties;
     for (const processor of entryProcessors) {
-      const entry = await processor.read({
+      const entry = await processor.readEntry({
         manifest,
         context: this.context,
       });
@@ -177,7 +177,7 @@ export class ManifestManager {
     for (const entryName in result) {
       const processor = entryProcessors.find((item) => item.matchEntryName(entryName));
       if (!processor) continue;
-      await processor.write({
+      await processor.writeEntry({
         normalizedManifest: this.normalizedManifest,
         manifest: this.manifest,
         rootPath: this.context.rootPath,

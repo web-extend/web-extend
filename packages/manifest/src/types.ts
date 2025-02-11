@@ -55,12 +55,14 @@ export interface ManifestEntryProcessor {
   matchDeclarativeEntryFile: (file: string) => null | { name: string; ext: string };
   matchEntryName: (name: string) => boolean;
   normalize: (props: NormalizeMainfestEntryProps) => MaybePromise<void>;
-  read: (props: {
-    manifest: WebExtensionManifest;
-    context: ManifestContext;
-  }) => MaybePromise<ManifestEntryInput | null>;
-  write: (props: WriteMainfestEntryItemProps) => MaybePromise<void>;
+  readEntry: (props: ReadManifestEntryItemProps) => MaybePromise<ManifestEntryInput | null>;
+  writeEntry: (props: WriteMainfestEntryItemProps) => MaybePromise<void>;
   onAfterBuild?: (props: WriteManifestFileProps) => MaybePromise<void>;
+}
+
+interface ReadManifestEntryItemProps {
+  manifest: WebExtensionManifest;
+  context: ManifestContext;
 }
 
 export interface ManifestContext {

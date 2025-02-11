@@ -28,7 +28,7 @@ const normalizePopupEntry: ManifestEntryProcessor['normalize'] = async ({ manife
   }
 };
 
-const readPopupEntry: ManifestEntryProcessor['read'] = ({ manifest }) => {
+const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest }) => {
   const { manifest_version, action, browser_action } = manifest || {};
   const pointer = manifest_version === 2 ? browser_action : action;
   const input = pointer?.default_popup;
@@ -43,7 +43,7 @@ const readPopupEntry: ManifestEntryProcessor['read'] = ({ manifest }) => {
   return entry;
 };
 
-const writePopupEntry: ManifestEntryProcessor['write'] = async ({ manifest, rootPath, name, input }) => {
+const writeEntry: ManifestEntryProcessor['writeEntry'] = async ({ manifest, rootPath, name, input }) => {
   const { manifest_version, action, browser_action } = manifest;
   const pointer = manifest_version === 2 ? browser_action : action;
   if (!pointer) return;
@@ -67,8 +67,8 @@ const popupProcessor: ManifestEntryProcessor = {
   matchDeclarativeEntryFile,
   matchEntryName: (entryName) => entryName === key,
   normalize: normalizePopupEntry,
-  read: readPopupEntry,
-  write: writePopupEntry,
+  readEntry,
+  writeEntry,
 };
 
 export default popupProcessor;

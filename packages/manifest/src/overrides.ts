@@ -26,7 +26,7 @@ const overrideProcessors = overrides.map((key) => {
     }
   };
 
-  const readOverridesEntry: ManifestEntryProcessor['read'] = ({ manifest }) => {
+  const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest }) => {
     const { chrome_url_overrides } = manifest || {};
     if (!chrome_url_overrides) return null;
 
@@ -41,7 +41,7 @@ const overrideProcessors = overrides.map((key) => {
     return Object.keys(entry).length ? entry : null;
   };
 
-  const writeOverridesEntry: ManifestEntryProcessor['write'] = ({ manifest, name }) => {
+  const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, name }) => {
     const { chrome_url_overrides } = manifest;
     if (!chrome_url_overrides) return;
 
@@ -56,8 +56,8 @@ const overrideProcessors = overrides.map((key) => {
     matchDeclarativeEntryFile,
     matchEntryName: (entryName) => entryName === key,
     normalize: normalizeOverridesEntry,
-    read: readOverridesEntry,
-    write: writeOverridesEntry,
+    readEntry,
+    writeEntry,
   } as ManifestEntryProcessor;
 });
 

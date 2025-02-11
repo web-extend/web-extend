@@ -19,7 +19,7 @@ const normalizeDevtoolsEntry: ManifestEntryProcessor['normalize'] = async ({ man
   }
 };
 
-const readDevtoolsEntry: ManifestEntryProcessor['read'] = async ({ manifest, context }) => {
+const readEntry: ManifestEntryProcessor['readEntry'] = async ({ manifest, context }) => {
   const { devtools_page } = manifest || {};
   if (!devtools_page) return null;
 
@@ -52,7 +52,7 @@ const readDevtoolsEntry: ManifestEntryProcessor['read'] = async ({ manifest, con
   return entry;
 };
 
-const writeDevtoolsEntry: ManifestEntryProcessor['write'] = ({ manifest, name }) => {
+const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, name }) => {
   manifest.devtools_page = `${name}.html`;
 };
 
@@ -61,8 +61,8 @@ const devtoolsProcessor: ManifestEntryProcessor = {
   matchDeclarativeEntryFile,
   matchEntryName: (entryName) => entryName === key,
   normalize: normalizeDevtoolsEntry,
-  read: readDevtoolsEntry,
-  write: writeDevtoolsEntry,
+  readEntry,
+  writeEntry,
 };
 
 export default devtoolsProcessor;

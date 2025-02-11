@@ -60,7 +60,7 @@ function getContentScriptInfo(contentScript: Manifest.ContentScript, rootPath: s
   };
 }
 
-const readContentEntry: ManifestEntryProcessor['read'] = ({ manifest, context }) => {
+const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest, context }) => {
   const { content_scripts } = manifest || {};
   if (!content_scripts?.length) return null;
 
@@ -68,6 +68,7 @@ const readContentEntry: ManifestEntryProcessor['read'] = ({ manifest, context })
   content_scripts.forEach((contentScript, index) => {
     const info = getContentScriptInfo(contentScript, context.rootPath, context.srcDir);
     if (!info) return;
+    // TODO: 有问题，必须是以 content 开头，才可以被找到。
     const { name, input } = info;
     entry[name] = {
       input,
@@ -77,7 +78,7 @@ const readContentEntry: ManifestEntryProcessor['read'] = ({ manifest, context })
   return entry;
 };
 
-const writeContentEntry: ManifestEntryProcessor['write'] = async ({
+const writeEntry: ManifestEntryProcessor['writeEntry'] = async ({
   normalizedManifest,
   manifest,
   name,
@@ -179,8 +180,8 @@ const contentProcessor: ManifestEntryProcessor = {
   matchDeclarativeEntryFile,
   matchEntryName: (entryName) => entryName.startsWith('content'),
   normalize: normalizeContentEntry,
-  read: readContentEntry,
-  write: writeContentEntry,
+  readEntry,
+  writeEntry,
   onAfterBuild,
 };
 
