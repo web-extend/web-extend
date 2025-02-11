@@ -5,7 +5,7 @@ import type { ExtensionTarget } from './types.js';
 
 const jsFileExts = ['.ts', '.js', '.tsx', '.jsx', '.mts', '.cts', '.mjs', '.cjs'];
 
-export function getEntryFileName(file: string, rootPath: string, srcDir: string) {
+export function getEntryName(file: string, rootPath: string, srcDir: string) {
   const filePath = isAbsolute(file) ? file : resolve(rootPath, file);
   const srcPath = isAbsolute(srcDir) ? srcDir : resolve(rootPath, srcDir);
   const relativeFilePath = filePath.startsWith(srcPath)

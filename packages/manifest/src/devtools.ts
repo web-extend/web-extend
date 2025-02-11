@@ -1,6 +1,6 @@
 import { readdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import { getEntryFileName, matchDeclarativeMultipleEntryFile, matchDeclarativeSingleEntryFile } from './common.js';
+import { getEntryName, matchDeclarativeMultipleEntryFile, matchDeclarativeSingleEntryFile } from './common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'devtools';
@@ -40,7 +40,7 @@ const readDevtoolsEntry: ManifestEntryProcessor['read'] = async ({ manifest, con
     .map((file) => resolve(srcPath, file));
 
   for (const file of panels) {
-    const name = getEntryFileName(file, rootPath, srcDir);
+    const name = getEntryName(file, rootPath, srcDir);
     if (name) {
       entry[name] = {
         input: [file],

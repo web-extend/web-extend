@@ -1,6 +1,6 @@
 import { relative, resolve } from 'node:path';
 import type { RsbuildConfig, RsbuildPlugin } from '@rsbuild/core';
-import { ManifestManager } from '@web-extend/manifest';
+import { ManifestManager, getEntryFileVariants } from '@web-extend/manifest';
 import type { ExtensionTarget, ManifestEntryOutput, WebExtensionManifest } from '@web-extend/manifest';
 import {
   clearOutdatedHotUpdateFiles,
@@ -72,8 +72,8 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
                       const entry = ManifestManager.matchDeclarativeEntryFile(relativePath);
                       if (!entry) return true;
 
-                      const entryFileVariants = ManifestManager.getEntryFileVariants(entry.name, entry.ext).map(
-                        (file) => resolve(srcPath, file),
+                      const entryFileVariants = getEntryFileVariants(entry.name, entry.ext).map((file) =>
+                        resolve(srcPath, file),
                       );
                       const hasEntry = entryFileVariants.some((file) => entryPaths.includes(file));
                       if (hasEntry) return true;

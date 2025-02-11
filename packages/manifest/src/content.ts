@@ -3,7 +3,7 @@ import { copyFile, mkdir, readFile } from 'node:fs/promises';
 import { basename, posix, resolve } from 'node:path';
 import type { Manifest } from 'webextension-polyfill';
 import {
-  getEntryFileName,
+  getEntryName,
   isDevMode,
   matchDeclarativeMultipleEntryFile,
   matchDeclarativeSingleEntryFile,
@@ -53,7 +53,7 @@ function getContentScriptInfo(contentScript: Manifest.ContentScript, rootPath: s
   const { js = [], css = [] } = contentScript;
   const input = [...js, ...css];
   if (!input[0]) return null;
-  const name = getEntryFileName(input[0], rootPath, resolve(rootPath, srcDir));
+  const name = getEntryName(input[0], rootPath, resolve(rootPath, srcDir));
   return {
     input,
     name: name.replaceAll('/', '-'),

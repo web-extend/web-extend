@@ -1,5 +1,5 @@
 import { resolve } from 'node:path';
-import { getEntryFileName, matchDeclarativeMultipleEntryFile, matchDeclarativeSingleEntryFile } from './common.js';
+import { getEntryName, matchDeclarativeMultipleEntryFile, matchDeclarativeSingleEntryFile } from './common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'sandbox';
@@ -28,7 +28,7 @@ const readSandboxEntry: ManifestEntryProcessor['read'] = ({ manifest, context })
 
   const entry: ManifestEntryInput = {};
   pages.forEach((page) => {
-    const name = getEntryFileName(page, context.rootPath, context.srcDir);
+    const name = getEntryName(page, context.rootPath, context.srcDir);
     entry[name] = {
       input: [page],
       html: true,
@@ -41,7 +41,7 @@ const writeSandboxEntry: ManifestEntryProcessor['write'] = ({ manifest, name, no
   const pages = manifest?.sandbox?.pages || [];
   if (!pages.length) return;
   const index = (normalizedManifest.sandbox?.pages || []).findIndex((file) =>
-    getEntryFileName(file, context.rootPath, context.srcDir),
+    getEntryName(file, context.rootPath, context.srcDir),
   );
   if (index === -1) return;
 

@@ -2,15 +2,7 @@ import { existsSync } from 'node:fs';
 import { cp, mkdir, readdir, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import backgroundProcessor from './background.js';
-import {
-  getEntryFileVariants,
-  isDevMode,
-  readPackageJson,
-  resolveOutDir,
-  resolveSrcDir,
-  resolveTarget,
-  setTargetEnv,
-} from './common.js';
+import { isDevMode, readPackageJson, resolveOutDir, resolveSrcDir, resolveTarget, setTargetEnv } from './common.js';
 import contentProcessor from './content.js';
 import devtoolsProcessor from './devtools.js';
 import iconsProcessor from './icons.js';
@@ -27,10 +19,9 @@ import type {
   ManifestEntryProcessor,
   NormalizeManifestProps,
   WebExtensionManifest,
-  WriteManifestFileProps,
 } from './types.js';
 
-export { setTargetEnv } from './common.js';
+export { setTargetEnv, getEntryFileVariants } from './common.js';
 
 export * from './types.js';
 
@@ -124,21 +115,6 @@ async function getDefaultManifest(rootPath: string, target?: ExtensionTarget) {
   return manifest;
 }
 
-async function writeManifestFile({ distPath, manifest, mode, runtime }: WriteManifestFileProps) {
-  if (!existsSync(distPath)) {
-    await mkdir(distPath, { recursive: true });
-  }
-
-  for (const processor of entryProcessors) {
-    if (processor.onAfterBuild) {
-      await processor.onAfterBuild({ distPath, manifest, mode, runtime });
-    }
-  }
-
-  const data = isDevMode(mode) ? JSON.stringify(manifest, null, 2) : JSON.stringify(manifest);
-  await writeFile(join(distPath, 'manifest.json'), data);
-}
-
 export class ManifestManager {
   public context = {} as ManifestContext;
   private manifest = {} as WebExtensionManifest;
@@ -213,10 +189,23 @@ export class ManifestManager {
     }
   }
 
-  writeManifestFile() {
+  async writeManifestFile() {
     const { rootPath, outDir, mode, runtime } = this.context;
     const distPath = resolve(rootPath, outDir);
-    return writeManifestFile({ distPath, manifest: this.manifest, mode, runtime });
+    const manifest = this.manifest;
+
+    if (!existsSync(distPath)) {
+      await mkdir(distPath, { recursive: true });
+    }
+
+    for (const processor of entryProcessors) {
+      if (processor.onAfterBuild) {
+        await processor.onAfterBuild({ distPath, manifest, mode, runtime });
+      }
+    }
+
+    const data = isDevMode(mode) ? JSON.stringify(manifest, null, 2) : JSON.stringify(manifest);
+    await writeFile(join(distPath, 'manifest.json'), data);
   }
 
   async copyPublicFiles() {
@@ -234,6 +223,4 @@ export class ManifestManager {
     }
     return null;
   }
-
-  static getEntryFileVariants = getEntryFileVariants;
 }
