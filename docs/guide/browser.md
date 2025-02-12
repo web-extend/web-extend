@@ -9,8 +9,8 @@ outline: deep
 WebExtend supports the following browser targets.
 
 - `chrome-mv3` (default)
-- `firefox-mv3`
-- `firefox-mv2`
+- `firefox-mv2` (recommended for Firefox)
+- `firefox-mv3` (experimental, doesn't work in dev mode)
 - `safari-mv3`
 - `edge-mv3`
 - `opera-mv3`
@@ -52,7 +52,7 @@ Extension API documents are as follows.
 - [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api)
 - [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API)
 
-### For Chrome Series
+### For Chromium-based
 
 You can use `chrome` API directly. If you use TypeScript, [`@types/chrome`](https://www.npmjs.com/package/@types/chrome) is recommended to be installed.
 

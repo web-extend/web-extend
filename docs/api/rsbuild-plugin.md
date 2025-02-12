@@ -32,8 +32,8 @@ Custom `manifest` configuration which defaults to `{}`. WebExtend will merge the
 Custom browser target which suppports the following targets.
 
 - `chrome-mv3` (default)
-- `firefox-mv3`
-- `firefox-mv2`
+- `firefox-mv2` (recommended for Firefox)
+- `firefox-mv3` (experimental, doesn't work in dev mode)
 - `safari-mv3`
 - `edge-mv3`
 - `opera-mv3`

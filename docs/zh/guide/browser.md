@@ -6,14 +6,16 @@ outline: deep
 
 ## 浏览器目标 {#browser-target}
 
-WebExtend 支持以下浏览器目标。默认的构建目标为 `chrome-mv3`，对应的构建产物可以在 chrome 系列的浏览器中使用（包括 Chrome、Edge、Opera 等）。
+WebExtend 支持以下浏览器目标。
 
 - `chrome-mv3` (默认)
-- `firefox-mv3`
-- `firefox-mv2`
+- `firefox-mv2` (对于 Firefox，推荐使用 MV2 版本)
+- `firefox-mv3` (实验性支持，不能用于 dev 环境中)
 - `safari-mv3`
 - `edge-mv3`
 - `opera-mv3`
+
+其中，构建目标为 `chrome-mv3` 时，对应的构建产物可以在 Chromium 系列的浏览器中使用（包括 Chrome、Edge、Opera 等）。
 
 自定义浏览器目标的示例如下：
 
@@ -52,7 +54,7 @@ Extension API 文档：
 - [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api)
 - [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API)
 
-### 适用于 Chrome 系列
+### 适用于 Chromium 系列
 
 可以直接使用 `chrome` API。如果使用 TypeScript，推荐安装 [`@types/chrome`](https://www.npmjs.com/package/@types/chrome)。
 

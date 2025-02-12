@@ -31,11 +31,11 @@ export default defineConfig({
 
 ### target
 
-目标浏览器，支持：
+目标浏览器，支持以下选项：
 
 - `chrome-mv3` (默认)
-- `firefox-mv3`
-- `firefox-mv2`
+- `firefox-mv2` (对于 Firefox，推荐使用 MV2 版本)
+- `firefox-mv3` (实验性支持，不能用于 dev 环境中)
 - `safari-mv3`
 - `edge-mv3`
 - `opera-mv3`

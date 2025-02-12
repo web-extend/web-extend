@@ -5,7 +5,7 @@ layout: home
 hero:
   name: "WebExtend"
   text: "The build tool for web extensions"
-  tagline: "Making web extension development simple, modern and efficient"
+  tagline: "Making web extension development simple, modern and efficient."
   actions:
     - theme: brand
       text: Introduction
@@ -20,7 +20,7 @@ hero:
 features:
   - icon: 📝
     title: Declarative Entrypoints
-    details: Automatically parse entry files based on the file system, reducing manifest.json configuration burden
+    details: Automatically parses entry files based on the file system, reducing manifest.json configuration burden
     link: /guide/entrypoints
   - icon: ⚡️
     title: Seamless Development Experience
