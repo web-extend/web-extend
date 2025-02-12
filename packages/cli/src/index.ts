@@ -4,6 +4,7 @@ import { init } from './init.js';
 import { type StartOptions, startBuild, startDevServer } from './rsbuild.js';
 import { type PreviewOptions, preview } from './web-ext.js';
 import { type ZipOptions, zip } from './zip.js';
+import chalk from 'chalk';
 
 function main() {
   program.name('web-extend');
@@ -41,9 +42,13 @@ function applyInitCommand(command: Command) {
           entries,
           ...otherOptions,
         });
-      } catch (err) {
+      } catch (error) {
+        if (error instanceof Error && error.name === 'ExitPromptError') {
+          console.log(`${chalk.red('✕')} ${chalk.bold('Canceled')}`);
+          return;
+        }
         console.error('Failed to create the project.');
-        console.error(err);
+        console.error(error);
         process.exit(1);
       }
     });
@@ -65,7 +70,11 @@ function applyGenerateCommand(command: Command) {
         await generate(options);
         console.log('Generated successfully!');
       } catch (error) {
-        console.error('Generated failed.');
+        if (error instanceof Error && error.name === 'ExitPromptError') {
+          console.log(`${chalk.red('✕')} ${chalk.bold('Canceled')}`);
+          return;
+        }
+        console.error('Failed to generate.');
         console.log(error);
         process.exit(1);
       }
