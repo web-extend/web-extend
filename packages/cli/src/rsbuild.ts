@@ -1,10 +1,13 @@
-import { resolve } from 'node:path';
+import { existsSync } from 'node:fs';
+import { relative, resolve, isAbsolute } from 'node:path';
+import { unlink, copyFile } from 'node:fs/promises';
 import type { RsbuildMode } from '@rsbuild/core';
 import type { FSWatcher } from 'chokidar';
 import { type BuildInfo, writeBuildInfo } from './cache.js';
 import { type RestartCallback, beforeRestart, onBeforeRestart, watchFilesForRestart } from './restart.js';
 import { type ExtensionRunner, importWebExt, normalizeRunConfig, run } from './web-ext.js';
 import { zip } from './zip.js';
+import chalk from 'chalk';
 
 export interface StartOptions {
   target?: string;
@@ -24,7 +27,8 @@ export interface StartOptions {
 
 let commonOptions: StartOptions = {};
 let extensionRunner: ExtensionRunner | null = null;
-let watchers: FSWatcher[] = [];
+let watchers: (FSWatcher | undefined)[] = [];
+const PUBLIC_DIR = 'public';
 
 // forked from https://github.com/web-infra-dev/rsbuild/blob/main/packages/core/src/cli/init.ts
 async function init({
@@ -97,48 +101,50 @@ async function init({
   rsbuild.onCloseBuild(envs.cleanup);
   rsbuild.onCloseDevServer(envs.cleanup);
 
-  if (isBuildWatch || isDev) {
-    for (const wather of watchers) {
-      await wather?.close();
-    }
-    watchers = [];
+  for (const wather of watchers) {
+    await wather?.close();
+  }
+  watchers = [];
 
+  rsbuild.onBeforeCreateCompiler(() => {
     const restart = isDev ? restartDevServer : isBuildWatch ? restartBuild : null;
-    rsbuild.onBeforeCreateCompiler(() => {
-      if (!restart) return;
+    if (!restart) return;
 
-      const files = [...envs.filePaths];
-      if (configFilePath) {
-        files.push(configFilePath);
-      }
+    const files = [...envs.filePaths];
+    if (configFilePath) {
+      files.push(configFilePath);
+    }
 
-      const config = rsbuild.getNormalizedConfig();
-      if (config.dev?.watchFiles) {
-        const watchFiles = [config.dev.watchFiles].flat().filter((item) => item.type === 'reload-server');
-        for (const watchFilesConfig of watchFiles) {
-          const paths = [watchFilesConfig.paths].flat();
-          if (watchFilesConfig.options) {
-            const watcher = watchFilesForRestart({
-              files: paths,
-              root,
-              restart,
-              watchOptions: watchFilesConfig.options,
-            });
-            if (watcher) {
-              watchers.push(watcher);
-            }
-          } else {
-            files.push(...paths);
-          }
+    const config = rsbuild.getNormalizedConfig();
+    if (config.dev?.watchFiles) {
+      const watchFiles = [config.dev.watchFiles].flat().filter((item) => item.type === 'reload-server');
+      for (const watchFilesConfig of watchFiles) {
+        const paths = [watchFilesConfig.paths].flat();
+        if (watchFilesConfig.options) {
+          const customWatcher = watchFilesForRestart({
+            files: paths,
+            root,
+            callback: restart,
+            watchOptions: watchFilesConfig.options,
+          });
+          watchers.push(customWatcher);
+        } else {
+          files.push(...paths);
         }
       }
+    }
 
-      const watcher = watchFilesForRestart({ files, root, restart });
-      if (watcher) {
-        watchers.push(watcher);
-      }
+    const watcher = watchFilesForRestart({ files, root, callback: restart });
+    watchers.push(watcher);
+
+    const publicWatcher = watchFilesForRestart({
+      files: [PUBLIC_DIR],
+      root,
+      callback: ({ rootPath, filePath }) =>
+        rewritePublicFile({ rootPath, distPath: rsbuild.context.distPath, filePath }),
     });
-  }
+    watchers.push(publicWatcher);
+  });
 
   return rsbuild;
 }
@@ -185,8 +191,8 @@ async function startDevServer(options: StartOptions) {
   onBeforeRestart(server.close);
 }
 
-const restartDevServer: RestartCallback = async ({ filePath }) => {
-  await beforeRestart({ filePath, clear: true, id: 'server' });
+const restartDevServer: RestartCallback = async ({ filePath, rootPath }) => {
+  await beforeRestart({ rootPath, filePath, clear: true, id: 'server' });
 
   const rsbuild = await init({ isDev: true, isRestart: true });
   if (!rsbuild) return;
@@ -235,8 +241,8 @@ async function startBuild(options: StartOptions) {
   }
 }
 
-const restartBuild: RestartCallback = async ({ filePath }) => {
-  await beforeRestart({ filePath, clear: true, id: 'build' });
+const restartBuild: RestartCallback = async ({ rootPath, filePath }) => {
+  await beforeRestart({ rootPath, filePath, clear: true, id: 'build' });
 
   const rsbuild = await init({ isBuildWatch: true, isRestart: true });
   if (!rsbuild) return;
@@ -281,6 +287,25 @@ function prepareEnv(command: 'dev' | 'build', options: StartOptions) {
 function getBuildTarget() {
   const target = process.env.WEB_EXTEND_TARGET || '';
   return target;
+}
+
+async function rewritePublicFile({
+  rootPath,
+  distPath,
+  filePath,
+}: { rootPath: string; distPath: string; filePath: string }) {
+  const publicPath = resolve(rootPath, PUBLIC_DIR);
+  const publichFilePath = isAbsolute(filePath) ? filePath : resolve(rootPath, filePath);
+  const distFilePath = resolve(distPath, relative(publicPath, publichFilePath));
+
+  console.info(`Rewrite because ${chalk.yellow(relative(rootPath, publichFilePath))} is changed.`);
+  if (!existsSync(publichFilePath)) {
+    if (existsSync(distFilePath)) {
+      await unlink(distFilePath);
+    }
+    return;
+  }
+  await copyFile(publichFilePath, distFilePath);
 }
 
 export { startDevServer, startBuild };

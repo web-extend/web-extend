@@ -1,10 +1,10 @@
-import { basename } from 'node:path';
+import { relative } from 'node:path';
 import chalk from 'chalk';
 import chokidar from 'chokidar';
 import type { ChokidarOptions } from 'chokidar';
 import { debounce } from './util.js';
 
-export type RestartCallback = (props: { filePath: string }) => Promise<unknown> | unknown;
+export type RestartCallback = (props: { filePath: string; rootPath: string }) => Promise<unknown> | unknown;
 
 type WatchEvent = 'add' | 'change' | 'unlink';
 type Cleaner = () => Promise<unknown> | unknown;
@@ -12,7 +12,7 @@ type Cleaner = () => Promise<unknown> | unknown;
 interface WatchFilesForRestartProps {
   root: string;
   files: string[];
-  restart: RestartCallback;
+  callback: RestartCallback;
   watchOptions?: ChokidarOptions;
   watchEvents?: WatchEvent[];
 }
@@ -20,7 +20,7 @@ interface WatchFilesForRestartProps {
 export function watchFilesForRestart({
   files,
   root,
-  restart,
+  callback,
   watchOptions = {},
   watchEvents = ['add', 'change', 'unlink'],
 }: WatchFilesForRestartProps) {
@@ -35,13 +35,12 @@ export function watchFilesForRestart({
     ...watchOptions,
   });
 
-  const callback = debounce(async (filePath) => {
-    await watcher.close();
-    await restart({ filePath });
+  const cb = debounce(async (filePath) => {
+    await callback({ filePath, rootPath: root });
   }, 300);
 
   for (const event of watchEvents) {
-    watcher.on(event, callback);
+    watcher.on(event, cb);
   }
 
   return watcher;
@@ -54,17 +53,17 @@ export function onBeforeRestart(cleaner: Cleaner) {
 }
 
 export async function beforeRestart({
+  rootPath,
   filePath,
   id,
   clear = true,
-}: { filePath?: string; id: string; clear?: boolean }) {
+}: { rootPath: string; filePath?: string; id: string; clear?: boolean }) {
   if (clear) {
     console.clear();
   }
 
   if (filePath) {
-    const filename = basename(filePath);
-    console.info(`Restart ${id} because ${chalk.yellow(filename)} is changed.\n`);
+    console.info(`Restart ${id} because ${chalk.yellow(relative(rootPath, filePath))} is changed.\n`);
   } else {
     console.info(`Restarting ${id}...\n`);
   }

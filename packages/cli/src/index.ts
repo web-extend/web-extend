@@ -1,10 +1,10 @@
+import chalk from 'chalk';
 import { type Command, program } from 'commander';
 import { type GenerateOptions, generate } from './generate.js';
 import { init } from './init.js';
 import { type StartOptions, startBuild, startDevServer } from './rsbuild.js';
 import { type PreviewOptions, preview } from './web-ext.js';
 import { type ZipOptions, zip } from './zip.js';
-import chalk from 'chalk';
 
 function main() {
   program.name('web-extend');
