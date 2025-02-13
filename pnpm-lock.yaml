@@ -1198,6 +1198,10 @@ packages:
     resolution: {integrity: sha512-Ds/PHTiVzuENQsmXrJKkSdfgNkr/SDG/2rDef0AWl3BchAnXdO7gXaYsAkNx4gWiC4OngNA3fQfd3+BcQxP1DQ==}
     hasBin: true
 
+  '@microsoft/api-extractor@7.50.0':
+    resolution: {integrity: sha512-Ds/PHTiVzuENQsmXrJKkSdfgNkr/SDG/2rDef0AWl3BchAnXdO7gXaYsAkNx4gWiC4OngNA3fQfd3+BcQxP1DQ==}
+    hasBin: true
+
   '@microsoft/tsdoc-config@0.17.1':
     resolution: {integrity: sha512-UtjIFe0C6oYgTnad4q1QP4qXwLhe6tIpNTRStJ2RZEPIkqQPREAwE5spzVxsdn9UaEMUqhh0AqSx3X4nWAKXWw==}
 
