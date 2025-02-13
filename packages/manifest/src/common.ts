@@ -75,7 +75,8 @@ const EXTENSION_TARGETS: ExtensionTarget[] = [
   'edge-mv3',
   'opera-mv3',
 ];
-const DEFAULT_EXTENSION_TARGET: ExtensionTarget = 'chrome-mv3';
+
+export const defaultExtensionTarget = 'chrome-mv3';
 
 export function resolveTarget(target?: string): ExtensionTarget {
   const envTarget = process.env.WEB_EXTEND_TARGET as ExtensionTarget;
@@ -87,7 +88,7 @@ export function resolveTarget(target?: string): ExtensionTarget {
   if (optionTarget && EXTENSION_TARGETS.includes(optionTarget)) {
     return optionTarget;
   }
-  return DEFAULT_EXTENSION_TARGET;
+  return defaultExtensionTarget;
 }
 
 export function setTargetEnv(target: string) {
@@ -125,7 +126,7 @@ export function resolveOutDir({ outdir, distPath, target, mode, tag }: GetOutDir
   } else {
     postfix = mode || '';
   }
-  const subDir = [target || DEFAULT_EXTENSION_TARGET, postfix].filter(Boolean).join('-');
+  const subDir = [target || defaultExtensionTarget, postfix].filter(Boolean).join('-');
   return join(dir, subDir);
 }
 

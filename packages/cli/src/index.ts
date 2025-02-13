@@ -6,6 +6,8 @@ import { type StartOptions, startBuild, startDevServer } from './rsbuild.js';
 import { type PreviewOptions, preview } from './web-ext.js';
 import { type ZipOptions, zip } from './zip.js';
 
+export type { ContentScriptConfig } from '@web-extend/manifest/types';
+
 export { defineWebExtConfig } from './web-ext.js';
 
 function runCli() {
@@ -144,6 +146,7 @@ function applyZipCommand(command: Command) {
     .argument('[dir]', 'specify the dist path')
     .option('-r, --root <root>', 'specify the project root directory')
     .option('-n, --filename <filename>', 'specify the output filename')
+    .option('-t, --target <target>', 'specify the extension target')
     .action(async (outDir: string, options: ZipOptions) => {
       try {
         await zip({ ...options, outDir });

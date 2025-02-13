@@ -1,26 +1,38 @@
 import { existsSync } from 'node:fs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import type { ExtensionTarget } from '@web-extend/manifest/types';
 
-export interface BuildInfo {
+export interface CacheBuildInfo {
   rootPath: string;
   distPath: string;
-  target: string;
+  target: ExtensionTarget;
 }
 
 interface CacheResult {
-  build?: BuildInfo;
+  build?: CacheBuildInfo[];
 }
 
 const cacheDir = '.web-extend';
-const resultFile = 'result.json';
+const resultFile = 'results.json';
 
 async function initCacheDir(dirPath: string) {
   await mkdir(dirPath);
   await writeFile(resolve(dirPath, '.gitignore'), '**/*', 'utf-8');
 }
 
-export async function writeBuildInfo(root: string, data: BuildInfo) {
+async function readCacheResult(filePath: string) {
+  try {
+    if (!existsSync(filePath)) return null;
+    const res = await readFile(filePath, 'utf-8');
+    const data = JSON.parse(res);
+    return data as CacheResult;
+  } catch {
+    return null;
+  }
+}
+
+export async function writeBuildInfo(root: string, data: CacheBuildInfo) {
   const cachePath = resolve(root, cacheDir);
   const resultPath = resolve(cachePath, resultFile);
 
@@ -32,12 +44,18 @@ export async function writeBuildInfo(root: string, data: BuildInfo) {
   if (!result) {
     result = {};
   }
-  result.build = {
-    ...(result.build || {}),
-    ...data,
-  };
+  if (!Array.isArray(result.build)) {
+    result.build = [];
+  }
 
-  await writeFile(resultPath, JSON.stringify(result, null, 2), 'utf-8');
+  const index = result.build.findIndex((item) => item.target === data.target);
+  if (index !== -1) {
+    result.build[index] = data;
+  } else {
+    result.build.push(data);
+  }
+
+  await writeFile(resultPath, JSON.stringify(result), 'utf-8');
 }
 
 export async function readBuildInfo(root: string) {
@@ -46,13 +64,15 @@ export async function readBuildInfo(root: string) {
   return result?.build;
 }
 
-async function readCacheResult(filePath: string) {
-  try {
-    if (!existsSync(filePath)) return null;
-    const res = await readFile(filePath, 'utf-8');
-    const data = JSON.parse(res);
-    return data as CacheResult;
-  } catch {
-    return null;
+export function getCurrentBuildInfo(list: CacheBuildInfo[], option: Partial<CacheBuildInfo>) {
+  const { distPath, target } = option;
+  if (distPath && target) {
+    return list.find((item) => item.distPath === distPath && item.target === target);
+  }
+  if (distPath) {
+    return list.find((item) => item.distPath === distPath);
+  }
+  if (target) {
+    return list.find((item) => item.target === target);
   }
 }

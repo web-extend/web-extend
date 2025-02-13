@@ -4,10 +4,11 @@ import { isAbsolute, relative, resolve } from 'node:path';
 import type { RsbuildMode } from '@rsbuild/core';
 import chalk from 'chalk';
 import type { FSWatcher } from 'chokidar';
-import { type BuildInfo, writeBuildInfo } from './cache.js';
-import { type WatchCallback, watchFiles as chokidarWatchFiles } from './chokidar.js';
+import { type CacheBuildInfo, writeBuildInfo } from './cache.js';
+import { type WatchCallback, watchFiles as chokidarWatchFiles } from './watcher.js';
 import { type ExtensionRunner, importWebExt, normalizeRunConfig, run } from './web-ext.js';
 import { zip } from './zip.js';
+import type { ExtensionTarget } from '@web-extend/manifest/types';
 
 export interface StartOptions {
   target?: string;
@@ -217,7 +218,7 @@ async function startBuild(options: StartOptions) {
   // run after manifest.json written in @web-extend/rsbuild-plugin
   rsbuild.onCloseBuild(async () => {
     const { rootPath, distPath } = rsbuild.context;
-    const buildInfo: BuildInfo = {
+    const buildInfo: CacheBuildInfo = {
       rootPath,
       distPath,
       target: getBuildTarget(),
@@ -249,7 +250,7 @@ const restartBuild: WatchCallback = async ({ rootPath, filePath }) => {
 
   rsbuild.onCloseBuild(async () => {
     const { rootPath, distPath } = rsbuild.context;
-    const buildInfo: BuildInfo = {
+    const buildInfo: CacheBuildInfo = {
       rootPath,
       distPath,
       target: getBuildTarget(),
@@ -286,7 +287,7 @@ function prepareEnv(command: 'dev' | 'build', options: StartOptions) {
 
 function getBuildTarget() {
   const target = process.env.WEB_EXTEND_TARGET || '';
-  return target;
+  return target as ExtensionTarget;
 }
 
 async function rewritePublicFile({

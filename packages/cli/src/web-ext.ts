@@ -1,6 +1,8 @@
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { readBuildInfo } from './cache.js';
+import { readBuildInfo, getCurrentBuildInfo } from './cache.js';
+import type { ExtensionTarget } from '@web-extend/manifest/types';
+import { defaultExtensionTarget } from '@web-extend/manifest';
 
 type TargetType = 'firefox-desktop' | 'firefox-android' | 'chromium';
 
@@ -50,11 +52,11 @@ export interface ExtensionRunner {
 
 export interface PreviewOptions {
   root?: string;
-  target?: string;
+  target?: ExtensionTarget;
   outDir?: string;
 }
 
-export function getBrowserTarget(target: string): TargetType {
+export function getBrowserTarget(target: ExtensionTarget): TargetType {
   const browser = target?.includes('firefox') ? 'firefox-desktop' : 'chromium';
   return browser;
 }
@@ -76,16 +78,15 @@ async function loadWebExtConfig(root: string) {
 export async function normalizeRunConfig(
   root: string,
   outDir: string,
-  extensionTarget: string,
+  extensionTarget = defaultExtensionTarget,
   options: WebExtRunConfig = {},
 ) {
   const userConfig = await loadWebExtConfig(root);
   const userRunconfig = userConfig?.run || {};
-  const target = getBrowserTarget(extensionTarget);
   const sourceDir = resolve(root, outDir);
 
   const config: WebExtRunConfig = {
-    target,
+    target: getBrowserTarget(extensionTarget as ExtensionTarget),
     sourceDir,
     ...options,
     ...userRunconfig,
@@ -111,22 +112,27 @@ export async function run(webExt: any, config: WebExtRunConfig) {
 export async function preview({ root = process.cwd(), outDir, target }: PreviewOptions) {
   const webExt = await importWebExt();
   if (!webExt) {
-    throw Error(`Cannot find package 'web-ext', please intsall web-ext first.`);
+    throw Error(`Cannot find package 'web-ext', please install web-ext first.`);
   }
 
   const buildInfo = await readBuildInfo(root);
-  const sourceDir = outDir ? resolve(root, outDir) : buildInfo?.distPath;
-  const extensionTarget = target || buildInfo?.target;
-
-  if (!sourceDir || !existsSync(sourceDir)) {
-    throw Error('The output directory is missing, please build first.');
+  if (!buildInfo?.length) {
+    throw Error('Cannot find build info, please build first.');
   }
 
-  if (!extensionTarget) {
-    throw Error('The extension target is missing, please build first.');
+  let currentBuildInfo = getCurrentBuildInfo(buildInfo, {
+    distPath: outDir ? resolve(root, outDir) : undefined,
+    target,
+  });
+
+  if (!currentBuildInfo) {
+    if (outDir || target) {
+      throw Error('The argument outDir or target is incorrect.');
+    }
+    currentBuildInfo = buildInfo[0];
   }
 
-  const config = await normalizeRunConfig(root, sourceDir, extensionTarget);
+  const config = await normalizeRunConfig(root, currentBuildInfo.distPath, currentBuildInfo.target);
   return run(webExt, config);
 }
 
