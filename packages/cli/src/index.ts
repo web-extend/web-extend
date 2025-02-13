@@ -6,7 +6,9 @@ import { type StartOptions, startBuild, startDevServer } from './rsbuild.js';
 import { type PreviewOptions, preview } from './web-ext.js';
 import { type ZipOptions, zip } from './zip.js';
 
-function main() {
+export { defineWebExtConfig } from './web-ext.js';
+
+function runCli() {
   program.name('web-extend');
 
   const initCommand = program.command('init').description('create a new project');
@@ -153,4 +155,4 @@ function applyZipCommand(command: Command) {
     });
 }
 
-export { main };
+export { runCli };

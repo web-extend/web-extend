@@ -3,6 +3,7 @@
   "version": "0.0.1-beta.2",
   "type": "module",
   "main": "dist/index.js",
+  "types": "./dist/index.d.ts",
   "bin": {
     "web-extend": "bin/index.js",
     "we": "bin/index.js"
@@ -32,6 +33,7 @@
     "sharp": "^0.33.5"
   },
   "devDependencies": {
+    "@microsoft/api-extractor": "^7.49.1",
     "@rsbuild/core": "^1.2.3",
     "@rslib/core": "^0.1.5",
     "@types/archiver": "^6.0.3",
