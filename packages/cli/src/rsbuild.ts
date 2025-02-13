@@ -1,13 +1,13 @@
 import { existsSync } from 'node:fs';
-import { relative, resolve, isAbsolute } from 'node:path';
-import { unlink, copyFile } from 'node:fs/promises';
+import { copyFile, unlink } from 'node:fs/promises';
+import { isAbsolute, relative, resolve } from 'node:path';
 import type { RsbuildMode } from '@rsbuild/core';
+import chalk from 'chalk';
 import type { FSWatcher } from 'chokidar';
 import { type BuildInfo, writeBuildInfo } from './cache.js';
-import { type RestartCallback, beforeRestart, onBeforeRestart, watchFilesForRestart } from './restart.js';
+import { type WatchCallback, watchFiles as chokidarWatchFiles } from './chokidar.js';
 import { type ExtensionRunner, importWebExt, normalizeRunConfig, run } from './web-ext.js';
 import { zip } from './zip.js';
-import chalk from 'chalk';
 
 export interface StartOptions {
   target?: string;
@@ -27,7 +27,7 @@ export interface StartOptions {
 
 let commonOptions: StartOptions = {};
 let extensionRunner: ExtensionRunner | null = null;
-let watchers: (FSWatcher | undefined)[] = [];
+let watchers: FSWatcher[] = [];
 const PUBLIC_DIR = 'public';
 
 // forked from https://github.com/web-infra-dev/rsbuild/blob/main/packages/core/src/cli/init.ts
@@ -121,29 +121,29 @@ async function init({
       for (const watchFilesConfig of watchFiles) {
         const paths = [watchFilesConfig.paths].flat();
         if (watchFilesConfig.options) {
-          const customWatcher = watchFilesForRestart({
+          const customWatcher = chokidarWatchFiles({
             files: paths,
             root,
             callback: restart,
             watchOptions: watchFilesConfig.options,
           });
-          watchers.push(customWatcher);
+          customWatcher && watchers.push(customWatcher);
         } else {
           files.push(...paths);
         }
       }
     }
 
-    const watcher = watchFilesForRestart({ files, root, callback: restart });
-    watchers.push(watcher);
+    const watcher = chokidarWatchFiles({ files, root, callback: restart });
+    watcher && watchers.push(watcher);
 
-    const publicWatcher = watchFilesForRestart({
+    const publicWatcher = chokidarWatchFiles({
       files: [PUBLIC_DIR],
       root,
       callback: ({ rootPath, filePath }) =>
         rewritePublicFile({ rootPath, distPath: rsbuild.context.distPath, filePath }),
     });
-    watchers.push(publicWatcher);
+    publicWatcher && watchers.push(publicWatcher);
   });
 
   return rsbuild;
@@ -191,7 +191,7 @@ async function startDevServer(options: StartOptions) {
   onBeforeRestart(server.close);
 }
 
-const restartDevServer: RestartCallback = async ({ filePath, rootPath }) => {
+const restartDevServer: WatchCallback = async ({ filePath, rootPath }) => {
   await beforeRestart({ rootPath, filePath, clear: true, id: 'server' });
 
   const rsbuild = await init({ isDev: true, isRestart: true });
@@ -241,7 +241,7 @@ async function startBuild(options: StartOptions) {
   }
 }
 
-const restartBuild: RestartCallback = async ({ rootPath, filePath }) => {
+const restartBuild: WatchCallback = async ({ rootPath, filePath }) => {
   await beforeRestart({ rootPath, filePath, clear: true, id: 'build' });
 
   const rsbuild = await init({ isBuildWatch: true, isRestart: true });
@@ -294,6 +294,7 @@ async function rewritePublicFile({
   distPath,
   filePath,
 }: { rootPath: string; distPath: string; filePath: string }) {
+  if (!filePath) return;
   const publicPath = resolve(rootPath, PUBLIC_DIR);
   const publichFilePath = isAbsolute(filePath) ? filePath : resolve(rootPath, filePath);
   const distFilePath = resolve(distPath, relative(publicPath, publichFilePath));
@@ -306,6 +307,35 @@ async function rewritePublicFile({
     return;
   }
   await copyFile(publichFilePath, distFilePath);
+}
+
+type Cleaner = () => Promise<unknown> | unknown;
+let cleaners: Cleaner[] = [];
+
+function onBeforeRestart(cleaner: Cleaner) {
+  cleaners.push(cleaner);
+}
+
+async function beforeRestart({
+  rootPath,
+  filePath,
+  id,
+  clear = true,
+}: { rootPath: string; filePath?: string; id: string; clear?: boolean }) {
+  if (clear) {
+    console.clear();
+  }
+
+  if (filePath) {
+    console.info(`Restart ${id} because ${chalk.yellow(relative(rootPath, filePath))} is changed.\n`);
+  } else {
+    console.info(`Restarting ${id}...\n`);
+  }
+
+  for (const cleaner of cleaners) {
+    await cleaner();
+  }
+  cleaners = [];
 }
 
 export { startDevServer, startBuild };
