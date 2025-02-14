@@ -1,8 +1,8 @@
 import { createWriteStream, existsSync } from 'node:fs';
 import { basename, dirname, resolve } from 'node:path';
-import archiver from 'archiver';
-import { readBuildInfo, getCurrentBuildInfo } from './cache.js';
 import type { ExtensionTarget } from '@web-extend/manifest/types';
+import archiver from 'archiver';
+import { getCurrentBuildInfo, readBuildInfo } from './cache.js';
 
 export interface ZipOptions {
   root?: string;

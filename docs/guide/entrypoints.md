@@ -31,7 +31,7 @@ src/assets/
 └─ icon-128.png
 ```
 
-Alternatively, you can use `web-extend` to generate the corressponding sized icons files, which needs a high quality image `assets/icon.png` (>= 128 * 128 px) as the template.
+Alternatively, you can use `web-extend` to generate the corressponding sized icons files, which needs a high quality image `assets/icon.png` (>= 128 \* 128 px) as the template.
 
 ```shell
 npx web-extend g icons
@@ -44,16 +44,16 @@ See [with-icons](https://github.com/web-extend/examples/tree/main/with-icons).
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest/background) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/background)
 
-The background entry will be reflected to the `background.service_worker` or `background.scripts` feild in `manifest.json`. It supports the following creation methods.
+The background entry will be reflected to the `background.service_worker` or `background.scripts` feild in `manifest.json`.
 
-Method 1: generate the entry automatically.
+Generate the entry automatically.
 
 ```shell
 npx web-extend g background
 
 ```
 
-Method 2: create the `src/background.js` file manually whose content is as follows:
+Alternatively, create the `src/background.js` file manually whose content is as follows:
 
 ::: code-group
 
@@ -69,16 +69,16 @@ See [with-background](https://github.com/web-extend/examples/tree/main/with-back
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/action) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/action)
 
-The popup entry will be reflected to the `action.default_popup` feild in `manifest.json`. It supports the following creation methods.
+The popup entry will be reflected to the `action.default_popup` feild in `manifest.json`.
 
-Method 1: generate the entry automatically.
+Generate the entry automatically.
 
 ```shell
 npx web-extend g popup
 
 ```
 
-Method 2: create the `src/popup.js` or `src/popup/index.js` file manually whose content is as follows:
+Alternatively, create the `src/popup.js` or `src/popup/index.js` file manually whose content is as follows:
 
 ::: code-group
 
@@ -106,16 +106,16 @@ See [with-popup](https://github.com/web-extend/examples/tree/main/with-popup).
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/options-page) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/options_ui)
 
-The options entry will be reflected to the `options_ui.page` feild in `manifest.json`. It supports the following creation methods.
+The options entry will be reflected to the `options_ui.page` feild in `manifest.json`.
 
-Method 1: generate the entry automatically.
+Generate the entry automatically.
 
 ```shell
 npx web-extend g options
 
 ```
 
-Method 2: create the `src/options.js` or `src/options/index.js` file manually.
+Alternatively, create the `src/options.js` or `src/options/index.js` file manually.
 
 See [with-options](https://github.com/web-extend/examples/tree/main/with-options).
 
@@ -125,28 +125,28 @@ See [with-options](https://github.com/web-extend/examples/tree/main/with-options
 
 ### Adding a single content script
 
-A single content entry will be reflected to the `content_scripts[0].js` field in `manifest.json`. It supports the following creation methods.
+A single content entry will be reflected to the `content_scripts[0].js` field in `manifest.json`.
 
-Method 1: generate the entry automatically.
+Generate the entry automatically.
 
 ```shell
 npx web-extend g content
 ```
 
-Method 2: create the `src/content.js` or`src/content/index.js` file manually.
+Alternatively, create the `src/content.js` or`src/content/index.js` file manually.
 
 ### Adding multiple content scripts
 
-Multiple content entries will be reflected to the `content_scripts[index].js` field in `manifest.josn` respectively. It supports the following creation methods.
+Multiple content entries will be reflected to the `content_scripts[index].js` field in `manifest.josn` respectively.
 
-Method 1: generate the entry automatically.
+Generate the entry automatically.
 
 ```shell
 npx web-extend g contents/site-one,contents/site-two
 
 ```
 
-Method 2: create the `src/contents/*.js` or `src/contents/*/index.js` file manually.
+Alternatively, create the `src/contents/*.js` or `src/contents/*/index.js` file manually.
 
 ### Adding CSS
 
@@ -190,16 +190,16 @@ See [with-content](https://github.com/web-extend/examples/tree/main/with-content
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/sidePanel) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Sidebars)
 
-The sidepanel entry will be reflected to the `side_panel.default_path` or `sidebar_action.default_panel` feild in `manifest.json`. It supports the following creation methods.
+The sidepanel entry will be reflected to the `side_panel.default_path` or `sidebar_action.default_panel` feild in `manifest.json`.
 
-Method 1: generate the entry automatically.
+Generate the entry automatically.
 
 ```shell
 npx web-extend g sidepanel
 
 ```
 
-Method 2: create the `src/sidepanel.js` or `src/sidepanel/index.js` file manually.
+Alternatively, create the `src/sidepanel.js` or `src/sidepanel/index.js` file manually.
 
 See [with-sidepanel](https://github.com/web-extend/examples/tree/main/with-sidepanel).
 
@@ -207,22 +207,22 @@ See [with-sidepanel](https://github.com/web-extend/examples/tree/main/with-sidep
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/how-to/devtools/extend-devtools) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/devtools_page)
 
-The devtools entry will be reflected to the `devtools_page` field in `manifest.json`. It supports the following creation methods.
+The devtools entry will be reflected to the `devtools_page` field in `manifest.json`.
 
-Method 1: generate the entry automatically.
+Generate the entry automatically.
 
 ```shell
 npx web-extend g devtools
 
 ```
 
-Method 2: create the `src/devtools.js` file manually.
+Alternatively, create the `src/devtools.js` file manually.
 
 ### Adding panels
 
 The devtools page is composed of a single panel or multiple panels. There are two methods to create panels.
 
-Method 1: generate the panel automatically.
+Generate the panel automatically.
 
 ```shell
 # create a single panel
@@ -232,7 +232,7 @@ npx web-extend g panel
 npx web-extend g panels/panel1,panels/panel2
 ```
 
-Method 2: create `src/panel/index.js` file for a single panel, or create `src/panels/my-panel/index.js` for multiple panels.
+Alternatively, create `src/panel/index.js` file for a single panel, or create `src/panels/panel1/index.js` for multiple panels.
 
 Then you can use the panel in the detools entry, as follows.
 
@@ -243,7 +243,7 @@ Then you can use the panel in the detools entry, as follows.
 chrome.devtools.panels.create("My panel", "", "panel.html");
 
 // for multiple panels
-chrome.devtools.panels.create("My panel", "", "panels/my-panel.html");
+chrome.devtools.panels.create("My panel", "", "panels/panel1.html");
 ```
 
 :::
@@ -254,54 +254,54 @@ See [with-devtools](https://github.com/web-extend/examples/tree/main/with-devtoo
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/chrome_url_overrides)
 
-The newtab entry will be reflected to the `chrome_url_overrides.newtab` field in `manifest.json`. It supports the following creation methods.
+The newtab entry will be reflected to the `chrome_url_overrides.newtab` field in `manifest.json`.
 
-Method 1: generate the entry automatically.
+Generate the entry automatically.
 
 ```shell
 npx web-extend g newtab
 
 ```
 
-Method 2: create the `src/newtab.js` or `src/newtab/index.js` file manually.
+Alternatively, create the `src/newtab.js` or `src/newtab/index.js` file manually.
 
 ## Bookmarks
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages), Firefox doesn't support bookmarks.
 
-The bookmarks entry will be reflected to the `chrome_url_overrides.bookmarks` field in `manifest.json`. It supports the following creation methods.
+The bookmarks entry will be reflected to the `chrome_url_overrides.bookmarks` field in `manifest.json`.
 
-Method 1: generate the entry automatically.
+Generate the entry automatically.
 
 ```shell
 npx web-extend g bookmarks
 
 ```
 
-Method 2: create the `src/bookmarks.js` or `src/bookmarks/index.js` file manually.
+Alternatively, create the `src/bookmarks.js` or `src/bookmarks/index.js` file manually.
 
 ## History
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages), Firefox doesn't support history.
 
-The history entry will be reflected to the `chrome_url_overrides.history` field in `manifest.json`. It supports the following creation methods.
+The history entry will be reflected to the `chrome_url_overrides.history` field in `manifest.json`.
 
-Method 1: generate the entry automatically.
+Generate the entry automatically.
 
 ```shell
 npx web-extend g history
 
 ```
 
-Method 2: create the `src/history.js` or `src/history/index.js` file manually.
+Alternatively, create the `src/history.js` or `src/history/index.js` file manually.
 
 ## Sandbox
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest/sandbox), Firefox doesn't support sandbox.
 
-The sandbox entry will be reflected to the `sandbox.pages` field in `manifest.json`. It supports the following creation methods.
+The sandbox entry will be reflected to the `sandbox.pages` field in `manifest.json`.
 
-Method 1: generate the entry automatically.
+Generate the entry automatically.
 
 ```shell
 # create a single entry
@@ -312,9 +312,9 @@ npx web-extend g sandboxes/sandbox1,sandboxes/sandbox2
 
 ```
 
-Method 2: create the `src/sandbox.js` or `src/sandboxes/*.js` file manually.
+Alternatively, create the `src/sandbox.js` or `src/sandboxes/*.js` file manually.
 
-To use the sandbox, you can embed it as an iframe inside another extension page.
+To use the sandbox, you can embed it as an iframe inside an extension page or a content script.
 
 ::: code-group
 

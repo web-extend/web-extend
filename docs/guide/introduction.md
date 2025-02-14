@@ -19,7 +19,7 @@ These tools might have some of these problems as follows.
 
 ## Main Features {#main-features}
 
-### 📝 Declarative Development {#declarative-development}
+### 📝 Declarative Entrypoints {#declarative-entrypoints}
 
 WebExtend automatically parses entries based on the file system, reducing `manifest.json` configuration burden.
 
@@ -33,7 +33,7 @@ WebExtend supports instant HMR for popup/options/**content_scripts**..., automat
 
 WebExtend automatically handles `manifest.json` configuration differences for easy multi-browser support.
 
-See [browser compatibility](./browser.md).
+See [browser relevant](./browser.md).
 
 ### 🛠️ ESM & TypeScript Support {#esm-typescript-support}
 

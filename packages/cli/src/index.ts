@@ -3,12 +3,12 @@ import { type Command, program } from 'commander';
 import { type GenerateOptions, generate } from './generate.js';
 import { init } from './init.js';
 import { type StartOptions, startBuild, startDevServer } from './rsbuild.js';
-import { type PreviewOptions, preview } from './web-ext.js';
+import { type PreviewOptions, preview } from './runner.js';
 import { type ZipOptions, zip } from './zip.js';
 
 export type { ContentScriptConfig } from '@web-extend/manifest/types';
 
-export { defineWebExtConfig } from './web-ext.js';
+export { defineWebExtConfig } from './runner.js';
 
 function runCli() {
   program.name('web-extend');

@@ -1,8 +1,8 @@
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { readBuildInfo, getCurrentBuildInfo } from './cache.js';
-import type { ExtensionTarget } from '@web-extend/manifest/types';
 import { defaultExtensionTarget } from '@web-extend/manifest';
+import type { ExtensionTarget } from '@web-extend/manifest/types';
+import { getCurrentBuildInfo, readBuildInfo } from './cache.js';
 
 type TargetType = 'firefox-desktop' | 'firefox-android' | 'chromium';
 
@@ -56,11 +56,6 @@ export interface PreviewOptions {
   outDir?: string;
 }
 
-export function getBrowserTarget(target: ExtensionTarget): TargetType {
-  const browser = target?.includes('firefox') ? 'firefox-desktop' : 'chromium';
-  return browser;
-}
-
 const posibleConfigFiles = ['web-ext.config.mjs', 'web-ext.config.cjs', 'web-ext.config.js'];
 
 async function loadWebExtConfig(root: string) {
@@ -75,7 +70,7 @@ async function loadWebExtConfig(root: string) {
   }
 }
 
-export async function normalizeRunConfig(
+export async function normalizeRunnerConfig(
   root: string,
   outDir: string,
   extensionTarget = defaultExtensionTarget,
@@ -86,7 +81,7 @@ export async function normalizeRunConfig(
   const sourceDir = resolve(root, outDir);
 
   const config: WebExtRunConfig = {
-    target: getBrowserTarget(extensionTarget as ExtensionTarget),
+    target: extensionTarget?.includes('firefox') ? 'firefox-desktop' : 'chromium',
     sourceDir,
     ...options,
     ...userRunconfig,
@@ -132,7 +127,7 @@ export async function preview({ root = process.cwd(), outDir, target }: PreviewO
     currentBuildInfo = buildInfo[0];
   }
 
-  const config = await normalizeRunConfig(root, currentBuildInfo.distPath, currentBuildInfo.target);
+  const config = await normalizeRunnerConfig(root, currentBuildInfo.distPath, currentBuildInfo.target);
   return run(webExt, config);
 }
 

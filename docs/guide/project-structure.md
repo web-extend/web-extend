@@ -18,6 +18,7 @@ Top-level folder is used to organize the following files or folders.
 | `.gitignore`             | Git files and folders to ignore                                             |
 | `package.json`           | Project dependencies and scripts                                            |
 | `rsbuild.config.js`      | Configuration file for Rsbuild                                              |
+| `web-ext.config.js`      | Configuration file for web-ext                                              |
 | `tsconfig.json`          | Configuration file for TypeScript                                           |
 
 ## Source Folder

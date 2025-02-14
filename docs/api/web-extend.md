@@ -144,5 +144,6 @@ Options:
 Options:
   -r, --root <root>          specify the project root directory
   -n, --filename <filename>  specify the output filename
+  -t, --target <target>      specify the extension target
   -h, --help                 display help for command
 ```

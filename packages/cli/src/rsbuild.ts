@@ -2,13 +2,13 @@ import { existsSync } from 'node:fs';
 import { copyFile, unlink } from 'node:fs/promises';
 import { isAbsolute, relative, resolve } from 'node:path';
 import type { RsbuildMode } from '@rsbuild/core';
+import type { ExtensionTarget } from '@web-extend/manifest/types';
 import chalk from 'chalk';
 import type { FSWatcher } from 'chokidar';
 import { type CacheBuildInfo, writeBuildInfo } from './cache.js';
 import { type WatchCallback, watchFiles as chokidarWatchFiles } from './watcher.js';
-import { type ExtensionRunner, importWebExt, normalizeRunConfig, run } from './web-ext.js';
+import { type ExtensionRunner, importWebExt, normalizeRunnerConfig, run } from './runner.js';
 import { zip } from './zip.js';
-import type { ExtensionTarget } from '@web-extend/manifest/types';
 
 export interface StartOptions {
   target?: string;
@@ -175,7 +175,7 @@ async function startDevServer(options: StartOptions) {
       // run after manifest.json written in @web-extend/rsbuild-plugin
       setTimeout(async () => {
         const { rootPath, distPath } = rsbuild.context;
-        const config = await normalizeRunConfig(rootPath, distPath, getBuildTarget(), {
+        const config = await normalizeRunnerConfig(rootPath, distPath, getBuildTarget(), {
           startUrl: typeof options.open === 'string' ? options.open : undefined,
         });
 

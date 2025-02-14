@@ -27,7 +27,7 @@ WebExtend is compatible with any frontend framework. For other frameworks, you m
 
 ## Manual Installtion
 
-### Install Dependencies
+### Install dependencies
 
 Create a project and install dependencies. WebExtend uses [Rsbuild](https://rsbuild.dev/) under the hood, which and the [`@web-extend/rsbuild-plugin`](../api/rsbuild-plugin.md) plugin are also needed to be installed.
 
@@ -44,7 +44,7 @@ npm i -D web-extend @rsbuild/core @web-extend/rsbuild-plugin
 
 It is also recommended to install TypeScript、React/Vue、Eslint/Prettier/Biome etc, for enhancing the development experience (Optional).
 
-### Add Scripts
+### Add scripts
 
 Add the `"type": "module"` field and the following scripts into `package.json`.
 
@@ -77,7 +77,7 @@ The feature of running the extension in a browser is based on [`web-ext`](https:
 npm install -D web-ext
 ```
 
-### Add Rsbuild Configuration
+### Add Rsbuild config
 
 Create the `rsbuild.config.js` file and add the following content.
 
@@ -94,7 +94,7 @@ export default defineConfig({
 
 :::
 
-### Add Entry Files
+### Add entry files
 
 Create the `src/popup.js` file whose content is as follows. WebExtend will parse the [entrypoint](entrypoints.md) automatically based on the file system.
 
@@ -144,7 +144,7 @@ export default defineConfig({
 
 If you prefer to run the extension manually, please remove the `--open` option in the `dev` command, enable the deveoplment mode in the browser, and then load the `dist/chrome-mv3-dev` or `dist/chrome-mv3-prod` directory.
 
-## Publish
+## Publishing
 
 Execute `npm run zip` for packaging the extension, and then publish it on browser stores. More information about publish refers to:
 
