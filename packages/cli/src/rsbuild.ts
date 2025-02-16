@@ -6,8 +6,8 @@ import type { ExtensionTarget } from '@web-extend/manifest/types';
 import chalk from 'chalk';
 import type { FSWatcher } from 'chokidar';
 import { type CacheBuildInfo, writeBuildInfo } from './cache.js';
-import { type WatchCallback, watchFiles as chokidarWatchFiles } from './watcher.js';
 import { type ExtensionRunner, importWebExt, normalizeRunnerConfig, run } from './runner.js';
+import { type WatchCallback, watchFiles as chokidarWatchFiles } from './watcher.js';
 import { zip } from './zip.js';
 
 export interface StartOptions {

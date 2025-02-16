@@ -5,6 +5,11 @@ import type { ExtensionTarget } from './types.js';
 
 const jsFileExts = ['.ts', '.js', '.tsx', '.jsx', '.mts', '.cts', '.mjs', '.cjs'];
 
+function isJavaScriptFile(file: string) {
+  if (file.endsWith('.d.ts')) return false;
+  return jsFileExts.some((ext) => file.endsWith(ext));
+}
+
 export function getEntryName(file: string, rootPath: string, srcDir: string) {
   const filePath = isAbsolute(file) ? file : resolve(rootPath, file);
   const srcPath = isAbsolute(srcDir) ? srcDir : resolve(rootPath, srcDir);
@@ -19,7 +24,7 @@ export function getEntryName(file: string, rootPath: string, srcDir: string) {
 }
 
 export function getEntryFileVariants(name: string, ext: string) {
-  if (!jsFileExts.includes(ext)) {
+  if (!isJavaScriptFile(`${name}${ext}`)) {
     return [`${name}${ext}`];
   }
   return jsFileExts.flatMap((item) => [`${name}${item}`, `${name}${sep}index${item}`]);
@@ -31,9 +36,9 @@ export const matchDeclarativeSingleEntryFile = (key: string, file: string) => {
 };
 
 export const matchDeclarativeMultipleEntryFile = (key: string, file: string) => {
-  const ext = extname(file);
-  if (!jsFileExts.includes(ext)) return null;
+  if (!isJavaScriptFile(file)) return null;
 
+  const ext = extname(file);
   // match [key]/*.js or [key]/*/index.js
   let name = '';
   const slices = file.split(sep);
