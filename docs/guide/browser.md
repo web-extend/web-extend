@@ -124,7 +124,7 @@ The feature above is based on the `run` command of `web-ext`. To custom settings
 
 See [web-ext run](https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#web-ext-run) for a full list of config. Here are some common custom settings.
 
-### Open a specific URL
+### Open the specific URL
 
 Open a tab at the specificed URL when the browser starts. Example:
 
@@ -140,7 +140,7 @@ export default {
 
 :::
 
-### Open a specific browser
+### Open the specific browser
 
 Provie a custom Chromium or Firefox executable path to open the specific browser. Example:
 

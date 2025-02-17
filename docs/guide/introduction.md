@@ -41,7 +41,7 @@ ESM and TypeScript work out of the box, no extra configuration needed.
 
 ### ✈️ Framework Agnostic {#framework-agnostic}
 
-Freedom to use any frontend framework or library, such as
+Freedom to use any frontend framework or library, for example:
 
 - React
 - Vue
@@ -60,7 +60,7 @@ See [Rsbuild](https://rsbuild.dev/).
 
 ### 💪 Scaffold Support {#scaffold-support}
 
-WebExtend provides a CLI tool that helps you create a project quickly or generate entry files automatically.
+WebExtend provides a CLI tool that helps you create a project quickly and generate entry files automatically.
 
 See [web-extend](../api/web-extend.md).
 
