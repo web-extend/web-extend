@@ -10,7 +10,7 @@ WebExtend 支持以下浏览器扩展目标。
 
 - `chrome-mv3` (默认)
 - `firefox-mv2` (对于 Firefox，推荐使用 MV2 版本)
-- `firefox-mv3` (不能用于 dev 环境中)
+- `firefox-mv3` (实验性支持，不能用于 dev 环境中)
 - `safari-mv3`
 - `edge-mv3`
 - `opera-mv3`

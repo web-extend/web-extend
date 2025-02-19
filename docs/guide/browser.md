@@ -10,7 +10,7 @@ WebExtend supports the following extension targets.
 
 - `chrome-mv3` (default)
 - `firefox-mv2` (recommended for Firefox)
-- `firefox-mv3` (doesn't work in dev mode)
+- `firefox-mv3` (experimental, doesn't work in dev mode)
 - `safari-mv3`
 - `edge-mv3`
 - `opera-mv3`
@@ -120,7 +120,7 @@ web-extend rsbuild:dev --open
 web-extend preview
 ```
 
-The feature above is based on the `run` command of `web-ext`. To custom settings for the runner, you can create a `web-ext.config.[m|c]js` in the root.
+The feature above is based on the `run` command of `web-ext`. To custom settings for the runner, you can create `web-ext.config.[m|c]js` in the root.
 
 See [web-ext run](https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#web-ext-run) for a full list of config. Here are some common custom settings.
 
