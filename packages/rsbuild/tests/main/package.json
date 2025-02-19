@@ -1,5 +1,5 @@
 {
-  "name": "basic",
+  "name": "main",
   "version": "1.0.0-alpha.1",
   "main": "index.js",
   "type": "module",
@@ -11,5 +11,5 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "basic demo"
+  "description": "main demo"
 }

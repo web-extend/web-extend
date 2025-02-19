@@ -1,7 +1,7 @@
 import { relative, resolve } from 'node:path';
 import type { RsbuildConfig, RsbuildPlugin } from '@rsbuild/core';
-import { ManifestManager } from '@web-extend/manifest';
-import type { ExtensionTarget, ManifestEntryOutput, WebExtensionManifest } from '@web-extend/manifest';
+import { ManifestManager, getEntryFileVariants } from '@web-extend/manifest';
+import type { ExtensionTarget, ManifestEntryOutput, WebExtensionManifest } from '@web-extend/manifest/types';
 import {
   clearOutdatedHotUpdateFiles,
   getAllRsbuildEntryFiles,
@@ -72,8 +72,8 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
                       const entry = ManifestManager.matchDeclarativeEntryFile(relativePath);
                       if (!entry) return true;
 
-                      const entryFileVariants = ManifestManager.getEntryFileVariants(entry.name, entry.ext).map(
-                        (file) => resolve(srcPath, file),
+                      const entryFileVariants = getEntryFileVariants(entry.name, entry.ext).map((file) =>
+                        resolve(srcPath, file),
                       );
                       const hasEntry = entryFileVariants.some((file) => entryPaths.includes(file));
                       if (hasEntry) return true;
@@ -179,6 +179,8 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
     });
 
     api.onDevCompileDone(async ({ stats }) => {
+      if (stats?.hasErrors()) return;
+
       await manifestManager.copyPublicFiles();
       await manifestManager.writeManifestFile();
 
@@ -189,7 +191,9 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       console.log('Built the extension successfully');
     });
 
-    api.onAfterBuild(async () => {
+    api.onAfterBuild(async ({ stats }) => {
+      if (stats?.hasErrors()) return;
+
       await manifestManager.writeManifestFile();
       console.log('Built the extension successfully');
     });

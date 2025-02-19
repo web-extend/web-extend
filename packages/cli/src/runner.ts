@@ -1,14 +1,12 @@
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { readBuildInfo } from './cache.js';
+import { defaultExtensionTarget } from '@web-extend/manifest';
+import type { ExtensionTarget } from '@web-extend/manifest/types';
+import { getCurrentBuildInfo, readBuildInfo } from './cache.js';
 
-export type TargetType = 'firefox-desktop' | 'firefox-android' | 'chromium';
+type TargetType = 'firefox-desktop' | 'firefox-android' | 'chromium';
 
-export interface WebExtOptions {
-  run?: WebExtRunOptions;
-}
-
-export interface WebExtRunOptions {
+interface WebExtRunConfig {
   artifactsDir?: string;
   browserConsole?: boolean;
   devtools?: boolean;
@@ -27,6 +25,7 @@ export interface WebExtRunOptions {
   startUrl?: string | string[];
   target?: TargetType | TargetType[];
   args?: string[];
+
   // Android CLI options.
   adbBin?: string;
   adbHost?: string;
@@ -36,9 +35,14 @@ export interface WebExtRunOptions {
   adbRemoveOldArtifacts?: boolean;
   firefoxApk?: string;
   firefoxApkComponent?: string;
+
   // Chromium CLI options.
   chromiumBinary?: string;
   chromiumProfile?: string;
+}
+
+interface WebExtConfig {
+  run?: WebExtRunConfig;
 }
 
 export interface ExtensionRunner {
@@ -48,13 +52,8 @@ export interface ExtensionRunner {
 
 export interface PreviewOptions {
   root?: string;
-  target?: string;
+  target?: ExtensionTarget;
   outDir?: string;
-}
-
-export function getBrowserTarget(target: string): TargetType {
-  const browser = target?.includes('firefox') ? 'firefox-desktop' : 'chromium';
-  return browser;
 }
 
 const posibleConfigFiles = ['web-ext.config.mjs', 'web-ext.config.cjs', 'web-ext.config.js'];
@@ -71,19 +70,18 @@ async function loadWebExtConfig(root: string) {
   }
 }
 
-export async function normalizeRunConfig(
+export async function normalizeRunnerConfig(
   root: string,
   outDir: string,
-  extensionTarget: string,
-  options: WebExtRunOptions = {},
+  extensionTarget = defaultExtensionTarget,
+  options: WebExtRunConfig = {},
 ) {
   const userConfig = await loadWebExtConfig(root);
   const userRunconfig = userConfig?.run || {};
-  const target = getBrowserTarget(extensionTarget);
   const sourceDir = resolve(root, outDir);
 
-  const config: WebExtRunOptions = {
-    target,
+  const config: WebExtRunConfig = {
+    target: extensionTarget?.includes('firefox') ? 'firefox-desktop' : 'chromium',
     sourceDir,
     ...options,
     ...userRunconfig,
@@ -99,7 +97,7 @@ export async function importWebExt() {
 }
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-export async function run(webExt: any, config: WebExtRunOptions) {
+export async function run(webExt: any, config: WebExtRunConfig) {
   const extensionRunner: ExtensionRunner = await webExt.cmd.run(config, {
     shouldExitProgram: false,
   });
@@ -109,21 +107,31 @@ export async function run(webExt: any, config: WebExtRunOptions) {
 export async function preview({ root = process.cwd(), outDir, target }: PreviewOptions) {
   const webExt = await importWebExt();
   if (!webExt) {
-    throw Error(`Cannot find package 'web-ext', please intsall web-ext first.`);
+    throw Error(`Cannot find package 'web-ext', please install web-ext first.`);
   }
 
   const buildInfo = await readBuildInfo(root);
-  const sourceDir = outDir ? resolve(root, outDir) : buildInfo?.distPath;
-  const extensionTarget = target || buildInfo?.target;
-
-  if (!sourceDir || !existsSync(sourceDir)) {
-    throw Error('The output directory is missing, please build first.');
+  if (!buildInfo?.length) {
+    throw Error('Cannot find build info, please build first.');
   }
 
-  if (!extensionTarget) {
-    throw Error('The extension target is missing, please build first.');
+  let currentBuildInfo = getCurrentBuildInfo(buildInfo, {
+    distPath: outDir ? resolve(root, outDir) : undefined,
+    target,
+  });
+
+  if (!currentBuildInfo) {
+    if (outDir || target) {
+      throw Error('The argument outDir or target is incorrect.');
+    }
+    currentBuildInfo = buildInfo[0];
   }
 
-  const config = await normalizeRunConfig(root, sourceDir, extensionTarget);
+  const config = await normalizeRunnerConfig(root, currentBuildInfo.distPath, currentBuildInfo.target);
   return run(webExt, config);
+}
+
+// https://extensionworkshop.com/documentation/develop/getting-started-with-web-ext/#setting-option-defaults-in-a-configuration-file
+export function defineWebExtConfig(config: WebExtConfig): WebExtConfig {
+  return config;
 }

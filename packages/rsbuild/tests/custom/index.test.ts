@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import type { Manifest } from 'webextension-polyfill';
-import { existsFile, initRsbuild, readManifestFile } from '../helper.js';
+import { initRsbuild, readManifestFile, validateDistFile } from '../helper.js';
 
 const __dirname = import.meta.dirname;
 
@@ -40,6 +40,6 @@ describe('custom', () => {
     const serviceWorkerContent = await readFile(resolve(distPath, service_worker), 'utf-8');
     expect(serviceWorkerContent).toContain('custom-background');
 
-    expect(existsFile(distPath, options_page || '', '.html')).toBeTruthy();
+    expect(validateDistFile(distPath, options_page || '', '.html')).toBeTruthy();
   });
 });

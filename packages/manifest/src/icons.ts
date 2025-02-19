@@ -57,7 +57,7 @@ const normalizeIconsEntry: ManifestEntryProcessor['normalize'] = async ({ manife
   }
 };
 
-const readIconsEntry: ManifestEntryProcessor['read'] = ({ manifest }) => {
+const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest }) => {
   const { icons, action, browser_action, manifest_version } = manifest || {};
   const pointer = manifest_version === 2 ? browser_action : action;
   const files = new Set<string>();
@@ -91,7 +91,7 @@ const getIconOutputName = (input: string, output: string[]) => {
   return output.find((item) => item.endsWith('.png') && basename(item).split('.')[0] === name);
 };
 
-const writeIconsEntry: ManifestEntryProcessor['write'] = ({ manifest, output }) => {
+const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, output }) => {
   if (!output?.length) return;
 
   function helper(icons: WebExtensionManifest['icons']) {
@@ -123,10 +123,9 @@ const writeIconsEntry: ManifestEntryProcessor['write'] = ({ manifest, output }) 
 const iconsProcessor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntryFile,
-  matchEntryName: (entryName) => entryName.startsWith('icon'),
   normalize: normalizeIconsEntry,
-  read: readIconsEntry,
-  write: writeIconsEntry,
+  readEntry,
+  writeEntry,
 };
 
 export default iconsProcessor;

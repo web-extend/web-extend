@@ -40,7 +40,7 @@ const normalizeBackgroundEntry: ManifestEntryProcessor['normalize'] = async ({ m
   }
 };
 
-const readBackgroundEntry: ManifestEntryProcessor['read'] = ({ manifest }) => {
+const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest }) => {
   const { background } = manifest || {};
   if (!background) return null;
 
@@ -62,7 +62,7 @@ const readBackgroundEntry: ManifestEntryProcessor['read'] = ({ manifest }) => {
   return entry;
 };
 
-const writeBackgroundEntry: ManifestEntryProcessor['write'] = ({ manifest, output }) => {
+const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, output }) => {
   const { background } = manifest;
   const scripts = output?.filter((item) => item.endsWith('.js')) || [];
   if (!background || !scripts.length) return;
@@ -77,10 +77,9 @@ const writeBackgroundEntry: ManifestEntryProcessor['write'] = ({ manifest, outpu
 const backgroundProcessor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntryFile,
-  matchEntryName: (entryName) => entryName === key,
   normalize: normalizeBackgroundEntry,
-  read: readBackgroundEntry,
-  write: writeBackgroundEntry,
+  readEntry,
+  writeEntry,
 };
 
 export default backgroundProcessor;

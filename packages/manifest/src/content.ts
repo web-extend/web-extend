@@ -1,9 +1,9 @@
 import { existsSync } from 'node:fs';
 import { copyFile, mkdir, readFile } from 'node:fs/promises';
-import { basename, dirname, join, resolve } from 'node:path';
+import { basename, posix, resolve } from 'node:path';
 import type { Manifest } from 'webextension-polyfill';
 import {
-  getEntryFileName,
+  getEntryName,
   isDevMode,
   matchDeclarativeMultipleEntryFile,
   matchDeclarativeSingleEntryFile,
@@ -35,15 +35,17 @@ const normalizeContentEntry: ManifestEntryProcessor['normalize'] = async ({ mani
     }
   }
 
-  // inject content runtime script for each entry in dev mode
-  if (isDevMode(mode) && runtime?.contentLoad) {
-    const contentLoad = runtime.contentLoad;
-    manifest.content_scripts?.forEach((item) => {
-      if (!item.js) {
-        item.js = [];
-      }
-      item.js.push(contentLoad);
-    });
+  if (isDevMode(mode) && manifest.content_scripts?.length) {
+    const { contentLoad } = runtime || {};
+    // inject content runtime script for each entry in dev mode including content bridge
+    if (contentLoad) {
+      manifest.content_scripts.forEach((item) => {
+        if (!item.js) {
+          item.js = [];
+        }
+        item.js.push(contentLoad);
+      });
+    }
   }
 };
 
@@ -51,20 +53,19 @@ function getContentScriptInfo(contentScript: Manifest.ContentScript, rootPath: s
   const { js = [], css = [] } = contentScript;
   const input = [...js, ...css];
   if (!input[0]) return null;
-  const name = getEntryFileName(input[0], rootPath, resolve(rootPath, srcDir));
+  const name = getEntryName(input[0], rootPath, resolve(rootPath, srcDir));
   return {
     input,
-    name,
+    name: name.replaceAll('/', '-'),
   };
 }
 
-const readContentEntry: ManifestEntryProcessor['read'] = ({ manifest, context }) => {
+const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest, context }) => {
   const { content_scripts } = manifest || {};
   if (!content_scripts?.length) return null;
 
   const entry: ManifestEntryInput = {};
   content_scripts.forEach((contentScript, index) => {
-    // const name = `content${content_scripts.length === 1 ? '' : index}`;
     const info = getContentScriptInfo(contentScript, context.rootPath, context.srcDir);
     if (!info) return;
     const { name, input } = info;
@@ -76,7 +77,7 @@ const readContentEntry: ManifestEntryProcessor['read'] = ({ manifest, context })
   return entry;
 };
 
-const writeContentEntry: ManifestEntryProcessor['write'] = async ({
+const writeEntry: ManifestEntryProcessor['writeEntry'] = async ({
   normalizedManifest,
   manifest,
   name,
@@ -91,7 +92,6 @@ const writeContentEntry: ManifestEntryProcessor['write'] = async ({
     return getContentScriptInfo(contentScript, context.rootPath, context.srcDir)?.name === name;
   });
   if (index === -1) return;
-  // const index = Number(name.replace('content', '') || '0');
 
   const normalizedContentScript = normalizedManifest.content_scripts?.[index];
 
@@ -115,28 +115,46 @@ const writeContentEntry: ManifestEntryProcessor['write'] = async ({
   content_scripts[index].css = output.filter((item) => item.endsWith('.css'));
 };
 
+const copyContentScriptFile = async (script: string, distPath: string) => {
+  const dir = posix.dirname(script);
+  const name = posix.basename(script);
+
+  const copyDir = `${dir}/copy`;
+  const copyDirPath = resolve(distPath, copyDir);
+  if (!existsSync(copyDirPath)) {
+    await mkdir(copyDirPath);
+  }
+
+  await copyFile(resolve(distPath, script), resolve(copyDirPath, name));
+  return `${copyDir}/${name}`;
+};
+
 const onAfterBuild: ManifestEntryProcessor['onAfterBuild'] = async ({ distPath, manifest, mode, runtime }) => {
   const { content_scripts = [] } = manifest;
   if (!content_scripts.length) return;
 
+  // guarantee that main and isolated world don't have same files.
   const mainContentScripts = content_scripts.filter((item) => item.world === 'MAIN');
-  const ioslatedScripts = content_scripts.filter((item) => item.world !== 'MAIN').flatMap((item) => item.js || []);
+  const isolatedScripts = content_scripts.filter((item) => item.world !== 'MAIN').flatMap((item) => item.js || []);
+  const isolatedStyles = content_scripts.filter((item) => item.world !== 'MAIN').flatMap((item) => item.css || []);
+
   if (mainContentScripts.length && mainContentScripts.length !== content_scripts.length) {
     for (const contentScript of mainContentScripts) {
-      const { js } = contentScript;
-      if (!js?.length) continue;
-      for (const [key, script] of Object.entries(js)) {
-        if (ioslatedScripts.includes(script)) {
-          const dir = dirname(script);
-          const name = basename(script);
-          const copyDir = join(dir, 'copy');
-          const copyDirPath = resolve(distPath, copyDir);
-          if (!existsSync(copyDirPath)) {
-            await mkdir(copyDirPath);
-          }
-          await copyFile(resolve(distPath, script), resolve(copyDirPath, name));
-          const index = Number(key);
-          js[index] = join(copyDir, name);
+      const { js = [], css = [] } = contentScript;
+
+      for (let i = 0; i < js.length; i++) {
+        const script = js[i];
+        if (isolatedScripts.includes(script)) {
+          const newName = await copyContentScriptFile(script, distPath);
+          js[i] = newName;
+        }
+      }
+
+      for (let i = 0; i < css.length; i++) {
+        const style = css[i];
+        if (isolatedStyles.includes(style)) {
+          const newName = await copyContentScriptFile(style, distPath);
+          css[i] = newName;
         }
       }
     }
@@ -146,7 +164,7 @@ const onAfterBuild: ManifestEntryProcessor['onAfterBuild'] = async ({ distPath, 
     const contentBridgePath = runtime.contentBridge;
     const contentbridgeName = basename(contentBridgePath);
     await copyFile(contentBridgePath, resolve(distPath, contentbridgeName));
-    const exists = ioslatedScripts.find((item) => item.endsWith(contentbridgeName));
+    const exists = isolatedScripts.find((item) => item.endsWith(contentbridgeName));
     if (!exists) {
       content_scripts.push({
         matches: ['<all_urls>'],
@@ -159,10 +177,9 @@ const onAfterBuild: ManifestEntryProcessor['onAfterBuild'] = async ({ distPath, 
 const contentProcessor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntryFile,
-  matchEntryName: (entryName) => entryName.startsWith('content'),
   normalize: normalizeContentEntry,
-  read: readContentEntry,
-  write: writeContentEntry,
+  readEntry,
+  writeEntry,
   onAfterBuild,
 };
 

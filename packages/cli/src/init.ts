@@ -163,69 +163,61 @@ export async function resolveEntryTemplate(text?: string) {
 }
 
 export async function normalizeInitialOptions(options: InitialOptions) {
-  try {
-    console.log('\nWelcome to web-extend\n');
+  console.log('\nWelcome to web-extend\n');
 
-    if (!options.projectName) {
-      options.projectName = await input({ message: 'Project name or path', default: 'my-extension-app' });
-    }
-
-    const root = process.cwd();
-    const projectPath = resolve(root, options.projectName);
-    if (existsSync(projectPath)) {
-      options.override = await select({
-        message: `Target directory ${options.projectName} is not empty, please choose`,
-        choices: [
-          {
-            name: 'Cancel operation',
-            value: false,
-          },
-          {
-            name: 'Continue and override files',
-            value: true,
-          },
-        ],
-      });
-      if (!options.override) {
-        const error = new Error('Cancel operation');
-        error.name = 'ExitPromptError';
-        throw error;
-      }
-    }
-
-    options.template = await resolveEntryTemplate(options.template);
-
-    if (!options.entries?.length) {
-      options.entries = await checkbox({
-        message: 'Select entrypoints',
-        choices: entrypoints,
-        loop: false,
-      });
-    }
-
-    if (!options.tools?.length) {
-      options.tools = await checkbox({
-        message: 'Select additional tools',
-        choices: tools,
-        loop: false,
-      });
-    }
-
-    console.log('\nDone. Next step:');
-    console.group();
-    console.log(`cd ${options.projectName}`);
-    console.log('npm install');
-    console.log('npm run dev');
-    console.groupEnd();
-    console.log();
-    return options;
-  } catch (error) {
-    if (error instanceof Error && error.name === 'ExitPromptError') {
-      console.log(`${chalk.red('✕')} ${chalk.bold('Canceled\n')}`);
-      return null;
-    }
-    throw error;
+  if (!options.projectName) {
+    options.projectName = await input({ message: 'Project name or path', default: 'my-extension-app' });
   }
+
+  const root = process.cwd();
+  const projectPath = resolve(root, options.projectName);
+  if (existsSync(projectPath)) {
+    options.override = await select({
+      message: `Target directory ${options.projectName} is not empty, please choose`,
+      choices: [
+        {
+          name: 'Cancel operation',
+          value: false,
+        },
+        {
+          name: 'Continue and override files',
+          value: true,
+        },
+      ],
+    });
+    if (!options.override) {
+      const error = new Error('Cancel operation');
+      error.name = 'ExitPromptError';
+      throw error;
+    }
+  }
+
+  options.template = await resolveEntryTemplate(options.template);
+
+  if (!options.entries?.length) {
+    options.entries = await checkbox({
+      message: 'Select entrypoints',
+      choices: entrypoints,
+      loop: false,
+    });
+  }
+
+  if (!options.tools?.length) {
+    options.tools = await checkbox({
+      message: 'Select additional tools',
+      choices: tools,
+      loop: false,
+    });
+  }
+
+  console.log('\nDone. Next step:');
+  console.group();
+  console.log(`cd ${options.projectName}`);
+  console.log('npm install');
+  console.log('npm run dev');
+  console.groupEnd();
+  console.log();
+  return options;
 }
 
 export async function createProject(options: InitialOptions) {

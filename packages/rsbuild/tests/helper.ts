@@ -16,9 +16,10 @@ export function getFileContent(distPath: string, name: string) {
   return readFile(resolve(distPath, name), 'utf-8');
 }
 
-export function existsFile(distPath: string, name: string, ext: string) {
+export function validateDistFile(distPath: string, name: string, ext: string) {
   if (!name) return false;
-  return existsSync(resolve(distPath, name)) && extname(name) === ext;
+  const file = resolve(distPath, name);
+  return existsSync(file) && file.startsWith(distPath) && extname(name) === ext;
 }
 
 type InitRsbuildOptions = {

@@ -34,9 +34,10 @@ export type ManifestEntryKey =
   | 'content'
   | 'popup'
   | 'options'
-  | 'devtools'
-  | 'sandbox'
   | 'sidepanel'
+  | 'devtools'
+  | 'panel'
+  | 'sandbox'
   | PageToOverride;
 
 interface ManifestEntryItem {
@@ -52,15 +53,16 @@ export type MaybePromise<T = unknown> = T | Promise<T>;
 
 export interface ManifestEntryProcessor {
   key: ManifestEntryKey;
-  matchDeclarativeEntryFile: (file: string) => null | { name: string; ext: string };
-  matchEntryName: (name: string) => boolean;
-  normalize: (props: NormalizeMainfestEntryProps) => MaybePromise<void>;
-  read: (props: {
-    manifest: WebExtensionManifest;
-    context: ManifestContext;
-  }) => MaybePromise<ManifestEntryInput | null>;
-  write: (props: WriteMainfestEntryItemProps) => MaybePromise<void>;
+  matchDeclarativeEntryFile?: (file: string) => null | { name: string; ext: string };
+  normalize?: (props: NormalizeMainfestEntryProps) => MaybePromise<void>;
+  readEntry?: (props: ReadManifestEntryItemProps) => MaybePromise<ManifestEntryInput | null>;
+  writeEntry?: (props: WriteMainfestEntryItemProps) => MaybePromise<void>;
   onAfterBuild?: (props: WriteManifestFileProps) => MaybePromise<void>;
+}
+
+interface ReadManifestEntryItemProps {
+  manifest: WebExtensionManifest;
+  context: ManifestContext;
 }
 
 export interface ManifestContext {
@@ -110,6 +112,6 @@ export interface WriteManifestFileProps {
   runtime?: ManifestRuntime;
 }
 
-export type ManifestEnties = {
+export type ManifestEntries = {
   [key in ManifestEntryKey]?: ManifestEntryInput;
 };

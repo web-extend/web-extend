@@ -1,38 +1,46 @@
 import { createWriteStream, existsSync } from 'node:fs';
 import { basename, dirname, resolve } from 'node:path';
+import type { ExtensionTarget } from '@web-extend/manifest/types';
 import archiver from 'archiver';
-import { readBuildInfo } from './cache.js';
+import { getCurrentBuildInfo, readBuildInfo } from './cache.js';
 
 export interface ZipOptions {
   root?: string;
   outDir?: string;
   filename?: string;
+  target?: ExtensionTarget;
 }
 
-export async function zip({ filename, outDir, root = process.cwd() }: ZipOptions) {
-  let sourceDir = outDir;
-  if (!sourceDir) {
-    const data = await readBuildInfo(root);
-    if (data?.distPath) {
-      sourceDir = data.distPath;
-    } else {
-      throw new Error('Argument source is missing.');
+export async function zip({ filename, outDir, root = process.cwd(), target }: ZipOptions) {
+  const buildInfo = await readBuildInfo(root);
+  if (!buildInfo?.length) {
+    throw Error('Cannot find build info, please build first.');
+  }
+
+  let currentBuildInfo = getCurrentBuildInfo(buildInfo, {
+    distPath: outDir ? resolve(root, outDir) : undefined,
+    target,
+  });
+
+  if (!currentBuildInfo) {
+    if (outDir || target) {
+      throw Error('The argument outDir or target is incorrect.');
     }
+    currentBuildInfo = buildInfo[0];
   }
 
-  const sourcePath = resolve(root, sourceDir);
-
-  if (!existsSync(sourcePath)) {
-    throw new Error(`${sourceDir} doesn't exist`);
+  const { distPath } = currentBuildInfo;
+  if (!existsSync(distPath)) {
+    throw new Error(`${distPath} doesn't exist`);
   }
 
-  const manifestFile = resolve(sourcePath, 'manifest.json');
+  const manifestFile = resolve(distPath, 'manifest.json');
   if (!existsSync(manifestFile)) {
-    throw new Error(`Cannot find manifest.json in ${sourcePath}`);
+    throw new Error(`Cannot find manifest.json in ${distPath}`);
   }
 
-  const dest = filename || `${basename(sourcePath)}.zip`;
-  const filePath = resolve(root, dirname(sourceDir), dest);
+  const dest = filename || `${basename(distPath)}.zip`;
+  const filePath = resolve(dirname(distPath), dest);
   const output = createWriteStream(filePath);
 
   return new Promise((resolve, reject) => {
@@ -41,7 +49,7 @@ export async function zip({ filename, outDir, root = process.cwd() }: ZipOptions
     });
     output.on('close', () => {
       const total = Math.round((archive.pointer() / 1024) * 100) / 100;
-      console.log(`Packaged ${basename(sourceDir)} successfully.`);
+      console.log(`Packaged ${basename(distPath)} successfully.`);
       console.log(`Output: ${filePath}`);
       console.log(`Total: ${total} kB`);
       resolve({
@@ -52,7 +60,7 @@ export async function zip({ filename, outDir, root = process.cwd() }: ZipOptions
     archive.on('error', reject);
 
     archive.pipe(output);
-    archive.directory(sourcePath, false);
+    archive.directory(distPath, false);
     archive.finalize();
   });
 }

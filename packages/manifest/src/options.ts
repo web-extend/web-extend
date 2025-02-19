@@ -25,7 +25,7 @@ const normalizeOptionsEntry: ManifestEntryProcessor['normalize'] = async ({ mani
   }
 };
 
-const readOptionsEntry: ManifestEntryProcessor['read'] = ({ manifest }) => {
+const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest }) => {
   const { options_ui, options_page } = manifest || {};
   const input = options_ui?.page || options_page;
   if (!input) return null;
@@ -39,7 +39,7 @@ const readOptionsEntry: ManifestEntryProcessor['read'] = ({ manifest }) => {
   return entry;
 };
 
-const writeOptionsEntry: ManifestEntryProcessor['write'] = ({ manifest, name }) => {
+const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, name }) => {
   const output = `${name}.html`;
   if (manifest.options_page) {
     manifest.options_page = output;
@@ -52,10 +52,9 @@ const writeOptionsEntry: ManifestEntryProcessor['write'] = ({ manifest, name }) 
 const optionsProcessor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntryFile,
-  matchEntryName: (entryName) => entryName === key,
   normalize: normalizeOptionsEntry,
-  read: readOptionsEntry,
-  write: writeOptionsEntry,
+  readEntry,
+  writeEntry,
 };
 
 export default optionsProcessor;

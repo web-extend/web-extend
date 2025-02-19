@@ -5,7 +5,12 @@ import type { ExtensionTarget } from './types.js';
 
 const jsFileExts = ['.ts', '.js', '.tsx', '.jsx', '.mts', '.cts', '.mjs', '.cjs'];
 
-export function getEntryFileName(file: string, rootPath: string, srcDir: string) {
+function isJavaScriptFile(file: string) {
+  if (file.endsWith('.d.ts')) return false;
+  return jsFileExts.some((ext) => file.endsWith(ext));
+}
+
+export function getEntryName(file: string, rootPath: string, srcDir: string) {
   const filePath = isAbsolute(file) ? file : resolve(rootPath, file);
   const srcPath = isAbsolute(srcDir) ? srcDir : resolve(rootPath, srcDir);
   const relativeFilePath = filePath.startsWith(srcPath)
@@ -15,35 +20,25 @@ export function getEntryFileName(file: string, rootPath: string, srcDir: string)
       : basename(filePath);
   const ext = extname(relativeFilePath);
   const name = relativeFilePath.replace(ext, '').replace(/[\\/]index$/, '');
-  return name;
+  return name.split(sep).join('/');
 }
 
 export function getEntryFileVariants(name: string, ext: string) {
-  if (!jsFileExts.includes(ext)) {
+  if (!isJavaScriptFile(`${name}${ext}`)) {
     return [`${name}${ext}`];
   }
-  return jsFileExts.flatMap((item) => [`${name}${item}`, `${name}/index${item}`]);
+  return jsFileExts.flatMap((item) => [`${name}${item}`, `${name}${sep}index${item}`]);
 }
 
 export const matchDeclarativeSingleEntryFile = (key: string, file: string) => {
-  const ext = extname(file);
-  if (!jsFileExts.includes(ext)) return null;
-
-  // match [key].js or [key]/index.js
-  const patterns = [`${key}${ext}`, `${key}/index${ext}`];
-  if (patterns.includes(file)) {
-    return {
-      name: key,
-      ext,
-    };
-  }
-  return null;
+  const res = getEntryFileVariants(key, '.js').includes(file);
+  return res ? { name: key, ext: extname(file) } : null;
 };
 
 export const matchDeclarativeMultipleEntryFile = (key: string, file: string) => {
-  const ext = extname(file);
-  if (!jsFileExts.includes(ext)) return null;
+  if (!isJavaScriptFile(file)) return null;
 
+  const ext = extname(file);
   // match [key]/*.js or [key]/*/index.js
   let name = '';
   const slices = file.split(sep);
@@ -85,7 +80,8 @@ const EXTENSION_TARGETS: ExtensionTarget[] = [
   'edge-mv3',
   'opera-mv3',
 ];
-const DEFAULT_EXTENSION_TARGET: ExtensionTarget = 'chrome-mv3';
+
+export const defaultExtensionTarget = 'chrome-mv3';
 
 export function resolveTarget(target?: string): ExtensionTarget {
   const envTarget = process.env.WEB_EXTEND_TARGET as ExtensionTarget;
@@ -97,7 +93,7 @@ export function resolveTarget(target?: string): ExtensionTarget {
   if (optionTarget && EXTENSION_TARGETS.includes(optionTarget)) {
     return optionTarget;
   }
-  return DEFAULT_EXTENSION_TARGET;
+  return defaultExtensionTarget;
 }
 
 export function setTargetEnv(target: string) {
@@ -135,7 +131,7 @@ export function resolveOutDir({ outdir, distPath, target, mode, tag }: GetOutDir
   } else {
     postfix = mode || '';
   }
-  const subDir = [target || DEFAULT_EXTENSION_TARGET, postfix].filter(Boolean).join('-');
+  const subDir = [target || defaultExtensionTarget, postfix].filter(Boolean).join('-');
   return join(dir, subDir);
 }
 

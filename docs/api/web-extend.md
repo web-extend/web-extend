@@ -73,9 +73,9 @@ Options:
 ```
 Options:
   -r, --root <root>      specify the project root directory
-  -c --config <config>   specify the configuration file
+  -c, --config <config>  specify the configuration file
   -o, --out-dir <dir>    specify the output directory
-  -m --mode <mode>       specify the build mode, can be `development`, `production` or `none`
+  -m, --mode <mode>      specify the build mode, can be `development`, `production` or `none`
   --env-mode <mode>      specify the env mode to load the `.env.[mode]` file
   --env-dir <dir>        specify the directory to load `.env` files
   -t, --target <target>  specify the extension target
@@ -99,9 +99,9 @@ Options:
 ```
 Options:
   -r, --root <root>      specify the project root directory
-  -c --config <config>   specify the configuration file
+  -c, --config <config>  specify the configuration file
   -o, --out-dir <dir>    specify the output directory
-  -m --mode <mode>       specify the build mode, can be `development`, `production` or `none`
+  -m, --mode <mode>      specify the build mode, can be `development`, `production` or `none`
   --env-mode <mode>      specify the env mode to load the `.env.[mode]` file
   --env-dir <dir>        specify the directory to load `.env` files
   -t, --target <target>  specify the extension target
@@ -144,5 +144,6 @@ Options:
 Options:
   -r, --root <root>          specify the project root directory
   -n, --filename <filename>  specify the output filename
+  -t, --target <target>      specify the extension target
   -h, --help                 display help for command
 ```

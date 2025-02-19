@@ -1,11 +1,16 @@
+import chalk from 'chalk';
 import { type Command, program } from 'commander';
 import { type GenerateOptions, generate } from './generate.js';
 import { init } from './init.js';
 import { type StartOptions, startBuild, startDevServer } from './rsbuild.js';
-import { type PreviewOptions, preview } from './web-ext.js';
+import { type PreviewOptions, preview } from './runner.js';
 import { type ZipOptions, zip } from './zip.js';
 
-function main() {
+export type { ContentScriptConfig } from '@web-extend/manifest/types';
+
+export { defineWebExtConfig } from './runner.js';
+
+function runCli() {
   program.name('web-extend');
 
   const initCommand = program.command('init').description('create a new project');
@@ -41,9 +46,13 @@ function applyInitCommand(command: Command) {
           entries,
           ...otherOptions,
         });
-      } catch (err) {
+      } catch (error) {
+        if (error instanceof Error && error.name === 'ExitPromptError') {
+          console.log(`${chalk.red('✕')} ${chalk.bold('Canceled')}`);
+          return;
+        }
         console.error('Failed to create the project.');
-        console.error(err);
+        console.error(error);
         process.exit(1);
       }
     });
@@ -65,7 +74,11 @@ function applyGenerateCommand(command: Command) {
         await generate(options);
         console.log('Generated successfully!');
       } catch (error) {
-        console.error('Generated failed.');
+        if (error instanceof Error && error.name === 'ExitPromptError') {
+          console.log(`${chalk.red('✕')} ${chalk.bold('Canceled')}`);
+          return;
+        }
+        console.error('Failed to generate.');
         console.log(error);
         process.exit(1);
       }
@@ -104,9 +117,9 @@ function applyRsbuildBuildCommand(command: Command) {
 function applyCommonRunOptions(command: Command) {
   command
     .option('-r, --root <root>', 'specify the project root directory')
-    .option('-c --config <config>', 'specify the configuration file')
+    .option('-c, --config <config>', 'specify the configuration file')
     .option('-o, --out-dir <dir>', 'specify the output directory')
-    .option('-m --mode <mode>', 'specify the build mode, can be `development`, `production` or `none`')
+    .option('-m, --mode <mode>', 'specify the build mode, can be `development`, `production` or `none`')
     .option('--env-mode <mode>', 'specify the env mode to load the `.env.[mode]` file')
     .option('--env-dir <dir>', 'specify the directory to load `.env` files')
     .option('-t, --target <target>', 'specify the extension target');
@@ -133,6 +146,7 @@ function applyZipCommand(command: Command) {
     .argument('[dir]', 'specify the dist path')
     .option('-r, --root <root>', 'specify the project root directory')
     .option('-n, --filename <filename>', 'specify the output filename')
+    .option('-t, --target <target>', 'specify the extension target')
     .action(async (outDir: string, options: ZipOptions) => {
       try {
         await zip({ ...options, outDir });
@@ -144,4 +158,4 @@ function applyZipCommand(command: Command) {
     });
 }
 
-export { main };
+export { runCli };

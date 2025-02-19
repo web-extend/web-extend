@@ -1,11 +1,11 @@
 import { basename } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import type { Manifest } from 'webextension-polyfill';
-import { existsFile, initRsbuild, readManifestFile } from '../helper.js';
+import { initRsbuild, readManifestFile, validateDistFile } from '../helper.js';
 
 const __dirname = import.meta.dirname;
 
-describe('basic for firefox', () => {
+describe('test build for firefox', () => {
   it('should build firefox-mv3-prod successfully', async () => {
     const defaultIcon = './src/assets/icon-128.png';
     const rsbuild = await initRsbuild({
@@ -30,10 +30,10 @@ describe('basic for firefox', () => {
     expect(manifest_version).toBe(3);
 
     const scripts = background && 'scripts' in background ? background.scripts : [];
-    expect(existsFile(distPath, scripts[0] || '', '.js')).toBeTruthy();
+    expect(validateDistFile(distPath, scripts[0] || '', '.js')).toBeTruthy();
 
     const sidepanel = sidebar_action?.default_panel;
-    expect(existsFile(distPath, sidepanel || '', '.html')).toBeTruthy();
+    expect(validateDistFile(distPath, sidepanel || '', '.html')).toBeTruthy();
 
     expect(action?.default_icon).toMatch(basename(defaultIcon, '.png'));
   });
@@ -55,7 +55,7 @@ describe('basic for firefox', () => {
 
     expect(manifest_version).toBe(2);
 
-    expect(existsFile(distPath, browser_action?.default_popup || '', '.html')).toBeTruthy();
+    expect(validateDistFile(distPath, browser_action?.default_popup || '', '.html')).toBeTruthy();
     expect(browser_action?.default_icon).toEqual(icons);
   });
 });

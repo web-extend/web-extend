@@ -44,16 +44,16 @@ npx web-extend g icons
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest/background) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/background)
 
-Background 入口对应了 `manifest.json` 中的 `background.service_worker` 或 `background.scripts` 字段，它支持两种添加方式。
+Background 入口对应了 `manifest.json` 中的 `background.service_worker` 或 `background.scripts` 字段。
 
-方式一：自动生成入口。
+自动生成入口。
 
 ```shell
 npx web-extend g background
 
 ```
 
-方式二：手动创建 `src/background.js` 文件，示例如下：
+或者手动创建 `src/background.js` 文件，示例如下：
 
 ::: code-group
 
@@ -69,16 +69,16 @@ console.log("This is a background script.");
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/action) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/action)
 
-Popup 入口对应了 `manifest.json` 中的 `action.default_popup` 字段，其支持两种添加方式。
+Popup 入口对应了 `manifest.json` 中的 `action.default_popup` 字段。
 
-方式一：自动生成入口。
+自动生成入口。
 
 ```shell
 npx web-extend g popup
 
 ```
 
-方式二：手动创建 `src/popup.js` 或 `src/popup/index.js` 文件，可以使用 React/Vue 等前端框架，示例如下：
+或者手动创建 `src/popup.js` 或 `src/popup/index.js` 文件，可以使用 React/Vue 等前端框架，示例如下：
 
 ::: code-group
 
@@ -106,16 +106,16 @@ if (rootEl) {
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/options-page) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/options_ui)
 
-Options 入口对应了 `manifest.json` 中的 `options_ui.page` 字段，其支持两种添加方式。
+Options 入口对应了 `manifest.json` 中的 `options_ui.page` 字段。
 
-方式一：自动生成入口。
+自动生成入口。
 
 ```shell
 npx web-extend g options
 
 ```
 
-方式二：手动创建 `src/options.js` 或 `src/options/index.js` 文件。
+或者手动创建 `src/options.js` 或 `src/options/index.js` 文件。
 
 ## Content Scripts
 
@@ -123,28 +123,28 @@ npx web-extend g options
 
 ### 添加单个入口 {#adding-a-single-content-script}
 
-单个 `content` 入口对应 `manifest.json` 中的 `content_scripts[0].js` 字段。入口支持两种添加方式。
+单个 `content` 入口对应 `manifest.json` 中的 `content_scripts[0].js` 字段。
 
-方式一：自动生成入口。
+自动生成入口。
 
 ```shell
 npx web-extend g content
 ```
 
-方式二：手动创建 `src/content.js` 或 `src/content/index.js` 文件。
+或者手动创建 `src/content.js` 或 `src/content/index.js` 文件。
 
 ### 添加多个入口 {#adding-multiple-content-scripts}
 
-多个 `content` 入口分别对应 `manifest.json` 中的 `content_scripts[index].js` 字段。入口支持两种添加方式。
+多个 `content` 入口分别对应 `manifest.json` 中的 `content_scripts[index].js` 字段。
 
-方式一：自动生成入口。
+自动生成入口。
 
 ```shell
 npx web-extend g contents/site-one
 
 ```
 
-方式二：手动创建 `src/contents/*.js` 或 `src/contents/*/index.js` 文件。
+或者手动创建 `src/contents/*.js` 或 `src/contents/*/index.js` 文件。
 
 ### 添加 CSS {#adding-css}
 
@@ -182,22 +182,22 @@ export const config: ContentScriptConfig = {
 
 :::
 
-参考 [with-content](https://github.com/web-extend/examples/tree/main/with-content), [with-multi-contents](https://github.com/web-extend/examples/tree/main/with-multi-contents)。
+参考 [with-content](https://github.com/web-extend/examples/tree/main/with-content)、[with-multi-contents](https://github.com/web-extend/examples/tree/main/with-multi-contents)。
 
 ## Sidepanel
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/sidePanel) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Sidebars)
 
-Sidepanel 入口对应了 `manifest.json` 中的 `side_panel.default_path` 或 `sidebar_action.default_panel` 字段，其支持两种添加方式。
+Sidepanel 入口对应了 `manifest.json` 中的 `side_panel.default_path` 或 `sidebar_action.default_panel` 字段。
 
-方式一：自动生成入口。
+自动生成入口。
 
 ```shell
 npx web-extend g sidepanel
 
 ```
 
-方式二：手动创建 `src/sidepanel.js` 或 `src/sidepanel/index.js` 文件。
+或者手动创建 `src/sidepanel.js` 或 `src/sidepanel/index.js` 文件。
 
 参考 [with-sidepanel](https://github.com/web-extend/examples/tree/main/with-sidepanel)。
 
@@ -205,16 +205,16 @@ npx web-extend g sidepanel
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/how-to/devtools/extend-devtools) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/devtools_page)
 
-Devtools 入口对应了 `manifest.json` 中的 `devtools_page` 字段。其支持两种添加方式。
+Devtools 入口对应了 `manifest.json` 中的 `devtools_page` 字段。
 
-方式一：自动生成入口。
+自动生成入口。
 
 ```shell
 npx web-extend g devtools
 
 ```
 
-方式二：手动创建 `src/devtools.js` 和 `src/panels/my-panel.js` 文件。示例如下：
+或者手动创建 `src/devtools.js` 和 `src/panels/my-panel.js` 文件。示例如下：
 
 ::: code-group
 
@@ -242,7 +242,7 @@ if (rootEl) {
 
 Devtools 页面由一个或多个 panel 组成，可以使用以下两种方式创建 panel。
 
-方式一：自动生成入口。
+自动生成入口。
 
 ```shell
 # create a single panel
@@ -252,7 +252,7 @@ npx web-extend g panel
 npx web-extend g panels/panel1,panels/panel2
 ```
 
-方式二：创建 `src/panel/index.js` 或 `src/panels/my-panel/index.js` 文件，分别用于单个 panel 和多个 panel。
+或者创建 `src/panel/index.js` 或 `src/panels/my-panel/index.js` 文件，分别用于单个 panel 和多个 panel。
 
 然后在 devtools 入口中引入 panel，如下所示。
 
@@ -274,54 +274,54 @@ chrome.devtools.panels.create("My panel", "", "panels/my-panel.html");
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/chrome_url_overrides)
 
-Newtab 入口对应了 `manifest.json` 中的 `chrome_url_overrides.newtab` 字段，其支持两种添加方式。
+Newtab 入口对应了 `manifest.json` 中的 `chrome_url_overrides.newtab` 字段。
 
-方式一：自动生成入口。
+自动生成入口。
 
 ```shell
 npx web-extend g newtab
 
 ```
 
-方式二：手动创建 `src/newtab.js` 或 `src/newtab/index.js` 文件。
+或者手动创建 `src/newtab.js` 或 `src/newtab/index.js` 文件。
 
 ## Bookmarks
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages)，Firefox 不支持 bookmarks。
 
-Bookmarks 入口对应了 `manifest.json` 中的 `chrome_url_overrides.bookmarks` 字段，其支持两种添加方式。
+Bookmarks 入口对应了 `manifest.json` 中的 `chrome_url_overrides.bookmarks` 字段。
 
-方式一：自动生成入口，运行以下命令。
+自动生成入口，运行以下命令。
 
 ```shell
 npx web-extend g bookmarks
 
 ```
 
-方式二：手动创建 `src/bookmarks.js` 或 `src/bookmarks/index.js` 文件。
+或者手动创建 `src/bookmarks.js` 或 `src/bookmarks/index.js` 文件。
 
 ## History
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages)，Firefox 不支持 history。
 
-History 入口对应了 `manifest.json` 中的 `chrome_url_overrides.history` 字段，其支持两种添加方式。
+History 入口对应了 `manifest.json` 中的 `chrome_url_overrides.history` 字段，
 
-方式一：自动生成入口。
+自动生成入口。
 
 ```shell
 npx web-extend g history
 
 ```
 
-方式二：手动创建 `src/history.js` 或 `src/history/index.js` 文件。
+或者手动创建 `src/history.js` 或 `src/history/index.js` 文件。
 
 ## Sandbox
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest/sandbox)，Firefox 不支持 sandbox。
 
-Sandbox 入口对应了 `manifest.json` 中的 `sandbox.pages` 字段，其支持两种添加方式。
+Sandbox 入口对应了 `manifest.json` 中的 `sandbox.pages` 字段。
 
-方式一：自动生成入口。
+自动生成入口。
 
 ```shell
 # 单入口
@@ -332,7 +332,7 @@ npx web-extend g sandboxes/sandbox-one
 
 ```
 
-方式二：手动创建 `src/sandbox.js` 或 `src/sandboxes/*.js` 文件。
+或者手动创建 `src/sandbox.js` 或 `src/sandboxes/*.js` 文件。
 
 然后可以在其他的扩展页面中，将 sandbox 作为 iframe 嵌入，示例如下。
 
@@ -352,4 +352,4 @@ document.querySelector("#root").innerHTML = `
 
 :::
 
-参考 [with-sandbox](https://github.com/web-extend/examples/tree/main/with-sandbox), [with-multi-sandboxes](https://github.com/web-extend/examples/tree/main/with-multi-sandboxes)。
+参考 [with-sandbox](https://github.com/web-extend/examples/tree/main/with-sandbox)、[with-multi-sandboxes](https://github.com/web-extend/examples/tree/main/with-multi-sandboxes)。

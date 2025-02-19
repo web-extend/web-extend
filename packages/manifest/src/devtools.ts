@@ -1,6 +1,5 @@
-import { readdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import { getEntryFileName, matchDeclarativeMultipleEntryFile, matchDeclarativeSingleEntryFile } from './common.js';
+import { matchDeclarativeSingleEntryFile } from './common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'devtools';
@@ -19,7 +18,7 @@ const normalizeDevtoolsEntry: ManifestEntryProcessor['normalize'] = async ({ man
   }
 };
 
-const readDevtoolsEntry: ManifestEntryProcessor['read'] = async ({ manifest, context }) => {
+const readEntry: ManifestEntryProcessor['readEntry'] = async ({ manifest, context }) => {
   const { devtools_page } = manifest || {};
   if (!devtools_page) return null;
 
@@ -30,41 +29,19 @@ const readDevtoolsEntry: ManifestEntryProcessor['read'] = async ({ manifest, con
     },
   };
 
-  const { rootPath, srcDir } = context;
-  const srcPath = resolve(rootPath, srcDir);
-  const files = await readdir(srcPath, { recursive: true });
-  const panels = files
-    .filter(
-      (file) => matchDeclarativeSingleEntryFile('panel', file) || matchDeclarativeMultipleEntryFile('panels', file),
-    )
-    .map((file) => resolve(srcPath, file));
-
-  for (const file of panels) {
-    // const res = file.match(/([^\\/]+)([\\/]index)?\.(ts|tsx|js|jsx|mjs|cjs)$/);
-    // const name = res?.[1];
-    const name = getEntryFileName(file, rootPath, srcDir);
-    if (name) {
-      entry[name] = {
-        input: [file],
-        html: true,
-      };
-    }
-  }
-
   return entry;
 };
 
-const writeDevtoolsEntry: ManifestEntryProcessor['write'] = ({ manifest, name }) => {
+const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, name }) => {
   manifest.devtools_page = `${name}.html`;
 };
 
 const devtoolsProcessor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntryFile,
-  matchEntryName: (entryName) => entryName === key,
   normalize: normalizeDevtoolsEntry,
-  read: readDevtoolsEntry,
-  write: writeDevtoolsEntry,
+  readEntry,
+  writeEntry,
 };
 
 export default devtoolsProcessor;

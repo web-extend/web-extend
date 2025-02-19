@@ -1,6 +1,6 @@
 # 项目结构 {#project-structure}
 
-## 顶层目录 {#top-level-folders}
+## 顶层目录 {#top-level-folder}
 
 项目的顶层目录用于组织公共静态资源、源码、项目配置等目录或文件。
 
@@ -18,9 +18,10 @@
 | `.gitignore`             | Git 的忽略文件                                                                              |
 | `package.json`           | 项目的依赖和脚本                                                                            |
 | `rsbuild.config.js`      | Rsbuild 配置文件                                                                            |
+| `web-ext.config.js`      | web-ext 配置文件                                                                            |
 | `tsconfig.json`          | TypeScript 配置文件                                                                         |
 
-## 源码目录 {#source-folders}
+## 源码目录 {#source-folder}
 
 项目的源码目录用于组织[入口](./entrypoints.md)、组件、库等目录或文件。
 

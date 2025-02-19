@@ -1,9 +1,13 @@
-import { resolve } from 'node:path';
+import { existsSync } from 'node:fs';
+import { copyFile, unlink } from 'node:fs/promises';
+import { isAbsolute, relative, resolve } from 'node:path';
 import type { RsbuildMode } from '@rsbuild/core';
+import type { ExtensionTarget } from '@web-extend/manifest/types';
+import chalk from 'chalk';
 import type { FSWatcher } from 'chokidar';
-import { type BuildInfo, writeBuildInfo } from './cache.js';
-import { type RestartCallback, beforeRestart, onBeforeRestart, watchFilesForRestart } from './restart.js';
-import { type ExtensionRunner, importWebExt, normalizeRunConfig, run } from './web-ext.js';
+import { type CacheBuildInfo, writeBuildInfo } from './cache.js';
+import { type ExtensionRunner, importWebExt, normalizeRunnerConfig, run } from './runner.js';
+import { type WatchCallback, watchFiles as chokidarWatchFiles } from './watcher.js';
 import { zip } from './zip.js';
 
 export interface StartOptions {
@@ -25,6 +29,7 @@ export interface StartOptions {
 let commonOptions: StartOptions = {};
 let extensionRunner: ExtensionRunner | null = null;
 let watchers: FSWatcher[] = [];
+const PUBLIC_DIR = 'public';
 
 // forked from https://github.com/web-infra-dev/rsbuild/blob/main/packages/core/src/cli/init.ts
 async function init({
@@ -97,48 +102,50 @@ async function init({
   rsbuild.onCloseBuild(envs.cleanup);
   rsbuild.onCloseDevServer(envs.cleanup);
 
-  if (isBuildWatch || isDev) {
-    for (const wather of watchers) {
-      await wather?.close();
-    }
-    watchers = [];
+  for (const wather of watchers) {
+    await wather?.close();
+  }
+  watchers = [];
 
+  rsbuild.onBeforeCreateCompiler(() => {
     const restart = isDev ? restartDevServer : isBuildWatch ? restartBuild : null;
-    rsbuild.onBeforeCreateCompiler(() => {
-      if (!restart) return;
+    if (!restart) return;
 
-      const files = [...envs.filePaths];
-      if (configFilePath) {
-        files.push(configFilePath);
-      }
+    const files = [...envs.filePaths];
+    if (configFilePath) {
+      files.push(configFilePath);
+    }
 
-      const config = rsbuild.getNormalizedConfig();
-      if (config.dev?.watchFiles) {
-        const watchFiles = [config.dev.watchFiles].flat().filter((item) => item.type === 'reload-server');
-        for (const watchFilesConfig of watchFiles) {
-          const paths = [watchFilesConfig.paths].flat();
-          if (watchFilesConfig.options) {
-            const watcher = watchFilesForRestart({
-              files: paths,
-              root,
-              restart,
-              watchOptions: watchFilesConfig.options,
-            });
-            if (watcher) {
-              watchers.push(watcher);
-            }
-          } else {
-            files.push(...paths);
-          }
+    const config = rsbuild.getNormalizedConfig();
+    if (config.dev?.watchFiles) {
+      const watchFiles = [config.dev.watchFiles].flat().filter((item) => item.type === 'reload-server');
+      for (const watchFilesConfig of watchFiles) {
+        const paths = [watchFilesConfig.paths].flat();
+        if (watchFilesConfig.options) {
+          const customWatcher = chokidarWatchFiles({
+            files: paths,
+            root,
+            callback: restart,
+            watchOptions: watchFilesConfig.options,
+          });
+          customWatcher && watchers.push(customWatcher);
+        } else {
+          files.push(...paths);
         }
       }
+    }
 
-      const watcher = watchFilesForRestart({ files, root, restart });
-      if (watcher) {
-        watchers.push(watcher);
-      }
+    const watcher = chokidarWatchFiles({ files, root, callback: restart });
+    watcher && watchers.push(watcher);
+
+    const publicWatcher = chokidarWatchFiles({
+      files: [PUBLIC_DIR],
+      root,
+      callback: ({ rootPath, filePath }) =>
+        rewritePublicFile({ rootPath, distPath: rsbuild.context.distPath, filePath }),
     });
-  }
+    publicWatcher && watchers.push(publicWatcher);
+  });
 
   return rsbuild;
 }
@@ -168,7 +175,7 @@ async function startDevServer(options: StartOptions) {
       // run after manifest.json written in @web-extend/rsbuild-plugin
       setTimeout(async () => {
         const { rootPath, distPath } = rsbuild.context;
-        const config = await normalizeRunConfig(rootPath, distPath, getBuildTarget(), {
+        const config = await normalizeRunnerConfig(rootPath, distPath, getBuildTarget(), {
           startUrl: typeof options.open === 'string' ? options.open : undefined,
         });
 
@@ -185,8 +192,8 @@ async function startDevServer(options: StartOptions) {
   onBeforeRestart(server.close);
 }
 
-const restartDevServer: RestartCallback = async ({ filePath }) => {
-  await beforeRestart({ filePath, clear: true, id: 'server' });
+const restartDevServer: WatchCallback = async ({ filePath, rootPath }) => {
+  await beforeRestart({ rootPath, filePath, clear: true, id: 'server' });
 
   const rsbuild = await init({ isDev: true, isRestart: true });
   if (!rsbuild) return;
@@ -211,7 +218,7 @@ async function startBuild(options: StartOptions) {
   // run after manifest.json written in @web-extend/rsbuild-plugin
   rsbuild.onCloseBuild(async () => {
     const { rootPath, distPath } = rsbuild.context;
-    const buildInfo: BuildInfo = {
+    const buildInfo: CacheBuildInfo = {
       rootPath,
       distPath,
       target: getBuildTarget(),
@@ -235,15 +242,15 @@ async function startBuild(options: StartOptions) {
   }
 }
 
-const restartBuild: RestartCallback = async ({ filePath }) => {
-  await beforeRestart({ filePath, clear: true, id: 'build' });
+const restartBuild: WatchCallback = async ({ rootPath, filePath }) => {
+  await beforeRestart({ rootPath, filePath, clear: true, id: 'build' });
 
   const rsbuild = await init({ isBuildWatch: true, isRestart: true });
   if (!rsbuild) return;
 
   rsbuild.onCloseBuild(async () => {
     const { rootPath, distPath } = rsbuild.context;
-    const buildInfo: BuildInfo = {
+    const buildInfo: CacheBuildInfo = {
       rootPath,
       distPath,
       target: getBuildTarget(),
@@ -280,7 +287,56 @@ function prepareEnv(command: 'dev' | 'build', options: StartOptions) {
 
 function getBuildTarget() {
   const target = process.env.WEB_EXTEND_TARGET || '';
-  return target;
+  return target as ExtensionTarget;
+}
+
+async function rewritePublicFile({
+  rootPath,
+  distPath,
+  filePath,
+}: { rootPath: string; distPath: string; filePath: string }) {
+  if (!filePath) return;
+  const publicPath = resolve(rootPath, PUBLIC_DIR);
+  const publichFilePath = isAbsolute(filePath) ? filePath : resolve(rootPath, filePath);
+  const distFilePath = resolve(distPath, relative(publicPath, publichFilePath));
+
+  console.info(`Rewrite because ${chalk.yellow(relative(rootPath, publichFilePath))} is changed.`);
+  if (!existsSync(publichFilePath)) {
+    if (existsSync(distFilePath)) {
+      await unlink(distFilePath);
+    }
+    return;
+  }
+  await copyFile(publichFilePath, distFilePath);
+}
+
+type Cleaner = () => Promise<unknown> | unknown;
+let cleaners: Cleaner[] = [];
+
+function onBeforeRestart(cleaner: Cleaner) {
+  cleaners.push(cleaner);
+}
+
+async function beforeRestart({
+  rootPath,
+  filePath,
+  id,
+  clear = true,
+}: { rootPath: string; filePath?: string; id: string; clear?: boolean }) {
+  if (clear) {
+    console.clear();
+  }
+
+  if (filePath) {
+    console.info(`Restart ${id} because ${chalk.yellow(relative(rootPath, filePath))} is changed.\n`);
+  } else {
+    console.info(`Restarting ${id}...\n`);
+  }
+
+  for (const cleaner of cleaners) {
+    await cleaner();
+  }
+  cleaners = [];
 }
 
 export { startDevServer, startBuild };
