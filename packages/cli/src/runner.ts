@@ -122,7 +122,7 @@ export async function preview({ root = process.cwd(), outDir, target }: PreviewO
 
   if (!currentBuildInfo) {
     if (outDir || target) {
-      throw Error('The argument outDir or target is incorrect.');
+      throw Error('The argument dir or target is incorrect.');
     }
     currentBuildInfo = buildInfo[0];
   }

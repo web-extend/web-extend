@@ -1,5 +1,6 @@
 import { createWriteStream, existsSync } from 'node:fs';
 import { basename, dirname, resolve } from 'node:path';
+import { readManifestFile } from '@web-extend/manifest';
 import type { ExtensionTarget } from '@web-extend/manifest/types';
 import archiver from 'archiver';
 import { getCurrentBuildInfo, readBuildInfo } from './cache.js';
@@ -11,7 +12,7 @@ export interface ZipOptions {
   target?: ExtensionTarget;
 }
 
-export async function zip({ filename, outDir, root = process.cwd(), target }: ZipOptions) {
+export async function zip({ filename, outDir, root = process.cwd(), target: optionTarget }: ZipOptions) {
   const buildInfo = await readBuildInfo(root);
   if (!buildInfo?.length) {
     throw Error('Cannot find build info, please build first.');
@@ -19,27 +20,24 @@ export async function zip({ filename, outDir, root = process.cwd(), target }: Zi
 
   let currentBuildInfo = getCurrentBuildInfo(buildInfo, {
     distPath: outDir ? resolve(root, outDir) : undefined,
-    target,
+    target: optionTarget,
   });
 
   if (!currentBuildInfo) {
-    if (outDir || target) {
-      throw Error('The argument outDir or target is incorrect.');
+    if (outDir || optionTarget) {
+      throw Error('The argument dir or target is incorrect.');
     }
     currentBuildInfo = buildInfo[0];
   }
 
-  const { distPath } = currentBuildInfo;
+  const { distPath, target } = currentBuildInfo;
+
   if (!existsSync(distPath)) {
     throw new Error(`${distPath} doesn't exist`);
   }
 
-  const manifestFile = resolve(distPath, 'manifest.json');
-  if (!existsSync(manifestFile)) {
-    throw new Error(`Cannot find manifest.json in ${distPath}`);
-  }
-
-  const dest = filename || `${basename(distPath)}.zip`;
+  const manifest = await readManifestFile(distPath);
+  const dest = filename || `${target}-${manifest.version}.zip`;
   const filePath = resolve(dirname(distPath), dest);
   const output = createWriteStream(filePath);
 
