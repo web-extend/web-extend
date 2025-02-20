@@ -1,9 +1,9 @@
 import { createWriteStream, existsSync } from 'node:fs';
 import { basename, dirname, resolve } from 'node:path';
+import { readManifestFile } from '@web-extend/manifest';
 import type { ExtensionTarget } from '@web-extend/manifest/types';
 import archiver from 'archiver';
 import { getCurrentBuildInfo, readBuildInfo } from './cache.js';
-import { readManifestFile } from '@web-extend/manifest';
 
 export interface ZipOptions {
   root?: string;
@@ -25,7 +25,7 @@ export async function zip({ filename, outDir, root = process.cwd(), target: opti
 
   if (!currentBuildInfo) {
     if (outDir || optionTarget) {
-      throw Error('The argument outDir or target is incorrect.');
+      throw Error('The argument dir or target is incorrect.');
     }
     currentBuildInfo = buildInfo[0];
   }
