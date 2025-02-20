@@ -2,15 +2,11 @@ import { existsSync } from 'node:fs';
 import { readFile, rm } from 'node:fs/promises';
 import { extname, resolve } from 'node:path';
 import { createRsbuild } from '@rsbuild/core';
-import { type WebExtensionManifest, setTargetEnv } from '@web-extend/manifest';
+import { setTargetEnv } from '@web-extend/manifest';
 import { pluginWebExtend } from '../src/index.js';
 import type { PluginWebExtendOptions } from '../src/index.js';
 
-export async function readManifestFile(distPath: string) {
-  const manifestPath = resolve(distPath, 'manifest.json');
-  const manifest = JSON.parse(await readFile(manifestPath, 'utf-8')) as WebExtensionManifest;
-  return manifest;
-}
+export { readManifestFile } from '@web-extend/manifest';
 
 export function getFileContent(distPath: string, name: string) {
   return readFile(resolve(distPath, name), 'utf-8');
