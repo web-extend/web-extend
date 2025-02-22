@@ -62,7 +62,7 @@ See [Rsbuild](https://rsbuild.dev/).
 
 WebExtend provides a CLI tool that helps you create a project quickly and generate entry files automatically.
 
-See [web-extend](../api/web-extend.md).
+See [web-extend](../../api/web-extend.md).
 
 ## Pre-Requisite Knowledge {#pre-requisite-knowledge}
 

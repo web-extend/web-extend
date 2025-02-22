@@ -10,7 +10,7 @@ outline: deep
 
 ## Automatic Installation
 
-It is recommended to use [`web-extend`](../api/web-extend.md) for creating a project automatically. Just run the following command on the CLI:
+It is recommended to use [`web-extend`](../../api/web-extend.md) for creating a project automatically. Just run the following command on the CLI:
 
 ```shell
 npx web-extend@latest init
@@ -29,7 +29,7 @@ WebExtend is compatible with any frontend framework. For other frameworks, you m
 
 ### Install dependencies
 
-Create a project and install dependencies. WebExtend uses [Rsbuild](https://rsbuild.dev/) under the hood, which and the [`@web-extend/rsbuild-plugin`](../api/rsbuild-plugin.md) plugin are also needed to be installed.
+Create a project and install dependencies. WebExtend uses [Rsbuild](https://rsbuild.dev/) under the hood, which and the [`@web-extend/rsbuild-plugin`](../../api/rsbuild-plugin.md) plugin are also needed to be installed.
 
 ```shell
 # create an empty project

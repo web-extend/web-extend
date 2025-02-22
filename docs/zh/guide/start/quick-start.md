@@ -10,7 +10,7 @@ outline: deep
 
 ## 自动安装 {#automatic-installation}
 
-推荐使用 [`web-extend`](../api/web-extend.md) 工具自动创建项目。在命令行界面运行命令：
+推荐使用 [`web-extend`](../../api/web-extend.md) 工具自动创建项目。在命令行界面运行命令：
 
 ```shell
 npx web-extend@latest init
@@ -29,7 +29,7 @@ WebExtend 兼容任何前端框架，如需在其他框架中使用，请参考�
 
 ### 安装依赖项 {#install-dependencies}
 
-创建项目并安装依赖项。WebExtend 使用 [Rsbuild](https://rsbuild.dev/) 作为底层构建工具，因此还需要安装它和一个 [`@web-extend/rsbuild-plugin`](../api/rsbuild-plugin.md) 插件。
+创建项目并安装依赖项。WebExtend 使用 [Rsbuild](https://rsbuild.dev/) 作为底层构建工具，因此还需要安装它和一个 [`@web-extend/rsbuild-plugin`](../../api/rsbuild-plugin.md) 插件。
 
 ```shell
 # create an empty project

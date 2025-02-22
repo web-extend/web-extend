@@ -61,7 +61,7 @@ TypeScript 开箱即用，无需额外配置。
 
 提供模板支持，方便快速创建项目、生成入口文件。
 
-查阅 [web-extend](../api/web-extend.md)。
+查阅 [web-extend](../../api/web-extend.md)。
 
 ## 预备知识 {#pre-requisite-knowledge}
 

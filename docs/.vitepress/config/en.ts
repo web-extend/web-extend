@@ -5,16 +5,16 @@ export default defineConfig({
   description: 'The build tool for web extensions',
   themeConfig: {
     nav: [
-      { text: 'Guide', link: '/guide/introduction' },
+      { text: 'Guide', link: '/guide/start/introduction' },
       { text: 'API', link: '/api/web-extend' },
       { text: 'Examples', link: 'https://github.com/web-extend/examples' },
     ],
 
     sidebar: {
-      '/': [
+      '/guide/': [
         {
-          text: 'Guide',
-          base: '/guide/',
+          text: 'Getting Start',
+          base: '/guide/start/',
           collapsed: false,
           items: [
             { text: 'Introduction', link: 'introduction' },
@@ -24,6 +24,19 @@ export default defineConfig({
             { text: 'Browser Support', link: 'browser' },
           ],
         },
+        {
+          text: 'Migration',
+          base: '/guide/migration/',
+          collapsed: false,
+          items: [
+            {
+              text: 'vitesse-webext',
+              link: 'vitesse-webext',
+            },
+          ],
+        },
+      ],
+      '/api/': [
         {
           text: 'API Reference',
           base: '/api/',
