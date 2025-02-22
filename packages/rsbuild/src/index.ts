@@ -49,6 +49,11 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       const srcPath = resolve(rootPath, srcDir);
 
       const extraConfig: RsbuildConfig = {
+        source: {
+          define: {
+            'import.meta.env.WEB_EXTEND_TARGET': JSON.stringify(manifestManager.context.target),
+          },
+        },
         environments,
         dev: {
           writeToDisk: true,

@@ -16,7 +16,7 @@ WebExtend 是一个帮助您使用现代 Web 技术构建浏览器扩展的工�
 - 较为复杂的 API。
 - 中文不友好，没有官方的中文文档。
 
-## 优势 {#main-features}
+## 主要特点 {#main-features}
 
 ### 📝 声明式入口 {#declarative-entrypoints}
 
@@ -28,11 +28,11 @@ WebExtend 是一个帮助您使用现代 Web 技术构建浏览器扩展的工�
 
 对于 popup/options/**content_scripts** 等入口支持即时 HMR、自动打开浏览器和运行扩展。
 
-### 🧭 跨浏览器兼容性 {#browser-compatibility}
+### 🧭 多浏览器支持 {#multi-browser-support}
 
 自动处理 manifest.json 配置差异，轻松实现多浏览器支持。
 
-查阅[浏览器相关](./browser.md)。
+查阅[浏览器支持](./browser.md)。
 
 ### 🛠️ ESM & TypeScript 支持 {#esm-typescript-support}
 

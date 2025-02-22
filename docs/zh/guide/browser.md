@@ -2,7 +2,7 @@
 outline: deep
 ---
 
-# 浏览器相关 {#browser-relevant}
+# 浏览器支持 {#browser-support}
 
 ## 扩展目标 {#extension-target}
 
@@ -17,7 +17,7 @@ WebExtend 支持以下浏览器扩展目标。
 
 当构建目标为 `chrome-mv3` 时，对应的构建产物可以在 Chromium 系列的浏览器中使用（包括 Chrome、Edge、Brave、Opera 等）。
 
-可以为 `web-extend` 的下列子命令传递一个 `-g` 或 `--target` 标志来指定目标。
+可以为 `web-extend` 的下列子命令传递 `--target` 或 `-t` 标志来指定目标。
 
 ```shell
 web-extend rsbuild:dev -t firefox-mv2
@@ -26,11 +26,11 @@ web-extend preview -t firefox-mv2
 web-extend zip -t firefox-mv2
 ```
 
-或者，也可以在 `pluginWebExtend()` 中传递一个 `target` 选项来指定目标。
+或者也可以在 `pluginWebExtend()` 中传递 `target` 指定目标。
 
 ::: code-group
 
-```js [rsbuild.config.js]
+```js [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
 import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
 
@@ -45,6 +45,21 @@ export default defineConfig({
 
 :::
 
+Webextend 会在代码构建时注入一个环境变量 `import.meta.env.WEB_EXTEND_TARGET`，这有助于处理不同浏览器之间的特异性。
+
+::: code-group
+
+```js [background.js]
+const target = import.meta.env.WEB_EXTEND_TARGET || "";
+if (target.includes("chrome")) {
+  chrome.sidePanel
+    .setPanelBehavior({ openPanelOnActionClick: true })
+    .catch((error) => console.error(error));
+}
+```
+
+:::
+
 ## Manifest 兼容 {#manifest-compatibility}
 
 WebExtend 会基于文件系统和构建目标，自动解析和生成 `manifest.json`，因此无需额外处理不同浏览器之间 Manifest 配置的差异性。
@@ -53,7 +68,7 @@ WebExtend 会基于文件系统和构建目标，自动解析和生成 `manifest
 
 ::: code-group
 
-```js [rsbuild.config.js]
+```js [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
 import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
 
@@ -82,7 +97,7 @@ Extension API 文档：
 - [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api)
 - [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API)
 
-### 适用于 Chromium 系列
+### 适用于 Chromium
 
 可以直接使用 `chrome` API。如果使用 TypeScript，推荐安装 [`@types/chrome`](https://www.npmjs.com/package/@types/chrome)。
 
@@ -124,9 +139,9 @@ npx web-extend preview
 
 以下是一些常见的自定义设置，完整的配置项请查阅 [web-ext run](https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#web-ext-run)。
 
-### 打开指定链接
+### 打开特定链接
 
-在浏览器启动时，打开一个指定的链接。示例：
+在浏览器启动时，打开一个指定的链接。示例如下：
 
 ::: code-group
 
@@ -140,9 +155,9 @@ export default {
 
 :::
 
-### 打开指定浏览器
+### 打开特定浏览器
 
-设置一个 Chromium 或 Firefox 的可执行路径，来打开一个指定的浏览器。示例。
+设置一个 Chromium 或 Firefox 的可执行路径，来打开一个指定的浏览器。示例如下：
 
 ::: code-group
 
@@ -159,7 +174,7 @@ export default {
 
 ### 保存浏览器配置
 
-`web-ext` 会在每次启动浏览器时创建一个新的临时的用户资料，可以指定一个用户的个人资料路径，来浏览器的配置信息。
+`web-ext` 会在每次启动浏览器时创建一个新的临时的用户资料，可以指定一个路径。当下次再次打开浏览器时，将会使用之前保存的用户配置信息。
 
 ::: code-group
 

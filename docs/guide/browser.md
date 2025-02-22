@@ -2,7 +2,7 @@
 outline: deep
 ---
 
-# Browser Relevant
+# Browser Support
 
 ## Extension Target
 
@@ -17,7 +17,7 @@ WebExtend supports the following extension targets.
 
 When the target is `chrome-mv3`, the built extension can be used in most Chromium-based browsers, such as Chrome, Edge, Brave, Opera, etc.
 
-To use a specific target, you can set a `-t` or `--target` flag for `web-extend` subcommands. Example:
+To use a specific target, you can set the `--target` or `-t` flag for `web-extend` subcommands, for example:
 
 ```shell
 web-extend rsbuild:dev -t firefox-mv2
@@ -26,11 +26,11 @@ web-extend preview -t firefox-mv2
 web-extend zip -t firefox-mv2
 ```
 
-Alternatively, you can set the target option in `pluginWebExtend()`.
+Alternatively, you can set the target in `pluginWebExtend()`.
 
 ::: code-group
 
-```js [rsbuild.config.js]
+```js [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
 import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
 
@@ -45,6 +45,21 @@ export default defineConfig({
 
 :::
 
+Webextend injects the `import.meta.env.WEB_EXTEND_TARGET` environment variable into the code during build, which is helpful for dealing with specificity between different browsers, for example:
+
+::: code-group
+
+```js [background.js]
+const target = import.meta.env.WEB_EXTEND_TARGET || "";
+if (target.includes("chrome")) {
+  chrome.sidePanel
+    .setPanelBehavior({ openPanelOnActionClick: true })
+    .catch((error) => console.error(error));
+}
+```
+
+:::
+
 ## Manifest Compatibility
 
 WebExtend uses the file system to parse entry files and reflect them to items in `manifest.json` automatically, so you don't need to care about the campatibility of `manifest.json` between differnent browsers.
@@ -53,7 +68,7 @@ Additionally, you can define the manifest option as a function in `pluginWebExte
 
 ::: code-group
 
-```js [rsbuild.config.js]
+```js [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
 import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
 

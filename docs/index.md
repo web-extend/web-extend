@@ -26,7 +26,7 @@ features:
     title: Seamless Development Experience
     details: Supports instant HMR, automatic browser opening and extension running
   - icon: 🧭
-    title: Browser Compatibility
+    title: Multi-browser Support
     details: Automatically handles manifest.json configuration differences for easy multi-browser support
     link: /guide/browser
   - icon: 🛠️
