@@ -3,9 +3,9 @@ name: Release
 
 on:
   # Run `npm run bump` to bump the version and create a git tag.
-  push:
-    tags:
-      - "v*"
+  # push:
+  #   tags:
+  #     - "v*"
 
   workflow_dispatch:
 
