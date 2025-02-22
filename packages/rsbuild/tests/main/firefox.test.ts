@@ -51,10 +51,10 @@ describe('test build for firefox', () => {
 
     const distPath = rsbuild.context.distPath;
     const manifest = await readManifestFile(distPath);
-    const { manifest_version, browser_action, icons } = manifest as Manifest.WebExtensionManifest;
+    const { manifest_version, browser_action, icons, host_permissions } = manifest as Manifest.WebExtensionManifest;
 
     expect(manifest_version).toBe(2);
-
+    expect(host_permissions).toBeUndefined();
     expect(validateDistFile(distPath, browser_action?.default_popup || '', '.html')).toBeTruthy();
     expect(browser_action?.default_icon).toEqual(icons);
   });

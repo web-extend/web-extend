@@ -41,7 +41,7 @@ const entryProcessors: ManifestEntryProcessor[] = [
 
 async function normalizeManifest({ manifest = {} as WebExtensionManifest, context }: NormalizeManifestProps) {
   const { rootPath, target, mode, srcDir } = context;
-  const defaultManifest = await getDefaultManifest(rootPath, target);
+  const defaultManifest = await initManifest(rootPath, target);
   const finalManifest = {
     ...defaultManifest,
     ...manifest,
@@ -53,18 +53,10 @@ async function normalizeManifest({ manifest = {} as WebExtensionManifest, contex
     throw new Error(`Required fields missing or invalid in manifest: ${invalidFields.join(', ')}`);
   }
 
+  normalizeManifestPermissions({ manifest: finalManifest, context });
+
   if (isDevMode(mode)) {
     finalManifest.version_name ??= `${finalManifest.version} (dev)`;
-    finalManifest.permissions ??= [];
-    finalManifest.host_permissions ??= [];
-
-    if (!finalManifest.permissions.includes('scripting')) {
-      finalManifest.permissions.push('scripting');
-    }
-
-    if (!finalManifest.host_permissions.includes('*://*/*')) {
-      finalManifest.host_permissions.push('*://*/*');
-    }
 
     finalManifest.commands = {
       'web-extend:reload-extension': {
@@ -96,7 +88,7 @@ async function normalizeManifest({ manifest = {} as WebExtensionManifest, contex
   return finalManifest;
 }
 
-async function getDefaultManifest(rootPath: string, target?: ExtensionTarget) {
+async function initManifest(rootPath: string, target?: ExtensionTarget) {
   const manifest: Partial<WebExtensionManifest> = {
     manifest_version: target?.includes('2') ? 2 : 3,
   };
@@ -116,6 +108,30 @@ async function getDefaultManifest(rootPath: string, target?: ExtensionTarget) {
   }
 
   return manifest;
+}
+
+function normalizeManifestPermissions({ manifest, context }: NormalizeManifestProps) {
+  if (!manifest) return;
+  const { mode } = context;
+
+  if (isDevMode(mode)) {
+    manifest.permissions ||= [];
+    if (!manifest.permissions.includes('scripting')) {
+      manifest.permissions.push('scripting');
+    }
+
+    manifest.host_permissions ||= [];
+    if (!manifest.host_permissions.includes('*://*/*')) {
+      manifest.host_permissions.push('*://*/*');
+    }
+  }
+
+  // "host_permissions" is unsupported in MV2
+  const { manifest_version, permissions = [], host_permissions } = manifest;
+  if (manifest_version === 2 && host_permissions) {
+    manifest.permissions = [...permissions, ...host_permissions];
+    manifest.host_permissions = undefined;
+  }
 }
 
 export class ManifestManager {
