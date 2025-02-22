@@ -56,8 +56,6 @@ async function normalizeManifest({ manifest = {} as WebExtensionManifest, contex
   normalizeManifestPermissions({ manifest: finalManifest, context });
 
   if (isDevMode(mode)) {
-    finalManifest.version_name ??= `${finalManifest.version} (dev)`;
-
     finalManifest.commands = {
       'web-extend:reload-extension': {
         suggested_key: {
