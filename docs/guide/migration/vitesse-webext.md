@@ -79,7 +79,7 @@ Next, add the `"type": "module"` field into package.json, and replace the comman
 WebExtend uses Rsbuild under the hood, so you need to migrate the bundler from Vite to Rsbuild. Nevertheless, the migration process is easy, and the main changes are as follows.
 
 1. Create `rsbuild.config.ts` in the root.
-2. Add the following plugins：
+2. Add the following plugins.
    - [@web-extend/rsbuild-plugin](https://www.npmjs.com/package/@web-extend/rsbuild-plugin)
    - [@rsbuild/plugin-vue](https://rsbuild.dev/plugins/list/plugin-vue)
    - [unplugin-vue-components/rspack](https://github.com/unplugin/unplugin-vue-components)
@@ -89,7 +89,7 @@ WebExtend uses Rsbuild under the hood, so you need to migrate the bundler from V
    - `resolve.alias` -> `resolve.alias`
    - `define` -> `source.define`
    - set `html.mountId: "app"`. Rsbuild will inject an HTML file for each entry file, so the original HTML files in source are useless.
-4. Support UnoCSS：
+4. Support UnoCSS.
    - Create `postcss.config.mjs`, and import the `@unocss/postcss` plugin.
    - Adjust the content of `unocss.config.ts`.
    - Remove `import 'uno.css'` from JS files, and insert `@unocss;` into the corresponding CSS files.
@@ -213,7 +213,7 @@ WebExtend uses the file system to parse entry files and generates the correspond
 
 ## Validating results
 
-After completing all changes above, congratulations 🎉！ You have done the basic migration. Now you can run `npm run dev` or `npm run build` to try it.
+After completing all changes above, congratulations 🎉 ! You have done the basic migration. Now you can run `npm run dev` or `npm run build` for having a try.
 
 ::: info Note
 The extension output path is `dist/[target]-[mode]` instead of `extension` in WebExtend.
