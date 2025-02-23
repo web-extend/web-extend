@@ -29,7 +29,7 @@ See [entrypoints](./entrypoints.md).
 
 WebExtend supports instant HMR for popup/options/**content_scripts**..., automatic browser opening and extension running.
 
-### 🧭 Multi-browser Support {#multi-browser-support}
+### 🧭 Multi-Browser Support {#multi-browser-support}
 
 WebExtend automatically handles `manifest.json` configuration differences for easy multi-browser support.
 
