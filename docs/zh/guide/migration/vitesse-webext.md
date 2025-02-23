@@ -4,11 +4,11 @@ outline: deep
 
 # vitesse-webext
 
-本章介绍如何从 [vitesse-webext](https://github.com/antfu-collective/vitesse-webext) 迁移到 WebExtend。完整的迁移代码可以参考 [examples/vitesse-webext](https://github.com/web-extend/examples/pull/4/files)。
+本章介绍如何从一个 [vitesse-webext](https://github.com/antfu-collective/vitesse-webext) 项目迁移到 WebExtend。完整的代码迁移过程可以参考 [examples/vitesse-webext](https://github.com/web-extend/examples/pull/4/files)。
 
 ## 安装依赖
 
-安装 WebExtend 的依赖。
+安装 WebExtend 和 Rsbuild 的依赖。
 
 ```shell
 npm add -D @rsbuild/core @web-extend/rsbuild-plugin web-extend
@@ -30,7 +30,7 @@ npm add -D unplugin-icons@latest
 
 ## 更新 npm scripts
 
-在 package.json 中添加 `"type": "module"` 字段，并使用 `web-extend` 的 CLI 命令替换 `scripts` 中含有的 `dev`、`build`、 `pack`、 `start` 等命令。
+在 package.json 中添加 `"type": "module"` 字段，并使用 `web-extend` 的 CLI 命令替换 `scripts` 中的 `dev`、`build`、 `pack`、 `start` 等命令。
 
 ::: details package.json
 
@@ -76,23 +76,23 @@ npm add -D unplugin-icons@latest
 
 ## 迁移构建工具
 
-Webextend 底层使用 Rsbuild 作为构建工具，从 Vite 迁移到 Vite 非常简单，主要改动如下：
+WebExtend 底层使用 Rsbuild 作为构建工具，因此需要从 Vite 迁移至 Rsbuild。整个迁移过程比较简单，主要改动如下：
 
 1. 在项目根目录下创建 `rsbuild.config.ts` 配置文件。
 2. 添加插件：
-   - `@web-extend/rsbuild-plugin`
-   - `@rsbuild/plugin-vue`
-   - `unplugin-vue-components/rspack`
-   - `unplugin-auto-import/rspack`
-   - `unplugin-icons/rspack`
+   - [@web-extend/rsbuild-plugin](https://www.npmjs.com/package/@web-extend/rsbuild-plugin)
+   - [@rsbuild/plugin-vue](https://rsbuild.dev/plugins/list/plugin-vue)
+   - [unplugin-vue-components/rspack](https://github.com/unplugin/unplugin-vue-components)
+   - [unplugin-auto-import/rspack](https://github.com/unplugin/unplugin-auto-import)
+   - [unplugin-icons/rspack](https://github.com/unplugin/unplugin-icons)
 3. 迁移配置项：
    - `resolve.alias` -> `resolve.alias`
    - `define` -> `source.define`
-   - 添加 `html.mountId: "app"`，Rsbuild 会为每个入口自动注入 HTML 文件，项目中 options、popup、sidepanel 等目录下的 HTML 文件不再被使用。
+   - 设置 `html.mountId: "app"`，Rsbuild 会为每个入口自动注入 HTML 文件，项目中 options、popup、sidepanel 等目录下的 HTML 文件不再被使用。
 4. 支持 UnoCSS：
-   - 创建 `postcss.config.mjs` 文件，引入 UnoCSS 插件
-   - 更改 `unocss.config.ts` 文件内容
-   - 移除 js 入口文件中的`import 'uno.css'`，改为在 css 入口文件中添加 `@unocss;`
+   - 创建 `postcss.config.mjs` ，并引入 `@unocss/postcss` 插件
+   - 调整 `unocss.config.ts` 文件内容
+   - 移除 JS 文件中的`import 'uno.css'`，改为在相应的 CSS 文件中添加 `@unocss;`
 
 相关配置文件的完整内容如下：
 
@@ -201,16 +201,15 @@ export default defineConfig({
 - [Rsbuild Vite](https://rsbuild.dev/guide/migration/vite)
 - [UnoCSS](https://unocss.dev/integrations/postcss)
 
-## 更新源码
+## 更新源码内容
 
-WebExtend 使用声明式入口，无需在 `manifest.json` 中显示声明。核心变更如下：
+WebExtend 会根据文件系统自动解析入口文件，因此无需在 `manifest.json` 中显示声明。核心改动如下：
 
-- 更改 icons：使用 `npx web-extend g icons --template ./extension/assets/icon-512.png` 生成 icon 文件。
-- 更改 popup、options、sidepanel：分别在对应的目录中移除 `index.html` 文件， `main.ts` 重命名为 `index.ts`。
-- 更改 contentScripts：该目录重命名为 `content`。
-- 更改 background: 移除 `index.ts` 文件中的 `import.meta.hot` 相关内容。
+- 生成 icons：运行 `npx web-extend g icons --template ./extension/assets/icon-512.png` 命令在 `src/assets` 目录下生成需要的 icon 文件。
+- 更改 popup、options、sidepanel：分别在对应的目录中移除 `index.html`，将 `main.ts` 重命名为 `index.ts`。
+- 更改 content：将 `contentScripts` 目录重命名为 `content`。
+- 更改 background: 该目录中的 `main.ts` 重命名为 `index.ts`，删除代码中的 `import.meta.hot` 相关内容。
 - 移除 `manifest.ts` 中与入口路径相关的部分，只保留 `permissions`、`host_permissions` 等必要字段。
-- 移除 `extension` 目录。WebExtend 中的产物构建目录为 `dist/[target]-[mode]`，该目录不在被使用。如果源码中有引用该目录，请使用新的产物目录。
 
 ## 验证结果
 
@@ -220,4 +219,4 @@ WebExtend 使用声明式入口，无需在 `manifest.json` 中显示声明。�
 WebExtend 中的产物构建目录为 `dist/[target]-[mode]`，而不是 `extension` 目录。
 :::
 
-上述迁移过程如有遗漏，欢迎指出。您可以直接在 Github 页面提交 issue 或提交 PR 🤝。
+上述迁移过程如有遗漏或错误之处，欢迎指出。您可以直接在 [Github 页面](https://github.com/web-extend/web-extend)提交 issue 或提交 PR 🤝。
