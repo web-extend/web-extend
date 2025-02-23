@@ -22,7 +22,13 @@ import type {
   WebExtensionManifest,
 } from './types.js';
 
-export { setTargetEnv, getEntryFileVariants, defaultExtensionTarget, readManifestFile } from './common.js';
+export {
+  setTargetEnv,
+  getEntryFileVariants,
+  defaultExtensionTarget,
+  readManifestFile,
+  resolveSrcDir,
+} from './common.js';
 
 export * from './types.js';
 

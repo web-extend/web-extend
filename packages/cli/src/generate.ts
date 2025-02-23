@@ -1,8 +1,9 @@
 import { existsSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
+import { resolve } from 'node:path';
 import { checkbox } from '@inquirer/prompts';
 import sharp from 'sharp';
 import { copyEntryFiles, entrypoints, getTemplatePath, resolveEntryTemplate } from './init.js';
+import { resolveSrcDir } from '@web-extend/manifest';
 
 export interface GenerateOptions {
   entries: string[];
@@ -12,18 +13,13 @@ export interface GenerateOptions {
   size?: string; // just for icons
 }
 
-const getProjectSrcDir = (rootPath: string, srcDir?: string | undefined) => {
-  if (srcDir) return srcDir;
-  return existsSync(resolve(rootPath, 'src')) ? './src' : './';
-};
-
 function getIconTemplatePath(root: string, template?: string) {
   let templatePath = '';
   if (template) {
     templatePath = resolve(root, template);
   } else {
     const name = 'icon.png';
-    const srcPath = resolve(root, getProjectSrcDir(root));
+    const srcPath = resolve(root, resolveSrcDir(root));
     templatePath = resolve(srcPath, 'assets', name);
     if (!existsSync(templatePath)) {
       templatePath = resolve(srcPath, name);
@@ -49,7 +45,7 @@ async function generateIcons({ root, template, outDir, size = ICON_SIZES.join(',
 
   for (const size of sizes) {
     const name = filename.replace('{size}', String(size));
-    const destPath = outDir ? resolve(root, outDir) : resolve(dirname(templatePath));
+    const destPath = outDir ? resolve(root, outDir) : resolve(root, resolveSrcDir(root), 'assets');
     await sharp(templatePath).resize(size).toFile(resolve(destPath, name));
   }
 }
@@ -57,7 +53,7 @@ async function generateIcons({ root, template, outDir, size = ICON_SIZES.join(',
 async function generateEntryFiles({ root, template, outDir, entries }: GenerateOptions) {
   const finalTemplate = await resolveEntryTemplate(template);
   const templatePath = getTemplatePath(finalTemplate);
-  const destPath = outDir ? resolve(root, outDir) : resolve(root, getProjectSrcDir(root));
+  const destPath = outDir ? resolve(root, outDir) : resolve(root, resolveSrcDir(root));
   await copyEntryFiles(resolve(templatePath, 'src'), destPath, entries);
 }
 
