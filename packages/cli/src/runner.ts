@@ -105,7 +105,7 @@ export async function run(webExt: any, config: WebExtRunConfig) {
   return extensionRunner;
 }
 
-export async function preview({ root = process.cwd(), outDir, target }: PreviewOptions) {
+export async function preview({ root = process.cwd(), outDir, target: optionTarget }: PreviewOptions) {
   const webExt = await importWebExt();
   if (!webExt) {
     throw Error(`Cannot find package 'web-ext'; please install web-ext first.`);
