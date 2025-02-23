@@ -1,8 +1,9 @@
 import { createWriteStream, existsSync } from 'node:fs';
-import { basename, dirname, resolve } from 'node:path';
+import { basename, dirname, resolve, relative } from 'node:path';
 import { readManifestFile } from '@web-extend/manifest';
 import type { ExtensionTarget } from '@web-extend/manifest/types';
 import archiver from 'archiver';
+import chalk from 'chalk';
 import { getCurrentBuildInfo, readBuildInfo } from './cache.js';
 
 export interface ZipOptions {
@@ -15,7 +16,7 @@ export interface ZipOptions {
 export async function zip({ filename, outDir, root = process.cwd(), target: optionTarget }: ZipOptions) {
   const buildInfo = await readBuildInfo(root);
   if (!buildInfo?.length) {
-    throw Error('Cannot find build info, please build first.');
+    throw Error('Cannot find build info; please build first.');
   }
 
   let currentBuildInfo = getCurrentBuildInfo(buildInfo, {
@@ -31,9 +32,10 @@ export async function zip({ filename, outDir, root = process.cwd(), target: opti
   }
 
   const { distPath, target } = currentBuildInfo;
-
   if (!existsSync(distPath)) {
-    throw new Error(`${distPath} doesn't exist`);
+    throw new Error(
+      `Directory ${chalk.yellow(relative(root, distPath))} doesn't exist; please ${chalk.bold('build')} first.`,
+    );
   }
 
   const manifest = await readManifestFile(distPath);
