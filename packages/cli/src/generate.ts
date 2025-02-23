@@ -4,6 +4,7 @@ import { checkbox } from '@inquirer/prompts';
 import { resolveSrcDir } from '@web-extend/manifest';
 import sharp from 'sharp';
 import { copyEntryFiles, entrypoints, getTemplatePath, resolveEntryTemplate } from './init.js';
+import { resolveSrcDir } from '@web-extend/manifest';
 
 export interface GenerateOptions {
   entries: string[];
