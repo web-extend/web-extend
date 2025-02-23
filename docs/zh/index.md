@@ -9,10 +9,10 @@ hero:
   actions:
     - theme: brand
       text: 介绍
-      link: /zh/guide/introduction
+      link: /zh/guide/start/introduction
     - theme: alt
       text: 快速上手
-      link: /zh/guide/quick-start
+      link: /zh/guide/start/quick-start
   image:
     src: /logo.svg
     alt: WebExtend
@@ -21,14 +21,14 @@ features:
   - icon: 📝
     title: 声明式入口
     details: 基于文件系统自动解析入口，减少 manifest.json 的配置负担
-    link: /zh/guide/entrypoints
+    link: /zh/guide/start/entrypoints
   - icon: ⚡️
     title: 无缝的开发体验
     details: 支持即时 HMR、自动打开浏览器和运行扩展
   - icon: 🧭
-    title: 浏览器兼容性
+    title: 多浏览器支持
     details: 自动处理 manifest.json 配置差异，轻松实现多浏览器支持
-    link: /zh/guide/browser
+    link: /zh/guide/start/browser
   - icon: 🛠️
     title: ESM、TypeScript 支持
     details: ESM、TypeScript 开箱即用，无需额外配置

@@ -1,8 +1,9 @@
 import { existsSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { relative, resolve } from 'node:path';
 import { defaultExtensionTarget } from '@web-extend/manifest';
 import type { ExtensionTarget } from '@web-extend/manifest/types';
-import { getCurrentBuildInfo, readBuildInfo } from './cache.js';
+import chalk from 'chalk';
+import { resolveBuildInfo } from './result.js';
 
 type TargetType = 'firefox-desktop' | 'firefox-android' | 'chromium';
 
@@ -107,27 +108,19 @@ export async function run(webExt: any, config: WebExtRunConfig) {
 export async function preview({ root = process.cwd(), outDir, target }: PreviewOptions) {
   const webExt = await importWebExt();
   if (!webExt) {
-    throw Error(`Cannot find package 'web-ext', please install web-ext first.`);
+    throw Error(`Cannot find package 'web-ext'; please install web-ext first.`);
   }
 
-  const buildInfo = await readBuildInfo(root);
-  if (!buildInfo?.length) {
-    throw Error('Cannot find build info, please build first.');
+  const { distPath, target: finalTarget } = await resolveBuildInfo({ root, outDir, target });
+  if (!distPath) {
+    throw Error('Cannot find build info; please build first or specify the artifact directory.');
   }
 
-  let currentBuildInfo = getCurrentBuildInfo(buildInfo, {
-    distPath: outDir ? resolve(root, outDir) : undefined,
-    target,
-  });
-
-  if (!currentBuildInfo) {
-    if (outDir || target) {
-      throw Error('The argument dir or target is incorrect.');
-    }
-    currentBuildInfo = buildInfo[0];
+  if (!existsSync(distPath)) {
+    throw new Error(`Directory ${chalk.yellow(relative(root, distPath))} doesn't exist.`);
   }
 
-  const config = await normalizeRunnerConfig(root, currentBuildInfo.distPath, currentBuildInfo.target);
+  const config = await normalizeRunnerConfig(root, distPath, finalTarget);
   return run(webExt, config);
 }
 

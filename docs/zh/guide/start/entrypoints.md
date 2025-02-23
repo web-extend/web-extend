@@ -117,6 +117,23 @@ npx web-extend g options
 
 或者手动创建 `src/options.js` 或 `src/options/index.js` 文件。
 
+## Sidepanel
+
+[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/sidePanel) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Sidebars)
+
+Sidepanel 入口对应了 `manifest.json` 中的 `side_panel.default_path` 或 `sidebar_action.default_panel` 字段。
+
+自动生成入口。
+
+```shell
+npx web-extend g sidepanel
+
+```
+
+或者手动创建 `src/sidepanel.js` 或 `src/sidepanel/index.js` 文件。
+
+参考 [with-sidepanel](https://github.com/web-extend/examples/tree/main/with-sidepanel)。
+
 ## Content Scripts
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_scripts)
@@ -183,23 +200,6 @@ export const config: ContentScriptConfig = {
 :::
 
 参考 [with-content](https://github.com/web-extend/examples/tree/main/with-content)、[with-multi-contents](https://github.com/web-extend/examples/tree/main/with-multi-contents)。
-
-## Sidepanel
-
-[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/sidePanel) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Sidebars)
-
-Sidepanel 入口对应了 `manifest.json` 中的 `side_panel.default_path` 或 `sidebar_action.default_panel` 字段。
-
-自动生成入口。
-
-```shell
-npx web-extend g sidepanel
-
-```
-
-或者手动创建 `src/sidepanel.js` 或 `src/sidepanel/index.js` 文件。
-
-参考 [with-sidepanel](https://github.com/web-extend/examples/tree/main/with-sidepanel)。
 
 ## Devtools
 
@@ -270,6 +270,21 @@ chrome.devtools.panels.create("My panel", "", "panels/my-panel.html");
 
 参考 [with-devtools](https://github.com/web-extend/examples/tree/main/with-devtools)。
 
+## Bookmarks
+
+[Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages)，Firefox 不支持 bookmarks。
+
+Bookmarks 入口对应了 `manifest.json` 中的 `chrome_url_overrides.bookmarks` 字段。
+
+自动生成入口。
+
+```shell
+npx web-extend g bookmarks
+
+```
+
+或者手动创建 `src/bookmarks.js` 或 `src/bookmarks/index.js` 文件。
+
 ## Newtab
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/chrome_url_overrides)
@@ -284,21 +299,6 @@ npx web-extend g newtab
 ```
 
 或者手动创建 `src/newtab.js` 或 `src/newtab/index.js` 文件。
-
-## Bookmarks
-
-[Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages)，Firefox 不支持 bookmarks。
-
-Bookmarks 入口对应了 `manifest.json` 中的 `chrome_url_overrides.bookmarks` 字段。
-
-自动生成入口，运行以下命令。
-
-```shell
-npx web-extend g bookmarks
-
-```
-
-或者手动创建 `src/bookmarks.js` 或 `src/bookmarks/index.js` 文件。
 
 ## History
 

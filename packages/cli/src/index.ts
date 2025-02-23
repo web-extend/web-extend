@@ -127,7 +127,7 @@ function applyCommonRunOptions(command: Command) {
 
 function applyPreviewCommand(command: Command) {
   command
-    .argument('[dir]', 'specify the dist path')
+    .argument('[dir]', 'specify the artifact directory')
     .option('-r, --root <root>', 'specify the project root directory')
     .option('-t, --target <target>', 'specify the extension target')
     .action(async (outDir: string, options: PreviewOptions) => {
@@ -143,7 +143,7 @@ function applyPreviewCommand(command: Command) {
 
 function applyZipCommand(command: Command) {
   command
-    .argument('[dir]', 'specify the dist path')
+    .argument('[dir]', 'specify the artifact directory')
     .option('-r, --root <root>', 'specify the project root directory')
     .option('-n, --filename <filename>', 'specify the output filename')
     .option('-t, --target <target>', 'specify the extension target')

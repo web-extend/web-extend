@@ -10,7 +10,7 @@ outline: deep
 
 ## Automatic Installation
 
-It is recommended to use [`web-extend`](../api/web-extend.md) for creating a project automatically. Just run the following command on the CLI:
+It is recommended to use [`web-extend`](../../api/web-extend.md) for creating a project automatically. Just run the following command on the CLI:
 
 ```shell
 npx web-extend@latest init
@@ -29,7 +29,7 @@ WebExtend is compatible with any frontend framework. For other frameworks, you m
 
 ### Install dependencies
 
-Create a project and install dependencies. WebExtend uses [Rsbuild](https://rsbuild.dev/) under the hood, which and the [`@web-extend/rsbuild-plugin`](../api/rsbuild-plugin.md) plugin are also needed to be installed.
+Create a project and install dependencies. WebExtend uses [Rsbuild](https://rsbuild.dev/) under the hood, which and the [`@web-extend/rsbuild-plugin`](../../api/rsbuild-plugin.md) plugin are also needed to be installed.
 
 ```shell
 # create an empty project
@@ -79,11 +79,11 @@ npm install -D web-ext
 
 ### Add Rsbuild config
 
-Create the `rsbuild.config.js` file and add the following content.
+Create the `rsbuild.config.ts` file and add the following content.
 
 ::: code-group
 
-```js [rsbuild.config.js]
+```js [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
 import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
 
@@ -124,7 +124,7 @@ Add extra `manifest.json` fields if necessary, such as `name`, `permissions`, an
 
 ::: code-group
 
-```js [rsbuild.config.js]
+```js [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
 import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
 

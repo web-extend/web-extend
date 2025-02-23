@@ -10,7 +10,7 @@ outline: deep
 
 ::: code-group
 
-```js [rsbuild.config.js]
+```js [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
 import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
 

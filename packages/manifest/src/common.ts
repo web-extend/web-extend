@@ -100,7 +100,7 @@ export function setTargetEnv(target: string) {
   process.env.WEB_EXTEND_TARGET = target;
 }
 
-export function resolveSrcDir(rootPath: string, srcDir: string | undefined) {
+export function resolveSrcDir(rootPath: string, srcDir?: string) {
   if (srcDir) return srcDir;
   return existsSync(resolve(rootPath, './src')) ? './src' : './';
 }

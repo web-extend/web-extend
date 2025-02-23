@@ -29,11 +29,11 @@ See [entrypoints](./entrypoints.md).
 
 WebExtend supports instant HMR for popup/options/**content_scripts**..., automatic browser opening and extension running.
 
-### 🧭 Browser Compatibility {#browser-compatibility}
+### 🧭 Multi-Browser Support {#multi-browser-support}
 
 WebExtend automatically handles `manifest.json` configuration differences for easy multi-browser support.
 
-See [browser relevant](./browser.md).
+See [browser support](./browser.md).
 
 ### 🛠️ ESM & TypeScript Support {#esm-typescript-support}
 
@@ -62,7 +62,7 @@ See [Rsbuild](https://rsbuild.dev/).
 
 WebExtend provides a CLI tool that helps you create a project quickly and generate entry files automatically.
 
-See [web-extend](../api/web-extend.md).
+See [web-extend](../../api/web-extend.md).
 
 ## Pre-Requisite Knowledge {#pre-requisite-knowledge}
 

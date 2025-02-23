@@ -9,10 +9,10 @@ hero:
   actions:
     - theme: brand
       text: Introduction
-      link: /guide/introduction
+      link: /guide/start/introduction
     - theme: alt
       text: Quick Start
-      link: /guide/quick-start
+      link: /guide/start/quick-start
   image:
     src: /logo.svg
     alt: WebExtend
@@ -21,14 +21,14 @@ features:
   - icon: 📝
     title: Declarative Entrypoints
     details: Automatically parses entry files based on the file system, reducing manifest.json configuration burden
-    link: /guide/entrypoints
+    link: /guide/start/entrypoints
   - icon: ⚡️
     title: Seamless Development Experience
     details: Supports instant HMR, automatic browser opening and extension running
   - icon: 🧭
-    title: Browser Compatibility
+    title: Multi-Browser Support
     details: Automatically handles manifest.json configuration differences for easy multi-browser support
-    link: /guide/browser
+    link: /guide/start/browser
   - icon: 🛠️
     title: ESM & TypeScript Support
     details: ESM and TypeScript work out of the box, no extra configuration needed

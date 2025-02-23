@@ -5,7 +5,7 @@ import type { RsbuildMode } from '@rsbuild/core';
 import type { ExtensionTarget } from '@web-extend/manifest/types';
 import chalk from 'chalk';
 import type { FSWatcher } from 'chokidar';
-import { type CacheBuildInfo, writeBuildInfo } from './cache.js';
+import { cacheBuildInfo } from './result.js';
 import { type ExtensionRunner, importWebExt, normalizeRunnerConfig, run } from './runner.js';
 import { type WatchCallback, watchFiles as chokidarWatchFiles } from './watcher.js';
 import { zip } from './zip.js';
@@ -218,20 +218,19 @@ async function startBuild(options: StartOptions) {
   // run after manifest.json written in @web-extend/rsbuild-plugin
   rsbuild.onCloseBuild(async () => {
     const { rootPath, distPath } = rsbuild.context;
-    const buildInfo: CacheBuildInfo = {
-      rootPath,
-      distPath,
-      target: getBuildTarget(),
-    };
 
     if (options.zip) {
       await zip({
-        root: buildInfo.rootPath,
-        outDir: buildInfo.distPath,
+        root: rootPath,
+        outDir: distPath,
       });
     }
 
-    await writeBuildInfo(buildInfo.rootPath, buildInfo);
+    await cacheBuildInfo(rootPath, {
+      rootPath,
+      distPath,
+      target: getBuildTarget(),
+    });
   });
 
   const buildInstance = await rsbuild.build({ watch: options.watch });
@@ -250,20 +249,19 @@ const restartBuild: WatchCallback = async ({ rootPath, filePath }) => {
 
   rsbuild.onCloseBuild(async () => {
     const { rootPath, distPath } = rsbuild.context;
-    const buildInfo: CacheBuildInfo = {
-      rootPath,
-      distPath,
-      target: getBuildTarget(),
-    };
 
     if (commonOptions.zip) {
       await zip({
-        root: buildInfo.rootPath,
-        outDir: buildInfo.distPath,
+        root: rootPath,
+        outDir: distPath,
       });
     }
 
-    await writeBuildInfo(buildInfo.rootPath, buildInfo);
+    await cacheBuildInfo(rootPath, {
+      rootPath,
+      distPath,
+      target: getBuildTarget(),
+    });
   });
 
   const buildInstance = await rsbuild.build({ watch: true });
