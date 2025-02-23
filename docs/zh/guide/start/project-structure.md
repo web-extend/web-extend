@@ -17,7 +17,7 @@
 | `.env.production.local`  | 本地环境变量文件，在 process.env.NODE_ENV 为 'production' 时有效，需要添加到 .gitignore 中  |
 | `.gitignore`             | Git 的忽略文件                                                                              |
 | `package.json`           | 项目的依赖和脚本                                                                            |
-| `rsbuild.config.js`      | Rsbuild 配置文件                                                                            |
+| `rsbuild.config.ts`      | Rsbuild 配置文件                                                                            |
 | `web-ext.config.js`      | web-ext 配置文件                                                                            |
 | `tsconfig.json`          | TypeScript 配置文件                                                                         |
 
@@ -71,7 +71,7 @@ WebExtend 支持自定义项目中的源码目录、输出目录等信息。
 
 ::: code-group
 
-```js [rsbuild.config.js]
+```js [rsbuild.config.ts]
 import { defineConfig } from '@rsbuild/core';
 import { pluginWebExtend } from '@web-extend/rsbuild-plugin';
 

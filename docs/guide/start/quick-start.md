@@ -79,11 +79,11 @@ npm install -D web-ext
 
 ### Add Rsbuild config
 
-Create the `rsbuild.config.js` file and add the following content.
+Create the `rsbuild.config.ts` file and add the following content.
 
 ::: code-group
 
-```js [rsbuild.config.js]
+```js [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
 import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
 
@@ -124,7 +124,7 @@ Add extra `manifest.json` fields if necessary, such as `name`, `permissions`, an
 
 ::: code-group
 
-```js [rsbuild.config.js]
+```js [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
 import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
 

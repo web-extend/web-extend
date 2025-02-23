@@ -35,7 +35,7 @@ async function readResultFromCache(root: string) {
 
 export async function cacheBuildInfo(root: string, data: CacheBuildInfo) {
   const resultPath = resolve(root, cacheDir, resultFile);
-  if (!dirname(resultPath)) {
+  if (!existsSync(dirname(resultPath))) {
     initCacheDir(root);
   }
 

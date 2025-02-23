@@ -17,7 +17,7 @@ Top-level folder is used to organize the following files or folders.
 | `.env.production.local`  | Local usage of the `.env.production` file, should be added to `.gitignore`  |
 | `.gitignore`             | Git files and folders to ignore                                             |
 | `package.json`           | Project dependencies and scripts                                            |
-| `rsbuild.config.js`      | Configuration file for Rsbuild                                              |
+| `rsbuild.config.ts`      | Configuration file for Rsbuild                                              |
 | `web-ext.config.js`      | Configuration file for web-ext                                              |
 | `tsconfig.json`          | Configuration file for TypeScript                                           |
 
@@ -71,7 +71,7 @@ WebExtend also supports custom settings for the source folder, the dist folder, 
 
 ::: code-group
 
-```js [rsbuild.config.js]
+```js [rsbuild.config.ts]
 import { defineConfig } from '@rsbuild/core';
 import { pluginWebExtend } from '@web-extend/rsbuild-plugin';
 

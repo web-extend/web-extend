@@ -4,7 +4,7 @@ outline: deep
 
 # Entrypoints
 
-WebExtend uses the file system to parse entry files and generates the corresponding feilds for `manifest.json`.
+WebExtend uses the file system to parse entry files and generates the corresponding fields for `manifest.json`.
 
 ::: info
 
@@ -44,7 +44,7 @@ See [with-icons](https://github.com/web-extend/examples/tree/main/with-icons).
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest/background) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/background)
 
-The background entry will be reflected to the `background.service_worker` or `background.scripts` feild in `manifest.json`.
+The background entry will be reflected to the `background.service_worker` or `background.scripts` field in `manifest.json`.
 
 Generate the entry automatically.
 
@@ -69,7 +69,7 @@ See [with-background](https://github.com/web-extend/examples/tree/main/with-back
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/action) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/action)
 
-The popup entry will be reflected to the `action.default_popup` feild in `manifest.json`.
+The popup entry will be reflected to the `action.default_popup` field in `manifest.json`.
 
 Generate the entry automatically.
 
@@ -106,7 +106,7 @@ See [with-popup](https://github.com/web-extend/examples/tree/main/with-popup).
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/options-page) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/options_ui)
 
-The options entry will be reflected to the `options_ui.page` feild in `manifest.json`.
+The options entry will be reflected to the `options_ui.page` field in `manifest.json`.
 
 Generate the entry automatically.
 
@@ -118,6 +118,23 @@ npx web-extend g options
 Alternatively, create the `src/options.js` or `src/options/index.js` file manually.
 
 See [with-options](https://github.com/web-extend/examples/tree/main/with-options).
+
+## Sidepanel
+
+[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/sidePanel) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Sidebars)
+
+The sidepanel entry will be reflected to the `side_panel.default_path` or `sidebar_action.default_panel` field in `manifest.json`.
+
+Generate the entry automatically.
+
+```shell
+npx web-extend g sidepanel
+
+```
+
+Alternatively, create the `src/sidepanel.js` or `src/sidepanel/index.js` file manually.
+
+See [with-sidepanel](https://github.com/web-extend/examples/tree/main/with-sidepanel).
 
 ## Content Scripts
 
@@ -186,23 +203,6 @@ export const config: ContentScriptConfig = {
 
 See [with-content](https://github.com/web-extend/examples/tree/main/with-content), [with-multi-contents](https://github.com/web-extend/examples/tree/main/with-multi-contents).
 
-## Sidepanel
-
-[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/sidePanel) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Sidebars)
-
-The sidepanel entry will be reflected to the `side_panel.default_path` or `sidebar_action.default_panel` feild in `manifest.json`.
-
-Generate the entry automatically.
-
-```shell
-npx web-extend g sidepanel
-
-```
-
-Alternatively, create the `src/sidepanel.js` or `src/sidepanel/index.js` file manually.
-
-See [with-sidepanel](https://github.com/web-extend/examples/tree/main/with-sidepanel).
-
 ## Devtools
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/how-to/devtools/extend-devtools) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/devtools_page)
@@ -250,21 +250,6 @@ chrome.devtools.panels.create("My panel", "", "panels/panel1.html");
 
 See [with-devtools](https://github.com/web-extend/examples/tree/main/with-devtools).
 
-## Newtab
-
-[Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/chrome_url_overrides)
-
-The newtab entry will be reflected to the `chrome_url_overrides.newtab` field in `manifest.json`.
-
-Generate the entry automatically.
-
-```shell
-npx web-extend g newtab
-
-```
-
-Alternatively, create the `src/newtab.js` or `src/newtab/index.js` file manually.
-
 ## Bookmarks
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages), Firefox doesn't support bookmarks.
@@ -279,6 +264,21 @@ npx web-extend g bookmarks
 ```
 
 Alternatively, create the `src/bookmarks.js` or `src/bookmarks/index.js` file manually.
+
+## Newtab
+
+[Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/chrome_url_overrides)
+
+The newtab entry will be reflected to the `chrome_url_overrides.newtab` field in `manifest.json`.
+
+Generate the entry automatically.
+
+```shell
+npx web-extend g newtab
+
+```
+
+Alternatively, create the `src/newtab.js` or `src/newtab/index.js` file manually.
 
 ## History
 

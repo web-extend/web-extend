@@ -79,11 +79,11 @@ npm install -D web-ext
 
 ### 添加 Rsbuild 配置 {#add-rsbuild-configuration}
 
-创建 `rsbuild.config.js`，添加如下内容。
+创建 `rsbuild.config.ts`，添加如下内容。
 
 ::: code-group
 
-```js [rsbuild.config.js]
+```js [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
 import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
 
@@ -124,7 +124,7 @@ npx web-extend generate popup
 
 ::: code-group
 
-```js [rsbuild.config.js]
+```js [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
 import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
 
