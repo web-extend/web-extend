@@ -1,8 +1,6 @@
 # @web-extend/rsbuild-plugin
 
-English
-
-A Rsbuild plugin for developing and building browser extensions, making browser extension development simple and efficient.
+An Rsbuild plugin for developing and building browser extensions.
 
 <p>
   <a href="https://npmjs.com/package/@web-extend/rsbuild-plugin">

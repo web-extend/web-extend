@@ -4,7 +4,7 @@ outline: deep
 
 # @web-extend/rsbuild-plugin
 
-[`@web-extend/rsbuild-plugin`](https://www.npmjs.com/package/@web-extend/rsbuild-plugin) is a Rsbuild plugin used to parse entry files, and build the extension, etc.
+[`@web-extend/rsbuild-plugin`](https://www.npmjs.com/package/@web-extend/rsbuild-plugin) is an Rsbuild plugin used to parse entry files, and build the extension, etc.
 
 ## Usage
 
