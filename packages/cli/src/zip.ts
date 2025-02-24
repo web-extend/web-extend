@@ -1,6 +1,6 @@
 import { createWriteStream, existsSync } from 'node:fs';
 import { basename, dirname, relative, resolve } from 'node:path';
-import { readManifestFile } from '@web-extend/manifest';
+import { readManifestFile } from '@web-extend/manifest/common';
 import type { ExtensionTarget } from '@web-extend/manifest/types';
 import archiver from 'archiver';
 import chalk from 'chalk';

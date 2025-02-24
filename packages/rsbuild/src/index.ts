@@ -1,6 +1,7 @@
 import { relative, resolve } from 'node:path';
 import type { RsbuildConfig, RsbuildPlugin } from '@rsbuild/core';
-import { ManifestManager, getEntryFileVariants } from '@web-extend/manifest';
+import { ManifestManager } from '@web-extend/manifest';
+import { getEntryFileVariants } from '@web-extend/manifest/common';
 import type { ExtensionTarget, ManifestEntryOutput, WebExtensionManifest } from '@web-extend/manifest/types';
 import {
   clearOutdatedHotUpdateFiles,
