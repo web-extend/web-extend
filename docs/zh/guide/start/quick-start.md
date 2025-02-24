@@ -31,16 +31,33 @@ WebExtend 兼容任何前端框架，如需在其他框架中使用，请参考�
 
 创建项目并安装依赖项。WebExtend 使用 [Rsbuild](https://rsbuild.dev/) 作为底层构建工具，因此还需要安装它和一个 [`@web-extend/rsbuild-plugin`](../../api/rsbuild-plugin.md) 插件。
 
-```shell
-# create an empty project
+::: code-group
+
+```shell [npm]
 mkdir my-extension-app
 cd my-extension-app
+
 npm init -y
-
-# install dev dependencies
-npm i -D web-extend @rsbuild/core @web-extend/rsbuild-plugin
-
+npm add -D web-extend @rsbuild/core @web-extend/rsbuild-plugin
 ```
+
+```shell [pnpm]
+mkdir my-extension-app
+cd my-extension-app
+
+npm init -y
+pnpm add -D web-extend @rsbuild/core @web-extend/rsbuild-plugin
+```
+
+```shell [yarn]
+mkdir my-extension-app
+cd my-extension-app
+
+npm init -y
+yarn add -D web-extend @rsbuild/core @web-extend/rsbuild-plugin
+```
+
+:::
 
 推荐安装 TypeScript、React/Vue、Eslint/Prettier/Biome 等前端工具，提升开发体验（可选）。
 
@@ -73,9 +90,21 @@ npm i -D web-extend @rsbuild/core @web-extend/rsbuild-plugin
 
 其中，在浏览器中运行扩展的功能基于 [`web-ext`](https://github.com/mozilla/web-ext) 工具实现。如果要使用这项功能，请在项目中额外安装该工具。
 
-```shell
-npm install -D web-ext
+::: code-group
+
+```shell [npm]
+npm add -D web-ext
 ```
+
+```shell [pnpm]
+pnpm add -D web-ext
+```
+
+```shell [yarn]
+yarn add -D web-ext
+```
+
+:::
 
 ### 添加 Rsbuild 配置 {#add-rsbuild-configuration}
 

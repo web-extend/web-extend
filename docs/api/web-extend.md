@@ -12,7 +12,7 @@ Usage:
 npx web-extend [options] [command]
 
 # or
-npm intsall -D web-extend
+npm add -D web-extend
 npx we [options] [command]
 ```
 

@@ -49,7 +49,7 @@ Webextend 会在代码构建时注入一个环境变量 `import.meta.env.WEB_EXT
 
 ::: code-group
 
-```js [background.js]
+```js [src/background.js]
 const target = import.meta.env.WEB_EXTEND_TARGET || "";
 if (target.includes("chrome")) {
   chrome.sidePanel
