@@ -1,5 +1,5 @@
 import './index.css';
-import type { ContentScriptConfig } from '@web-extend/rsbuild-plugin';
+import type { ContentScriptConfig } from 'web-extend'
 
 function render(root: HTMLElement) {
   root.innerHTML = `<div class="web-extend-content-container">

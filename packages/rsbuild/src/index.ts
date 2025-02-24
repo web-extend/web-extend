@@ -21,8 +21,6 @@ export type PluginWebExtendOptions<T = unknown> = {
   outDir?: string;
 };
 
-export type { ContentScriptConfig } from '@web-extend/manifest';
-
 export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPlugin => ({
   name: 'plugin-web-extend',
   setup: (api) => {

@@ -1,4 +1,4 @@
-import type { ContentScriptConfig } from '@web-extend/rsbuild-plugin';
+import type { ContentScriptConfig } from 'web-extend';
 import { createApp } from 'vue';
 import App from './App.vue';
 

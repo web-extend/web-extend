@@ -1,4 +1,4 @@
-import type { ContentScriptConfig } from '@web-extend/rsbuild-plugin';
+import type { ContentScriptConfig } from 'web-extend';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
