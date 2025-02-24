@@ -1,8 +1,8 @@
-import { existsSync } from 'node:fs';
-import { readFile } from 'node:fs/promises';
+// import { existsSync } from 'node:fs';
+// import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { matchDeclarativeSingleEntryFile } from './common.js';
-import { parseExportObject } from './parser/export.js';
+// import { parseExportObject } from './parser/export.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'popup';
@@ -43,23 +43,23 @@ const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest }) => {
   return entry;
 };
 
-const writeEntry: ManifestEntryProcessor['writeEntry'] = async ({ manifest, rootPath, name, input }) => {
+const writeEntry: ManifestEntryProcessor['writeEntry'] = async ({ manifest, name }) => {
   const { manifest_version, action, browser_action } = manifest;
   const pointer = manifest_version === 2 ? browser_action : action;
   if (!pointer) return;
 
   pointer.default_popup = `${name}.html`;
 
-  const { default_title } = pointer;
-  const entryMain = input?.[0];
-  const entryManinPath = resolve(rootPath, entryMain || '');
-  if (!default_title && entryMain && existsSync(entryManinPath)) {
-    const code = await readFile(entryManinPath, 'utf-8');
-    const title = parseExportObject<string>(code, 'title');
-    if (title) {
-      pointer.default_title = title;
-    }
-  }
+  // const { default_title } = pointer;
+  // const entryMain = input?.[0];
+  // const entryManinPath = resolve(rootPath, entryMain || '');
+  // if (!default_title && entryMain && existsSync(entryManinPath)) {
+  //   const code = await readFile(entryManinPath, 'utf-8');
+  //   const title = parseExportObject<string>(code, 'title');
+  //   if (title) {
+  //     pointer.default_title = title;
+  //   }
+  // }
 };
 
 const popupProcessor: ManifestEntryProcessor = {
