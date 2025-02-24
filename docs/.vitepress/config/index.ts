@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress';
+import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-icons';
 import en from './en';
 import zh from './zh';
-import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-icons';
 
 const shared = defineConfig({
   title: 'WebExtend',
