@@ -1,12 +1,12 @@
-import type { NormalizeManifestProps } from './types.js';
-import { isDevMode } from './common.js';
 import type { Manifest } from 'webextension-polyfill';
+import { isDevMode } from './common.js';
+import type { NormalizeManifestProps, WebExtensionManifest } from './types.js';
 
 function polyfillManifestBetweenBrowsers({ manifest, context }: NormalizeManifestProps) {
   if (!manifest) return;
   const { target } = context;
+  const { background, side_panel, permissions } = manifest;
 
-  const { background, side_panel } = manifest;
   if (target.includes('firefox')) {
     manifest.version_name = undefined;
     manifest.sandbox = undefined;
@@ -26,6 +26,15 @@ function polyfillManifestBetweenBrowsers({ manifest, context }: NormalizeManifes
       };
       manifest.side_panel = undefined;
     }
+    if (permissions?.includes('sidePanel')) {
+      manifest.permissions = permissions.filter((permission) => permission !== 'sidePanel');
+    }
+    return;
+  }
+
+  if (side_panel?.default_path && !permissions?.includes('sidePanel')) {
+    manifest.permissions ??= [];
+    manifest.permissions.push('sidePanel');
   }
 }
 

@@ -5,7 +5,6 @@ import { describe, expect, it } from 'vitest';
 import type { Manifest } from 'webextension-polyfill';
 import { initRsbuild, readManifestFile, validateDistFile } from '../helper.js';
 import { config as contentConfig } from './src/content.js';
-import { title as popupTitle } from './src/popup/index.js';
 
 const __dirname = import.meta.dirname;
 
@@ -31,6 +30,7 @@ describe('test build for chrome', () => {
       sandbox,
       icons,
       side_panel,
+      permissions,
     } = manifest;
 
     expect(manifest_version).toBe(3);
@@ -104,6 +104,7 @@ describe('test build for chrome', () => {
     // sidepanel
     expect(side_panel?.default_path).toBe('sidepanel.html');
     expect(validateDistFile(distPath, side_panel?.default_path || '', '.html')).toBeTruthy();
+    expect(permissions).toContain('sidePanel');
 
     // public
     const publicPath = resolve(__dirname, 'public');

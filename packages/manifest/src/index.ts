@@ -9,6 +9,7 @@ import iconsProcessor from './icons.js';
 import optionsProcessor from './options.js';
 import overrideProcessors from './overrides.js';
 import panelProcessor from './panel.js';
+import { polyfillManifest } from './polyfill.js';
 import popupProcessor from './popup.js';
 import sandboxProcessor from './sandbox.js';
 import sidepanelProcessor from './sidepanel.js';
@@ -21,7 +22,6 @@ import type {
   NormalizeManifestProps,
   WebExtensionManifest,
 } from './types.js';
-import { polyfillManifest } from './polyfill.js';
 
 const entryProcessors: ManifestEntryProcessor[] = [
   backgroundProcessor,
