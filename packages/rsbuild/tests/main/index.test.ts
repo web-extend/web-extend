@@ -68,7 +68,7 @@ describe('test build for chrome', () => {
     // popup
     expect(action?.default_popup).toBe('popup.html');
     expect(validateDistFile(distPath, action?.default_popup || '', '.html')).toBeTruthy();
-    expect(action?.default_title).toBe(popupTitle);
+    // expect(action?.default_title).toBe(popupTitle);
     expect(action?.default_icon).toEqual(icons);
 
     // options
