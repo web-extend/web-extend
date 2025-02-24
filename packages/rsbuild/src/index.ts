@@ -1,4 +1,5 @@
-import { relative, resolve, dirname } from 'node:path';
+import { dirname, relative, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import type { RsbuildConfig, RsbuildPlugin } from '@rsbuild/core';
 import { ManifestManager } from '@web-extend/manifest';
 import { getEntryFileVariants } from '@web-extend/manifest/common';
@@ -10,7 +11,6 @@ import {
   isDevMode,
   normalizeRsbuildEnvironments,
 } from './helper.js';
-import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
