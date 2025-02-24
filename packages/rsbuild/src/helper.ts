@@ -2,7 +2,7 @@ import { existsSync } from 'node:fs';
 import { readdir, unlink } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import type { EnvironmentConfig, RsbuildConfig, RsbuildEntry, Rspack } from '@rsbuild/core';
-import type { ManifestEntries, ManifestEntryInput } from '@web-extend/manifest';
+import type { ManifestEntries, ManifestEntryInput } from '@web-extend/manifest/types';
 import type { EnviromentKey } from './types.js';
 
 export function isDevMode(mode: string | undefined) {
