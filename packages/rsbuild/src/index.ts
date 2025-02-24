@@ -1,4 +1,4 @@
-import { relative, resolve } from 'node:path';
+import { relative, resolve, dirname } from 'node:path';
 import type { RsbuildConfig, RsbuildPlugin } from '@rsbuild/core';
 import { ManifestManager } from '@web-extend/manifest';
 import { getEntryFileVariants } from '@web-extend/manifest/common';
@@ -10,6 +10,9 @@ import {
   isDevMode,
   normalizeRsbuildEnvironments,
 } from './helper.js';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export type PluginWebExtendOptions<T = unknown> = {
   manifest?: T | ((props: { target: ExtensionTarget; mode: string }) => T);
