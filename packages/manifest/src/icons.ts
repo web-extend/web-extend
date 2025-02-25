@@ -1,5 +1,4 @@
 import { basename, resolve } from 'node:path';
-import type { Manifest } from 'webextension-polyfill';
 import type { ManifestEntryProcessor, WebExtensionManifest } from './types.js';
 
 const key = 'icons';
@@ -40,17 +39,12 @@ const normalizeIconsEntry: ManifestEntryProcessor['normalize'] = async ({ manife
     };
   }
 
-  const { manifest_version } = manifest;
-  let pointer: Manifest.ActionManifest | undefined = undefined;
-  if (manifest_version === 2) {
-    manifest.browser_action ??= {};
-    pointer = manifest.browser_action;
-  } else {
-    manifest.action ??= {};
-    pointer = manifest.action;
-  }
-
-  if (!pointer.default_icon) {
+  const { action, browser_action } = manifest;
+  let pointer = action || browser_action;
+  if (!pointer?.default_icon) {
+    if (!pointer) {
+      pointer = manifest.action = {};
+    }
     pointer.default_icon = {
       ...declarativeIcons,
     };
@@ -58,9 +52,10 @@ const normalizeIconsEntry: ManifestEntryProcessor['normalize'] = async ({ manife
 };
 
 const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest }) => {
-  const { icons, action, browser_action, manifest_version } = manifest || {};
-  const pointer = manifest_version === 2 ? browser_action : action;
+  const { icons, action, browser_action } = manifest || {};
+  const pointer = action || browser_action;
   const files = new Set<string>();
+
   function helper(icons?: WebExtensionManifest['icons']) {
     if (!icons) return;
     for (const size in icons) {
@@ -106,8 +101,8 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, output }) 
     }
   }
 
-  const { icons, action, browser_action, manifest_version } = manifest;
-  const pointer = manifest_version === 2 ? browser_action : action;
+  const { icons, action, browser_action } = manifest;
+  const pointer = action || browser_action;
 
   if (icons) {
     helper(icons);

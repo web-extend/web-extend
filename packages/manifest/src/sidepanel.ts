@@ -1,6 +1,6 @@
 import { resolve } from 'node:path';
 import { matchDeclarativeSingleEntryFile } from './common.js';
-import type { ManifestEntryInput, ManifestEntryProcessor, WebExtensionManifest } from './types.js';
+import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'sidepanel';
 
