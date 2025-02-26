@@ -1,9 +1,42 @@
-import type { Rspack, RsbuildEntry } from '@rsbuild/core';
-import { isDevMode } from '@web-extend/manifest/common';
+import type { RsbuildEntry, Rspack, EnvironmentConfig } from '@rsbuild/core';
+import { isDevMode, transformManifestEntry } from './helper.js';
+import type { NormalizeRsbuildEnvironmentProps } from './types.js';
 
-const pluginName = 'RspackContentRuntimePlugin';
+function getContentEnvironmentConfig({
+  manifestEntries,
+  manifestContext,
+  context,
+}: NormalizeRsbuildEnvironmentProps): EnvironmentConfig {
+  const content = manifestEntries.content;
+  const { mode } = manifestContext;
+  const entry = transformManifestEntry(content);
+  return {
+    source: {
+      entry,
+    },
+    output: {
+      target: 'web',
+      injectStyles: isDevMode(mode),
+    },
+    tools: {
+      rspack: {
+        output: {
+          hotUpdateGlobal: 'webpackHotUpdateWebExtend_content',
+        },
+        plugins: [
+          new RspackContentRuntimePlugin({
+            getPort: () => context.devServer?.port,
+            target: manifestContext.target,
+            mode: manifestContext.mode,
+            entry: entry || {},
+          }),
+        ],
+      },
+    },
+  };
+}
 
-type PluginOptions = {
+type RspackContentRuntimePluginOptions = {
   getPort: () => number | undefined;
   target: string;
   entry: RsbuildEntry;
@@ -11,16 +44,17 @@ type PluginOptions = {
 };
 
 class RspackContentRuntimePlugin {
-  #options: PluginOptions | undefined;
+  name = 'RspackContentRuntimePlugin';
+  #options: RspackContentRuntimePluginOptions | undefined;
 
-  constructor(options: PluginOptions) {
+  constructor(options: RspackContentRuntimePluginOptions) {
     this.#options = options;
   }
 
   apply(compiler: Rspack.Compiler) {
-    compiler.hooks.compilation.tap(pluginName, (compilation) => {
+    compiler.hooks.compilation.tap(this.name, (compilation) => {
       const { RuntimeGlobals, Compilation } = compiler.webpack;
-      compilation.hooks.runtimeModule.tap(pluginName, (module, chunk) => {
+      compilation.hooks.runtimeModule.tap(this.name, (module, chunk) => {
         const { target = '' } = this.#options || {};
         if (module.name === 'load_script' && module.source) {
           const originSource = module.source.source.toString('utf-8');
@@ -41,7 +75,7 @@ class RspackContentRuntimePlugin {
 
       compilation.hooks.processAssets.tap(
         {
-          name: pluginName,
+          name: this.name,
           stage: Compilation.PROCESS_ASSETS_STAGE_ADDITIONS,
         },
         (assets) => {
@@ -89,4 +123,4 @@ ${loadScriptName} = async function (url, done, ...args) {
 };`;
 }
 
-export { RspackContentRuntimePlugin };
+export { getContentEnvironmentConfig };

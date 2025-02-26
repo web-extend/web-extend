@@ -1,16 +1,14 @@
 import { existsSync } from 'node:fs';
 import { readdir, unlink } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import type { EnvironmentConfig, RsbuildConfig, RsbuildContext, RsbuildEntry, Rspack } from '@rsbuild/core';
-import type { ManifestContext, ManifestEntries, ManifestEntryInput } from '@web-extend/manifest/types';
-import { RspackContentRuntimePlugin } from './content.js';
-import type { EnviromentKey } from './types.js';
+import type { RsbuildConfig, RsbuildEntry, Rspack } from '@rsbuild/core';
+import type { ManifestEntryInput } from '@web-extend/manifest/types';
 
 export function isDevMode(mode: string | undefined) {
   return mode === 'development';
 }
 
-function transformManifestEntry(entry: ManifestEntryInput | undefined) {
+export function transformManifestEntry(entry: ManifestEntryInput | undefined) {
   if (!entry) return;
   const res: RsbuildEntry = {};
   for (const key in entry) {
@@ -53,91 +51,6 @@ export function getAllRsbuildEntryFiles(environments: RsbuildConfig['environment
     }
   }
   return res;
-}
-
-export async function normalizeRsbuildEnvironments({
-  manifestEntries,
-  config,
-  selfRootPath,
-  context,
-  manifestContext,
-}: {
-  config: RsbuildConfig;
-  selfRootPath: string;
-  manifestEntries: ManifestEntries;
-  context: RsbuildContext;
-  manifestContext: ManifestContext;
-}) {
-  const { background, content, ...others } = manifestEntries;
-  const mode = config.mode || process.env.NODE_ENV;
-
-  const environments: {
-    [key in EnviromentKey]?: EnvironmentConfig;
-  } = {};
-  let defaultEnvironment: EnvironmentConfig | null = null;
-
-  if (background) {
-    defaultEnvironment = environments.background = {
-      source: {
-        entry: transformManifestEntry(background),
-      },
-      output: {
-        target: 'web-worker',
-      },
-    };
-  }
-
-  if (content) {
-    const entry = transformManifestEntry(content);
-    defaultEnvironment = environments.content = {
-      source: {
-        entry,
-      },
-      output: {
-        target: 'web',
-        injectStyles: isDevMode(mode),
-      },
-      tools: {
-        rspack: {
-          output: {
-            hotUpdateGlobal: 'webpackHotUpdateWebExtend_content',
-          },
-          plugins: [
-            new RspackContentRuntimePlugin({
-              getPort: () => context.devServer?.port,
-              target: manifestContext.target,
-              mode: manifestContext.mode,
-              entry: entry || {},
-            }),
-          ],
-        },
-      },
-    };
-  }
-
-  const webEntry = Object.values(others)
-    .filter(Boolean)
-    .reduce((res, cur) => Object.assign(res, cur), {});
-  if (Object.values(webEntry).length || !defaultEnvironment) {
-    defaultEnvironment = environments.web = {
-      source: {
-        entry: Object.values(webEntry).length
-          ? transformManifestEntry(webEntry)
-          : {
-              // void the empty entry error
-              empty: {
-                import: resolve(selfRootPath, './static/empty-entry.js'),
-                html: false,
-              },
-            },
-      },
-      output: {
-        target: 'web',
-      },
-    };
-  }
-
-  return environments;
 }
 
 function getHotUpdateAssets(statsList: Rspack.Stats[]) {

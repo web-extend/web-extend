@@ -1,6 +1,6 @@
 import { dirname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import type { RsbuildConfig, RsbuildPlugin } from '@rsbuild/core';
+import type { RsbuildConfig, RsbuildPlugin, EnvironmentConfig } from '@rsbuild/core';
 import { ManifestManager } from '@web-extend/manifest';
 import { getEntryFileVariants } from '@web-extend/manifest/common';
 import type { ExtensionTarget, ManifestEntryOutput, WebExtensionManifest } from '@web-extend/manifest/types';
@@ -8,10 +8,61 @@ import {
   clearOutdatedHotUpdateFiles,
   getAllRsbuildEntryFiles,
   getRsbuildEntryFiles,
-  normalizeRsbuildEnvironments,
+  transformManifestEntry,
 } from './helper.js';
+import type { NormalizeRsbuildEnvironmentProps, EnviromentKey } from './types.js';
+import { getContentEnvironmentConfig } from './content.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+
+async function normalizeRsbuildEnvironments(options: NormalizeRsbuildEnvironmentProps) {
+  const { manifestEntries, selfRootPath } = options;
+  const { background, content, ...others } = manifestEntries;
+
+  const environments: {
+    [key in EnviromentKey]?: EnvironmentConfig;
+  } = {};
+  let defaultEnvironment: EnvironmentConfig | null = null;
+
+  if (background) {
+    defaultEnvironment = environments.background = {
+      source: {
+        entry: transformManifestEntry(background),
+      },
+      output: {
+        target: 'web-worker',
+      },
+    };
+  }
+
+  if (content) {
+    defaultEnvironment = environments.content = getContentEnvironmentConfig(options);
+  }
+
+  const webEntry = Object.values(others)
+    .filter(Boolean)
+    .reduce((res, cur) => Object.assign(res, cur), {});
+  if (Object.values(webEntry).length || !defaultEnvironment) {
+    defaultEnvironment = environments.web = {
+      source: {
+        entry: Object.values(webEntry).length
+          ? transformManifestEntry(webEntry)
+          : {
+              // void the empty entry error
+              empty: {
+                import: resolve(selfRootPath, './static/empty-entry.js'),
+                html: false,
+              },
+            },
+      },
+      output: {
+        target: 'web',
+      },
+    };
+  }
+
+  return environments;
+}
 
 export type PluginWebExtendOptions<T = unknown> = {
   manifest?: T | ((props: { target: ExtensionTarget; mode: string }) => T);
