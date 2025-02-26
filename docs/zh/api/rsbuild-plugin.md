@@ -27,7 +27,7 @@ export default defineConfig({
 
 `manifest` 配置，默认为 `{}`。WebExtend 会合并 `manifest` 选项和入口文件信息（前者有更高的优先级），在构建时自动生成 `manifest.json`。
 
-[manifest 映射](../guide/project-structure.md#manifest-mapping)
+[manifest 映射](../guide/start/project-structure.md#manifest-mapping)
 
 ### target
 

@@ -4,7 +4,7 @@ outline: deep
 
 # vitesse-webext
 
-The article will introduce how to migrate a [vitesse-webext](https://github.com/antfu-collective/vitesse-webext) project to WebExtend. To see the full list of migration changes, please refer to [examples/vitesse-webext](https://github.com/web-extend/examples/pull/4/files).
+The article will introduce how to migrate a [vitesse-webext](https://github.com/antfu-collective/vitesse-webext) project to WebExtend. To see the full list of migration changes, please refer to [examples/from-vitesse-webext](https://github.com/web-extend/examples/pull/4/files).
 
 ## Installing dependencies
 

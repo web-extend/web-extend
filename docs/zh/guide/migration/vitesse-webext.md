@@ -4,7 +4,7 @@ outline: deep
 
 # vitesse-webext
 
-本章介绍如何从一个 [vitesse-webext](https://github.com/antfu-collective/vitesse-webext) 项目迁移到 WebExtend。完整的代码迁移过程可以参考 [examples/vitesse-webext](https://github.com/web-extend/examples/pull/4/files)。
+本章介绍如何从一个 [vitesse-webext](https://github.com/antfu-collective/vitesse-webext) 项目迁移到 WebExtend。完整的代码迁移过程可以参考 [examples/from-vitesse-webext](https://github.com/web-extend/examples/pull/4/files)。
 
 ## 安装依赖
 
