@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitepress';
+import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-icons';
 import en from './en';
 import zh from './zh';
 
@@ -24,9 +25,16 @@ const shared = defineConfig({
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   ...shared,
-
   locales: {
     root: { label: 'English', ...en },
     zh: { label: '简体中文', ...zh },
+  },
+  markdown: {
+    config(md) {
+      md.use(groupIconMdPlugin);
+    },
+  },
+  vite: {
+    plugins: [groupIconVitePlugin()],
   },
 });

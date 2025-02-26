@@ -11,25 +11,6 @@ if (typeof browser !== 'undefined') {
       sendResponse({ type: 'ok' });
       return;
     }
-
-    if (message.type === 'web-extend:execute-script') {
-      const tabId = sender.tab?.id;
-      const file = message.file;
-      if (tabId && file) {
-        browser.scripting
-          .executeScript({
-            target: { tabId },
-            files: [file],
-          })
-          .then(() => {
-            sendResponse({ code: 0 });
-          })
-          .catch((error) => {
-            sendResponse({ code: -1, error });
-          });
-      }
-      return true;
-    }
   });
 
   browser.commands.onCommand.addListener((command) => {

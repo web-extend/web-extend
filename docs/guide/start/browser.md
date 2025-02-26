@@ -49,7 +49,7 @@ Webextend injects the `import.meta.env.WEB_EXTEND_TARGET` environment variable i
 
 ::: code-group
 
-```js [background.js]
+```js [src/background.js]
 const target = import.meta.env.WEB_EXTEND_TARGET || "";
 if (target.includes("chrome")) {
   chrome.sidePanel

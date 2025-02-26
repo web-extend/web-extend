@@ -1,4 +1,4 @@
-import type { ContentScriptConfig } from '@web-extend/rsbuild-plugin';
+import type { ContentScriptConfig } from 'web-extend';
 import { mount } from 'svelte';
 import App from './App.svelte';
 

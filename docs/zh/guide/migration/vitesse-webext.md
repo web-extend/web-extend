@@ -8,25 +8,50 @@ outline: deep
 
 ## 安装依赖
 
-安装 WebExtend 和 Rsbuild 的依赖。
+安装 WebExtend 和 Rsbuild 的依赖，以及 Rsbuild 中处理 Vue 和 UnoCSS 的插件。
 
-```shell
+::: code-group
+
+```shell [npm]
 npm add -D @rsbuild/core @web-extend/rsbuild-plugin web-extend
-```
-
-安装 Rsbuild 中处理 Vue 和 UnoCSS 的插件。
-
-```shell
 npm add -D @rsbuild/plugin-vue @unocss/postcss
 ```
 
+```shell [pnpm]
+pnpm add -D @rsbuild/core @web-extend/rsbuild-plugin web-extend
+pnpm add -D @rsbuild/plugin-vue @unocss/postcss
+```
+
+```shell [yarn]
+yarn add -D @rsbuild/core @web-extend/rsbuild-plugin web-extend
+yarn add -D @rsbuild/plugin-vue @unocss/postcss
+```
+
+:::
+
 更新项目中 `unocss`、 `unplugin-auto-import`、`unplugin-icons` 等依赖的版本，确保其可以在 Rsbuild 中集成。
 
-```shell
+::: code-group
+
+```shell [npm]
 npm add -D unocss@latest @unocss/reset@latest
 npm add -D unplugin-auto-import@latest
 npm add -D unplugin-icons@latest
 ```
+
+```shell [pnpm]
+pnpm add -D unocss@latest @unocss/reset@latest
+pnpm add -D unplugin-auto-import@latest
+pnpm add -D unplugin-icons@latest
+```
+
+```shell [yarn]
+yarn add -D unocss@latest @unocss/reset@latest
+yarn add -D unplugin-auto-import@latest
+yarn add -D unplugin-icons@latest
+```
+
+:::
 
 ## 更新 npm scripts
 
@@ -34,7 +59,7 @@ npm add -D unplugin-icons@latest
 
 ::: details package.json
 
-```json [package.json]
+```json
 {
   "type": "module", // [!code ++]
   "scripts": {
@@ -213,10 +238,10 @@ WebExtend 会根据文件系统自动解析入口文件，因此无需在 `manif
 
 ## 验证结果
 
-完成以上步骤后，您已经完成了从 vitesse-webext 向 WebExtend 的基本迁移，可以使用 `npm run dev` 或 `npm run build` 命令来尝试构建。
+完成以上步骤后，你已经完成了从 vitesse-webext 向 WebExtend 的基本迁移，恭喜 🎉 ！现在可以使用 `npm run dev` 或 `npm run build` 命令来尝试构建。
 
 ::: info 注意
 WebExtend 中的产物构建目录为 `dist/[target]-[mode]`，而不是 `extension` 目录。
 :::
 
-上述迁移过程如有遗漏或错误之处，欢迎指出。您可以直接在 [Github 页面](https://github.com/web-extend/web-extend)提交 issue 或提交 PR 🤝。
+上述迁移过程如有纰漏之处，欢迎指出。您可以直接在 [Github 页面](https://github.com/web-extend/web-extend)提交 issue 或提交 PR 🤝。

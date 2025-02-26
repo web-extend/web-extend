@@ -9,6 +9,7 @@ import iconsProcessor from './icons.js';
 import optionsProcessor from './options.js';
 import overrideProcessors from './overrides.js';
 import panelProcessor from './panel.js';
+import { polyfillManifest } from './polyfill.js';
 import popupProcessor from './popup.js';
 import sandboxProcessor from './sandbox.js';
 import sidepanelProcessor from './sidepanel.js';
@@ -21,16 +22,6 @@ import type {
   NormalizeManifestProps,
   WebExtensionManifest,
 } from './types.js';
-
-export {
-  setTargetEnv,
-  getEntryFileVariants,
-  defaultExtensionTarget,
-  readManifestFile,
-  resolveSrcDir,
-} from './common.js';
-
-export * from './types.js';
 
 const entryProcessors: ManifestEntryProcessor[] = [
   backgroundProcessor,
@@ -58,8 +49,6 @@ async function normalizeManifest({ manifest = {} as WebExtensionManifest, contex
   if (invalidFields.length) {
     throw new Error(`Required fields missing or invalid in manifest: ${invalidFields.join(', ')}`);
   }
-
-  normalizeManifestPermissions({ manifest: finalManifest, context });
 
   if (isDevMode(mode)) {
     finalManifest.commands = {
@@ -89,6 +78,7 @@ async function normalizeManifest({ manifest = {} as WebExtensionManifest, contex
     console.error(err);
   }
 
+  polyfillManifest({ manifest: finalManifest, context });
   return finalManifest;
 }
 
@@ -112,30 +102,6 @@ async function initManifest(rootPath: string, target?: ExtensionTarget) {
   }
 
   return manifest;
-}
-
-function normalizeManifestPermissions({ manifest, context }: NormalizeManifestProps) {
-  if (!manifest) return;
-  const { mode } = context;
-
-  if (isDevMode(mode)) {
-    manifest.permissions ||= [];
-    if (!manifest.permissions.includes('scripting')) {
-      manifest.permissions.push('scripting');
-    }
-
-    manifest.host_permissions ||= [];
-    if (!manifest.host_permissions.includes('*://*/*')) {
-      manifest.host_permissions.push('*://*/*');
-    }
-  }
-
-  // "host_permissions" is unsupported in MV2
-  const { manifest_version, permissions = [], host_permissions } = manifest;
-  if (manifest_version === 2 && host_permissions) {
-    manifest.permissions = [...permissions, ...host_permissions];
-    manifest.host_permissions = undefined;
-  }
 }
 
 export class ManifestManager {
@@ -203,18 +169,18 @@ export class ManifestManager {
     if (!this.entries) return;
     for (const entryName in result) {
       for (const processor of entryProcessors) {
-        const entry = this.entries[processor.key];
-        if (!entry || !Object.hasOwn(entry, entryName) || !processor.writeEntry) continue;
-
-        await processor.writeEntry({
-          normalizedManifest: this.normalizedManifest,
-          manifest: this.manifest,
-          rootPath: this.context.rootPath,
-          name: entryName,
-          input: result[entryName].input,
-          output: result[entryName].output,
-          context: this.context,
-        });
+        const entry = this.entries[processor.key] || {};
+        if (entryName in entry && processor.writeEntry) {
+          await processor.writeEntry({
+            normalizedManifest: this.normalizedManifest,
+            manifest: this.manifest,
+            rootPath: this.context.rootPath,
+            name: entryName,
+            input: result[entryName].input,
+            output: result[entryName].output,
+            context: this.context,
+          });
+        }
       }
     }
   }

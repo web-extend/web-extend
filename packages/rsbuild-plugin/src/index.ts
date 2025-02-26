@@ -1,14 +1,68 @@
-import { relative, resolve } from 'node:path';
-import type { RsbuildConfig, RsbuildPlugin } from '@rsbuild/core';
-import { ManifestManager, getEntryFileVariants } from '@web-extend/manifest';
+import { dirname, relative, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import type { EnvironmentConfig, RsbuildConfig, RsbuildPlugin } from '@rsbuild/core';
+import { ManifestManager } from '@web-extend/manifest';
+import { getEntryFileVariants } from '@web-extend/manifest/common';
 import type { ExtensionTarget, ManifestEntryOutput, WebExtensionManifest } from '@web-extend/manifest/types';
+import { getContentEnvironmentConfig } from './content.js';
 import {
   clearOutdatedHotUpdateFiles,
   getAllRsbuildEntryFiles,
   getRsbuildEntryFiles,
-  isDevMode,
-  normalizeRsbuildEnvironments,
+  transformManifestEntry,
 } from './helper.js';
+import type { EnviromentKey, NormalizeRsbuildEnvironmentProps } from './types.js';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+async function normalizeRsbuildEnvironments(options: NormalizeRsbuildEnvironmentProps) {
+  const { manifestEntries, selfRootPath } = options;
+  const { background, content, ...others } = manifestEntries;
+
+  const environments: {
+    [key in EnviromentKey]?: EnvironmentConfig;
+  } = {};
+  let defaultEnvironment: EnvironmentConfig | null = null;
+
+  if (background) {
+    defaultEnvironment = environments.background = {
+      source: {
+        entry: transformManifestEntry(background),
+      },
+      output: {
+        target: 'web-worker',
+      },
+    };
+  }
+
+  if (content) {
+    defaultEnvironment = environments.content = getContentEnvironmentConfig(options);
+  }
+
+  const webEntry = Object.values(others)
+    .filter(Boolean)
+    .reduce((res, cur) => Object.assign(res, cur), {});
+  if (Object.values(webEntry).length || !defaultEnvironment) {
+    defaultEnvironment = environments.web = {
+      source: {
+        entry: Object.values(webEntry).length
+          ? transformManifestEntry(webEntry)
+          : {
+              // void the empty entry error
+              empty: {
+                import: resolve(selfRootPath, './static/empty-entry.js'),
+                html: false,
+              },
+            },
+      },
+      output: {
+        target: 'web',
+      },
+    };
+  }
+
+  return environments;
+}
 
 export type PluginWebExtendOptions<T = unknown> = {
   manifest?: T | ((props: { target: ExtensionTarget; mode: string }) => T);
@@ -16,8 +70,6 @@ export type PluginWebExtendOptions<T = unknown> = {
   srcDir?: string;
   outDir?: string;
 };
-
-export type { ContentScriptConfig } from '@web-extend/manifest';
 
 export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPlugin => ({
   name: 'plugin-web-extend',
@@ -36,14 +88,19 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         rootPath,
         runtime: {
           background: resolve(selfRootPath, 'static/background-runtime.js'),
-          contentLoad: resolve(selfRootPath, 'static/content-load.js'),
           contentBridge: resolve(selfRootPath, 'static/content-bridge.js'),
         },
         manifest: options.manifest as WebExtensionManifest,
       });
 
       const manifestEntries = await manifestManager.readEntries();
-      const environments = await normalizeRsbuildEnvironments({ manifestEntries, config, selfRootPath });
+      const environments = await normalizeRsbuildEnvironments({
+        manifestEntries,
+        config,
+        selfRootPath,
+        context: api.context,
+        manifestContext: manifestManager.context,
+      });
       const entryPaths = getAllRsbuildEntryFiles(environments);
       const srcDir = manifestManager.context.srcDir;
       const srcPath = resolve(rootPath, srcDir);
@@ -128,28 +185,6 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       });
     });
 
-    api.processAssets({ stage: 'additions' }, async ({ assets, compilation, environment, sources }) => {
-      // support content hmr in dev mode
-      const mode = manifestManager.context.mode;
-      if (isDevMode(mode) && environment.name === 'content') {
-        const entries = Object.keys(environment.entry);
-        for (const name in assets) {
-          if (!name.endsWith('.js')) continue;
-
-          const entryName = entries.find((item) => name.includes(item));
-          if (entryName) {
-            const oldContent = assets[name].source() as string;
-            const newContent = oldContent.replaceAll(
-              'webpackHotUpdateWebExtend_content',
-              `webpackHotUpdateWebExtend_${entryName}`,
-            );
-            const source = new sources.RawSource(newContent);
-            compilation.updateAsset(name, source);
-          }
-        }
-      }
-    });
-
     api.processAssets({ stage: 'optimize' }, async ({ assets, compilation, environment }) => {
       if (environment.name === 'web') {
         for (const name in assets) {
@@ -198,6 +233,9 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
 
     api.onAfterBuild(async ({ stats }) => {
       if (stats?.hasErrors()) return;
+
+      // fix occasional test error
+      await new Promise((resolve) => setTimeout(resolve, 5));
 
       await manifestManager.writeManifestFile();
       console.log('Built the extension successfully');
