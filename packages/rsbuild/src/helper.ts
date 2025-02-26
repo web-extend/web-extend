@@ -1,9 +1,10 @@
 import { existsSync } from 'node:fs';
 import { readdir, unlink } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import type { EnvironmentConfig, RsbuildConfig, RsbuildEntry, Rspack } from '@rsbuild/core';
+import type { EnvironmentConfig, RsbuildConfig, RsbuildEntry, Rspack, RsbuildContext } from '@rsbuild/core';
 import type { ManifestEntries, ManifestEntryInput } from '@web-extend/manifest/types';
 import type { EnviromentKey } from './types.js';
+import { RspackContentRuntimePlugin } from './content.js';
 
 export function isDevMode(mode: string | undefined) {
   return mode === 'development';
@@ -58,10 +59,12 @@ export async function normalizeRsbuildEnvironments({
   manifestEntries,
   config,
   selfRootPath,
+  context,
 }: {
   config: RsbuildConfig;
   selfRootPath: string;
   manifestEntries: ManifestEntries;
+  context: RsbuildContext;
 }) {
   const { background, content, ...others } = manifestEntries;
   const mode = config.mode || process.env.NODE_ENV;
@@ -91,14 +94,16 @@ export async function normalizeRsbuildEnvironments({
         target: 'web',
         injectStyles: isDevMode(mode),
       },
-      dev: {
-        assetPrefix: true,
-      },
       tools: {
         rspack: {
           output: {
             hotUpdateGlobal: 'webpackHotUpdateWebExtend_content',
           },
+          plugins: [
+            new RspackContentRuntimePlugin({
+              getPort: () => context.devServer?.port,
+            }),
+          ],
         },
       },
     };

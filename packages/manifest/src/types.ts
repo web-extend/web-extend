@@ -79,7 +79,6 @@ export interface ManifestContext {
 
 export interface ManifestRuntime {
   background?: string;
-  contentLoad?: string;
   contentBridge?: string;
 }
 

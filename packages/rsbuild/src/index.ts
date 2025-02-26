@@ -38,14 +38,18 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         rootPath,
         runtime: {
           background: resolve(selfRootPath, 'static/background-runtime.js'),
-          contentLoad: resolve(selfRootPath, 'static/content-load.js'),
           contentBridge: resolve(selfRootPath, 'static/content-bridge.js'),
         },
         manifest: options.manifest as WebExtensionManifest,
       });
 
       const manifestEntries = await manifestManager.readEntries();
-      const environments = await normalizeRsbuildEnvironments({ manifestEntries, config, selfRootPath });
+      const environments = await normalizeRsbuildEnvironments({
+        manifestEntries,
+        config,
+        selfRootPath,
+        context: api.context,
+      });
       const entryPaths = getAllRsbuildEntryFiles(environments);
       const srcDir = manifestManager.context.srcDir;
       const srcPath = resolve(rootPath, srcDir);

@@ -17,7 +17,7 @@ const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFi
   matchDeclarativeSingleEntryFile(key, file) || matchDeclarativeMultipleEntryFile('contents', file);
 
 const normalizeContentEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, files, context }) => {
-  const { rootPath, srcDir, runtime, mode } = context;
+  const { rootPath, srcDir } = context;
 
   if (!manifest.content_scripts?.length) {
     const entryPath = files
@@ -32,19 +32,6 @@ const normalizeContentEntry: ManifestEntryProcessor['normalize'] = async ({ mani
           js: [filePath],
         });
       }
-    }
-  }
-
-  if (isDevMode(mode) && manifest.content_scripts?.length) {
-    const { contentLoad } = runtime || {};
-    // inject content runtime script for each entry in dev mode including content bridge
-    if (contentLoad) {
-      manifest.content_scripts.forEach((item) => {
-        if (!item.js) {
-          item.js = [];
-        }
-        item.js.push(contentLoad);
-      });
     }
   }
 };
