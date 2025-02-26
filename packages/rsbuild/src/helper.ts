@@ -88,9 +88,10 @@ export async function normalizeRsbuildEnvironments({
   }
 
   if (content) {
+    const entry = transformManifestEntry(content);
     defaultEnvironment = environments.content = {
       source: {
-        entry: transformManifestEntry(content),
+        entry,
       },
       output: {
         target: 'web',
@@ -105,6 +106,8 @@ export async function normalizeRsbuildEnvironments({
             new RspackContentRuntimePlugin({
               getPort: () => context.devServer?.port,
               target: manifestContext.target,
+              mode: manifestContext.mode,
+              entry: entry || {},
             }),
           ],
         },

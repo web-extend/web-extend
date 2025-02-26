@@ -8,7 +8,6 @@ import {
   clearOutdatedHotUpdateFiles,
   getAllRsbuildEntryFiles,
   getRsbuildEntryFiles,
-  isDevMode,
   normalizeRsbuildEnvironments,
 } from './helper.js';
 
@@ -133,28 +132,6 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         }
         return code;
       });
-    });
-
-    api.processAssets({ stage: 'additions' }, async ({ assets, compilation, environment, sources }) => {
-      // support content hmr in dev mode
-      const mode = manifestManager.context.mode;
-      if (isDevMode(mode) && environment.name === 'content') {
-        const entries = Object.keys(environment.entry);
-        for (const name in assets) {
-          if (!name.endsWith('.js')) continue;
-
-          const entryName = entries.find((item) => name.includes(item));
-          if (entryName) {
-            const oldContent = assets[name].source() as string;
-            const newContent = oldContent.replaceAll(
-              'webpackHotUpdateWebExtend_content',
-              `webpackHotUpdateWebExtend_${entryName}`,
-            );
-            const source = new sources.RawSource(newContent);
-            compilation.updateAsset(name, source);
-          }
-        }
-      }
     });
 
     api.processAssets({ stage: 'optimize' }, async ({ assets, compilation, environment }) => {
