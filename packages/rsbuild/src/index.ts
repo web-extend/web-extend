@@ -1,17 +1,17 @@
 import { dirname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import type { RsbuildConfig, RsbuildPlugin, EnvironmentConfig } from '@rsbuild/core';
+import type { EnvironmentConfig, RsbuildConfig, RsbuildPlugin } from '@rsbuild/core';
 import { ManifestManager } from '@web-extend/manifest';
 import { getEntryFileVariants } from '@web-extend/manifest/common';
 import type { ExtensionTarget, ManifestEntryOutput, WebExtensionManifest } from '@web-extend/manifest/types';
+import { getContentEnvironmentConfig } from './content.js';
 import {
   clearOutdatedHotUpdateFiles,
   getAllRsbuildEntryFiles,
   getRsbuildEntryFiles,
   transformManifestEntry,
 } from './helper.js';
-import type { NormalizeRsbuildEnvironmentProps, EnviromentKey } from './types.js';
-import { getContentEnvironmentConfig } from './content.js';
+import type { EnviromentKey, NormalizeRsbuildEnvironmentProps } from './types.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 

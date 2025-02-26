@@ -1,4 +1,4 @@
-import type { RsbuildEntry, Rspack, EnvironmentConfig } from '@rsbuild/core';
+import type { EnvironmentConfig, RsbuildEntry, Rspack } from '@rsbuild/core';
 import { isDevMode, transformManifestEntry } from './helper.js';
 import type { NormalizeRsbuildEnvironmentProps } from './types.js';
 
