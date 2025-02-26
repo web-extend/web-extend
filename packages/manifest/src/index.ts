@@ -169,18 +169,18 @@ export class ManifestManager {
     if (!this.entries) return;
     for (const entryName in result) {
       for (const processor of entryProcessors) {
-        const entry = this.entries[processor.key];
-        if (!entry || !Object.hasOwn(entry, entryName) || !processor.writeEntry) continue;
-
-        await processor.writeEntry({
-          normalizedManifest: this.normalizedManifest,
-          manifest: this.manifest,
-          rootPath: this.context.rootPath,
-          name: entryName,
-          input: result[entryName].input,
-          output: result[entryName].output,
-          context: this.context,
-        });
+        const entry = this.entries[processor.key] || {};
+        if (entryName in entry && processor.writeEntry) {
+          await processor.writeEntry({
+            normalizedManifest: this.normalizedManifest,
+            manifest: this.manifest,
+            rootPath: this.context.rootPath,
+            name: entryName,
+            input: result[entryName].input,
+            output: result[entryName].output,
+            context: this.context,
+          });
+        }
       }
     }
   }

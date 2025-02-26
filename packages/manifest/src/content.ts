@@ -17,7 +17,7 @@ const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFi
   matchDeclarativeSingleEntryFile(key, file) || matchDeclarativeMultipleEntryFile('contents', file);
 
 const normalizeContentEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, files, context }) => {
-  const { rootPath, srcDir, runtime, mode } = context;
+  const { rootPath, srcDir } = context;
 
   if (!manifest.content_scripts?.length) {
     const entryPath = files
@@ -34,19 +34,6 @@ const normalizeContentEntry: ManifestEntryProcessor['normalize'] = async ({ mani
       }
     }
   }
-
-  if (isDevMode(mode) && manifest.content_scripts?.length) {
-    const { contentLoad } = runtime || {};
-    // inject content runtime script for each entry in dev mode including content bridge
-    if (contentLoad) {
-      manifest.content_scripts.forEach((item) => {
-        if (!item.js) {
-          item.js = [];
-        }
-        item.js.push(contentLoad);
-      });
-    }
-  }
 };
 
 function getContentScriptInfo(contentScript: Manifest.ContentScript, rootPath: string, srcDir: string) {
@@ -56,7 +43,7 @@ function getContentScriptInfo(contentScript: Manifest.ContentScript, rootPath: s
   const name = getEntryName(input[0], rootPath, resolve(rootPath, srcDir));
   return {
     input,
-    name: name.replaceAll('/', '-'),
+    name,
   };
 }
 

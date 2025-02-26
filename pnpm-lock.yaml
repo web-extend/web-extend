@@ -293,7 +293,7 @@ importers:
         specifier: ^0.12.0
         version: 0.12.0
 
-  packages/rsbuild:
+  packages/rsbuild-plugin:
     dependencies:
       '@babel/parser':
         specifier: ^7.26.7
