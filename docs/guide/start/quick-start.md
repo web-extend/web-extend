@@ -170,7 +170,7 @@ export default defineConfig({
 
 Execute `npm run dev` for development, or `npm run build` for production.
 
-If you prefer to run the extension manually, please remove the `--open` option in the `dev` command, enable the deveoplment mode in the browser, and then load the `dist/chrome-mv3-dev` or `dist/chrome-mv3-prod` aritfact directory.
+If you prefer to run the extension manually, please remove the `--open` option in the `dev` command, enable the deveoplment mode in the browser, and then load the `dist/chrome-mv3-dev` or `dist/chrome-mv3-prod` artifact directory.
 
 ## Publishing
 
