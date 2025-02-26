@@ -1,10 +1,10 @@
 import { existsSync } from 'node:fs';
 import { readdir, unlink } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import type { EnvironmentConfig, RsbuildConfig, RsbuildEntry, Rspack, RsbuildContext } from '@rsbuild/core';
+import type { EnvironmentConfig, RsbuildConfig, RsbuildContext, RsbuildEntry, Rspack } from '@rsbuild/core';
 import type { ManifestEntries, ManifestEntryInput } from '@web-extend/manifest/types';
-import type { EnviromentKey } from './types.js';
 import { RspackContentRuntimePlugin } from './content.js';
+import type { EnviromentKey } from './types.js';
 
 export function isDevMode(mode: string | undefined) {
   return mode === 'development';
