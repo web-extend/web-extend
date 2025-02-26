@@ -234,6 +234,9 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
     api.onAfterBuild(async ({ stats }) => {
       if (stats?.hasErrors()) return;
 
+      // fix occasional test error
+      await new Promise((resolve) => setTimeout(resolve, 5));
+
       await manifestManager.writeManifestFile();
       console.log('Built the extension successfully');
     });

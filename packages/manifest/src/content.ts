@@ -43,7 +43,7 @@ function getContentScriptInfo(contentScript: Manifest.ContentScript, rootPath: s
   const name = getEntryName(input[0], rootPath, resolve(rootPath, srcDir));
   return {
     input,
-    name: name.replaceAll('/', '-'),
+    name,
   };
 }
 
