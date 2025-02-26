@@ -31,16 +31,33 @@ WebExtend is compatible with any frontend framework. For other frameworks, you m
 
 Create a project and install dependencies. WebExtend uses [Rsbuild](https://rsbuild.dev/) under the hood, which and the [`@web-extend/rsbuild-plugin`](../../api/rsbuild-plugin.md) plugin are also needed to be installed.
 
-```shell
-# create an empty project
+::: code-group
+
+```shell [npm]
 mkdir my-extension-app
 cd my-extension-app
+
 npm init -y
-
-# install dev dependencies
-npm i -D web-extend @rsbuild/core @web-extend/rsbuild-plugin
-
+npm add -D web-extend @rsbuild/core @web-extend/rsbuild-plugin
 ```
+
+```shell [pnpm]
+mkdir my-extension-app
+cd my-extension-app
+
+npm init -y
+pnpm add -D web-extend @rsbuild/core @web-extend/rsbuild-plugin
+```
+
+```shell [yarn]
+mkdir my-extension-app
+cd my-extension-app
+
+npm init -y
+yarn add -D web-extend @rsbuild/core @web-extend/rsbuild-plugin
+```
+
+:::
 
 It is also recommended to install TypeScript、React/Vue、Eslint/Prettier/Biome etc, for enhancing the development experience (Optional).
 
@@ -73,9 +90,21 @@ The meanings of the commands above are as follows:
 
 The feature of running the extension in a browser is based on [`web-ext`](https://github.com/mozilla/web-ext). If you want to use the feature, please install it additionally.
 
-```shell
-npm install -D web-ext
+::: code-group
+
+```shell [npm]
+npm add -D web-ext
 ```
+
+```shell [pnpm]
+pnpm add -D web-ext
+```
+
+```shell [yarn]
+yarn add -D web-ext
+```
+
+:::
 
 ### Add Rsbuild config
 
@@ -139,10 +168,9 @@ export default defineConfig({
 
 ## Run & Build
 
-- execute `npm run dev` for development.
-- execute `npm run build` for production.
+Execute `npm run dev` for development, or `npm run build` for production.
 
-If you prefer to run the extension manually, please remove the `--open` option in the `dev` command, enable the deveoplment mode in the browser, and then load the `dist/chrome-mv3-dev` or `dist/chrome-mv3-prod` directory.
+If you prefer to run the extension manually, please remove the `--open` option in the `dev` command, enable the deveoplment mode in the browser, and then load the `dist/chrome-mv3-dev` or `dist/chrome-mv3-prod` aritfact directory.
 
 ## Publishing
 

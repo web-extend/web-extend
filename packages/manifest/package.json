@@ -4,7 +4,8 @@
   "main": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./types": "./src/types.ts"
+    "./types": "./src/types.ts",
+    "./common": "./src/common.ts"
   },
   "type": "module",
   "private": "true",

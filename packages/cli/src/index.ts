@@ -103,15 +103,18 @@ function applyRsbuildDevCommand(command: Command) {
 
 function applyRsbuildBuildCommand(command: Command) {
   applyCommonRunOptions(command);
-  command.option('-z, --zip', 'package the built extension').action(async (options: StartOptions) => {
-    try {
-      await startBuild(options);
-    } catch (err) {
-      console.error('Failed to build.');
-      console.error(err);
-      process.exit(1);
-    }
-  });
+  command
+    .option('-w, --watch', 'watch for changes and rebuild')
+    .option('-z, --zip', 'package the built extension')
+    .action(async (options: StartOptions) => {
+      try {
+        await startBuild(options);
+      } catch (err) {
+        console.error('Failed to build.');
+        console.error(err);
+        process.exit(1);
+      }
+    });
 }
 
 function applyCommonRunOptions(command: Command) {

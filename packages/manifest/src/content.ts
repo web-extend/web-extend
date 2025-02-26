@@ -65,7 +65,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest, context }) =
   if (!content_scripts?.length) return null;
 
   const entry: ManifestEntryInput = {};
-  content_scripts.forEach((contentScript, index) => {
+  content_scripts.forEach((contentScript) => {
     const info = getContentScriptInfo(contentScript, context.rootPath, context.srcDir);
     if (!info) return;
     const { name, input } = info;

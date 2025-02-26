@@ -12,7 +12,7 @@ Usage:
 npx web-extend [options] [command]
 
 # or
-npm intsall -D web-extend
+npm add -D web-extend
 npx we [options] [command]
 ```
 
@@ -105,6 +105,7 @@ Options:
   --env-mode <mode>      specify the env mode to load the `.env.[mode]` file
   --env-dir <dir>        specify the directory to load `.env` files
   -t, --target <target>  specify the extension target
+  -w, --watch            watch for changes and rebuild
   -z, --zip              package the built extension
   -h, --help             display help for command
 ```

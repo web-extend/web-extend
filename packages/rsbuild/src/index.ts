@@ -1,6 +1,8 @@
-import { relative, resolve } from 'node:path';
+import { dirname, relative, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import type { RsbuildConfig, RsbuildPlugin } from '@rsbuild/core';
-import { ManifestManager, getEntryFileVariants } from '@web-extend/manifest';
+import { ManifestManager } from '@web-extend/manifest';
+import { getEntryFileVariants } from '@web-extend/manifest/common';
 import type { ExtensionTarget, ManifestEntryOutput, WebExtensionManifest } from '@web-extend/manifest/types';
 import {
   clearOutdatedHotUpdateFiles,
@@ -10,14 +12,14 @@ import {
   normalizeRsbuildEnvironments,
 } from './helper.js';
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 export type PluginWebExtendOptions<T = unknown> = {
   manifest?: T | ((props: { target: ExtensionTarget; mode: string }) => T);
   target?: ExtensionTarget;
   srcDir?: string;
   outDir?: string;
 };
-
-export type { ContentScriptConfig } from '@web-extend/manifest';
 
 export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPlugin => ({
   name: 'plugin-web-extend',

@@ -1,6 +1,6 @@
 import { resolve } from 'node:path';
 import { matchDeclarativeSingleEntryFile } from './common.js';
-import type { ManifestEntryInput, ManifestEntryProcessor, WebExtensionManifest } from './types.js';
+import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'sidepanel';
 
@@ -8,29 +8,17 @@ const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFi
   matchDeclarativeSingleEntryFile(key, file);
 
 const normalizeSidepanelEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, context, files }) => {
-  const { rootPath, srcDir, target } = context;
+  const { rootPath, srcDir } = context;
   const { side_panel, sidebar_action } = manifest;
   if (side_panel?.default_path || sidebar_action?.default_panel) {
-    addSidepanelPermission(manifest);
     return;
   }
 
   const entryPath = files.filter(matchDeclarativeEntryFile).map((file) => resolve(rootPath, srcDir, file))[0];
-
   if (entryPath) {
-    if (target.includes('firefox')) {
-      manifest.sidebar_action = {
-        default_panel: entryPath,
-        ...(sidebar_action || {}),
-      };
-      return;
-    }
-
     manifest.side_panel = {
       default_path: entryPath,
-      ...(side_panel || {}),
     };
-    addSidepanelPermission(manifest);
   }
 };
 
@@ -58,13 +46,6 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, name }) =>
     sidebar_action.default_panel = output;
   }
 };
-
-function addSidepanelPermission(manifest: WebExtensionManifest) {
-  if (manifest.side_panel?.default_path && !manifest.permissions?.includes('sidePanel')) {
-    manifest.permissions ??= [];
-    manifest.permissions.push('sidePanel');
-  }
-}
 
 const sidepanelProcessor: ManifestEntryProcessor = {
   key,

@@ -25,7 +25,13 @@ describe('test build for firefox', () => {
 
     const distPath = rsbuild.context.distPath;
     const manifest = await readManifestFile(distPath);
-    const { manifest_version, background, sidebar_action, action } = manifest as Manifest.WebExtensionManifest;
+    const {
+      manifest_version,
+      background,
+      sidebar_action,
+      action,
+      permissions = [],
+    } = manifest as Manifest.WebExtensionManifest;
 
     expect(manifest_version).toBe(3);
 
@@ -34,6 +40,7 @@ describe('test build for firefox', () => {
 
     const sidepanel = sidebar_action?.default_panel;
     expect(validateDistFile(distPath, sidepanel || '', '.html')).toBeTruthy();
+    expect(permissions).not.toContain('sidePanel');
 
     expect(action?.default_icon).toMatch(basename(defaultIcon, '.png'));
   });

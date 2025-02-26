@@ -3,14 +3,17 @@ import type { Manifest } from 'webextension-polyfill';
 export type ExtensionTarget = 'chrome-mv3' | 'firefox-mv2' | 'firefox-mv3' | 'safari-mv3' | 'edge-mv3' | 'opera-mv3';
 
 export interface WebExtensionManifest extends Manifest.WebExtensionManifest {
-  // Firefox doesn't support sandbox
   sandbox?: {
     pages: string[];
     content_security_policy?: string;
   };
-  // Firefox doesn't support side_panel, but supports sidebar_action
   side_panel?: {
     default_path?: string;
+  };
+  chrome_url_overrides?: {
+    newtab?: string;
+    history?: string;
+    bookmarks?: string;
   };
 }
 

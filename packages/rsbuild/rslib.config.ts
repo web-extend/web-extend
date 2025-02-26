@@ -9,7 +9,6 @@ export default defineConfig({
         bundle: true,
       },
     },
-    { format: 'cjs', syntax: 'es2021' },
   ],
   output: {
     copy: [

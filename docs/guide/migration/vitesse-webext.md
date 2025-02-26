@@ -8,25 +8,50 @@ The article will introduce how to migrate a [vitesse-webext](https://github.com/
 
 ## Installing dependencies
 
-Install the dependencies of Webextend and Rsbuild.
+Install the dependencies of Webextend, Rsbuild, and Vue and UnoCSS plugins for Rsbuild.
 
-```shell
+::: code-group
+
+```shell [npm]
 npm add -D @rsbuild/core @web-extend/rsbuild-plugin web-extend
-```
-
-Install the plugins of Vue and UnoCSS for Rsbuild.
-
-```shell
 npm add -D @rsbuild/plugin-vue @unocss/postcss
 ```
 
+```shell [pnpm]
+pnpm add -D @rsbuild/core @web-extend/rsbuild-plugin web-extend
+pnpm add -D @rsbuild/plugin-vue @unocss/postcss
+```
+
+```shell [yarn]
+yarn add -D @rsbuild/core @web-extend/rsbuild-plugin web-extend
+yarn add -D @rsbuild/plugin-vue @unocss/postcss
+```
+
+:::
+
 Update the versions of `unocss`, `unplugin-auto-import` and `unplugin-icons` packages, guaranteeing they can be integrated into Rsbuild.
 
-```shell
+::: code-group
+
+```shell [npm]
 npm add -D unocss@latest @unocss/reset@latest
 npm add -D unplugin-auto-import@latest
 npm add -D unplugin-icons@latest
 ```
+
+```shell [pnpm]
+pnpm add -D unocss@latest @unocss/reset@latest
+pnpm add -D unplugin-auto-import@latest
+pnpm add -D unplugin-icons@latest
+```
+
+```shell [yarn]
+yarn add -D unocss@latest @unocss/reset@latest
+yarn add -D unplugin-auto-import@latest
+yarn add -D unplugin-icons@latest
+```
+
+:::
 
 ## Updating npm scripts
 
@@ -34,7 +59,7 @@ Next, add the `"type": "module"` field into package.json, and replace the comman
 
 ::: details package.json
 
-```json [package.json]
+```json
 {
   "type": "module", // [!code ++]
   "scripts": {
@@ -216,7 +241,7 @@ WebExtend uses the file system to parse entry files and generates the correspond
 After completing all changes above, congratulations 🎉 ! You have done the basic migration. Now you can run `npm run dev` or `npm run build` for having a try.
 
 ::: info Note
-The extension output path is `dist/[target]-[mode]` instead of `extension` in WebExtend.
+The extension's artifact directory is `dist/[target]-[mode]` instead of `extension` in WebExtend.
 :::
 
 If there is any omission or mistake in the above migration process, please point it out. You can submit an issue or a PR directly from [the Github page](https://github.com/web-extend/web-extend) 🤝.
