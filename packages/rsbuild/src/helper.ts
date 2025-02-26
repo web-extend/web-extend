@@ -2,7 +2,7 @@ import { existsSync } from 'node:fs';
 import { readdir, unlink } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import type { EnvironmentConfig, RsbuildConfig, RsbuildContext, RsbuildEntry, Rspack } from '@rsbuild/core';
-import type { ManifestEntries, ManifestEntryInput, ManifestContext } from '@web-extend/manifest/types';
+import type { ManifestContext, ManifestEntries, ManifestEntryInput } from '@web-extend/manifest/types';
 import { RspackContentRuntimePlugin } from './content.js';
 import type { EnviromentKey } from './types.js';
 
