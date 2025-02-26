@@ -49,6 +49,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         config,
         selfRootPath,
         context: api.context,
+        manifestContext: manifestManager.context,
       });
       const entryPaths = getAllRsbuildEntryFiles(environments);
       const srcDir = manifestManager.context.srcDir;

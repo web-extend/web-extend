@@ -2,7 +2,7 @@ import { existsSync } from 'node:fs';
 import { readdir, unlink } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import type { EnvironmentConfig, RsbuildConfig, RsbuildContext, RsbuildEntry, Rspack } from '@rsbuild/core';
-import type { ManifestEntries, ManifestEntryInput } from '@web-extend/manifest/types';
+import type { ManifestEntries, ManifestEntryInput, ManifestContext } from '@web-extend/manifest/types';
 import { RspackContentRuntimePlugin } from './content.js';
 import type { EnviromentKey } from './types.js';
 
@@ -60,11 +60,13 @@ export async function normalizeRsbuildEnvironments({
   config,
   selfRootPath,
   context,
+  manifestContext,
 }: {
   config: RsbuildConfig;
   selfRootPath: string;
   manifestEntries: ManifestEntries;
   context: RsbuildContext;
+  manifestContext: ManifestContext;
 }) {
   const { background, content, ...others } = manifestEntries;
   const mode = config.mode || process.env.NODE_ENV;
@@ -102,6 +104,7 @@ export async function normalizeRsbuildEnvironments({
           plugins: [
             new RspackContentRuntimePlugin({
               getPort: () => context.devServer?.port,
+              target: manifestContext.target,
             }),
           ],
         },
