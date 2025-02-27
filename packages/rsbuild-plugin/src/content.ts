@@ -38,7 +38,7 @@ type RspackContentRuntimePluginOptions = {
   getPort: () => number | undefined;
 };
 
-class RspackContentRuntimePlugin {
+class RspackContentRuntimePlugin implements Rspack.RspackPluginInstance {
   name = 'RspackContentRuntimePlugin';
   #options: RspackContentRuntimePluginOptions | undefined;
 
