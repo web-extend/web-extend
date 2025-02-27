@@ -1,6 +1,8 @@
-import type { EnvironmentConfig, RsbuildEntry, Rspack } from '@rsbuild/core';
+import type { EnvironmentConfig, Rspack } from '@rsbuild/core';
 import { isDevMode, transformManifestEntry } from './helper.js';
 import type { NormalizeRsbuildEnvironmentProps } from './types.js';
+
+const hotUpdateGlobal = 'webpackHotUpdateWebExtend_content';
 
 function getContentEnvironmentConfig({
   manifestEntries,
@@ -9,10 +11,9 @@ function getContentEnvironmentConfig({
 }: NormalizeRsbuildEnvironmentProps): EnvironmentConfig {
   const content = manifestEntries.content;
   const { mode } = manifestContext;
-  const entry = transformManifestEntry(content);
   return {
     source: {
-      entry,
+      entry: transformManifestEntry(content),
     },
     output: {
       target: 'web',
@@ -21,14 +22,11 @@ function getContentEnvironmentConfig({
     tools: {
       rspack: {
         output: {
-          hotUpdateGlobal: 'webpackHotUpdateWebExtend_content',
+          hotUpdateGlobal,
         },
         plugins: [
           new RspackContentRuntimePlugin({
             getPort: () => context.devServer?.port,
-            target: manifestContext.target,
-            mode: manifestContext.mode,
-            entry: entry || {},
           }),
         ],
       },
@@ -38,9 +36,6 @@ function getContentEnvironmentConfig({
 
 type RspackContentRuntimePluginOptions = {
   getPort: () => number | undefined;
-  target: string;
-  entry: RsbuildEntry;
-  mode: string;
 };
 
 class RspackContentRuntimePlugin {
@@ -55,10 +50,9 @@ class RspackContentRuntimePlugin {
     compiler.hooks.compilation.tap(this.name, (compilation) => {
       const { RuntimeGlobals, Compilation } = compiler.webpack;
       compilation.hooks.runtimeModule.tap(this.name, (module, chunk) => {
-        const { target = '' } = this.#options || {};
         if (module.name === 'load_script' && module.source) {
           const originSource = module.source.source.toString('utf-8');
-          const newSource = patchloadScriptCode(RuntimeGlobals.loadScript, originSource, target);
+          const newSource = patchloadScriptCode(RuntimeGlobals.loadScript, originSource);
           module.source.source = Buffer.from(newSource, 'utf-8');
           return;
         }
@@ -79,9 +73,8 @@ class RspackContentRuntimePlugin {
           stage: Compilation.PROCESS_ASSETS_STAGE_ADDITIONS,
         },
         (assets) => {
-          const { entry, mode } = this.#options || {};
+          const { mode, entry } = compiler.options;
           if (!entry || !isDevMode(mode)) return;
-
           const entries = Object.keys(entry);
           const { RawSource } = compiler.webpack.sources;
 
@@ -90,10 +83,7 @@ class RspackContentRuntimePlugin {
             const entryName = entries.find((item) => name.includes(item));
             if (entryName && name.endsWith('.js')) {
               const oldContent = asset.source() as string;
-              const newContent = oldContent.replaceAll(
-                'webpackHotUpdateWebExtend_content',
-                `webpackHotUpdateWebExtend_${entryName}`,
-              );
+              const newContent = oldContent.replaceAll(hotUpdateGlobal, `webpackHotUpdateWebExtend_${entryName}`);
               const source = new RawSource(newContent);
               compilation.updateAsset(name, source);
             }
@@ -104,14 +94,11 @@ class RspackContentRuntimePlugin {
   }
 }
 
-function patchloadScriptCode(loadScriptName: string, loadScriptCode: string, target: string) {
-  return `${loadScriptCode.replace(loadScriptName, 'let originLoadScript')}
-${loadScriptName} = async function (url, done, ...args) {
+function patchloadScriptCode(loadScriptName: string, _: string) {
+  const extensionTarget = process.env.WEB_EXTEND_TARGET || '';
+  return `${loadScriptName} = async function (url, done, ...args) {
   try {
-    if(${target.includes('firefox')}) {
-      if (typeof browser !== 'object' || !browser.runtime) {
-        return originLoadScript(url, done, ...args);
-      }
+    if(${extensionTarget.includes('firefox')} && typeof browser === 'object' && browser.runtime) {
       const pathname = new URL(url).pathname; 
       url = browser.runtime.getURL(pathname);
     }
