@@ -1,5 +1,6 @@
 import { existsSync } from 'node:fs';
 import { relative, resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { defaultExtensionTarget } from '@web-extend/manifest/common';
 import type { ExtensionTarget } from '@web-extend/manifest/types';
 import chalk from 'chalk';
@@ -63,7 +64,8 @@ async function loadWebExtConfig(root: string) {
   const configFile = posibleConfigFiles.map((item) => resolve(root, item)).find((item) => existsSync(item));
   if (!configFile) return null;
   try {
-    const { default: config } = await import(configFile);
+    const fileUrl = pathToFileURL(configFile).href;
+    const { default: config } = await import(fileUrl);
     return config;
   } catch (err) {
     console.error(`Loading ${configFile} failed. \n`, err);
