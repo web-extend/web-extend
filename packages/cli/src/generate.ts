@@ -34,10 +34,7 @@ function getIconTemplatePath(root: string, template?: string) {
 const ICON_SIZES = [16, 32, 48, 128];
 
 async function generateIcons({ root, template, outDir, size = ICON_SIZES.join(',') }: GenerateOptions) {
-  const sharp = await import('sharp').then((mod) => mod.default).catch(() => null);
-  if (!sharp) {
-    throw Error(`Cannot find package 'sharp'; please install sharp first.`);
-  }
+  const sharp = await import('sharp').then((mod) => mod.default);
 
   const templatePath = getIconTemplatePath(root, template);
   const filename = 'icon-{size}.png';
