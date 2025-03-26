@@ -131,8 +131,8 @@ importers:
         specifier: ^8.3.0
         version: 8.4.0(body-parser@1.20.3)
       web-extend:
-        specifier: 0.0.1-beta.5
-        version: 0.0.1-beta.5(@rsbuild/core@1.2.11)(@types/node@22.13.4)(web-ext@8.4.0(body-parser@1.20.3))
+        specifier: 0.0.1-beta.6
+        version: 0.0.1-beta.6(@rsbuild/core@1.2.11)(@types/node@22.13.4)(web-ext@8.4.0(body-parser@1.20.3))
 
   packages/cli/templates/template-svelte-ts:
     dependencies:
@@ -180,8 +180,8 @@ importers:
         specifier: ^8.3.0
         version: 8.4.0(body-parser@1.20.3)
       web-extend:
-        specifier: 0.0.1-beta.5
-        version: 0.0.1-beta.5(@rsbuild/core@1.2.11)(@types/node@22.13.4)(web-ext@8.4.0(body-parser@1.20.3))
+        specifier: 0.0.1-beta.6
+        version: 0.0.1-beta.6(@rsbuild/core@1.2.11)(@types/node@22.13.4)(web-ext@8.4.0(body-parser@1.20.3))
 
   packages/cli/templates/template-vanilla-ts:
     devDependencies:
@@ -216,8 +216,8 @@ importers:
         specifier: ^8.3.0
         version: 8.4.0(body-parser@1.20.3)
       web-extend:
-        specifier: 0.0.1-beta.5
-        version: 0.0.1-beta.5(@rsbuild/core@1.2.11)(@types/node@22.13.4)(web-ext@8.4.0(body-parser@1.20.3))
+        specifier: 0.0.1-beta.6
+        version: 0.0.1-beta.6(@rsbuild/core@1.2.11)(@types/node@22.13.4)(web-ext@8.4.0(body-parser@1.20.3))
 
   packages/cli/templates/template-vue-ts:
     dependencies:
@@ -262,8 +262,8 @@ importers:
         specifier: ^8.3.0
         version: 8.4.0(body-parser@1.20.3)
       web-extend:
-        specifier: 0.0.1-beta.5
-        version: 0.0.1-beta.5(@rsbuild/core@1.2.11)(@types/node@22.13.4)(web-ext@8.4.0(body-parser@1.20.3))
+        specifier: 0.0.1-beta.6
+        version: 0.0.1-beta.6(@rsbuild/core@1.2.11)(@types/node@22.13.4)(web-ext@8.4.0(body-parser@1.20.3))
 
   packages/manifest:
     dependencies:
@@ -4418,8 +4418,8 @@ packages:
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
     hasBin: true
 
-  web-extend@0.0.1-beta.5:
-    resolution: {integrity: sha512-wfzs1od2xRXgOEjHGle71lBWDQwJbGDXsscea1u/JxAeBkp7Ibsa9WkBqZfqXlbuINQCcqs0kp0LYy/KDD0hpw==}
+  web-extend@0.0.1-beta.6:
+    resolution: {integrity: sha512-6foHXk21C+QAUwSese8Gf2FHeJXIG4rDIlyczly//HqmQkMWSykRlpHmfwG87Tl4i1ocj4bnJEYExROri67qvg==}
     engines: {node: '>=16.7.0'}
     hasBin: true
     peerDependencies:
@@ -8818,7 +8818,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  web-extend@0.0.1-beta.5(@rsbuild/core@1.2.11)(@types/node@22.13.4)(web-ext@8.4.0(body-parser@1.20.3)):
+  web-extend@0.0.1-beta.6(@rsbuild/core@1.2.11)(@types/node@22.13.4)(web-ext@8.4.0(body-parser@1.20.3)):
     dependencies:
       '@inquirer/prompts': 7.3.2(@types/node@22.13.4)
       archiver: 7.0.1
