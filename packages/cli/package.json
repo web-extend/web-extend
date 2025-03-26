@@ -50,6 +50,9 @@
     "@rsbuild/core": {
       "optional": true
     },
+    "sharp": {
+      "optional": true
+    },
     "web-ext": {
       "optional": true
     }
