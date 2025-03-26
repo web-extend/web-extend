@@ -1,10 +1,10 @@
 import { existsSync } from 'node:fs';
 import { relative, resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { defaultExtensionTarget } from '@web-extend/manifest/common';
 import type { ExtensionTarget } from '@web-extend/manifest/types';
 import chalk from 'chalk';
 import { resolveBuildInfo } from './result.js';
-import { pathToFileURL } from 'node:url';
 
 type TargetType = 'firefox-desktop' | 'firefox-android' | 'chromium';
 
