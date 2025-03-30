@@ -157,7 +157,7 @@ export default {
 
 ### Open the specific browser
 
-Provie a custom Chromium or Firefox executable path to open the specific browser. Example:
+Provide a custom Chromium or Firefox executable path to open the specific browser. Example:
 
 ::: code-group
 
@@ -178,10 +178,23 @@ export default {
 
 ::: code-group
 
-```js [web-ext.config.js]
+```js [Mac/Linux]
+// web-ext.config.js
 export default {
   run: {
     args: ["--user-data-dir=path/to/profile"],
+  },
+};
+```
+
+```js [Windows]
+// web-ext.config.js
+import { resolve } from "node:path";
+
+export default {
+  run: {
+    chromiumProfile: resolve("/path/to/profile"),
+    keepProfileChanges: true,
   },
 };
 ```
