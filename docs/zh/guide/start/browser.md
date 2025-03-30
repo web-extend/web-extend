@@ -178,7 +178,8 @@ export default {
 
 ::: code-group
 
-```js [web-ext.config.js]
+```js [Mac/Linux]
+// web-ext.config.js
 export default {
   run: {
     args: ["--user-data-dir=path/to/profile"],
@@ -186,4 +187,14 @@ export default {
 };
 ```
 
-:::
+```js [Windows]
+// web-ext.config.js
+import { resolve } from "node:path";
+
+export default {
+  run: {
+    chromiumProfile: resolve("/path/to/profile"),
+    keepProfileChanges: true,
+  },
+};
+```
