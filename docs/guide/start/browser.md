@@ -157,7 +157,7 @@ export default {
 
 ### Open the specific browser
 
-Provide a custom Chromium or Firefox executable path to open the specific browser. Example:
+Provide a custom Chromium or Firefox executable path to open the specific browser.
 
 ::: code-group
 

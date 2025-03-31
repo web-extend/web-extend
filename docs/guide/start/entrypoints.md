@@ -17,29 +17,6 @@ All entry files are located in the src directory, which can be a folder or a fil
 
 :::
 
-## Icons
-
-[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest/icons) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/icons)
-
-Create the `assets/icon-{size}.png` files under the `src` directory as follows, which will be reflected to the `icons` and `action.default_icons` fields in `manifest.json`.
-
-```
-src/assets/
-├─ icon-16.png
-├─ icon-32.png
-├─ icon-48.png
-└─ icon-128.png
-```
-
-Alternatively, you can use `web-extend` to generate the corressponding sized icons files, which needs a high quality image `assets/icon.png` (>= 128 \* 128 px) as the template.
-
-```shell
-npx web-extend g icons
-
-```
-
-See [with-icons](https://github.com/web-extend/examples/tree/main/with-icons).
-
 ## Background
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest/background) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/background)
@@ -50,7 +27,6 @@ Generate the entry automatically.
 
 ```shell
 npx web-extend g background
-
 ```
 
 Alternatively, create the `src/background.js` file manually whose content is as follows:
@@ -65,76 +41,19 @@ console.log("This is a background script.");
 
 See [with-background](https://github.com/web-extend/examples/tree/main/with-background).
 
-## Popup
+## Bookmarks
 
-[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/action) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/action)
+[Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages), Firefox doesn't support bookmarks.
 
-The popup entry will be reflected to the `action.default_popup` field in `manifest.json`.
-
-Generate the entry automatically.
-
-```shell
-npx web-extend g popup
-
-```
-
-Alternatively, create the `src/popup.js` or `src/popup/index.js` file manually whose content is as follows:
-
-::: code-group
-
-```tsx [src/popup/index.jsx]
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import App from "./App";
-
-const rootEl = document.getElementById("root");
-if (rootEl) {
-  const root = createRoot(rootEl);
-  root.render(
-    <StrictMode>
-      <App />
-    </StrictMode>
-  );
-}
-```
-
-:::
-
-See [with-popup](https://github.com/web-extend/examples/tree/main/with-popup).
-
-## Options
-
-[Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/options-page) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/options_ui)
-
-The options entry will be reflected to the `options_ui.page` field in `manifest.json`.
+The bookmarks entry will be reflected to the `chrome_url_overrides.bookmarks` field in `manifest.json`.
 
 Generate the entry automatically.
 
 ```shell
-npx web-extend g options
-
+npx web-extend g bookmarks
 ```
 
-Alternatively, create the `src/options.js` or `src/options/index.js` file manually.
-
-See [with-options](https://github.com/web-extend/examples/tree/main/with-options).
-
-## Sidepanel
-
-[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/sidePanel) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Sidebars)
-
-The sidepanel entry will be reflected to the `side_panel.default_path` or `sidebar_action.default_panel` field in `manifest.json`.
-
-Generate the entry automatically.
-
-```shell
-npx web-extend g sidepanel
-
-```
-
-Alternatively, create the `src/sidepanel.js` or `src/sidepanel/index.js` file manually.
-
-See [with-sidepanel](https://github.com/web-extend/examples/tree/main/with-sidepanel).
+Alternatively, create the `src/bookmarks.js` or `src/bookmarks/index.js` file manually.
 
 ## Content Scripts
 
@@ -160,7 +79,6 @@ Generate the entry automatically.
 
 ```shell
 npx web-extend g contents/site-one,contents/site-two
-
 ```
 
 Alternatively, create the `src/contents/*.js` or `src/contents/*/index.js` file manually.
@@ -213,7 +131,6 @@ Generate the entry automatically.
 
 ```shell
 npx web-extend g devtools
-
 ```
 
 Alternatively, create the `src/devtools.js` file manually.
@@ -250,20 +167,41 @@ chrome.devtools.panels.create("My panel", "", "panels/panel1.html");
 
 See [with-devtools](https://github.com/web-extend/examples/tree/main/with-devtools).
 
-## Bookmarks
+## History
 
-[Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages), Firefox doesn't support bookmarks.
+[Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages), Firefox doesn't support history.
 
-The bookmarks entry will be reflected to the `chrome_url_overrides.bookmarks` field in `manifest.json`.
+The history entry will be reflected to the `chrome_url_overrides.history` field in `manifest.json`.
 
 Generate the entry automatically.
 
 ```shell
-npx web-extend g bookmarks
-
+npx web-extend g history
 ```
 
-Alternatively, create the `src/bookmarks.js` or `src/bookmarks/index.js` file manually.
+Alternatively, create the `src/history.js` or `src/history/index.js` file manually.
+
+## Icons
+
+[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest/icons) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/icons)
+
+Create the `assets/icon-{size}.png` files under the `src` directory as follows, which will be reflected to the `icons` and `action.default_icons` fields in `manifest.json`.
+
+```
+src/assets/
+├─ icon-16.png
+├─ icon-32.png
+├─ icon-48.png
+└─ icon-128.png
+```
+
+Alternatively, you can use `web-extend` to generate the corressponding sized icons files, which needs a high quality image `assets/icon.png` (>= 128 \* 128 px) as the template.
+
+```shell
+npx web-extend g icons
+```
+
+See [with-icons](https://github.com/web-extend/examples/tree/main/with-icons).
 
 ## Newtab
 
@@ -275,25 +213,61 @@ Generate the entry automatically.
 
 ```shell
 npx web-extend g newtab
-
 ```
 
 Alternatively, create the `src/newtab.js` or `src/newtab/index.js` file manually.
 
-## History
+## Options
 
-[Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages), Firefox doesn't support history.
+[Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/options-page) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/options_ui)
 
-The history entry will be reflected to the `chrome_url_overrides.history` field in `manifest.json`.
+The options entry will be reflected to the `options_ui.page` field in `manifest.json`.
 
 Generate the entry automatically.
 
 ```shell
-npx web-extend g history
-
+npx web-extend g options
 ```
 
-Alternatively, create the `src/history.js` or `src/history/index.js` file manually.
+Alternatively, create the `src/options.js` or `src/options/index.js` file manually.
+
+See [with-options](https://github.com/web-extend/examples/tree/main/with-options).
+
+## Popup
+
+[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/action) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/action)
+
+The popup entry will be reflected to the `action.default_popup` field in `manifest.json`.
+
+Generate the entry automatically.
+
+```shell
+npx web-extend g popup
+```
+
+Alternatively, create the `src/popup.js` or `src/popup/index.js` file manually whose content is as follows:
+
+::: code-group
+
+```tsx [src/popup/index.jsx]
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import App from "./App";
+
+const rootEl = document.getElementById("root");
+if (rootEl) {
+  const root = createRoot(rootEl);
+  root.render(
+    <StrictMode>
+      <App />
+    </StrictMode>
+  );
+}
+```
+
+:::
+
+See [with-popup](https://github.com/web-extend/examples/tree/main/with-popup).
 
 ## Sandbox
 
@@ -333,3 +307,19 @@ document.querySelector("#root").innerHTML = `
 :::
 
 See [with-sandbox](https://github.com/web-extend/examples/tree/main/with-sandbox), [with-multi-sandboxes](https://github.com/web-extend/examples/tree/main/with-multi-sandboxes).
+
+## Sidepanel
+
+[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/sidePanel) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Sidebars)
+
+The sidepanel entry will be reflected to the `side_panel.default_path` or `sidebar_action.default_panel` field in `manifest.json`.
+
+Generate the entry automatically.
+
+```shell
+npx web-extend g sidepanel
+```
+
+Alternatively, create the `src/sidepanel.js` or `src/sidepanel/index.js` file manually.
+
+See [with-sidepanel](https://github.com/web-extend/examples/tree/main/with-sidepanel).

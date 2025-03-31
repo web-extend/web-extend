@@ -17,29 +17,6 @@ WebExtend 会基于文件系统自动解析入口文件，生成 `manifest.json`
 
 :::
 
-## Icons
-
-[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest/icons) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/icons)
-
-在 src 目录下创建 `assets/icon-{size}.png` 文件，其对应 `manifest.json` 中的 `icons` 和 `action.default_icon` 字段。
-
-```
-src/assets/
-├─ icon-16.png
-├─ icon-32.png
-├─ icon-48.png
-└─ icon-128.png
-```
-
-`web-extend` 工具支持基于一个高质量图片文件 `assets/icon.png` 作为模板（建议图片尺寸不小于 128\*128px），自动生成对应尺寸的 icon 文件。运行以下命令。
-
-```shell
-npx web-extend g icons
-
-```
-
-参考 [with-icons](https://github.com/web-extend/examples/tree/main/with-icons)。
-
 ## Background
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest/background) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/background)
@@ -50,7 +27,6 @@ Background 入口对应了 `manifest.json` 中的 `background.service_worker` �
 
 ```shell
 npx web-extend g background
-
 ```
 
 或者手动创建 `src/background.js` 文件，示例如下：
@@ -65,74 +41,19 @@ console.log("This is a background script.");
 
 参考 [with-background](https://github.com/web-extend/examples/tree/main/with-background)。
 
-## Popup
+## Bookmarks
 
-[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/action) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/action)
+[Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages)，Firefox 不支持 bookmarks。
 
-Popup 入口对应了 `manifest.json` 中的 `action.default_popup` 字段。
-
-自动生成入口。
-
-```shell
-npx web-extend g popup
-
-```
-
-或者手动创建 `src/popup.js` 或 `src/popup/index.js` 文件，可以使用 React/Vue 等前端框架，示例如下：
-
-::: code-group
-
-```tsx [src/popup/index.jsx]
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import App from "./App";
-
-const rootEl = document.getElementById("root");
-if (rootEl) {
-  const root = createRoot(rootEl);
-  root.render(
-    <StrictMode>
-      <App />
-    </StrictMode>
-  );
-}
-```
-
-:::
-
-参考 [with-popup](https://github.com/web-extend/examples/tree/main/with-popup)。
-
-## Options
-
-[Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/options-page) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/options_ui)
-
-Options 入口对应了 `manifest.json` 中的 `options_ui.page` 字段。
+Bookmarks 入口对应了 `manifest.json` 中的 `chrome_url_overrides.bookmarks` 字段。
 
 自动生成入口。
 
 ```shell
-npx web-extend g options
-
+npx web-extend g bookmarks
 ```
 
-或者手动创建 `src/options.js` 或 `src/options/index.js` 文件。
-
-## Sidepanel
-
-[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/sidePanel) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Sidebars)
-
-Sidepanel 入口对应了 `manifest.json` 中的 `side_panel.default_path` 或 `sidebar_action.default_panel` 字段。
-
-自动生成入口。
-
-```shell
-npx web-extend g sidepanel
-
-```
-
-或者手动创建 `src/sidepanel.js` 或 `src/sidepanel/index.js` 文件。
-
-参考 [with-sidepanel](https://github.com/web-extend/examples/tree/main/with-sidepanel)。
+或者手动创建 `src/bookmarks.js` 或 `src/bookmarks/index.js` 文件。
 
 ## Content Scripts
 
@@ -158,7 +79,6 @@ npx web-extend g content
 
 ```shell
 npx web-extend g contents/site-one
-
 ```
 
 或者手动创建 `src/contents/*.js` 或 `src/contents/*/index.js` 文件。
@@ -211,7 +131,6 @@ Devtools 入口对应了 `manifest.json` 中的 `devtools_page` 字段。
 
 ```shell
 npx web-extend g devtools
-
 ```
 
 或者手动创建 `src/devtools.js` 和 `src/panels/my-panel.js` 文件。示例如下：
@@ -270,20 +189,42 @@ chrome.devtools.panels.create("My panel", "", "panels/my-panel.html");
 
 参考 [with-devtools](https://github.com/web-extend/examples/tree/main/with-devtools)。
 
-## Bookmarks
+## History
 
-[Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages)，Firefox 不支持 bookmarks。
+[Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages)，Firefox 不支持 history。
 
-Bookmarks 入口对应了 `manifest.json` 中的 `chrome_url_overrides.bookmarks` 字段。
+History 入口对应了 `manifest.json` 中的 `chrome_url_overrides.history` 字段，
 
 自动生成入口。
 
 ```shell
-npx web-extend g bookmarks
+npx web-extend g history
+```
+
+或者手动创建 `src/history.js` 或 `src/history/index.js` 文件。
+
+## Icons
+
+[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest/icons) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/icons)
+
+在 src 目录下创建 `assets/icon-{size}.png` 文件，其对应 `manifest.json` 中的 `icons` 和 `action.default_icon` 字段。
+
+```
+src/assets/
+├─ icon-16.png
+├─ icon-32.png
+├─ icon-48.png
+└─ icon-128.png
+```
+
+`web-extend` 工具支持基于一个高质量图片文件 `assets/icon.png` 作为模板（建议图片尺寸不小于 128\*128px），自动生成对应尺寸的 icon 文件。运行以下命令。
+
+```shell
+npx web-extend g icons
 
 ```
 
-或者手动创建 `src/bookmarks.js` 或 `src/bookmarks/index.js` 文件。
+参考 [with-icons](https://github.com/web-extend/examples/tree/main/with-icons)。
 
 ## Newtab
 
@@ -295,25 +236,59 @@ Newtab 入口对应了 `manifest.json` 中的 `chrome_url_overrides.newtab` 字�
 
 ```shell
 npx web-extend g newtab
-
 ```
 
 或者手动创建 `src/newtab.js` 或 `src/newtab/index.js` 文件。
 
-## History
+## Options
 
-[Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages)，Firefox 不支持 history。
+[Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/options-page) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/options_ui)
 
-History 入口对应了 `manifest.json` 中的 `chrome_url_overrides.history` 字段，
+Options 入口对应了 `manifest.json` 中的 `options_ui.page` 字段。
 
 自动生成入口。
 
 ```shell
-npx web-extend g history
-
+npx web-extend g options
 ```
 
-或者手动创建 `src/history.js` 或 `src/history/index.js` 文件。
+或者手动创建 `src/options.js` 或 `src/options/index.js` 文件。
+
+## Popup
+
+[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/action) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/action)
+
+Popup 入口对应了 `manifest.json` 中的 `action.default_popup` 字段。
+
+自动生成入口。
+
+```shell
+npx web-extend g popup
+```
+
+或者手动创建 `src/popup.js` 或 `src/popup/index.js` 文件，可以使用 React/Vue 等前端框架，示例如下：
+
+::: code-group
+
+```tsx [src/popup/index.jsx]
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import App from "./App";
+
+const rootEl = document.getElementById("root");
+if (rootEl) {
+  const root = createRoot(rootEl);
+  root.render(
+    <StrictMode>
+      <App />
+    </StrictMode>
+  );
+}
+```
+
+:::
+
+参考 [with-popup](https://github.com/web-extend/examples/tree/main/with-popup)。
 
 ## Sandbox
 
@@ -329,7 +304,6 @@ npx web-extend g sandbox
 
 # 多入口
 npx web-extend g sandboxes/sandbox-one
-
 ```
 
 或者手动创建 `src/sandbox.js` 或 `src/sandboxes/*.js` 文件。
@@ -353,3 +327,19 @@ document.querySelector("#root").innerHTML = `
 :::
 
 参考 [with-sandbox](https://github.com/web-extend/examples/tree/main/with-sandbox)、[with-multi-sandboxes](https://github.com/web-extend/examples/tree/main/with-multi-sandboxes)。
+
+## Sidepanel
+
+[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/sidePanel) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Sidebars)
+
+Sidepanel 入口对应了 `manifest.json` 中的 `side_panel.default_path` 或 `sidebar_action.default_panel` 字段。
+
+自动生成入口。
+
+```shell
+npx web-extend g sidepanel
+```
+
+或者手动创建 `src/sidepanel.js` 或 `src/sidepanel/index.js` 文件。
+
+参考 [with-sidepanel](https://github.com/web-extend/examples/tree/main/with-sidepanel)。
