@@ -4,11 +4,11 @@ outline: deep
 
 # vitesse-webext
 
-The article will introduce how to migrate a [vitesse-webext](https://github.com/antfu-collective/vitesse-webext) project to WebExtend. To see the full list of migration changes, please refer to [examples/from-vitesse-webext](https://github.com/web-extend/examples/pull/4/files).
+This chapter introduces how to migrate a [vitesse-webext](https://github.com/antfu-collective/vitesse-webext) project to WebExtend. Here is a migration example [from-vitesse-webext](https://github.com/web-extend/examples/pull/4/files).
 
 ## Installing dependencies
 
-Install the dependencies of Webextend, Rsbuild, and Vue and UnoCSS plugins for Rsbuild.
+Install the following dependencies.
 
 ::: code-group
 
@@ -29,7 +29,7 @@ yarn add -D @rsbuild/plugin-vue @unocss/postcss
 
 :::
 
-Update the versions of `unocss`, `unplugin-auto-import` and `unplugin-icons` packages, guaranteeing they can be integrated into Rsbuild.
+Update the versions of the following dependencies, guaranteeing they can be integrated into Rsbuild.
 
 ::: code-group
 
@@ -55,7 +55,7 @@ yarn add -D unplugin-icons@latest
 
 ## Updating npm scripts
 
-Next, add the `"type": "module"` field into package.json, and replace the commands in `scripts` (including `dev`, `build`, `pack`, `start`, etc.) with the CLI commands of `web-extend`.
+Next, add the `"type": "module"` field and update scripts with the following WebExtend's CLI commands in `package.json`.
 
 ::: details package.json
 
@@ -238,10 +238,6 @@ WebExtend uses the file system to parse entry files and generates the correspond
 
 ## Validating results
 
-After completing all changes above, congratulations 🎉 ! You have done the basic migration. Now you can run `npm run dev` or `npm run build` for having a try.
+Congratulations 🎉 ! You have done the basic migration. Now you can run `npm run dev` or `npm run build`. The extension's artifact directory is `dist/[target]-[mode]`.
 
-::: info Note
-The extension's artifact directory is `dist/[target]-[mode]` instead of `extension` in WebExtend.
-:::
-
-If there is any omission or mistake in the above migration process, please point it out. You can submit an issue or a PR directly from [the Github page](https://github.com/web-extend/web-extend) 🤝.
+If there is any omission or mistake, welcome to submit an issue or a PR from [the Github page](https://github.com/web-extend/web-extend) 🤝.

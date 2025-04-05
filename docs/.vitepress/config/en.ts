@@ -30,7 +30,7 @@ export default defineConfig({
           collapsed: false,
           items: [
             {
-              text: 'crxjs',
+              text: 'CRXJS',
               link: 'crxjs',
             },
             {
