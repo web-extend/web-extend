@@ -19,27 +19,27 @@ These tools might have some of these problems as follows.
 
 ## Main Features {#main-features}
 
-### 📝 Declarative Entrypoints {#declarative-entrypoints}
+### Declarative Entrypoints {#declarative-entrypoints}
 
 WebExtend automatically parses entries based on the file system, reducing `manifest.json` configuration burden.
 
 See [entrypoints](./entrypoints.md).
 
-### ⚡️ Seamless Development Experience {#seamless-development-experience}
+### Seamless Development Experience {#seamless-development-experience}
 
 WebExtend supports instant HMR for popup/options/**content_scripts**..., automatic browser opening and extension running.
 
-### 🧭 Multi-Browser Support {#multi-browser-support}
+### Multi-Browser Support {#multi-browser-support}
 
 WebExtend automatically handles `manifest.json` configuration differences for easy multi-browser support.
 
 See [browser support](./browser.md).
 
-### 🛠️ ESM & TypeScript Support {#esm-typescript-support}
+### ESM & TypeScript Support {#esm-typescript-support}
 
 ESM and TypeScript work out of the box, no extra configuration needed.
 
-### ✈️ Framework Agnostic {#framework-agnostic}
+### Framework Agnostic {#framework-agnostic}
 
 Freedom to use any frontend framework or library, for example:
 
@@ -52,13 +52,13 @@ Freedom to use any frontend framework or library, for example:
 - Auto Import
 - ...
 
-### 🚀 Lightning Fast Performance {#lightning-fast-performance}
+### Lightning Fast Performance {#lightning-fast-performance}
 
 Powered by Rsbuild for extremely fast development and building.
 
 See [Rsbuild](https://rsbuild.dev/).
 
-### 💪 Scaffold Support {#scaffold-support}
+### Scaffold Support {#scaffold-support}
 
 WebExtend provides a CLI tool that helps you create a project quickly and generate entry files automatically.
 
