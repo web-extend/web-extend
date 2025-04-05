@@ -26,25 +26,6 @@ web-extend preview -t firefox-mv2
 web-extend zip -t firefox-mv2
 ```
 
-或者也可以在 `pluginWebExtend()` 中传递 `target` 指定目标。
-
-::: code-group
-
-```js [rsbuild.config.ts]
-import { defineConfig } from "@rsbuild/core";
-import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
-
-export default defineConfig({
-  plugins: [
-    pluginWebExtend({
-      target: "firefox-mv2", // default: "chrome-mv3"
-    }),
-  ],
-});
-```
-
-:::
-
 Webextend 会在代码构建时注入一个环境变量 `import.meta.env.WEB_EXTEND_TARGET`，这有助于处理不同浏览器之间的特异性。
 
 ::: code-group

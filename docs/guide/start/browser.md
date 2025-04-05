@@ -26,25 +26,6 @@ web-extend preview -t firefox-mv2
 web-extend zip -t firefox-mv2
 ```
 
-Alternatively, you can set the target in `pluginWebExtend()`.
-
-::: code-group
-
-```js [rsbuild.config.ts]
-import { defineConfig } from "@rsbuild/core";
-import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
-
-export default defineConfig({
-  plugins: [
-    pluginWebExtend({
-      target: "firefox-mv2",
-    }),
-  ],
-});
-```
-
-:::
-
 Webextend injects the `import.meta.env.WEB_EXTEND_TARGET` environment variable into the code during build, which is helpful for dealing with specificity between different browsers, for example:
 
 ::: code-group
