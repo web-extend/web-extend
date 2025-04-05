@@ -2,9 +2,11 @@
 outline: deep
 ---
 
-# web-extend CLI
+# web-extend
 
-[`web-extend`](https://www.npmjs.com/package/web-extend) is a CLI tool for creating a project, and generating entry files, etc.
+[`web-extend`](https://www.npmjs.com/package/web-extend) is a useful tool set for creating a project, and generating entry files, etc.
+
+## CLI
 
 Usage:
 
@@ -18,7 +20,7 @@ npx we [options] [command]
 
 `we` is a shortened form for `web-extend`. They are equal in function, but the `we` command only can be used after the `web-extend` tool installed.
 
-## web-extend init
+### web-extend init
 
 The `init` command is used to create a project.
 
@@ -37,7 +39,7 @@ Options:
   -h, --help             display help for command
 ```
 
-## web-extend generate
+### web-extend generate
 
 The `generate` command is used to generate entry files.
 
@@ -58,7 +60,7 @@ Options:
   -h, --help             display help for command
 ```
 
-## web-extend rsbuild:dev
+### web-extend rsbuild:dev
 
 The `rsbuild:dev` command uses Rsbuild to build and run the extension in the development environment.
 
@@ -84,7 +86,7 @@ Options:
   -h, --help             display help for command
 ```
 
-## web-extend rsbuild:build
+### web-extend rsbuild:build
 
 The `rsbuild:dev` command uses Rsbuild to build the extension in the production environment.
 
@@ -110,7 +112,7 @@ Options:
   -h, --help             display help for command
 ```
 
-## web-extend preview
+### web-extend preview
 
 The `preview` command is used to preview the extension for production.
 
@@ -129,7 +131,7 @@ Options:
   -h, --help             display help for command
 ```
 
-## web-extend zip
+### web-extend zip
 
 The `zip` command is used to package the extension for production.
 
@@ -147,4 +149,50 @@ Options:
   -n, --filename <filename>  specify the output filename
   -t, --target <target>      specify the extension target
   -h, --help                 display help for command
+```
+
+## Functions
+
+### defineWebExtConfig
+
+`defineWebExtConfig` is a function that helps you to custom web-ext's config.
+
+Usage:
+
+::: code-group
+
+```js [web-ext.config.js]
+import { defineWebExtConfig } from "web-extend";
+
+export default defineWebExtConfig({
+  run: {
+    // ...
+  },
+});
+```
+
+:::
+
+Source: [runner.ts](https://github.com/web-extend/web-extend/blob/main/packages/cli/src/runner.ts#L130).
+
+## Types
+
+### ContentScriptConfig
+
+`ContentScriptConfig` is a TypeScript type that helps you define content script's config.
+
+Type:
+
+```ts
+export interface ContentScriptConfig {
+  matches: string[];
+  exclude_matches?: string[];
+  css?: string[];
+  run_at?: "document_start" | "document_end" | "document_idle";
+  all_frames?: boolean;
+  match_about_blank?: boolean;
+  include_globs?: string[];
+  exclude_globs?: string[];
+  world?: "ISOLATED" | "MAIN";
+}
 ```

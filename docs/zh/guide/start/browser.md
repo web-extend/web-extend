@@ -26,25 +26,6 @@ web-extend preview -t firefox-mv2
 web-extend zip -t firefox-mv2
 ```
 
-或者也可以在 `pluginWebExtend()` 中传递 `target` 指定目标。
-
-::: code-group
-
-```js [rsbuild.config.ts]
-import { defineConfig } from "@rsbuild/core";
-import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
-
-export default defineConfig({
-  plugins: [
-    pluginWebExtend({
-      target: "firefox-mv2", // default: "chrome-mv3"
-    }),
-  ],
-});
-```
-
-:::
-
 Webextend 会在代码构建时注入一个环境变量 `import.meta.env.WEB_EXTEND_TARGET`，这有助于处理不同浏览器之间的特异性。
 
 ::: code-group
@@ -146,11 +127,13 @@ npx web-extend preview
 ::: code-group
 
 ```js [web-ext.config.js]
-export default {
+import { defineWebExtConfig } from "web-extend";
+
+export default defineWebExtConfig({
   run: {
     startUrl: "https://www.google.com",
   },
-};
+});
 ```
 
 :::
@@ -162,12 +145,14 @@ export default {
 ::: code-group
 
 ```js [web-ext.config.js]
-export default {
+import { defineWebExtConfig } from "web-extend";
+
+export default defineWebExtConfig({
   run: {
     firefox: "/path/to/firefox",
     chromiumBinary: "/path/to/chrome",
   },
-};
+});
 ```
 
 :::
@@ -180,21 +165,24 @@ export default {
 
 ```js [Mac/Linux]
 // web-ext.config.js
-export default {
+import { defineWebExtConfig } from "web-extend";
+
+export default defineWebExtConfig({
   run: {
     args: ["--user-data-dir=path/to/profile"],
   },
-};
+});
 ```
 
 ```js [Windows]
 // web-ext.config.js
 import { resolve } from "node:path";
+import { defineWebExtConfig } from "web-extend";
 
-export default {
+export default defineWebExtConfig({
   run: {
     chromiumProfile: resolve("/path/to/profile"),
     keepProfileChanges: true,
   },
-};
+});
 ```

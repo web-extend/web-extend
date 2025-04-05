@@ -18,27 +18,27 @@ WebExtend 是一个帮助您使用现代 Web 技术构建浏览器扩展的工�
 
 ## 主要特点 {#main-features}
 
-### 📝 声明式入口 {#declarative-entrypoints}
+### 声明式入口 {#declarative-entrypoints}
 
 基于文件系统自动解析入口，减少 manifest.json 的配置负担。
 
 查阅[声明式入口](./entrypoints.md)。
 
-### ⚡️ 无缝的开发体验 {#seamless-development-experience}
+### 无缝的开发体验 {#seamless-development-experience}
 
 对于 popup/options/**content_scripts** 等入口支持即时 HMR、自动打开浏览器和运行扩展。
 
-### 🧭 多浏览器支持 {#multi-browser-support}
+### 多浏览器支持 {#multi-browser-support}
 
 自动处理 manifest.json 配置差异，轻松实现多浏览器支持。
 
 查阅[浏览器支持](./browser.md)。
 
-### 🛠️ ESM & TypeScript 支持 {#esm-typescript-support}
+### ESM & TypeScript 支持 {#esm-typescript-support}
 
 TypeScript 开箱即用，无需额外配置。
 
-### ✈️ 框架无关 {#framework-agnostic}
+### 框架无关 {#framework-agnostic}
 
 可以自由使用任何前端框架和库，例如：
 
@@ -51,13 +51,13 @@ TypeScript 开箱即用，无需额外配置。
 - Auto Import
 - ...
 
-### 🚀 极速性能 {#lightning-fast-performance}
+### 极速性能 {#lightning-fast-performance}
 
 基于 Rsbuild 实现极速开发和构建。
 
 查阅 [Rsbuild](https://rsbuild.dev/)。
 
-### 💪 脚手架支持 {#scaffold-support}
+### 脚手架支持 {#scaffold-support}
 
 提供模板支持，方便快速创建项目、生成入口文件。
 

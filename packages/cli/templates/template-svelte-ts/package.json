@@ -28,7 +28,7 @@
     "svelte-check": "^4.1.1",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.21.0",
-    "web-ext": "^8.3.0",
+    "web-ext": "^8.5.0",
     "web-extend": "0.0.1-beta.6"
   }
 }

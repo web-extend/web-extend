@@ -26,25 +26,6 @@ web-extend preview -t firefox-mv2
 web-extend zip -t firefox-mv2
 ```
 
-Alternatively, you can set the target in `pluginWebExtend()`.
-
-::: code-group
-
-```js [rsbuild.config.ts]
-import { defineConfig } from "@rsbuild/core";
-import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
-
-export default defineConfig({
-  plugins: [
-    pluginWebExtend({
-      target: "firefox-mv2",
-    }),
-  ],
-});
-```
-
-:::
-
 Webextend injects the `import.meta.env.WEB_EXTEND_TARGET` environment variable into the code during build, which is helpful for dealing with specificity between different browsers, for example:
 
 ::: code-group
@@ -146,11 +127,13 @@ Open a tab at the specificed URL when the browser starts. Example:
 ::: code-group
 
 ```js [web-ext.config.js]
-export default {
+import { defineWebExtConfig } from "web-extend";
+
+export default defineWebExtConfig({
   run: {
     startUrl: "https://www.google.com",
   },
-};
+});
 ```
 
 :::
@@ -162,12 +145,14 @@ Provide a custom Chromium or Firefox executable path to open the specific browse
 ::: code-group
 
 ```js [web-ext.config.js]
-export default {
+import { defineWebExtConfig } from "web-extend";
+
+export default defineWebExtConfig({
   run: {
     firefox: "/path/to/firefox",
     chromiumBinary: "/path/to/chrome",
   },
-};
+});
 ```
 
 :::
@@ -180,23 +165,26 @@ export default {
 
 ```js [Mac/Linux]
 // web-ext.config.js
-export default {
+import { defineWebExtConfig } from "web-extend";
+
+export default defineWebExtConfig({
   run: {
     args: ["--user-data-dir=path/to/profile"],
   },
-};
+});
 ```
 
 ```js [Windows]
 // web-ext.config.js
 import { resolve } from "node:path";
+import { defineWebExtConfig } from "web-extend";
 
-export default {
+export default defineWebExtConfig({
   run: {
     chromiumProfile: resolve("/path/to/profile"),
     keepProfileChanges: true,
   },
-};
+});
 ```
 
 :::

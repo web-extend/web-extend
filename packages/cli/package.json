@@ -38,9 +38,9 @@
     "@rslib/core": "^0.1.5",
     "@types/archiver": "^6.0.3",
     "@types/node": "^22.13.1",
+    "@web-extend/manifest": "workspace:*",
     "typescript": "^5.7.3",
-    "web-ext": "^8.4.0",
-    "@web-extend/manifest": "workspace:*"
+    "web-ext": "^8.5.0"
   },
   "peerDependencies": {
     "@rsbuild/core": "^1.1.6",

@@ -29,7 +29,7 @@ WebExtend 兼容任何前端框架，如需在其他框架中使用，请参考�
 
 ### 安装依赖项 {#install-dependencies}
 
-创建项目并安装依赖项。WebExtend 使用 [Rsbuild](https://rsbuild.dev/) 作为底层构建工具，因此还需要安装它和一个 [`@web-extend/rsbuild-plugin`](../../api/rsbuild-plugin.md) 插件。
+创建项目并安装依赖项。WebExtend 使用 [Rsbuild](https://rsbuild.dev/) 作为底层构建工具，并使用 [web-ext](https://github.com/mozilla/web-ext) 实现在浏览器中自动运行插件。
 
 ::: code-group
 
@@ -38,7 +38,7 @@ mkdir my-extension-app
 cd my-extension-app
 
 npm init -y
-npm add -D web-extend @rsbuild/core @web-extend/rsbuild-plugin
+npm add -D web-extend @rsbuild/core @web-extend/rsbuild-plugin web-ext
 ```
 
 ```shell [pnpm]
@@ -46,7 +46,7 @@ mkdir my-extension-app
 cd my-extension-app
 
 npm init -y
-pnpm add -D web-extend @rsbuild/core @web-extend/rsbuild-plugin
+pnpm add -D web-extend @rsbuild/core @web-extend/rsbuild-plugin web-ext
 ```
 
 ```shell [yarn]
@@ -54,12 +54,12 @@ mkdir my-extension-app
 cd my-extension-app
 
 npm init -y
-yarn add -D web-extend @rsbuild/core @web-extend/rsbuild-plugin
+yarn add -D web-extend @rsbuild/core @web-extend/rsbuild-plugin web-ext
 ```
 
 :::
 
-推荐安装 TypeScript、React/Vue、Eslint/Prettier/Biome 等前端工具，提升开发体验（可选）。
+推荐安装 TypeScript、React/Vue、ESLint/Prettier/Biome 等前端工具，提升开发体验（可选）。
 
 ### 添加脚本命令 {#add-scripts}
 
@@ -87,24 +87,6 @@ yarn add -D web-extend @rsbuild/core @web-extend/rsbuild-plugin
 - `build`: 使用 Rsbuild 构建生产版本的扩展。
 - `preview`: 预览生产版本的扩展。需要先执行 `build` 命令。
 - `zip`: 将生产版本的扩展压缩为一个 `.zip` 文件，以备发布。需要先执行 `build` 命令。
-
-其中，在浏览器中运行扩展的功能基于 [`web-ext`](https://github.com/mozilla/web-ext) 工具实现。如果要使用这项功能，请在项目中额外安装该工具。
-
-::: code-group
-
-```shell [npm]
-npm add -D web-ext
-```
-
-```shell [pnpm]
-pnpm add -D web-ext
-```
-
-```shell [yarn]
-yarn add -D web-ext
-```
-
-:::
 
 ### 添加 Rsbuild 配置 {#add-rsbuild-configuration}
 

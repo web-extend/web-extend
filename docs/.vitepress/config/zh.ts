@@ -30,6 +30,10 @@ export default defineConfig({
           collapsed: false,
           items: [
             {
+              text: 'CRXJS',
+              link: 'crxjs',
+            },
+            {
               text: 'vitesse-webext',
               link: 'vitesse-webext',
             },
@@ -42,7 +46,7 @@ export default defineConfig({
           base: '/zh/api/',
           collapsed: false,
           items: [
-            { text: 'web-extend CLI', link: 'web-extend' },
+            { text: 'web-extend', link: 'web-extend' },
             { text: '@web-extend/rsbuild-plugin', link: 'rsbuild-plugin' },
           ],
         },

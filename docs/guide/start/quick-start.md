@@ -29,7 +29,7 @@ WebExtend is compatible with any frontend framework. For other frameworks, you m
 
 ### Install dependencies
 
-Create a project and install dependencies. WebExtend uses [Rsbuild](https://rsbuild.dev/) under the hood, which and the [`@web-extend/rsbuild-plugin`](../../api/rsbuild-plugin.md) plugin are also needed to be installed.
+Create a project and install dependencies. WebExtend uses [Rsbuild](https://rsbuild.dev/) as the bundler. And the feature of running the extension automatically is based on [web-ext](https://github.com/mozilla/web-ext).
 
 ::: code-group
 
@@ -38,7 +38,7 @@ mkdir my-extension-app
 cd my-extension-app
 
 npm init -y
-npm add -D web-extend @rsbuild/core @web-extend/rsbuild-plugin
+npm add -D web-extend @rsbuild/core @web-extend/rsbuild-plugin web-ext
 ```
 
 ```shell [pnpm]
@@ -46,7 +46,7 @@ mkdir my-extension-app
 cd my-extension-app
 
 npm init -y
-pnpm add -D web-extend @rsbuild/core @web-extend/rsbuild-plugin
+pnpm add -D web-extend @rsbuild/core @web-extend/rsbuild-plugin web-ext
 ```
 
 ```shell [yarn]
@@ -54,12 +54,12 @@ mkdir my-extension-app
 cd my-extension-app
 
 npm init -y
-yarn add -D web-extend @rsbuild/core @web-extend/rsbuild-plugin
+yarn add -D web-extend @rsbuild/core @web-extend/rsbuild-plugin web-ext
 ```
 
 :::
 
-It is also recommended to install TypeScript、React/Vue、Eslint/Prettier/Biome etc, for enhancing the development experience (Optional).
+It is also recommended to install TypeScript、React/Vue、ESLint/Prettier/Biome etc, for enhancing the development experience (Optional).
 
 ### Add scripts
 
@@ -87,24 +87,6 @@ The meanings of the commands above are as follows:
 - `build`: use Rsbuild for building the extension for production.
 - `preview`: preview the extension for production.
 - `zip`: package the extension for production into a `.zip` file.
-
-The feature of running the extension in a browser is based on [`web-ext`](https://github.com/mozilla/web-ext). If you want to use the feature, please install it additionally.
-
-::: code-group
-
-```shell [npm]
-npm add -D web-ext
-```
-
-```shell [pnpm]
-pnpm add -D web-ext
-```
-
-```shell [yarn]
-yarn add -D web-ext
-```
-
-:::
 
 ### Add Rsbuild config
 
