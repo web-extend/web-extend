@@ -4,7 +4,7 @@ outline: deep
 
 # CRXJS
 
-This chaptor introduces how to migrate a [CRXJS](https://crxjs.dev/vite-plugin) project to WebExtend. The main difference between WebExtend and CRXJS is WebExtend using Rsbuild as the bundler instead of Vite. Nevertheless, the migration process is simple and Rsbuild is really fast.
+This chaptor introduces how to migrate a [CRXJS](https://crxjs.dev/vite-plugin) project to WebExtend. The main difference between WebExtend and CRXJS is WebExtend using Rsbuild as the bundler instead of Vite. Nevertheless, the migration process is simple and Rsbuild is really fast. Here is a migration example [from-crxjs](https://github.com/web-extend/examples/pull/7/files).
 
 ## Installing dependencies
 
@@ -53,7 +53,7 @@ When migrating bundler from Vite to Rsbuild, the main changes are as follows.
 2. Migrate plugins, see [rsbuild-migrating-plugins](https://rsbuild.dev/guide/migration/vite#migrating-plugins).
 3. Migrate configuration, see [rsbuild-configuration-migration](https://rsbuild.dev/guide/migration/vite#configuration-migration).
 
-Here is an example of `rsbuild.config.ts`.
+Example.
 
 ::: code-group
 
