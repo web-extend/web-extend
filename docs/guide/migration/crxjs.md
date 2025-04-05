@@ -83,7 +83,7 @@ export default defineConfig({
 
 ## Updating mainfest
 
-The `mainfest` file in CRXJS is also supported in WebExtend. To adpat it, you need to modify all `*.html` entry points to `*.js` entry points.
+The `mainfest` file in CRXJS is also supported in WebExtend. For adaption, you need to modify all `*.html` entry points to `*.js` entry points.
 
 Example.
 

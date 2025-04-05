@@ -46,7 +46,7 @@ export default defineConfig({
           base: '/api/',
           collapsed: false,
           items: [
-            { text: 'web-extend CLI', link: 'web-extend' },
+            { text: 'web-extend', link: 'web-extend' },
             { text: '@web-extend/rsbuild-plugin', link: 'rsbuild-plugin' },
           ],
         },

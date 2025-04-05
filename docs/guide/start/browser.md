@@ -127,11 +127,13 @@ Open a tab at the specificed URL when the browser starts. Example:
 ::: code-group
 
 ```js [web-ext.config.js]
-export default {
+import { defineWebExtConfig } from "web-extend";
+
+export default defineWebExtConfig({
   run: {
     startUrl: "https://www.google.com",
   },
-};
+});
 ```
 
 :::
@@ -143,12 +145,14 @@ Provide a custom Chromium or Firefox executable path to open the specific browse
 ::: code-group
 
 ```js [web-ext.config.js]
-export default {
+import { defineWebExtConfig } from "web-extend";
+
+export default defineWebExtConfig({
   run: {
     firefox: "/path/to/firefox",
     chromiumBinary: "/path/to/chrome",
   },
-};
+});
 ```
 
 :::
@@ -161,23 +165,26 @@ export default {
 
 ```js [Mac/Linux]
 // web-ext.config.js
-export default {
+import { defineWebExtConfig } from "web-extend";
+
+export default defineWebExtConfig({
   run: {
     args: ["--user-data-dir=path/to/profile"],
   },
-};
+});
 ```
 
 ```js [Windows]
 // web-ext.config.js
 import { resolve } from "node:path";
+import { defineWebExtConfig } from "web-extend";
 
-export default {
+export default defineWebExtConfig({
   run: {
     chromiumProfile: resolve("/path/to/profile"),
     keepProfileChanges: true,
   },
-};
+});
 ```
 
 :::

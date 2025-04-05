@@ -127,11 +127,13 @@ npx web-extend preview
 ::: code-group
 
 ```js [web-ext.config.js]
-export default {
+import { defineWebExtConfig } from "web-extend";
+
+export default defineWebExtConfig({
   run: {
     startUrl: "https://www.google.com",
   },
-};
+});
 ```
 
 :::
@@ -143,12 +145,14 @@ export default {
 ::: code-group
 
 ```js [web-ext.config.js]
-export default {
+import { defineWebExtConfig } from "web-extend";
+
+export default defineWebExtConfig({
   run: {
     firefox: "/path/to/firefox",
     chromiumBinary: "/path/to/chrome",
   },
-};
+});
 ```
 
 :::
@@ -161,21 +165,24 @@ export default {
 
 ```js [Mac/Linux]
 // web-ext.config.js
-export default {
+import { defineWebExtConfig } from "web-extend";
+
+export default defineWebExtConfig({
   run: {
     args: ["--user-data-dir=path/to/profile"],
   },
-};
+});
 ```
 
 ```js [Windows]
 // web-ext.config.js
 import { resolve } from "node:path";
+import { defineWebExtConfig } from "web-extend";
 
-export default {
+export default defineWebExtConfig({
   run: {
     chromiumProfile: resolve("/path/to/profile"),
     keepProfileChanges: true,
   },
-};
+});
 ```

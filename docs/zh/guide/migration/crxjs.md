@@ -4,7 +4,7 @@ outline: deep
 
 # CRXJS
 
-本章介绍如何迁移一个 [CRXJS](https://crxjs.dev/vite-plugin) 项目到 WebExtend. 它们的主要区别在于 WebExtend 使用 Rsbuild 作为构建工具而不是 Vite。尽管如此，整个迁移过程非常简单，并且 Rsbuild 真的很快。完整的迁移示例参考 [from-crxjs](https://github.com/web-extend/examples/pull/7/files)。
+本章介绍如何迁移一个 [CRXJS](https://crxjs.dev/vite-plugin) 项目到 WebExtend。它们的主要区别在于 WebExtend 使用 Rsbuild 作为构建工具而不是 Vite。尽管如此，整个迁移过程非常简单，并且 Rsbuild 真的很快。完整的迁移示例参考 [from-crxjs](https://github.com/web-extend/examples/pull/7/files)。
 
 ## 安装依赖
 
