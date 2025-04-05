@@ -45,7 +45,7 @@ yarn add -D @rsbuild/core @web-extend/rsbuild-plugin web-extend web-ext
 
 在迁移 Vite 到 Rsbuild 的过程中，主要的改动点如下。
 
-1. 在根目录下创建 `rsbuild.config.ts`。
+1. 在根目录下创建 `rsbuild.config.ts`，并引入 `@web-extend/rsbuild-plugin` 插件。
 2. 迁移插件，参考 [rsbuild-migrating-plugins](https://rsbuild.dev/guide/migration/vite#migrating-plugins)。
 3. 迁移配置项，参考 [rsbuild-configuration-migration](https://rsbuild.dev/guide/migration/vite#configuration-migration)。
 
