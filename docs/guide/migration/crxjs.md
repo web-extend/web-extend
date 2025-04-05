@@ -76,9 +76,6 @@ export default defineConfig({
       manifest,
     }),
   ],
-  dev: {
-    liveReload: false,
-  },
 });
 ```
 

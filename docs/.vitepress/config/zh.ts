@@ -30,6 +30,10 @@ export default defineConfig({
           collapsed: false,
           items: [
             {
+              text: 'CRXJS',
+              link: 'crxjs',
+            },
+            {
               text: 'vitesse-webext',
               link: 'vitesse-webext',
             },
