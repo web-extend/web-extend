@@ -150,6 +150,9 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         },
         server: {
           printUrls: false,
+          cors: {
+            origin: '*',
+          },
         },
         output: {
           distPath: {
