@@ -12,8 +12,8 @@ import {
   transformManifestEntry,
 } from './helper.js';
 import type { EnviromentKey, NormalizeRsbuildEnvironmentProps } from './types.js';
+import { DownloadRemotePlugin } from './download-remote.js';
 
-export { DownloadRemotePlugin } from './build-remote/remote.js';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 async function normalizeRsbuildEnvironments(options: NormalizeRsbuildEnvironmentProps) {
@@ -158,6 +158,11 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         output: {
           distPath: {
             root: manifestManager.context.outDir,
+          },
+        },
+        tools: {
+          rspack: {
+            plugins: [new DownloadRemotePlugin()],
           },
         },
       };

@@ -1,16 +1,17 @@
+import crypto from 'node:crypto';
 import fs from 'node:fs';
-import path from 'node:path';
 import http from 'node:http';
 import https from 'node:https';
-import crypto from 'node:crypto';
+import path from 'node:path';
 import type { Rspack } from '@rsbuild/core';
 
 interface DownloadRemotePluginOptions {
   cacheDir: string;
+  cacheTTL: number;
 }
 
 export class DownloadRemotePlugin {
-  name = 'RspackDownloadRemotePlugin';
+  name = 'DownloadRemotePlugin';
   options: DownloadRemotePluginOptions;
 
   constructor(options: Partial<DownloadRemotePluginOptions> = {}) {
@@ -18,6 +19,7 @@ export class DownloadRemotePlugin {
     const cacheDir = path.join(nodeModulesPath, '.remote-cache');
     this.options = {
       cacheDir,
+      cacheTTL: 24 * 60 * 60 * 1000, // 24h
       ...options,
     };
 
@@ -43,10 +45,6 @@ export class DownloadRemotePlugin {
         callback(null);
       });
     });
-
-    compiler.hooks.shutdown.tap(this.name, () => {
-      this.cleanCache();
-    });
   }
 
   isRemoteImport(request: string) {
@@ -54,13 +52,26 @@ export class DownloadRemotePlugin {
   }
 
   async downloadWithCache(remoteUrl: string, cachePath: string) {
-    if (fs.existsSync(cachePath)) {
+    if (await this.isCacheValid(cachePath)) {
       // console.log(`[Cache] Using cached version of ${remoteUrl}`);
       return;
     }
 
     // console.log(`[Download] Fetching fresh copy of ${remoteUrl}`);
     await this.downloadFile(remoteUrl, cachePath);
+  }
+
+  async isCacheValid(cachePath: string) {
+    try {
+      if (!fs.existsSync(cachePath)) return false;
+
+      const stats = fs.statSync(cachePath);
+      if (Date.now() - stats.mtimeMs > this.options.cacheTTL) return false;
+
+      return true;
+    } catch (err) {
+      return false;
+    }
   }
 
   async downloadFile(url: string, savePath: string) {
