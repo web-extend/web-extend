@@ -13,6 +13,7 @@ import {
 } from './helper.js';
 import type { EnviromentKey, NormalizeRsbuildEnvironmentProps } from './types.js';
 
+export { DownloadRemotePlugin } from './build-remote/remote.js';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 async function normalizeRsbuildEnvironments(options: NormalizeRsbuildEnvironmentProps) {
