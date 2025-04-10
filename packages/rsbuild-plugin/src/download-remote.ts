@@ -6,6 +6,7 @@ import path from 'node:path';
 import type { Rspack } from '@rsbuild/core';
 
 interface DownloadRemotePluginOptions {
+  root: string;
   cacheDir: string;
   cacheTTL: number;
 }
@@ -15,9 +16,12 @@ export class DownloadRemotePlugin {
   options: DownloadRemotePluginOptions;
 
   constructor(options: Partial<DownloadRemotePluginOptions> = {}) {
-    const nodeModulesPath = findNearestNodeModules() || '.';
-    const cacheDir = path.join(nodeModulesPath, '.remote-cache');
+    const root = options.root || process.cwd();
+    const nodeModulesPath = findNearestNodeModules(root) || root;
+    const cacheDir = path.resolve(nodeModulesPath, '.remote-cache');
+
     this.options = {
+      root,
       cacheDir,
       cacheTTL: 24 * 60 * 60 * 1000, // 24h
       ...options,

@@ -5,6 +5,7 @@ import { ManifestManager } from '@web-extend/manifest';
 import { getEntryFileVariants } from '@web-extend/manifest/common';
 import type { ExtensionTarget, ManifestEntryOutput, WebExtensionManifest } from '@web-extend/manifest/types';
 import { getContentEnvironmentConfig } from './content.js';
+import { DownloadRemotePlugin } from './download-remote.js';
 import {
   clearOutdatedHotUpdateFiles,
   getAllRsbuildEntryFiles,
@@ -12,7 +13,6 @@ import {
   transformManifestEntry,
 } from './helper.js';
 import type { EnviromentKey, NormalizeRsbuildEnvironmentProps } from './types.js';
-import { DownloadRemotePlugin } from './download-remote.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
