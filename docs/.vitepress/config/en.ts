@@ -21,6 +21,7 @@ export default defineConfig({
             { text: 'Quick Start', link: 'quick-start' },
             { text: 'Project Structure', link: 'project-structure' },
             { text: 'Entrypoints', link: 'entrypoints' },
+            { text: 'Environment Variables', link: 'environment-variables' },
             { text: 'Browsers', link: 'browsers' },
             { text: 'Remote Code', link: 'remote-code' },
           ],

@@ -21,6 +21,7 @@ export default defineConfig({
             { text: '快速上手', link: 'quick-start' },
             { text: '项目结构', link: 'project-structure' },
             { text: '入口', link: 'entrypoints' },
+            { text: '环境变量', link: 'environment-variables' },
             { text: '浏览器', link: 'browsers' },
             { text: '远程代码', link: 'remote-code' },
           ],
