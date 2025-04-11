@@ -32,7 +32,7 @@ WebExtend 是一个帮助您使用现代 Web 技术构建浏览器扩展的工�
 
 自动处理 manifest.json 配置差异，轻松实现多浏览器支持。
 
-查阅[浏览器支持](./browser.md)。
+查阅[浏览器](./browsers.md)。
 
 ### ESM & TypeScript 支持 {#esm-typescript-support}
 

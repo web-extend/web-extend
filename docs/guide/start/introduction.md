@@ -33,7 +33,7 @@ WebExtend supports instant HMR for popup/options/**content_scripts**..., automat
 
 WebExtend automatically handles `manifest.json` configuration differences for easy multi-browser support.
 
-See [browser support](./browser.md).
+See [browsers](./browsers.md).
 
 ### ESM & TypeScript Support {#esm-typescript-support}
 

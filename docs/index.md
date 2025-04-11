@@ -28,7 +28,7 @@ features:
   - icon: 🧭
     title: Multi-Browser Support
     details: Automatically handles manifest.json configuration differences for easy multi-browser support
-    link: /guide/start/browser
+    link: /guide/start/browsers
   - icon: 🛠️
     title: ESM & TypeScript Support
     details: ESM and TypeScript work out of the box, no extra configuration needed

@@ -28,7 +28,7 @@ features:
   - icon: 🧭
     title: 多浏览器支持
     details: 自动处理 manifest.json 配置差异，轻松实现多浏览器支持
-    link: /zh/guide/start/browser
+    link: /zh/guide/start/browsers
   - icon: 🛠️
     title: ESM、TypeScript 支持
     details: ESM、TypeScript 开箱即用，无需额外配置
