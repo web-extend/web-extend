@@ -22,6 +22,7 @@ export default defineConfig({
             { text: '项目结构', link: 'project-structure' },
             { text: '入口', link: 'entrypoints' },
             { text: '浏览器支持', link: 'browser' },
+            { text: '远程代码', link: 'remote-code' },
           ],
         },
         {
