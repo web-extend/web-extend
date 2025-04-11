@@ -22,6 +22,7 @@ export default defineConfig({
             { text: 'Project Structure', link: 'project-structure' },
             { text: 'Entrypoints', link: 'entrypoints' },
             { text: 'Browser Support', link: 'browser' },
+            { text: 'Remote Code', link: 'remote-code' },
           ],
         },
         {
