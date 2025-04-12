@@ -22,6 +22,7 @@ The `web-extend` tool provides the following templates, which all use TypeScript
 - [React](https://react.dev/)
 - [Vue](https://vuejs.org/)
 - [Svelte](https://svelte.dev/)
+- [Solid](https://www.solidjs.com/)
 
 WebExtend is compatible with any frontend framework. For other frameworks, you might need manual installation.
 
