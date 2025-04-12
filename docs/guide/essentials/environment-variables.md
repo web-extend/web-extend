@@ -4,7 +4,7 @@ outline: deep
 
 # Environment Variables
 
-WebExtend supports injecting environment variables into your code, which is helpful for dynamic configuration, thanks to Rsbuild.
+WebExtend supports injecting environment variables into your code based on Rsbuild, which is helpful for dynamic configuration, thanks to Rsbuild.
 
 ## Built-in Environment Variables
 

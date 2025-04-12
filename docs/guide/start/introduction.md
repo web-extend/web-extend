@@ -41,16 +41,9 @@ ESM and TypeScript work out of the box, no extra configuration needed.
 
 ### Framework Agnostic {#framework-agnostic}
 
-Freedom to use any frontend framework or library, for example:
+Freedom to use any frontend framework or library.
 
-- React
-- Vue
-- Svelte
-- CSS Modules
-- Tailwind CSS
-- UnoCSS
-- Auto Import
-- ...
+See [using libraries](/guide/essentials/using-libraries).
 
 ### Lightning Fast Performance {#lightning-fast-performance}
 

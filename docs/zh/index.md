@@ -21,14 +21,14 @@ features:
   - icon: 📝
     title: 声明式入口
     details: 基于文件系统自动解析入口，减少 manifest.json 的配置负担
-    link: /zh/guide/start/entrypoints
+    link: /zh/guide/essentials/entrypoints
   - icon: ⚡️
     title: 无缝的开发体验
     details: 支持即时 HMR、自动打开浏览器和运行扩展
   - icon: 🧭
     title: 多浏览器支持
     details: 自动处理 manifest.json 配置差异，轻松实现多浏览器支持
-    link: /zh/guide/start/browsers
+    link: /zh/guide/essentials/browsers
   - icon: 🛠️
     title: ESM、TypeScript 支持
     details: ESM、TypeScript 开箱即用，无需额外配置
