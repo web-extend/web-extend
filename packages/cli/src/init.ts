@@ -34,6 +34,10 @@ const frameworks = [
     name: chalk.red('Svelte'),
     value: 'svelte',
   },
+  {
+    name: chalk.blueBright('Solid'),
+    value: 'solid',
+  },
 ];
 
 const variants = [
@@ -268,9 +272,10 @@ async function copyTemplate(source: string, dest: string, options: InitialOption
       await cp(srcPath, destPath, {
         recursive: true,
         filter: (s) => {
+          const fileRelativePath = relative(srcPath, s);
           if (name === 'src') {
-            const entryPath = relative(srcPath, s);
-            const ignored = entryNames.some((item) => entryPath.includes(item));
+            // ignore all entry files
+            const ignored = entryNames.some((item) => fileRelativePath.includes(item));
             return !ignored;
           }
           return true;
