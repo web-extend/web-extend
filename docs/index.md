@@ -33,7 +33,7 @@ features:
     title: ESM & TypeScript Support
     details: ESM and TypeScript work out of the box, no extra configuration needed
   - icon: ✈️
-    title: Framework Agnostic
+    title: Frontend Framework Agnostic
     details: Freedom to use any frontend framework or library
     link: /guide/essentials/using-libraries
   - icon: 🚀

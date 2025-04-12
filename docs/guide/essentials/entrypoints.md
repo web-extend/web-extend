@@ -95,7 +95,7 @@ import "./index.css";
 
 :::
 
-Alternatively, you can use [CSS Modules](https://rsbuild.dev/guide/basic/css-modules), [Tailwind CSS](https://rsbuild.dev/guide/basic/tailwindcss), [UnoCSS](https://rsbuild.dev/guide/basic/unocss) or [CSS-in-JS](https://rsbuild.dev/guide/framework/react#css-in-js) for styling.
+Alternatively, you can use [CSS libraries](./using-libraries.md#css-libraries) for styling.
 
 ### Adding config
 

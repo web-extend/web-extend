@@ -6,7 +6,7 @@ outline: deep
 
 WebExtend supports injecting environment variables into your code based on Rsbuild, which is helpful for dynamic configuration, thanks to Rsbuild.
 
-## Built-in Environment Variables
+## Built-in Env Variables
 
 There are two kinds of built-in env variables you can use: the ones provided by Rsbuild, and the ones provided by WebExtend.
 
@@ -20,7 +20,7 @@ WebExtend provides the following variables.
 
 - `import.meta.env.WEB_EXTEND_TARGET`: read the extension target.
 
-## Custom Environment Variables
+## Custom Env Variables
 
 You can custom env variables in the following env files.
 
@@ -74,7 +74,7 @@ console.log(import.meta.env.FOO); // 'Hello Test'
 console.log(import.meta.env.BAR); // '1'
 ```
 
-## Use Environment Variables
+## Use Env Variables
 
 ### In Client Code
 
