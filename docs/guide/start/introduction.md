@@ -23,7 +23,7 @@ These tools might have some of these problems as follows.
 
 WebExtend automatically parses entries based on the file system, reducing `manifest.json` configuration burden.
 
-See [entrypoints](./entrypoints.md).
+See [entrypoints](../essentials/entrypoints.md).
 
 ### Seamless Development Experience {#seamless-development-experience}
 
@@ -33,7 +33,7 @@ WebExtend supports instant HMR for popup/options/**content_scripts**..., automat
 
 WebExtend automatically handles `manifest.json` configuration differences for easy multi-browser support.
 
-See [browsers](./browsers.md).
+See [browsers](../essentials/browsers.md).
 
 ### ESM & TypeScript Support {#esm-typescript-support}
 
@@ -43,7 +43,7 @@ ESM and TypeScript work out of the box, no extra configuration needed.
 
 Freedom to use any frontend framework or library.
 
-See [using libraries](/guide/essentials/using-libraries).
+See [using libraries](../essentials/using-libraries.md).
 
 ### Lightning Fast Performance {#lightning-fast-performance}
 
