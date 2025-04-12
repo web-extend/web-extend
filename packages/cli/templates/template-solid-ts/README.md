@@ -1,4 +1,4 @@
-# Rsbuild project
+# WebExtend Project
 
 ## Setup
 
@@ -8,7 +8,7 @@ Install the dependencies:
 pnpm install
 ```
 
-## Get started
+## Get Started
 
 Start the dev server:
 
@@ -20,10 +20,4 @@ Build the app for production:
 
 ```bash
 pnpm build
-```
-
-Preview the production build locally:
-
-```bash
-pnpm preview
 ```
