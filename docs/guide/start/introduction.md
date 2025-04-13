@@ -57,6 +57,22 @@ WebExtend provides a CLI tool that helps you create a project quickly and genera
 
 See [web-extend](../../api/web-extend.md).
 
+## Comparisons
+
+The feature comparisons of WebExtend, Plasmo and WXT are as follows.
+
+| Feature                                  | WebExtend | Plasmo         | WXT            |
+| ---------------------------------------- | --------- | -------------- | -------------- |
+| Bundler                                  | Rsbuild   | Parcel         | Vite           |
+| First-class TypeScript support           | ✅        | ✅             | ✅             |
+| File-based entrypoints                   | ✅        | ✅             | ✅             |
+| Live-reloading + HMR for extension pages | ✅        | ✅             | ✅             |
+| Live-reloading + HMR for content_scripts | ✅        | Live-reloading | Live-reloading |
+| MV3 and MV2 support                      | ✅        | ✅             | ✅             |
+| Multi-browser support                    | ✅        | ✅             | ✅             |
+| Automatic extension running              | ✅        | ❌             | ✅             |
+| APIs                                     | Simple    | Moderate       | Complex        |
+
 ## Pre-Requisite Knowledge {#pre-requisite-knowledge}
 
 Before getting start, you should know basic knowledge about web extension development.
