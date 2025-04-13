@@ -35,6 +35,7 @@ features:
   - icon: ✈️
     title: 前端框架无关
     details: 可以自由使用任何前端框架和库
+    link: /zh/guide/essentials/using-libraries
   - icon: 🚀
     title: 极速性能
     details: 基于 Rsbuild 实现极速开发和构建

@@ -20,9 +20,7 @@ WebExtend 是一个帮助您使用现代 Web 技术构建浏览器扩展的工�
 
 ### 声明式入口 {#declarative-entrypoints}
 
-基于文件系统自动解析入口，减少 manifest.json 的配置负担。
-
-查阅[声明式入口](../essentials/entrypoints.md)。
+基于文件系统自动解析入口，减少 manifest.json 的配置负担。查阅[声明式入口](../essentials/entrypoints.md)。
 
 ### 无缝的开发体验 {#seamless-development-experience}
 
@@ -30,9 +28,7 @@ WebExtend 是一个帮助您使用现代 Web 技术构建浏览器扩展的工�
 
 ### 多浏览器支持 {#multi-browser-support}
 
-自动处理 manifest.json 配置差异，轻松实现多浏览器支持。
-
-查阅[浏览器](../essentials/browsers.md)。
+自动处理 manifest.json 配置差异，轻松实现多浏览器支持。查阅[浏览器](../essentials/browsers.md)。
 
 ### ESM & TypeScript 支持 {#esm-typescript-support}
 
@@ -40,28 +36,15 @@ TypeScript 开箱即用，无需额外配置。
 
 ### 框架无关 {#framework-agnostic}
 
-可以自由使用任何前端框架和库，例如：
-
-- React
-- Vue
-- Svelte
-- CSS Modules
-- Tailwind CSS
-- UnoCSS
-- Auto Import
-- ...
+可以自由使用任何前端框架和库。查阅 [使用库](../essentials/using-libraries.md)。
 
 ### 极速性能 {#lightning-fast-performance}
 
-基于 Rsbuild 实现极速开发和构建。
-
-查阅 [Rsbuild](https://rsbuild.dev/)。
+基于 Rsbuild 实现极速开发和构建。查阅 [Rsbuild](https://rsbuild.dev/)。
 
 ### 脚手架支持 {#scaffold-support}
 
-提供模板支持，方便快速创建项目、生成入口文件。
-
-查阅 [web-extend](../../api/web-extend.md)。
+提供模板支持，方便快速创建项目、生成入口文件。查阅 [web-extend](../../api/web-extend.md)。
 
 ## 预备知识 {#pre-requisite-knowledge}
 

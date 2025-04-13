@@ -2,21 +2,21 @@
 outline: deep
 ---
 
-# Using Libraries
+# 使用库
 
-WebExtend supports lots of frontend frameworks or libraries, which benefits from [Rsbuild's features](https://rsbuild.dev/guide/start/features). This chapter covers most commonly used cases.
+WebExtend 支持众多前端框架或库，这得益于 [Rsbuild 提供的功能](https://rsbuild.dev/guide/start/features)。本章覆盖了一些常用的使用案例。
 
-## UI Libraries
+## UI 库
 
 ### React
 
-To create a project with WebExtend and React, just run the following command.
+若要使用 React 创建一个新的 WebExtend 项目，请执行以下命令。
 
 ```shell
 npx web-extend@latest init --template react
 ```
 
-To use React in an existing WebExtend project, you need to register the [Rsbuild React plugin](https://rsbuild.dev/plugins/list/plugin-react).
+若要在已有的 WebExtend 项目中使用 React，则需要引入 [Rsbuild React 插件](https://rsbuild.dev/plugins/list/plugin-react)。
 
 ```ts [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
@@ -30,13 +30,13 @@ export default defineConfig({
 
 ### Vue
 
-To create a project with WebExtend and Vue, just run the following command.
+若要使用 Vue 创建一个新的 WebExtend 项目，请执行以下命令。
 
 ```shell
 npx web-extend@latest init --template vue
 ```
 
-To use Vue in an existing WebExtend project, you need to register the [Rsbuild Vue plugin](https://rsbuild.dev/plugins/list/plugin-vue).
+若要在已有的 WebExtend 项目中使用 Vue，则需要引入 [Rsbuild Vue 插件](https://rsbuild.dev/plugins/list/plugin-vue)。
 
 ```ts [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
@@ -56,13 +56,13 @@ export default defineConfig({
 
 ### Svelte
 
-To create a project with WebExtend and Svelte, just run the following command.
+若要使用 Svelte 创建一个新的 WebExtend 项目，请执行以下命令。
 
 ```shell
 npx web-extend@latest init --template svelte
 ```
 
-To use Svelte in an existing WebExtend project, you need to register the [Rsbuild Svelte plugin](https://rsbuild.dev/plugins/list/plugin-svelte).
+若要在已有的 WebExtend 项目中使用 Svelte，则需要引入 [Rsbuild Svelte 插件](https://rsbuild.dev/plugins/list/plugin-svelte)。
 
 ```ts [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
@@ -76,13 +76,13 @@ export default defineConfig({
 
 ### Solid
 
-To create a project with WebExtend and Solid, just run the following command.
+若要使用 Solid 创建一个新的 WebExtend 项目，请执行以下命令。
 
 ```shell
 npx web-extend@latest init --template solid
 ```
 
-To use Solid in an existing WebExtend project, you need to register the [Rsbuild Solid plugin](https://rsbuild.dev/plugins/list/plugin-solid).
+若要在已有的 WebExtend 项目中使用 Solid，则需要引入 [Rsbuild Solid 插件](https://rsbuild.dev/plugins/list/plugin-solid)。
 
 ```ts [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
@@ -101,13 +101,13 @@ export default defineConfig({
 });
 ```
 
-## CSS Libraries
+## CSS 库
 
 ### CSS Modules
 
-You can directly use [CSS Modules](https://github.com/css-modules/css-modules) in a WebExtend project. Files ending with `.module.(css|less|sass|scss|styl|stylus)` are considered CSS Modules.
+在 WebExtend 项目中可以直接使用 [CSS Modules](https://github.com/css-modules/css-modules)。以 `.module.(css|less|sass|scss|styl|stylus)` 结尾的文件将会被当作 CSS Modules 处理。
 
-For Example.
+示例如下。
 
 ```css [button.module.css]
 .red {
@@ -123,13 +123,13 @@ export default () => {
 };
 ```
 
-### CSS Preprocessors
+### CSS 预处理器
 
-You can use CSS preprocessors in a WebExtend project, including Sass, Less and Stylus. To use one of them, you need to register the corresponding Rsbuild plugin.
+在 WebExtend 项目中可以使用 CSS 预处理器，包括 Sass、Less 和 Stylus。为了使用它们，需要引入对应的插件。
 
-- [Sass Plugin](https://rsbuild.dev/plugins/list/plugin-sass)
-- [Less Plugin](https://rsbuild.dev/plugins/list/plugin-less)
-- [Stylus Plugin](https://rsbuild.dev/plugins/list/plugin-stylus)
+- [Sass 插件](https://rsbuild.dev/plugins/list/plugin-sass)
+- [Less 插件](https://rsbuild.dev/plugins/list/plugin-less)
+- [Stylus 插件](https://rsbuild.dev/plugins/list/plugin-stylus)
 
 ::: code-group
 
@@ -164,9 +164,9 @@ export default {
 
 ### Tailwind CSS
 
-To use [Tailwind CSS](https://tailwindcss.com/) in a WebExtend project, you can integrate it with PostCSS, which is built-in supported in Rsbuild.
+若要在 WebExtend 项目中使用 [Tailwind CSS](https://tailwindcss.com/)，需要通过 PostCSS 集成。Rsbuild 内置了 PostCSS 的支持。
 
-Install the following dependencies.
+安装依赖。
 
 ::: code-group
 
@@ -184,7 +184,7 @@ yarn add tailwindcss @tailwindcss/postcss -D
 
 :::
 
-Register the Tailwind CSS PostCSS plugin through `postcss.config.js`.
+在 `postcss.config.js` 中注册 Tailwind CSS PostCSS 插件。
 
 ```js [postcss.config.mjs]
 export default {
@@ -194,13 +194,13 @@ export default {
 };
 ```
 
-Import Tailwind CSS to your CSS entry file.
+在 CSS 入口文件中引入 Tailwind CSS。
 
 ```css [src/popup/index.css]
 @import "tailwindcss";
 ```
 
-Now you can use Tailwind CSS in your components or HTML.
+在组件或 HTML 中使用 Tailwind CSS。
 
 ```tsx
 <h1 class="text-3xl font-bold underline">Hello world!</h1>
@@ -208,9 +208,9 @@ Now you can use Tailwind CSS in your components or HTML.
 
 ### UnoCSS
 
-To use [UnoCSS](https://unocss.dev/) in a WebExtend project, you can integrate it with PostCSS, which is built-in supported in Rsbuild.
+若要在 WebExtend 项目中使用 [UnoCSS](https://unocss.dev/)，可以通过 PostCSS 集成。Rsbuild 内置了 PostCSS 的支持。
 
-Install the following dependencies.
+安装依赖。
 
 ::: code-group
 
@@ -228,7 +228,7 @@ yarn add unocss @unocss/postcss -D
 
 :::
 
-Register the UnoCSS PostCSS plugin through `postcss.config.js`.
+在 `postcss.config.js` 中注册 UnoCSS PostCSS 插件。
 
 ```js [postcss.config.mjs]
 import UnoCSS from "@unocss/postcss";
@@ -238,7 +238,7 @@ export default {
 };
 ```
 
-Add UnoCSS configuration through `uno.config.ts`.
+在 `uno.config.ts` 中添加 UnoCSS 配置。
 
 ```ts [uno.config.ts]
 import { defineConfig, presetWind3 } from "unocss";
@@ -254,23 +254,23 @@ export default defineConfig({
 });
 ```
 
-Import UnoCSS to your CSS entry file.
+在 CSS 入口文件中引入 UnoCSS。
 
 ```css [src/popup/index.css]
 @unocss;
 ```
 
-Now you can use UnoCSS in your components or HTML.
+在组件或 HTML 中使用 UnoCSS。
 
 ```tsx
 <div class="m-1">>Hello world!</div>
 ```
 
-## Auto Imports
+## 自动导入
 
-[unplugin-auto-import](https://github.com/unplugin/unplugin-auto-import) is a library for auto importing APIs on-demand. To use it in a WebExtend project, you need to register the corresponding plugin.
+[unplugin-auto-import](https://github.com/unplugin/unplugin-auto-import) 是一个用于按需自动导入 API 的库。若要在 WebExtend 项目中使它，需要引入对应的插件。
 
-For example.
+示例如下。
 
 ```ts [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
@@ -295,7 +295,7 @@ export default defineConfig({
 });
 ```
 
-Now you can directly use browser and Vue Composition API without importing, which will be automatically injected in the build time.
+现在可以直接使用 browser 和 Vue 组合式 API，而不需要手动导入。在构建时，这些依赖将会被自动注入。
 
 ```vue [src/popup/Popup.vue]
 <script setup lang="ts">
@@ -318,22 +318,22 @@ function openOptionsPage() {
 </template>
 ```
 
-## Linting & Formatting
+## 校验与格式化
 
 ### ESLint
 
-ESLint is a lint tool that helps you find and fix problems in JavaScript code.
+ESLint 是一个代码校验工具，可以帮助你发现和修复 JavaScript 代码中的问题。
 
-Use [ESLint](https://eslint.org/docs/latest/use/getting-started).
+使用 [ESLint](https://eslint.org/docs/latest/use/getting-started)。
 
 ### Prettier
 
-Prettier is an opinionated code formatter that helps you style code.
+Prettier 是一个代码格式化工具，可以帮助你统一代码风格。
 
-Use [Prettier](https://prettier.io/docs/install).
+使用 [Prettier](https://prettier.io/docs/install)。
 
 ### Biome
 
-Biome is one toolchain that helps you format and lint your code, which can be considered a combination of ESLint and Prettier.
+Biome 是一个工具链，可以帮助你格式化和校验代码，可以视为 ESlint 和 Prettier 的组合。
 
-Use [Biome](https://biomejs.dev/guides/getting-started/).
+使用 [Biome](https://biomejs.dev/guides/getting-started/)。
