@@ -82,7 +82,7 @@ To create a project with WebExtend and Solid, just run the following command.
 npx web-extend@latest init --template solid
 ```
 
-To use Vue in an existing WebExtend project, you need to register the [Rsbuild Svelte plugin](https://rsbuild.dev/plugins/list/plugin-svelte).
+To use Vue in an existing WebExtend project, you need to register the [Rsbuild Solid plugin](https://rsbuild.dev/plugins/list/plugin-solid).
 
 ```ts [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
@@ -130,6 +130,37 @@ You can use CSS preprocessors in a WebExtend project, including Sass, Less and S
 - [Sass Plugin](https://rsbuild.dev/plugins/list/plugin-sass)
 - [Less Plugin](https://rsbuild.dev/plugins/list/plugin-less)
 - [Stylus Plugin](https://rsbuild.dev/plugins/list/plugin-stylus)
+
+::: code-group
+
+```ts [Sass]
+// rsbuild.config.ts
+import { pluginSass } from "@rsbuild/plugin-sass";
+
+export default {
+  plugins: [pluginSass()],
+};
+```
+
+```ts [Less]
+// rsbuild.config.ts
+import { pluginLess } from "@rsbuild/plugin-less";
+
+export default {
+  plugins: [pluginLess()],
+};
+```
+
+```ts [Stylus]
+// rsbuild.config.ts
+import { pluginStylus } from "@rsbuild/plugin-stylus";
+
+export default {
+  plugins: [pluginStylus()],
+};
+```
+
+:::
 
 ### Tailwind CSS
 
@@ -235,9 +266,7 @@ Now you can use UnoCSS in your components or HTML.
 <div class="m-1">Hello</div>
 ```
 
-## Other Libraries
-
-### Auto Imports
+## Auto Imports
 
 [unplugin-auto-import](https://github.com/unplugin/unplugin-auto-import) is a library for auto importing APIs on-demand. To use it in a WebExtend project, you need to register the corresponding plugin.
 
@@ -288,3 +317,23 @@ function openOptionsPage() {
   </main>
 </template>
 ```
+
+## Linting & Formatting
+
+### ESLint
+
+ESLint is a lint tool that helps you find and fix problems in JavaScript code.
+
+Use [ESLint](https://eslint.org/docs/latest/use/getting-started).
+
+### Prettier
+
+Prettier is an opinionated code formatter that helps you style code.
+
+Use [Prettier](https://prettier.io/docs/install).
+
+### Biome
+
+Biome is one toolchain that helps you format and lint your code, which can be considered a combination of ESLint and Prettier.
+
+Use [Biome](https://biomejs.dev/guides/getting-started/).

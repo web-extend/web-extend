@@ -44,10 +44,6 @@ FOO=Hello
 BAR=1
 ```
 
-```[.env.development]
-FOO=Hello Dev
-```
-
 ```[.env.test]
 FOO=Hello Test
 ```
