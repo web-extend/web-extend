@@ -46,6 +46,22 @@ TypeScript 开箱即用，无需额外配置。
 
 提供模板支持，方便快速创建项目、生成入口文件。查阅 [web-extend](../../api/web-extend.md)。
 
+## 比较 {#comparisons}
+
+WebExtend、Plasmo 和 WXT 的功能比较如下。
+
+| 功能                                    | WebExtend | Plasmo   | WXT      |
+| --------------------------------------- | --------- | -------- | -------- |
+| 打包器                                  | Rsbuild   | Parcel   | Vite     |
+| 一等 TypeScript 支持                    | ✅        | ✅       | ✅       |
+| 基于文件系统的路由                      | ✅        | ✅       | ✅       |
+| 自动刷新 + HMR（对于扩展页）            | ✅        | ✅       | ✅       |
+| 自动刷新 + HMR （对于 content_scripts） | ✅        | 自动刷新 | 自动刷新 |
+| MV3、MV2 支持                           | ✅        | ✅       | ✅       |
+| 多浏览器支持                            | ✅        | ✅       | ✅       |
+| 自动运行扩展                            | ✅        | ❌       | ✅       |
+| APIs                                    | 简单      | 适中     | 复杂     |
+
 ## 预备知识 {#pre-requisite-knowledge}
 
 了解浏览器扩展开发的基础知识。
