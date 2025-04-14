@@ -87,15 +87,76 @@ Alternatively, create the `src/contents/*.js` or `src/contents/*/index.js` file 
 
 Import CSS files directly in the `content` entry file, which will be reflected to the `content_scripts[index].css` field in `manifest.json`.
 
-::: code-group
+For example.
 
-```js [src/content/index.js]
-import "./index.css";
+```css [src/content/index.css]
+.web-extend-content-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  align-items: end;
+  z-index: 1000;
+}
+
+.web-extend-content {
+  color: #000;
+  background-color: #fff;
+  margin-right: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  text-align: center;
+  padding: 12px;
+}
 ```
 
-:::
+```js [src/content/index.ts]
+import "./index.css";
 
-Alternatively, you can use [CSS libraries](./using-libraries.md#css-libraries) for styling.
+let root = document.getElementById("myContent");
+if (!root) {
+  root = document.createElement("div");
+  root.id = "myContent";
+  root.innerHTML = `<div class="web-extend-content-container">
+    <div class="web-extend-content">
+      <p>This is a content script.</p>
+    </div>
+  </div>`;
+  document.body.appendChild(root);
+}
+```
+
+You can also apply CSS inside Shadow DOM, which is helpful to avoid style conflicts with the styles in the main site.
+
+For example.
+
+```ts [src/content/index.ts]
+import inlineStyles from "./index.css?inline";
+
+let host = document.getElementById("myContentHost");
+if (!host) {
+  host = document.createElement("div");
+  host.id = "myContentHost";
+
+  const shadow = host.attachShadow({ mode: "open" });
+
+  const sheet = new CSSStyleSheet();
+  sheet.replaceSync(inlineStyles);
+  shadow.adoptedStyleSheets = [sheet];
+
+  const root = document.createElement("div");
+  root.innerHTML = `<div class="web-extend-content-container">
+    <div class="web-extend-content">
+      <p>This is a content script.</p>
+    </div>
+  </div>`;
+  shadow.appendChild(root);
+
+  document.body.appendChild(host);
+}
+```
+
+For advanced styling, you can utilize CSS Modules, CSS Preprocessors, Tailwind CSS, or UnoCSS. See [using CSS libraries](./using-libraries.md#css-libraries).
 
 ### Adding config
 

@@ -107,7 +107,7 @@ export default defineConfig({
 
 You can directly use [CSS Modules](https://github.com/css-modules/css-modules) in a WebExtend project. Files ending with `.module.(css|less|sass|scss|styl|stylus)` are considered CSS Modules.
 
-For Example.
+For example.
 
 ```css [button.module.css]
 .red {
