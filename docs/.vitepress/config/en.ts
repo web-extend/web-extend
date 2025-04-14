@@ -13,21 +13,28 @@ export default defineConfig({
     sidebar: {
       '/guide/': [
         {
-          text: 'Getting Start',
+          text: 'Getting Started',
           base: '/guide/start/',
-          collapsed: false,
           items: [
             { text: 'Introduction', link: 'introduction' },
             { text: 'Quick Start', link: 'quick-start' },
+          ],
+        },
+        {
+          text: 'Essentials',
+          base: '/guide/essentials/',
+          items: [
             { text: 'Project Structure', link: 'project-structure' },
             { text: 'Entrypoints', link: 'entrypoints' },
-            { text: 'Browser Support', link: 'browser' },
+            { text: 'Environment Variables', link: 'environment-variables' },
+            { text: 'Using Libraries', link: 'using-libraries' },
+            { text: 'Browsers', link: 'browsers' },
+            { text: 'Remote Code', link: 'remote-code' },
           ],
         },
         {
           text: 'Migration',
           base: '/guide/migration/',
-          collapsed: false,
           items: [
             {
               text: 'CRXJS',

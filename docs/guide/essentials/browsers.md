@@ -2,9 +2,9 @@
 outline: deep
 ---
 
-# Browser Support
+# Browsers
 
-## Extension Target
+## Browser Target
 
 WebExtend supports the following extension targets.
 
@@ -41,7 +41,11 @@ if (target.includes("chrome")) {
 
 :::
 
-## Manifest Compatibility
+## Browser Compatibility
+
+There are two kinds of compatibility problems when developing a cross-browser extension: manifest config compatibility and extension API compatibility.
+
+### Manifest
 
 WebExtend uses the file system to parse entry files and reflect them to items in `manifest.json` automatically, so you don't need to care about the campatibility of `manifest.json` between differnent browsers.
 
@@ -69,7 +73,7 @@ Manifest documents are as follows.
 - [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest)
 - [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json)
 
-## Extension API Compatibility
+### Extension API
 
 One thing that's important to note is that WebExtend won't deal with the compatibility of Extension APIs for now, so you need to do it yourself.
 
@@ -78,11 +82,11 @@ Extension API documents are as follows.
 - [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api)
 - [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API)
 
-### For Chromium-based
+#### For Chromium-based
 
 You can use `chrome` API directly. If you use TypeScript, [`@types/chrome`](https://www.npmjs.com/package/@types/chrome) is recommended to be installed.
 
-### For Firefox
+#### For Firefox
 
 It is recommended to install [webextension-polyfill](https://www.npmjs.com/package/webextension-polyfill). If you use TypeScript, [@types/webextension-polyfill](https://www.npmjs.com/package/@types/webextension-polyfill) is also recommended. An example is as follows.
 

@@ -23,7 +23,7 @@ These tools might have some of these problems as follows.
 
 WebExtend automatically parses entries based on the file system, reducing `manifest.json` configuration burden.
 
-See [entrypoints](./entrypoints.md).
+See [entrypoints](../essentials/entrypoints.md).
 
 ### Seamless Development Experience {#seamless-development-experience}
 
@@ -33,7 +33,7 @@ WebExtend supports instant HMR for popup/options/**content_scripts**..., automat
 
 WebExtend automatically handles `manifest.json` configuration differences for easy multi-browser support.
 
-See [browser support](./browser.md).
+See [browsers](../essentials/browsers.md).
 
 ### ESM & TypeScript Support {#esm-typescript-support}
 
@@ -41,16 +41,9 @@ ESM and TypeScript work out of the box, no extra configuration needed.
 
 ### Framework Agnostic {#framework-agnostic}
 
-Freedom to use any frontend framework or library, for example:
+Freedom to use any frontend framework or library.
 
-- React
-- Vue
-- Svelte
-- CSS Modules
-- Tailwind CSS
-- UnoCSS
-- Auto Import
-- ...
+See [using libraries](../essentials/using-libraries.md).
 
 ### Lightning Fast Performance {#lightning-fast-performance}
 
@@ -63,6 +56,22 @@ See [Rsbuild](https://rsbuild.dev/).
 WebExtend provides a CLI tool that helps you create a project quickly and generate entry files automatically.
 
 See [web-extend](../../api/web-extend.md).
+
+## Comparisons
+
+The feature comparisons of WebExtend, Plasmo and WXT are as follows.
+
+| Feature                                  | WebExtend | Plasmo         | WXT            |
+| ---------------------------------------- | --------- | -------------- | -------------- |
+| Bundler                                  | Rsbuild   | Parcel         | Vite           |
+| First-class TypeScript support           | ✅        | ✅             | ✅             |
+| File-based entrypoints                   | ✅        | ✅             | ✅             |
+| Live-reloading + HMR for extension pages | ✅        | ✅             | ✅             |
+| Live-reloading + HMR for content_scripts | ✅        | Live-reloading | Live-reloading |
+| MV3 and MV2 support                      | ✅        | ✅             | ✅             |
+| Multi-browser support                    | ✅        | ✅             | ✅             |
+| Automatic extension running              | ✅        | ❌             | ✅             |
+| APIs                                     | Simple    | Moderate       | Complex        |
 
 ## Pre-Requisite Knowledge {#pre-requisite-knowledge}
 

@@ -107,7 +107,7 @@ export default {
 
 :::
 
-此外，WebExtend 也支持[声明式入口](../start/entrypoints.md)。如果使用这种方式，你将不再需要手动定义入口文件。
+此外，WebExtend 也支持[声明式入口](../essentials/entrypoints.md)。如果使用这种方式，你将不再需要手动定义入口文件。
 
 ## 验证结果
 

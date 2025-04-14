@@ -13,21 +13,28 @@ export default defineConfig({
     sidebar: {
       '/zh/guide/': [
         {
-          text: '指南',
+          text: '开始',
           base: '/zh/guide/start/',
-          collapsed: false,
           items: [
             { text: '介绍', link: 'introduction' },
             { text: '快速上手', link: 'quick-start' },
+          ],
+        },
+        {
+          text: '基础',
+          base: '/zh/guide/essentials/',
+          items: [
             { text: '项目结构', link: 'project-structure' },
             { text: '入口', link: 'entrypoints' },
-            { text: '浏览器支持', link: 'browser' },
+            { text: '环境变量', link: 'environment-variables' },
+            { text: '使用库', link: 'using-libraries' },
+            { text: '浏览器', link: 'browsers' },
+            { text: '远程代码', link: 'remote-code' },
           ],
         },
         {
           text: '迁移',
           base: '/zh/guide/migration/',
-          collapsed: false,
           items: [
             {
               text: 'CRXJS',

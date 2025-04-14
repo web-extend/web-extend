@@ -22,6 +22,7 @@ npx web-extend@latest init
 - [React](https://react.dev/)
 - [Vue](https://vuejs.org/)
 - [Svelte](https://svelte.dev/)
+- [Solid](https://www.solidjs.com/)
 
 WebExtend 兼容任何前端框架，如需在其他框架中使用，请参考手动安装的部分。
 

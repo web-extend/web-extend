@@ -5,6 +5,7 @@ import { ManifestManager } from '@web-extend/manifest';
 import { getEntryFileVariants } from '@web-extend/manifest/common';
 import type { ExtensionTarget, ManifestEntryOutput, WebExtensionManifest } from '@web-extend/manifest/types';
 import { getContentEnvironmentConfig } from './content.js';
+import { DownloadRemotePlugin } from './download-remote.js';
 import {
   clearOutdatedHotUpdateFiles,
   getAllRsbuildEntryFiles,
@@ -157,6 +158,11 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         output: {
           distPath: {
             root: manifestManager.context.outDir,
+          },
+        },
+        tools: {
+          rspack: {
+            plugins: [new DownloadRemotePlugin()],
           },
         },
       };

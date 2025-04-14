@@ -196,3 +196,13 @@ export interface ContentScriptConfig {
   world?: "ISOLATED" | "MAIN";
 }
 ```
+
+使用：
+
+```ts [src/content/index.ts]
+import type { ContentScriptConfig } from "web-extend";
+
+export const config: ContentScriptConfig = {
+  matches: ["https://www.google.com/*"],
+};
+```

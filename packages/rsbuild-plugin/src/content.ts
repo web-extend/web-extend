@@ -24,7 +24,7 @@ function getContentEnvironmentConfig({
           hotUpdateGlobal: 'webpackHotUpdateWebExtend_content',
         },
         plugins: [
-          new RspackContentRuntimePlugin({
+          new ContentRuntimePlugin({
             getPort: () => context.devServer?.port,
             target: manifestContext.target,
             mode: manifestContext.mode,
@@ -43,8 +43,8 @@ type RspackContentRuntimePluginOptions = {
   mode: string;
 };
 
-class RspackContentRuntimePlugin {
-  name = 'RspackContentRuntimePlugin';
+class ContentRuntimePlugin {
+  name = 'ContentRuntimePlugin';
   #options: RspackContentRuntimePluginOptions | undefined;
 
   constructor(options: RspackContentRuntimePluginOptions) {

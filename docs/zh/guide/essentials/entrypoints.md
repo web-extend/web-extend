@@ -85,17 +85,74 @@ npx web-extend g contents/site-one
 
 ### 添加 CSS {#adding-css}
 
-在 `content` 入口文件中直接引入 CSS 文件，对应 `manifest.json` 中的 `content_scripts[index].css` 字段。
+在 `content` 入口文件中直接引入 CSS 文件，对应 `manifest.json` 中的 `content_scripts[index].css` 字段。示例如下。
 
-::: code-group
+```css [src/content/index.css]
+.web-extend-content-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  align-items: end;
+  z-index: 1000;
+}
 
-```js [src/content/index.js]
-import "./index.css";
+.web-extend-content {
+  color: #000;
+  background-color: #fff;
+  margin-right: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  text-align: center;
+  padding: 12px;
+}
 ```
 
-:::
+```js [src/content/index.ts]
+import "./index.css";
 
-此外，还可以使用 [CSS Modules](https://rsbuild.dev/guide/basic/css-modules)、[Tailwind CSS](https://rsbuild.dev/guide/basic/tailwindcss)、[UnoCSS](https://rsbuild.dev/guide/basic/unocss) 或 [CSS-in-JS](https://rsbuild.dev/guide/framework/react#css-in-js) 等设置样式。
+let root = document.getElementById("myContent");
+if (!root) {
+  root = document.createElement("div");
+  root.id = "myContent";
+  root.innerHTML = `<div class="web-extend-content-container">
+    <div class="web-extend-content">
+      <p>This is a content script.</p>
+    </div>
+  </div>`;
+  document.body.appendChild(root);
+}
+```
+
+为了避免样式与主站中的样式冲突，你还可以在 Shadow DOM 中应用样式。示例如下。
+
+```ts [src/content/index.ts]
+import inlineStyles from "./index.css?inline";
+
+let host = document.getElementById("myContentHost");
+if (!host) {
+  host = document.createElement("div");
+  host.id = "myContentHost";
+
+  const shadow = host.attachShadow({ mode: "open" });
+
+  const sheet = new CSSStyleSheet();
+  sheet.replaceSync(inlineStyles);
+  shadow.adoptedStyleSheets = [sheet];
+
+  const root = document.createElement("div");
+  root.innerHTML = `<div class="web-extend-content-container">
+    <div class="web-extend-content">
+      <p>This is a content script.</p>
+    </div>
+  </div>`;
+  shadow.appendChild(root);
+
+  document.body.appendChild(host);
+}
+```
+
+此外，还可以使用 CSS Modules、CSS 预处理器、Tailwind CSS 或 UnoCSS 来设置样式。查阅[使用 CSS 库](./using-libraries.md#css-libraries)。
 
 ### 添加 config {#adding-config}
 

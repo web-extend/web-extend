@@ -2,9 +2,9 @@
 outline: deep
 ---
 
-# 浏览器支持 {#browser-support}
+# 浏览器 {#browsers}
 
-## 扩展目标 {#extension-target}
+## 浏览器目标 {#extension-target}
 
 WebExtend 支持以下浏览器扩展目标。
 
@@ -41,7 +41,11 @@ if (target.includes("chrome")) {
 
 :::
 
-## Manifest 兼容 {#manifest-compatibility}
+## 浏览器兼容性
+
+在开发跨浏览器扩展时，需要考虑两类兼容性问题：`maifest.json` 的兼容和扩展 API 的兼容。
+
+### Manifest {#manifest}
 
 WebExtend 会基于文件系统和构建目标，自动解析和生成 `manifest.json`，因此无需额外处理不同浏览器之间 Manifest 配置的差异性。
 
@@ -69,7 +73,7 @@ Manifest 文档：
 - [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest)
 - [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json)
 
-## Extension API 兼容 {#extension-aip-compatibility}
+### Extension API {#extension-api}
 
 WebExtend 不会处理 Extension API，如果需要兼容多个浏览器，需要在源码中手动处理。
 
@@ -78,11 +82,11 @@ Extension API 文档：
 - [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api)
 - [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API)
 
-### 适用于 Chromium
+#### 适用于 Chromium
 
 可以直接使用 `chrome` API。如果使用 TypeScript，推荐安装 [`@types/chrome`](https://www.npmjs.com/package/@types/chrome)。
 
-### 适用于 Firefox
+#### 适用于 Firefox
 
 如果需要支持或兼容 Firefox 浏览器，推荐使用 [webextension-polyfill](https://www.npmjs.com/package/webextension-polyfill)，它提供了统一的浏览器扩展 API，兼容 Firefox 和 Chrome 系列。如果使用 TypeScript，还需要安装 [@types/webextension-polyfill](https://www.npmjs.com/package/@types/webextension-polyfill)。示例如下。
 
@@ -104,7 +108,7 @@ browser.storage.local
 
 :::
 
-## 浏览器启动 {#browser-startup}
+## 浏览器运行 {#browser-startup}
 
 运行以下命令，WebExtend 将自动打开浏览器并运行扩展。如果目标为 `firefox-mv2` 或 `firefox-mv3`，会打开 Firefox 浏览器，否则会打开 Chrome 浏览器。
 

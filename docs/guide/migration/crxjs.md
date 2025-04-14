@@ -111,7 +111,7 @@ export default {
 
 :::
 
-Additionally, WebExend also supports [declarative entrypoints](../start/entrypoints.md), which parses entry files based on the file system and generates the corresponding fields for `manifest.json`, so you no longer need to define entrypoints manually.
+Additionally, WebExend also supports [declarative entrypoints](../essentials/entrypoints.md), which parses entry files based on the file system and generates the corresponding fields for `manifest.json`, so you no longer need to define entrypoints manually.
 
 ## Validating results
 
