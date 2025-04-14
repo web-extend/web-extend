@@ -156,7 +156,7 @@ if (!host) {
 }
 ```
 
-For advanced styling, you can utilize CSS Modules, CSS Preprocessors, Tailwind CSS, or UnoCSS. See [using CSS libraries](./using-libraries.md#css-libraries).
+For advanced styling, you can utilize CSS Modules, CSS preprocessors, Tailwind CSS, or UnoCSS. See [using CSS libraries](./using-libraries.md#css-libraries).
 
 ### Adding config
 
