@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { cancel, isCancel, multiselect } from '@clack/prompts';
 import { resolveSrcDir } from '@web-extend/manifest/common';
-import { multiselect, isCancel, cancel } from '@clack/prompts';
 import { copyEntryFiles, entrypoints, getTemplatePath, resolveEntryTemplate } from './init.js';
 
 export interface GenerateOptions {

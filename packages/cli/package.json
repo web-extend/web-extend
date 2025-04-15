@@ -14,16 +14,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "npm run build"
   },
-  "files": [
-    "dist",
-    "bin",
-    "templates"
-  ],
-  "keywords": [
-    "web extensions",
-    "browser extensions",
-    "CLI"
-  ],
+  "files": ["dist", "bin", "templates"],
+  "keywords": ["web extensions", "browser extensions", "CLI"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/web-extend/web-extend.git"

@@ -2,7 +2,7 @@ import { existsSync } from 'node:fs';
 import { copyFile, cp, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { basename, dirname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { intro, outro, text, select, multiselect, cancel, isCancel, note, type Option } from '@clack/prompts';
+import { type Option, cancel, intro, isCancel, multiselect, note, outro, select, text } from '@clack/prompts';
 import chalk from 'chalk';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
