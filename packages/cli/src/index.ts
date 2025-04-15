@@ -1,4 +1,3 @@
-import chalk from 'chalk';
 import { type Command, program } from 'commander';
 import { type GenerateOptions, generate } from './generate.js';
 import { init } from './init.js';
@@ -47,10 +46,6 @@ function applyInitCommand(command: Command) {
           ...otherOptions,
         });
       } catch (error) {
-        if (error instanceof Error && error.name === 'ExitPromptError') {
-          console.log(`${chalk.red('✕')} ${chalk.bold('Canceled')}`);
-          return;
-        }
         console.error('Failed to create the project.');
         console.error(error);
         process.exit(1);
@@ -75,7 +70,7 @@ function applyGenerateCommand(command: Command) {
         console.log('Generated successfully!');
       } catch (error) {
         if (error instanceof Error && error.name === 'ExitPromptError') {
-          console.log(`${chalk.red('✕')} ${chalk.bold('Canceled')}`);
+          // console.log(`${chalk.red('✕')} ${chalk.bold('Canceled')}`);
           return;
         }
         console.error('Failed to generate.');

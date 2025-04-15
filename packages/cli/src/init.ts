@@ -2,7 +2,7 @@ import { existsSync } from 'node:fs';
 import { copyFile, cp, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { basename, dirname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { checkbox, input, select } from '@inquirer/prompts';
+import { intro, outro, text, select, multiselect, cancel, isCancel, note, type Option } from '@clack/prompts';
 import chalk from 'chalk';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -17,48 +17,48 @@ export interface InitialOptions {
   tools?: ProjectToolType[];
 }
 
-const frameworks = [
+const frameworks: Option<string>[] = [
   {
-    name: chalk.yellow('Vanilla'),
+    label: chalk.yellow('Vanilla'),
     value: 'vanilla',
   },
   {
-    name: chalk.cyan('React'),
+    label: chalk.cyan('React'),
     value: 'react',
   },
   {
-    name: chalk.green('Vue'),
+    label: chalk.green('Vue'),
     value: 'vue',
   },
   {
-    name: chalk.red('Svelte'),
+    label: chalk.red('Svelte'),
     value: 'svelte',
   },
   {
-    name: chalk.blueBright('Solid'),
+    label: chalk.blueBright('Solid'),
     value: 'solid',
   },
 ];
 
 const variants = [
   {
-    name: 'TypeScript',
+    label: 'TypeScript',
     value: 'ts',
   },
   {
-    name: 'JavaScript',
+    label: 'JavaScript',
     value: 'js',
     disabled: true,
   },
 ];
 
-const tools: { name: string; value: ProjectToolType }[] = [
+const tools: Option<ProjectToolType>[] = [
   {
-    name: 'Add ESLint for code linting',
+    label: 'Add ESLint for code linting',
     value: 'eslint',
   },
   {
-    name: 'Add Prettier for code formatting',
+    label: 'Add Prettier for code formatting',
     value: 'prettier',
   },
 ];
@@ -78,59 +78,59 @@ export type EntryPointType =
 
 export type EntryTemplateType = 'background' | 'content' | 'devtools' | 'web';
 
-export const entrypoints: { name: string; value: EntryPointType; template: EntryTemplateType }[] = [
+export const entrypoints: (Option<EntryPointType> & { template: EntryTemplateType })[] = [
   {
-    name: 'background',
+    label: 'background',
     value: 'background',
     template: 'background',
   },
   {
-    name: 'content',
+    label: 'content',
     value: 'content',
     template: 'content',
   },
   {
-    name: 'popup',
+    label: 'popup',
     value: 'popup',
     template: 'web',
   },
   {
-    name: 'options',
+    label: 'options',
     value: 'options',
     template: 'web',
   },
   {
-    name: 'sidepanel',
+    label: 'sidepanel',
     value: 'sidepanel',
     template: 'web',
   },
   {
-    name: 'devtools',
+    label: 'devtools',
     value: 'devtools',
     template: 'devtools',
   },
   {
-    name: 'panel',
+    label: 'panel',
     value: 'panel',
     template: 'web',
   },
   {
-    name: 'newtab',
+    label: 'newtab',
     value: 'newtab',
     template: 'web',
   },
   {
-    name: 'bookmarks',
+    label: 'bookmarks',
     value: 'bookmarks',
     template: 'web',
   },
   {
-    name: 'history',
+    label: 'history',
     value: 'history',
     template: 'web',
   },
   {
-    name: 'sandbox',
+    label: 'sandbox',
     value: 'sandbox',
     template: 'web',
   },
@@ -142,22 +142,20 @@ const templates = frameworks.flatMap((framework) =>
 
 export async function resolveEntryTemplate(text?: string) {
   let template = '';
-  // only support ts template
   const variant = 'ts';
   if (!text) {
-    const framework = await select({
-      message: 'Select a framework',
-      choices: frameworks,
+    const value = await select({
+      message: 'Select framework',
+      options: frameworks,
     });
-    // const variant = await select({
-    //   message: 'Select a variant',
-    //   choices: variants,
-    // });
-    template = `${framework}-${variant}`;
+    if (isCancel(value)) {
+      cancel('Operation cancelled');
+      return;
+    }
+    template = `${value}-${variant}`;
   } else {
     const list = text.split('-');
-    const framework = list[0];
-    template = `${framework}-${variant}`;
+    template = `${list[0]}-${variant}`;
   }
 
   if (!templates.includes(template)) {
@@ -167,60 +165,80 @@ export async function resolveEntryTemplate(text?: string) {
 }
 
 export async function normalizeInitialOptions(options: InitialOptions) {
-  console.log('\nWelcome to web-extend\n');
+  console.log();
+  intro(chalk.bgCyan(' Welcome to WebExtend '));
 
   if (!options.projectName) {
-    options.projectName = await input({ message: 'Project name or path', default: 'my-extension-app' });
+    const value = await text({ message: 'Project name or path', placeholder: 'my-extension-app' });
+    if (isCancel(value)) {
+      cancel('Operation cancelled');
+      return;
+    }
+    options.projectName = value;
   }
 
   const root = process.cwd();
   const projectPath = resolve(root, options.projectName);
   if (existsSync(projectPath)) {
-    options.override = await select({
-      message: `Target directory ${options.projectName} is not empty, please choose`,
-      choices: [
+    const value = await select({
+      message: `Target ${chalk.yellow(options.projectName)} is not empty, please choose`,
+      options: [
         {
-          name: 'Cancel operation',
+          label: 'Cancel operation',
           value: false,
         },
         {
-          name: 'Continue and override files',
+          label: 'Continue and override files',
           value: true,
         },
       ],
     });
-    if (!options.override) {
-      const error = new Error('Cancel operation');
-      error.name = 'ExitPromptError';
-      throw error;
+    if (isCancel(value) || !value) {
+      cancel('Operation cancelled');
+      return;
     }
+    options.override = value;
   }
 
   options.template = await resolveEntryTemplate(options.template);
+  if (!options.template) {
+    return;
+  }
 
   if (!options.entries?.length) {
-    options.entries = await checkbox({
+    const value = await multiselect({
       message: 'Select entrypoints',
-      choices: entrypoints,
-      loop: false,
+      options: entrypoints,
     });
+    if (isCancel(value)) {
+      cancel('Operation cancelled');
+      return;
+    }
+    options.entries = value;
   }
 
   if (!options.tools?.length) {
-    options.tools = await checkbox({
+    const value = await multiselect({
       message: 'Select additional tools',
-      choices: tools,
-      loop: false,
+      options: tools,
+      required: false,
     });
+    if (isCancel(value)) {
+      cancel('Operation cancelled');
+      return;
+    }
+    options.tools = value;
   }
 
-  console.log('\nDone. Next step:');
-  console.group();
-  console.log(`cd ${options.projectName}`);
-  console.log('npm install');
-  console.log('npm run dev');
-  console.groupEnd();
-  console.log();
+  const nextSteps = [
+    `1. ${chalk.cyan(`cd ${options.projectName}`)}`,
+    `2. ${chalk.cyan('git init')} ${chalk.dim('(optional)')}`,
+    `3. ${chalk.cyan('npm install')}`,
+    `4. ${chalk.cyan('npm run dev')}`,
+  ];
+  note(nextSteps.map((step) => chalk.reset(step)).join('\n'), 'Next steps');
+  outro('Done');
+
   return options;
 }
 

@@ -14,8 +14,16 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "npm run build"
   },
-  "files": ["dist", "bin", "templates"],
-  "keywords": ["web extensions", "browser extensions", "CLI"],
+  "files": [
+    "dist",
+    "bin",
+    "templates"
+  ],
+  "keywords": [
+    "web extensions",
+    "browser extensions",
+    "CLI"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/web-extend/web-extend.git"
@@ -25,7 +33,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@inquirer/prompts": "^7.3.1",
+    "@clack/prompts": "^0.10.1",
     "archiver": "^7.0.1",
     "chalk": "^5.4.1",
     "chokidar": "^4.0.3",

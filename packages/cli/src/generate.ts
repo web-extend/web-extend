@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { checkbox } from '@inquirer/prompts';
 import { resolveSrcDir } from '@web-extend/manifest/common';
+import { multiselect, isCancel, cancel } from '@clack/prompts';
 import { copyEntryFiles, entrypoints, getTemplatePath, resolveEntryTemplate } from './init.js';
 
 export interface GenerateOptions {
@@ -53,6 +53,7 @@ async function generateIcons({ root, template, outDir, size = ICON_SIZES.join(',
 
 async function generateEntryFiles({ root, template, outDir, entries }: GenerateOptions) {
   const finalTemplate = await resolveEntryTemplate(template);
+  if (!finalTemplate) return;
   const templatePath = getTemplatePath(finalTemplate);
   const destPath = outDir ? resolve(root, outDir) : resolve(root, resolveSrcDir(root));
   await copyEntryFiles(resolve(templatePath, 'src'), destPath, entries);
@@ -60,11 +61,20 @@ async function generateEntryFiles({ root, template, outDir, entries }: GenerateO
 
 export async function generate(options: GenerateOptions) {
   if (!options.entries.length) {
-    options.entries = await checkbox({
+    console.log();
+
+    const value = await multiselect({
       message: 'Select entrypoints',
-      choices: [{ name: 'icons', value: 'icons' }, ...entrypoints],
-      loop: false,
+      options: [...entrypoints, { label: 'icons', value: 'icons' }],
     });
+    if (isCancel(value)) {
+      cancel('Operation cancelled');
+      const error = new Error('Operation cancelled');
+      error.name = 'ExitPromptError';
+      throw error;
+    }
+
+    options.entries = value;
   }
 
   const { entries = [] } = options;
