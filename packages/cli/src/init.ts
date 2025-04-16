@@ -146,7 +146,7 @@ export async function resolveEntryTemplate(text?: string) {
   const variant = 'ts';
   if (!text) {
     const framework = await select({
-      message: 'Select a framework',
+      message: 'Select framework',
       choices: frameworks,
     });
     // const variant = await select({
@@ -167,7 +167,7 @@ export async function resolveEntryTemplate(text?: string) {
 }
 
 export async function normalizeInitialOptions(options: InitialOptions) {
-  console.log('\nWelcome to web-extend\n');
+  console.log(chalk.bgCyan('\n Welcome to WebExtend \n'));
 
   if (!options.projectName) {
     options.projectName = await input({ message: 'Project name or path', default: 'my-extension-app' });
