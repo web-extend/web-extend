@@ -62,8 +62,9 @@ export async function generate(options: GenerateOptions) {
   if (!options.entries.length) {
     options.entries = await checkbox({
       message: 'Select entrypoints',
-      choices: [{ name: 'icons', value: 'icons' }, ...entrypoints],
+      choices: [...entrypoints, { name: 'icons', value: 'icons' }],
       loop: false,
+      required: true,
     });
   }
 

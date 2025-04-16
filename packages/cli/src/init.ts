@@ -146,13 +146,9 @@ export async function resolveEntryTemplate(text?: string) {
   const variant = 'ts';
   if (!text) {
     const framework = await select({
-      message: 'Select a framework',
+      message: 'Select framework',
       choices: frameworks,
     });
-    // const variant = await select({
-    //   message: 'Select a variant',
-    //   choices: variants,
-    // });
     template = `${framework}-${variant}`;
   } else {
     const list = text.split('-');
@@ -167,7 +163,7 @@ export async function resolveEntryTemplate(text?: string) {
 }
 
 export async function normalizeInitialOptions(options: InitialOptions) {
-  console.log('\nWelcome to web-extend\n');
+  console.log(chalk.bgCyan('\n Welcome to WebExtend \n'));
 
   if (!options.projectName) {
     options.projectName = await input({ message: 'Project name or path', default: 'my-extension-app' });
@@ -203,6 +199,7 @@ export async function normalizeInitialOptions(options: InitialOptions) {
       message: 'Select entrypoints',
       choices: entrypoints,
       loop: false,
+      required: true,
     });
   }
 
@@ -214,11 +211,13 @@ export async function normalizeInitialOptions(options: InitialOptions) {
     });
   }
 
-  console.log('\nDone. Next step:');
+  const pkgManager = 'npm';
+  console.log('\nDone. Next steps:');
   console.group();
-  console.log(`cd ${options.projectName}`);
-  console.log('npm install');
-  console.log('npm run dev');
+  console.log(`1. cd ${options.projectName}`);
+  console.log(`2. git init ${chalk.dim('(optional)')}`);
+  console.log(`3. ${pkgManager} install`);
+  console.log(`4. ${pkgManager} run dev`);
   console.groupEnd();
   console.log();
   return options;
