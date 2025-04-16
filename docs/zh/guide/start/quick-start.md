@@ -108,7 +108,7 @@ export default defineConfig({
 
 ### 添加入口文件 {#add-entry-files}
 
-创建 src 源码目录，并创建 `popup.js` 文件，文件内容如下。WebExtend 将基于文件系统[自动解析入口](entrypoints.md)。
+创建 src 源码目录，并创建 `popup.js` 文件，文件内容如下。WebExtend 将基于文件系统[自动解析入口](../essentials/entrypoints.md)。
 
 ::: code-group
 

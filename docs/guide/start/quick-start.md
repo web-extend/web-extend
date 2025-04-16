@@ -108,7 +108,7 @@ export default defineConfig({
 
 ### Add entry files
 
-Create the `src/popup.js` file whose content is as follows. WebExtend will parse the [entrypoint](entrypoints.md) automatically based on the file system.
+Create the `src/popup.js` file whose content is as follows. WebExtend will parse the [entrypoint](../essentials/entrypoints.md) automatically based on the file system.
 
 ::: code-group
 
