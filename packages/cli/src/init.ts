@@ -217,7 +217,7 @@ export async function normalizeInitialOptions(options: InitialOptions) {
   console.log(`1. cd ${options.projectName}`);
   console.log(`2. git init ${chalk.dim('(optional)')}`);
   console.log(`3. ${pkgManager} install`);
-  console.log(`4. ${pkgManager}run dev`);
+  console.log(`4. ${pkgManager} run dev`);
   console.groupEnd();
   console.log();
   return options;
