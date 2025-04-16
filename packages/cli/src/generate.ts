@@ -64,6 +64,7 @@ export async function generate(options: GenerateOptions) {
       message: 'Select entrypoints',
       choices: [...entrypoints, { name: 'icons', value: 'icons' }],
       loop: false,
+      required: true,
     });
   }
 

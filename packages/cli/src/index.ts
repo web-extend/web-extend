@@ -48,7 +48,7 @@ function applyInitCommand(command: Command) {
         });
       } catch (error) {
         if (error instanceof Error && error.name === 'ExitPromptError') {
-          console.log(`${chalk.red('✕')} ${chalk.bold('Canceled')}`);
+          console.log(`${chalk.red('✕')} ${chalk.bold('Operation Canceled')}`);
           return;
         }
         console.error('Failed to create the project.');
@@ -75,7 +75,7 @@ function applyGenerateCommand(command: Command) {
         console.log('Generated successfully!');
       } catch (error) {
         if (error instanceof Error && error.name === 'ExitPromptError') {
-          console.log(`${chalk.red('✕')} ${chalk.bold('Canceled')}`);
+          console.log(`${chalk.red('✕')} ${chalk.bold('Operation Canceled')}`);
           return;
         }
         console.error('Failed to generate.');
