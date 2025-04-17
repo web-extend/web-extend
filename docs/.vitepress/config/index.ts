@@ -1,6 +1,6 @@
+import markdownItFootnote from 'markdown-it-footnote';
 import { defineConfig } from 'vitepress';
 import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-icons';
-import markdownItFootnote from 'markdown-it-footnote';
 import en from './en';
 import zh from './zh';
 
