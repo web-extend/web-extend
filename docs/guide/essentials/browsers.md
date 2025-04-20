@@ -4,7 +4,7 @@ outline: deep
 
 # Browsers
 
-## Browser Target
+## Browser Targets
 
 WebExtend supports the following extension targets.
 
