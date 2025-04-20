@@ -21,7 +21,7 @@ src/
 
 When the entry is a folder, and that folder contains a single entry, the `index.js` file within that folder will be discovered as the entry point.
 
-When the entry is a folder, and that folder contains multiple entries, all the direct `*.js` or `*/index.js` files in that folder will be discovered as entry points. Only files in `contents`, `sandboxes` and `panels` folders will be discovered as multiple entries currently.
+When the entry is a folder, and that folder contains multiple entries, all the direct `*.js` or `*/index.js` files within that folder will be discovered as entry points. Only files in `contents`, `sandboxes` and `panels` folders will be discovered as multiple entries currently.
 
 ```
 src/
