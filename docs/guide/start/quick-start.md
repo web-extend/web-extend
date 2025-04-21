@@ -132,7 +132,7 @@ Alternatively, you can use the `web-extend` tool to generate entry files. Run th
 npx web-extend generate popup
 ```
 
-If you prefer to explicitly define entries, or want to add extra `manifest.json` fields, please pass the `manifest` option, which has higher priority.
+If you prefer to define entries explicitly, or want to add extra manifest fields, please pass the `manifest` option, which has higher priority.
 
 ::: code-group
 

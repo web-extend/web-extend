@@ -1,23 +1,44 @@
 ---
-outline: deep
+outline: [2, 3]
 ---
 
 # 入口 {#entrypoints}
 
-WebExtend 会基于文件系统自动解析入口文件，生成 `manifest.json` 中对应的配置项。
+## 声明式入口
 
-::: info 入口说明
+WebExtend 会基于文件系统自动解析入口文件，生成对应的 manifest 字段。因此，您无需再在 `manifest.json` 中手动维护这些入口定义。
 
-入口文件位于源码目录下。除 icons 外，入口可以是目录或文件中任意一种形式：
+在 WebExtend 中，入口文件位于源码目录下。入口可以是目录或文件中任意一种形式。
 
-- 入口为文件：仅支持扩展名为 `.js|.jsx|.ts|.tsx` 的入口文件。构建工具会自动为每个入口注入一个 [HTML 模板](https://rsbuild.dev/guide/basic/html-template)，生成对应的 `.html` 文件。
-- 入口为目录：
-  - 如果是单入口，该目录下的 `index.js` 文件将作为入口。
-  - 如果是多入口：该目录下的所有一级 `*.js` 或 `*/index.js` 文件将作为入口。目前仅有 `contents`、`sandboxes` 和 `panels` 目录支持多入口。
+当入口为文件时，仅支持扩展名为 `.js|.jsx|.ts|.tsx` 的入口文件。构建工具会自动为每个入口注入一个 [HTML 模板](https://rsbuild.dev/guide/basic/html-template)，生成对应的 HTML 文件。
 
-:::
+```
+src/
+├─ background.js -> entrypoint
+├─ popup.js -> entrypoint
+└─ content.js -> entrypoint
+```
 
-## Background
+当入口为目录，并且为单入口时，该目录下的 `index.js` 文件将作为入口。
+
+当入口为目录，并且为多入口时，该目录下的所有一级 `*.js` 或 `*/index.js` 文件将作为入口。目前仅有 `contents`、`sandboxes` 和 `panels` 目录支持多入口。
+
+```
+src/
+├─ content/
+|  ├─ lib.js
+|  ├─ index.css
+|  └─ index.js -> entrypoint
+└─ contents/
+   ├─ content-one.js -> entrypoint
+   └─ content-two/
+      ├─ index.css
+      └─ index.js -> entrypoint
+```
+
+## 入口类型
+
+### Background
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest/background) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/background)
 
@@ -41,7 +62,7 @@ console.log("This is a background script.");
 
 参考 [with-background](https://github.com/web-extend/examples/tree/main/with-background)。
 
-## Bookmarks
+### Bookmarks
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages)，Firefox 不支持 bookmarks。
 
@@ -55,11 +76,11 @@ npx web-extend g bookmarks
 
 或者手动创建 `src/bookmarks.js` 或 `src/bookmarks/index.js` 文件。
 
-## Content Scripts
+### Content Scripts
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_scripts)
 
-### 添加单个入口 {#adding-a-single-content-script}
+#### 添加单个入口 {#adding-a-single-content-script}
 
 单个 `content` 入口对应 `manifest.json` 中的 `content_scripts[0].js` 字段。
 
@@ -71,7 +92,7 @@ npx web-extend g content
 
 或者手动创建 `src/content.js` 或 `src/content/index.js` 文件。
 
-### 添加多个入口 {#adding-multiple-content-scripts}
+#### 添加多个入口 {#adding-multiple-content-scripts}
 
 多个 `content` 入口分别对应 `manifest.json` 中的 `content_scripts[index].js` 字段。
 
@@ -83,7 +104,7 @@ npx web-extend g contents/site-one
 
 或者手动创建 `src/contents/*.js` 或 `src/contents/*/index.js` 文件。
 
-### 添加 CSS {#adding-css}
+#### 添加 CSS {#adding-css}
 
 在 `content` 入口文件中直接引入 CSS 文件，对应 `manifest.json` 中的 `content_scripts[index].css` 字段。示例如下。
 
@@ -154,7 +175,7 @@ if (!host) {
 
 此外，还可以使用 CSS Modules、CSS 预处理器、Tailwind CSS 或 UnoCSS 来设置样式。查阅[使用 CSS 库](./using-libraries.md#css-libraries)。
 
-### 添加 config {#adding-config}
+#### 添加 config {#adding-config}
 
 在入口文件中具名导出一个 `config` 对象，对应 `manifest.json` 中 `content_scripts` 的其他字段。如果使用 TypeScript，WebExtend 提供了一个 `ContentScriptConfig` 类型。示例如下。
 
@@ -178,7 +199,7 @@ export const config: ContentScriptConfig = {
 
 参考 [with-content](https://github.com/web-extend/examples/tree/main/with-content)、[with-multi-contents](https://github.com/web-extend/examples/tree/main/with-multi-contents)。
 
-## Devtools
+### Devtools
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/how-to/devtools/extend-devtools) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/devtools_page)
 
@@ -214,7 +235,7 @@ if (rootEl) {
 
 :::
 
-### 添加 panel
+#### 添加 panel
 
 Devtools 页面由一个或多个 panel 组成，可以使用以下两种方式创建 panel。
 
@@ -246,7 +267,7 @@ chrome.devtools.panels.create("My panel", "", "panels/my-panel.html");
 
 参考 [with-devtools](https://github.com/web-extend/examples/tree/main/with-devtools)。
 
-## History
+### History
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages)，Firefox 不支持 history。
 
@@ -260,7 +281,7 @@ npx web-extend g history
 
 或者手动创建 `src/history.js` 或 `src/history/index.js` 文件。
 
-## Icons
+### Icons
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest/icons) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/icons)
 
@@ -283,7 +304,7 @@ npx web-extend g icons
 
 参考 [with-icons](https://github.com/web-extend/examples/tree/main/with-icons)。
 
-## Newtab
+### Newtab
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/chrome_url_overrides)
 
@@ -297,7 +318,7 @@ npx web-extend g newtab
 
 或者手动创建 `src/newtab.js` 或 `src/newtab/index.js` 文件。
 
-## Options
+### Options
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/options-page) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/options_ui)
 
@@ -311,7 +332,7 @@ npx web-extend g options
 
 或者手动创建 `src/options.js` 或 `src/options/index.js` 文件。
 
-## Popup
+### Popup
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/action) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/action)
 
@@ -347,7 +368,7 @@ if (rootEl) {
 
 参考 [with-popup](https://github.com/web-extend/examples/tree/main/with-popup)。
 
-## Sandbox
+### Sandbox
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest/sandbox)，Firefox 不支持 sandbox。
 
@@ -385,7 +406,7 @@ document.querySelector("#root").innerHTML = `
 
 参考 [with-sandbox](https://github.com/web-extend/examples/tree/main/with-sandbox)、[with-multi-sandboxes](https://github.com/web-extend/examples/tree/main/with-multi-sandboxes)。
 
-## Sidepanel
+### Sidepanel
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/sidePanel) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Sidebars)
 

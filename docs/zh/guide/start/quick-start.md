@@ -62,7 +62,7 @@ yarn add -D web-extend @rsbuild/core @web-extend/rsbuild-plugin web-ext
 
 推荐安装 TypeScript、React/Vue、ESLint/Prettier/Biome 等前端工具，提升开发体验（可选）。
 
-### 添加脚本命令 {#add-scripts}
+### 添加 npm 脚本命令 {#add-npm-scripts}
 
 修改 `package.json`，添加 `"type": "module"` 字段及如下命令：
 
@@ -106,16 +106,16 @@ export default defineConfig({
 
 :::
 
-### 添加入口文件 {#add-entry-files}
+### 添加入口 {#add-entry-files}
 
 创建 src 源码目录，并创建 `popup.js` 文件，文件内容如下。WebExtend 将基于文件系统[自动解析入口](../essentials/entrypoints.md)。
 
 ::: code-group
 
 ```js [src/popup.js]
-const rootEl = document.querySelector("#root");
-if (rootEl) {
-  rootEl.innerHTML = `
+const root = document.querySelector("#root");
+if (root) {
+  root.innerHTML = `
   <div class="content">
     <h1>Vanilla WebExtend</h1>
     <p>This is a popup page.</p>
@@ -132,7 +132,7 @@ if (rootEl) {
 npx web-extend generate popup
 ```
 
-添加额外的 `manifest.json` 配置项，比如 `name` 、`permissions` 等。（可选）
+如果您更偏向显式定义入口，或者想要添加额外的 manifest 字段，请传递 `manifest` 选项，它拥有更高的优先级。
 
 ::: code-group
 
