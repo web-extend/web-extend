@@ -51,17 +51,22 @@ WebExtend provides a CLI tool that helps you create a project quickly and genera
 
 The feature comparisons of WebExtend, Plasmo and WXT are as follows.
 
-| Feature                                  | WebExtend | Plasmo         | WXT            |
-| ---------------------------------------- | --------- | -------------- | -------------- |
-| Bundler                                  | Rsbuild   | Parcel         | Vite           |
-| First-class TypeScript support           | ✅        | ✅             | ✅             |
-| File-based entrypoints                   | ✅        | ✅             | ✅             |
-| Live-reloading + HMR for extension pages | ✅        | ✅             | ✅             |
-| Live-reloading + HMR for content_scripts | ✅        | Live-reloading | Live-reloading |
-| MV3 and MV2 support                      | ✅        | ✅             | ✅             |
-| Multi-browser support                    | ✅        | ✅             | ✅             |
-| Automatic extension running              | ✅        | ❌             | ✅             |
-| APIs                                     | Simple    | Moderate       | Complex        |
+| Feature                                  | WebExtend | Plasmo   | WXT     | CRXJS   |
+| ---------------------------------------- | --------- | -------- | ------- | ------- |
+| Bundler                                  | Rsbuild   | Parcel   | Vite    | Vite    |
+| First-class TypeScript support           | ✅        | ✅       | ✅      | ✅      |
+| File-based entrypoints                   | ✅        | ✅       | ✅      | ❌      |
+| Live-reloading + HMR for extension pages | ✅        | 🟡 [^1]  | ✅      | ✅      |
+| Live-reloading + HMR for content_scripts | ✅        | 🟡 [^2]  | 🟡 [^2] | ✅      |
+| MV3 and MV2 support                      | ✅        | ✅       | ✅      | 🟡 [^3] |
+| Multi-browser support                    | ✅        | ✅       | ✅      | 🟡 [^4] |
+| Automatic extension running              | ✅        | ❌       | ✅      | ❌      |
+| APIs                                     | Simple    | Moderate | Complex | Simple  |
+
+[^1]: Only React HMR.
+[^2]: Only live-reloading.
+[^3]: Only MV3.
+[^4]: Only Chrome.
 
 ## Pre-Requisite Knowledge {#pre-requisite-knowledge}
 

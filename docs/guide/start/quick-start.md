@@ -62,7 +62,7 @@ yarn add -D web-extend @rsbuild/core @web-extend/rsbuild-plugin web-ext
 
 It is also recommended to install TypeScript、React/Vue、ESLint/Prettier/Biome etc, for enhancing the development experience (Optional).
 
-### Add scripts
+### Add npm scripts
 
 Add the `"type": "module"` field and the following scripts into `package.json`.
 
@@ -106,16 +106,16 @@ export default defineConfig({
 
 :::
 
-### Add entry files
+### Add entry points
 
-Create the `src/popup.js` file whose content is as follows. WebExtend will parse the [entrypoint](../essentials/entrypoints.md) automatically based on the file system.
+Create the `src/popup.ts` file with the following content. WebExtend will parse [entrypoints](../essentials/entrypoints.md) automatically based on the file system. In this way, you no longer need to define entries in `manifest.json`.
 
 ::: code-group
 
-```js [src/popup.js]
-const rootEl = document.querySelector("#root");
-if (rootEl) {
-  rootEl.innerHTML = `
+```js [src/popup.ts]
+const root = document.querySelector("#root");
+if (root) {
+  root.innerHTML = `
   <div class="content">
     <h1>Vanilla WebExtend</h1>
     <p>This is a popup page.</p>
@@ -132,7 +132,7 @@ Alternatively, you can use the `web-extend` tool to generate entry files. Run th
 npx web-extend generate popup
 ```
 
-Add extra `manifest.json` fields if necessary, such as `name`, `permissions`, and so on (Optional).
+If you prefer to define entries explicitly, or want to add extra manifest fields, please pass the `manifest` option, which has higher priority.
 
 ::: code-group
 
