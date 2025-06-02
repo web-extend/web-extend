@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 import type { EnvironmentConfig, RsbuildConfig, RsbuildPlugin } from '@rsbuild/core';
 import { ManifestManager } from '@web-extend/manifest';
 import { getEntryFileVariants } from '@web-extend/manifest/common';
-import type { ExtensionTarget, ManifestEntryOutput, WebExtensionManifest } from '@web-extend/manifest/types';
+import type { ManifestEntryOutput, WebExtensionManifest } from '@web-extend/manifest/types';
 import { getContentEnvironmentConfig } from './content.js';
 import { DownloadRemotePlugin } from './download-remote.js';
 import {
@@ -12,9 +12,11 @@ import {
   getRsbuildEntryFiles,
   transformManifestEntry,
 } from './helper.js';
-import type { EnviromentKey, NormalizeRsbuildEnvironmentProps } from './types.js';
+import type { EnviromentKey, NormalizeRsbuildEnvironmentProps, PluginWebExtendOptions } from './types.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+
+export type { PluginWebExtendOptions } from './types.js';
 
 async function normalizeRsbuildEnvironments(options: NormalizeRsbuildEnvironmentProps) {
   const { manifestEntries, selfRootPath } = options;
@@ -64,13 +66,6 @@ async function normalizeRsbuildEnvironments(options: NormalizeRsbuildEnvironment
 
   return environments;
 }
-
-export type PluginWebExtendOptions<T = unknown> = {
-  manifest?: T | ((props: { target: ExtensionTarget; mode: string }) => T);
-  target?: ExtensionTarget;
-  srcDir?: string;
-  outDir?: string;
-};
 
 export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPlugin => ({
   name: 'plugin-web-extend',

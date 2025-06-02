@@ -3,23 +3,31 @@ import type { Manifest } from 'webextension-polyfill';
 export type ExtensionTarget = 'chrome-mv3' | 'firefox-mv2' | 'firefox-mv3' | 'safari-mv3' | 'edge-mv3' | 'opera-mv3';
 
 export interface WebExtensionManifest extends Manifest.WebExtensionManifest {
-  sandbox?: {
-    pages: string[];
-    content_security_policy?: string;
-  };
-  side_panel?: {
-    default_path?: string;
-  };
-  chrome_url_overrides?: {
-    newtab?: string;
-    history?: string;
-    bookmarks?: string;
-  };
+  sandbox?: ManifestSandbox;
+  side_panel?: ManifestSidePanel;
+  chrome_url_overrides?: ManifestChromeUrlOverrides;
 }
 
-export interface ContentScriptConfig {
+interface ManifestChromeUrlOverrides {
+  newtab?: string;
+  history?: string;
+  bookmarks?: string;
+}
+
+interface ManifestIcons {
+  [size: number]: string;
+}
+
+interface ManifestAction {
+  default_icon?: ManifestIcons;
+  default_title?: string;
+  default_popup?: string;
+}
+
+interface ManifestContentScript {
   matches: string[];
   exclude_matches?: string[];
+  js?: string[];
   css?: string[];
   run_at?: 'document_start' | 'document_end' | 'document_idle';
   all_frames?: boolean;
@@ -27,6 +35,29 @@ export interface ContentScriptConfig {
   include_globs?: string[];
   exclude_globs?: string[];
   world?: 'ISOLATED' | 'MAIN';
+}
+
+export type ContentScriptConfig = Omit<ManifestContentScript, 'js'>;
+
+interface ManifestSandbox {
+  pages: string[];
+  content_security_policy?: string;
+}
+
+interface ManifestCommandItem {
+  suggested_key?: {
+    default?: string;
+    windows?: string;
+    mac?: string;
+    chromeos?: string;
+    linux?: string;
+  };
+  description?: string;
+  global?: boolean;
+}
+
+interface ManifestSidePanel {
+  default_path?: string;
 }
 
 export type PageToOverride = 'newtab' | 'history' | 'bookmarks';
@@ -117,3 +148,43 @@ export interface WriteManifestFileProps {
 export type ManifestEntries = {
   [key in ManifestEntryKey]?: ManifestEntryInput;
 };
+
+export interface CustomMainfest {
+  action?: ManifestAction;
+  background?: {
+    service_worker?: string;
+    type?: 'module';
+  };
+  chrome_url_overrides?: ManifestChromeUrlOverrides;
+  commands?: Record<string, ManifestCommandItem>;
+  content_scripts?: ManifestContentScript[];
+  content_security_policy?: {
+    extension_pages?: string;
+    sandbox?: string;
+  };
+  description?: string;
+  default_locale?: string;
+  devtools_page?: string;
+  homepage_url?: string;
+  host_permissions?: string[];
+  icons?: ManifestIcons;
+  manifest_version?: number;
+  minimum_chrome_version?: string;
+  name?: string;
+  options_page?: string;
+  options_ui?: {
+    page?: string;
+    open_in_tab?: boolean;
+  };
+  permissions?: string[];
+  sandbox?: ManifestSandbox;
+  side_panel?: ManifestSidePanel;
+  version?: string;
+  version_name?: string;
+  web_accessible_resources?:
+    | {
+        resources: string[];
+        matches?: string[];
+      }
+    | string[];
+}
