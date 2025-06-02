@@ -173,7 +173,7 @@ export default defineWebExtConfig({
 
 :::
 
-Source: [runner.ts](https://github.com/web-extend/web-extend/blob/main/packages/cli/src/runner.ts#L130).
+Source: [runner.ts](https://github.com/web-extend/web-extend/blob/main/packages/core/src/runner.ts#L130).
 
 ## Types
 

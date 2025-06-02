@@ -2,4 +2,4 @@ packages:
   - "examples/*"
   - "packages/*"
   - "docs"
-  - "packages/cli/templates/*"
+  - "packages/core/templates/*"
