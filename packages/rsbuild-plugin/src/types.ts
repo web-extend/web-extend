@@ -1,5 +1,5 @@
 import type { RsbuildConfig, RsbuildContext } from '@rsbuild/core';
-import type { ManifestContext, ManifestEntries, CustomMainfest } from '@web-extend/manifest/types';
+import type { CustomMainfest, ManifestContext, ManifestEntries } from '@web-extend/manifest/types';
 import type { ExtensionTarget } from '@web-extend/manifest/types';
 
 export type EnviromentKey = 'web' | 'content' | 'background';
