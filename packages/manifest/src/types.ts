@@ -149,7 +149,7 @@ export type ManifestEntries = {
   [key in ManifestEntryKey]?: ManifestEntryInput;
 };
 
-export interface CustomMainfest {
+export interface CustomManifest {
   action?: ManifestAction;
   background?: {
     service_worker?: string;
@@ -187,4 +187,5 @@ export interface CustomMainfest {
         matches?: string[];
       }
     | string[];
+  [key: string]: unknown; // allow other custom fields
 }
