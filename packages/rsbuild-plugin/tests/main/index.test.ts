@@ -2,7 +2,7 @@ import { existsSync } from 'node:fs';
 import { readdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import type { Manifest } from 'webextension-polyfill';
+import type { Manifest } from '@web-extend/manifest/types';
 import { initRsbuild, readManifestFile, validateDistFile } from '../helper.js';
 import { config as contentConfig } from './src/content.js';
 
