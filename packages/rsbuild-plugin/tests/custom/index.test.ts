@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import { describe, expect, it } from 'vitest';
 import type { Manifest } from '@web-extend/manifest/types';
+import { describe, expect, it } from 'vitest';
 import { initRsbuild, readManifestFile, validateDistFile } from '../helper.js';
 
 const __dirname = import.meta.dirname;
