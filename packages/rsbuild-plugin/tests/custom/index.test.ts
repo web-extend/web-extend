@@ -1,6 +1,5 @@
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import type { Manifest } from '@web-extend/manifest/types';
 import { describe, expect, it } from 'vitest';
 import { initRsbuild, readManifestFile, validateDistFile } from '../helper.js';
 
@@ -34,9 +33,8 @@ describe('custom', () => {
 
     const distPath = rsbuild.context.distPath;
     const manifest = await readManifestFile(distPath);
-    const { background, options_page } = manifest;
-
-    const { service_worker } = background as Manifest.WebExtensionManifestBackgroundC3Type;
+    const { background = {}, options_page } = manifest;
+    const { service_worker = '' } = background;
     const serviceWorkerContent = await readFile(resolve(distPath, service_worker), 'utf-8');
     expect(serviceWorkerContent).toContain('custom-background');
 

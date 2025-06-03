@@ -333,8 +333,8 @@ importers:
         specifier: ^22.8.6
         version: 22.13.4
       '@types/webextension-polyfill':
-        specifier: ^0.12.1
-        version: 0.12.1
+        specifier: ^0.12.3
+        version: 0.12.3
       typescript:
         specifier: ^5.7.2
         version: 5.7.3
@@ -369,18 +369,12 @@ importers:
       '@types/node':
         specifier: ^22.12.0
         version: 22.13.4
-      '@types/webextension-polyfill':
-        specifier: ^0.12.1
-        version: 0.12.1
       '@web-extend/manifest':
         specifier: workspace:*
         version: link:../manifest
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
-      webextension-polyfill:
-        specifier: ^0.12.0
-        version: 0.12.0
 
 packages:
 
@@ -1960,8 +1954,8 @@ packages:
   '@types/web-bluetooth@0.0.20':
     resolution: {integrity: sha512-g9gZnnXVq7gM7v3tJCWV/qw7w+KeOlSHAhgF9RytFyifW6AF61hdT2ucrYhPq9hLs5JIryeupHV3qGk95dH9ow==}
 
-  '@types/webextension-polyfill@0.12.1':
-    resolution: {integrity: sha512-xPTFWwQ8BxPevPF2IKsf4hpZNss4LxaOLZXypQH4E63BDLmcwX/RMGdI4tB4VO4Nb6xDBH3F/p4gz4wvof1o9w==}
+  '@types/webextension-polyfill@0.12.3':
+    resolution: {integrity: sha512-F58aDVSeN/MjUGazXo/cPsmR76EvqQhQ1v4x23hFjUX0cfAJYE+JBWwiOGW36/VJGGxoH74sVlRIF3z7SJCKyg==}
 
   '@types/yauzl@2.10.3':
     resolution: {integrity: sha512-oJoftv0LSuaDZE3Le4DbKX+KS9G36NzOeSap90UIK0yMA/NhKJhqlSGtNDORNRaIbQfzjXDrQa0ytJ6mNRGz/Q==}
@@ -6541,7 +6535,7 @@ snapshots:
 
   '@types/web-bluetooth@0.0.20': {}
 
-  '@types/webextension-polyfill@0.12.1': {}
+  '@types/webextension-polyfill@0.12.3': {}
 
   '@types/yauzl@2.10.3':
     dependencies:

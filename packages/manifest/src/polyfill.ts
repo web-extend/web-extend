@@ -11,8 +11,8 @@ function polyfillManifestBetweenBrowsers({ manifest, context }: NormalizeManifes
     manifest.version_name = undefined;
     manifest.sandbox = undefined;
 
-    if (background && 'service_worker' in background) {
-      (background as unknown as Manifest.WebExtensionManifestBackgroundC2Type).scripts ??= [background.service_worker];
+    if (background?.service_worker) {
+      background.scripts ??= [background.service_worker];
     }
 
     if (manifest.chrome_url_overrides) {
