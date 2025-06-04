@@ -2,6 +2,8 @@ import type { Manifest } from 'webextension-polyfill';
 
 export type ExtensionTarget = 'chrome-mv3' | 'firefox-mv2' | 'firefox-mv3' | 'safari-mv3' | 'edge-mv3' | 'opera-mv3';
 
+export type { Manifest };
+
 export interface WebExtensionManifest extends Manifest.WebExtensionManifest {
   sandbox?: ManifestSandbox;
   side_panel?: ManifestSidePanel;
