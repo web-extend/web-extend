@@ -1,7 +1,6 @@
 import { existsSync } from 'node:fs';
 import { copyFile, mkdir, readFile } from 'node:fs/promises';
 import { basename, posix, resolve } from 'node:path';
-import type { Manifest } from 'webextension-polyfill';
 import {
   getEntryName,
   isDevMode,
@@ -9,7 +8,7 @@ import {
   matchDeclarativeSingleEntryFile,
 } from './common.js';
 import { parseExportObject } from './parser/export.js';
-import type { ContentScriptConfig, ManifestEntryInput, ManifestEntryProcessor } from './types.js';
+import type { ContentScriptConfig, Manifest, ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'content';
 

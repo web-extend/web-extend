@@ -173,7 +173,7 @@ export default defineWebExtConfig({
 
 :::
 
-源码： [runner.ts](https://github.com/web-extend/web-extend/blob/main/packages/cli/src/runner.ts#L130).
+源码： [runner.ts](https://github.com/web-extend/web-extend/blob/main/packages/core/src/runner.ts#L130).
 
 ## 类型
 

@@ -1,5 +1,4 @@
 import { resolve } from 'node:path';
-import type { Manifest } from 'webextension-polyfill';
 import { isDevMode, matchDeclarativeSingleEntryFile } from './common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor, WebExtensionManifest } from './types.js';
 
@@ -13,9 +12,9 @@ const normalizeBackgroundEntry: ManifestEntryProcessor['normalize'] = async ({ m
   const { background } = manifest;
   const scripts: string[] = [];
 
-  if (background && 'service_worker' in background) {
+  if (background?.service_worker) {
     scripts.push(background.service_worker);
-  } else if (background && 'scripts' in background && background.scripts) {
+  } else if (background?.scripts) {
     scripts.push(...background.scripts);
   } else {
     const entryPath = files
@@ -31,12 +30,12 @@ const normalizeBackgroundEntry: ManifestEntryProcessor['normalize'] = async ({ m
 
   if (!scripts.length) return;
 
-  manifest.background ??= {} as WebExtensionManifest['background'];
+  manifest.background ??= {};
   // Firefox only supports background.scripts
   if (target.includes('firefox')) {
-    (manifest.background as Manifest.WebExtensionManifestBackgroundC2Type).scripts = scripts;
+    manifest.background.scripts = scripts;
   } else {
-    (manifest.background as Manifest.WebExtensionManifestBackgroundC3Type).service_worker = scripts.join(',');
+    manifest.background.service_worker = scripts.join(',');
   }
 };
 
@@ -45,9 +44,9 @@ const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest }) => {
   if (!background) return null;
 
   let input: string[] = [];
-  if ('service_worker' in background) {
+  if (background.service_worker) {
     input = background.service_worker.split(',');
-  } else if ('scripts' in background) {
+  } else if (background.scripts) {
     input = background.scripts || [];
   }
 
@@ -67,10 +66,10 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, output }) 
   const scripts = output?.filter((item) => item.endsWith('.js')) || [];
   if (!background || !scripts.length) return;
 
-  if ('scripts' in background) {
+  if (background.scripts) {
     background.scripts = scripts;
   } else {
-    (background as Manifest.WebExtensionManifestBackgroundC3Type).service_worker = scripts[0];
+    background.service_worker = scripts[0];
   }
 };
 

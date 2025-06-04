@@ -1,6 +1,5 @@
 import { basename } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import type { Manifest } from 'webextension-polyfill';
 import { initRsbuild, readManifestFile, validateDistFile } from '../helper.js';
 
 const __dirname = import.meta.dirname;
@@ -25,17 +24,11 @@ describe('test build for firefox', () => {
 
     const distPath = rsbuild.context.distPath;
     const manifest = await readManifestFile(distPath);
-    const {
-      manifest_version,
-      background,
-      sidebar_action,
-      action,
-      permissions = [],
-    } = manifest as Manifest.WebExtensionManifest;
+    const { manifest_version, background, sidebar_action, action, permissions = [] } = manifest;
 
     expect(manifest_version).toBe(3);
 
-    const scripts = background && 'scripts' in background ? background.scripts : [];
+    const scripts = background?.scripts || [];
     expect(validateDistFile(distPath, scripts[0] || '', '.js')).toBeTruthy();
 
     const sidepanel = sidebar_action?.default_panel;
@@ -58,7 +51,7 @@ describe('test build for firefox', () => {
 
     const distPath = rsbuild.context.distPath;
     const manifest = await readManifestFile(distPath);
-    const { manifest_version, browser_action, icons, host_permissions } = manifest as Manifest.WebExtensionManifest;
+    const { manifest_version, browser_action, icons, host_permissions } = manifest;
 
     expect(manifest_version).toBe(2);
     expect(host_permissions).toBeUndefined();

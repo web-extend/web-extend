@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import type { Manifest } from 'webextension-polyfill';
 import { initRsbuild, readManifestFile } from '../helper.js';
 
 describe('test dev for chrome', () => {
@@ -16,7 +15,7 @@ describe('test dev for chrome', () => {
         const manifest = await readManifestFile(distPath);
         const { manifest_version, background } = manifest;
         expect(manifest_version).toBe(3);
-        expect((background as Manifest.WebExtensionManifestBackgroundC3Type).service_worker).toBeDefined();
+        expect(background?.service_worker).toBeDefined();
 
         server.close();
         resolve({});
