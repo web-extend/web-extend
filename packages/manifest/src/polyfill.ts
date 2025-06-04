@@ -1,5 +1,5 @@
 import { isDevMode } from './common.js';
-import type { NormalizeManifestProps, Manifest } from './types.js';
+import type { Manifest, NormalizeManifestProps } from './types.js';
 
 function polyfillManifestBetweenBrowsers({ manifest, context }: NormalizeManifestProps) {
   if (!manifest) return;

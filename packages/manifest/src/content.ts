@@ -8,7 +8,7 @@ import {
   matchDeclarativeSingleEntryFile,
 } from './common.js';
 import { parseExportObject } from './parser/export.js';
-import type { ContentScriptConfig, ManifestEntryInput, ManifestEntryProcessor, Manifest } from './types.js';
+import type { ContentScriptConfig, Manifest, ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'content';
 
