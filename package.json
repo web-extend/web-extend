@@ -15,7 +15,7 @@
   "simple-git-hooks": {
     "pre-commit": "npx lint-staged"
   },
-  
+
   "lint-staged": {
     "*.{md,mdx,json,css,less,scss}": "npm run lint:write",
     "*.{js,jsx,ts,tsx,mjs,cjs}": "npm run lint:write"
