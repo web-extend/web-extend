@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { basename, extname, isAbsolute, join, relative, resolve, sep } from 'node:path';
-import type { ExtensionTarget, WebExtensionManifest, ManifestEntryItem } from './types.js';
+import type { ExtensionTarget, ManifestEntryItem, WebExtensionManifest } from './types.js';
 
 const scriptExts = ['.ts', '.js', '.tsx', '.jsx', '.mts', '.cts', '.mjs', '.cjs'];
 const styleExts = ['.css', '.scss', '.sass', '.less', '.styl', '.stylus'];
@@ -49,7 +49,7 @@ export const matchMultipleDeclarativeEntryFile = (
   if (entryType?.includes('style')) {
     allowable = allowable || isStyleFile(file);
   }
-  if(!allowable) return null;
+  if (!allowable) return null;
 
   const ext = extname(file);
   // match [key]/*.[ext] or [key]/*/index.[ext]

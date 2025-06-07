@@ -12,8 +12,8 @@ import panelProcessor from './panel.js';
 import { polyfillManifest } from './polyfill.js';
 import popupProcessor from './popup.js';
 import sandboxProcessor from './sandbox.js';
-import sidepanelProcessor from './sidepanel.js';
 import scriptingProcessor from './scripting.js';
+import sidepanelProcessor from './sidepanel.js';
 import type {
   ExtensionTarget,
   ManifestContext,

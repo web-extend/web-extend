@@ -2,14 +2,10 @@ import { existsSync } from 'node:fs';
 import { readdir, unlink } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import type { RsbuildConfig, RsbuildEntry, Rspack } from '@rsbuild/core';
-import type { ManifestEntryInput, ManifestEntries } from '@web-extend/manifest/types';
+import type { ManifestEntryInput } from '@web-extend/manifest/types';
 
 export function isDevMode(mode: string | undefined) {
   return mode === 'development';
-}
-
-export function getAssetEntryType(name: string, manifestEntries: ManifestEntries) {
-  
 }
 
 export function transformManifestEntry(entry: ManifestEntryInput | undefined) {

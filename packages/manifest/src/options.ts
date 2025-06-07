@@ -33,7 +33,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest }) => {
   const entry: ManifestEntryInput = {
     options: {
       input: [input],
-      entryType: 'html'
+      entryType: 'html',
     },
   };
   return entry;

@@ -3,9 +3,8 @@ import { fileURLToPath } from 'node:url';
 import type { EnvironmentConfig, RsbuildConfig, RsbuildPlugin } from '@rsbuild/core';
 import { ManifestManager } from '@web-extend/manifest';
 import { getEntryFileVariants } from '@web-extend/manifest/common';
-import type { ManifestEntryOutput, WebExtensionManifest, ManifestEntries } from '@web-extend/manifest/types';
+import type { ManifestEntries, ManifestEntryOutput, WebExtensionManifest } from '@web-extend/manifest/types';
 import { getContentEnvironmentConfig } from './content.js';
-import { getWebEnvironmentConfig } from './web.js';
 import { DownloadRemotePlugin } from './download-remote.js';
 import {
   clearOutdatedHotUpdateFiles,
@@ -14,6 +13,7 @@ import {
   transformManifestEntry,
 } from './helper.js';
 import type { EnviromentKey, NormalizeRsbuildEnvironmentProps, PluginWebExtendOptions } from './types.js';
+import { getWebEnvironmentConfig } from './web.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 

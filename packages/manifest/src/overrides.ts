@@ -1,6 +1,6 @@
 import { resolve } from 'node:path';
 import { matchSingleDeclarativeEntryFile } from './common.js';
-import type { Manifest, ManifestEntryInput, ManifestEntryProcessor, ManifestEntryKey } from './types.js';
+import type { Manifest, ManifestEntryInput, ManifestEntryKey, ManifestEntryProcessor } from './types.js';
 
 const overrides: ManifestEntryKey[] = ['newtab', 'history', 'bookmarks'];
 
@@ -34,7 +34,7 @@ const overrideProcessors = overrides.map((key) => {
     if (input) {
       entry[key] = {
         input: [input],
-        entryType: 'html'
+        entryType: 'html',
       };
     }
     return Object.keys(entry).length ? entry : null;

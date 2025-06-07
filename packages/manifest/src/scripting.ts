@@ -1,6 +1,6 @@
-import { readdir } from 'node:fs/promises';
-import { resolve, join } from 'node:path';
 import { existsSync } from 'node:fs';
+import { readdir } from 'node:fs/promises';
+import { join, resolve } from 'node:path';
 import { getEntryName, matchMultipleDeclarativeEntryFile, matchSingleDeclarativeEntryFile } from './common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
