@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import { readdir, unlink } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import type { RsbuildConfig, RsbuildEntry, Rspack, FilenameConfig } from '@rsbuild/core';
+import type { FilenameConfig, RsbuildConfig, RsbuildEntry, Rspack } from '@rsbuild/core';
 import type { ManifestEntryInput } from '@web-extend/manifest/types';
 
 export function isDevMode(mode: string | undefined) {

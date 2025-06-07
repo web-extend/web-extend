@@ -1,5 +1,5 @@
 import type { EnvironmentConfig, RsbuildEntry, Rspack } from '@rsbuild/core';
-import { isDevMode, transformManifestEntry, getJsDistPath, getCssDistPath } from './helper.js';
+import { getCssDistPath, getJsDistPath, isDevMode, transformManifestEntry } from './helper.js';
 import type { NormalizeRsbuildEnvironmentProps } from './types.js';
 
 function getContentEnvironmentConfig({

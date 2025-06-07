@@ -1,5 +1,5 @@
 import type { EnvironmentConfig } from '@rsbuild/core';
-import { transformManifestEntry, getJsDistPath, getCssDistPath } from './helper.js';
+import { getCssDistPath, getJsDistPath, transformManifestEntry } from './helper.js';
 import type { NormalizeRsbuildEnvironmentProps } from './types.js';
 
 export function getWebEnvironmentConfig({

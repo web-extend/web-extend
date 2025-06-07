@@ -9,9 +9,9 @@ import { DownloadRemotePlugin } from './download-remote.js';
 import {
   clearOutdatedHotUpdateFiles,
   getAllRsbuildEntryFiles,
+  getJsDistPath,
   getRsbuildEntryFiles,
   transformManifestEntry,
-  getJsDistPath,
 } from './helper.js';
 import type { EnviromentKey, NormalizeRsbuildEnvironmentProps, PluginWebExtendOptions } from './types.js';
 import { getWebEnvironmentConfig } from './web.js';
