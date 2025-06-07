@@ -2,9 +2,9 @@
 outline: [2, 3]
 ---
 
-# Entrypoints
+# Entries
 
-## Declarative Entrypoints
+## Declarative Entries
 
 WebExtend supports file-conventional entry points, meaning it parses entry points based on the file system and generates the corresponding manifest fields. So you no longer need to define these entry points manually in `manifest.json`.
 
@@ -14,9 +14,9 @@ When the entry is a file, only the file ends with `.js|.jsx|.ts|.tsx` will be di
 
 ```
 src/
-├─ background.js -> entrypoint
-├─ popup.js -> entrypoint
-└─ content.js -> entrypoint
+├─ background.ts -> entrypoint
+├─ popup.ts -> entrypoint
+└─ content.ts -> entrypoint
 ```
 
 When the entry is a folder, and that folder contains a single entry, the `index.js` file within that folder will be discovered as the entry point.
@@ -26,17 +26,17 @@ When the entry is a folder, and that folder contains multiple entries, all the d
 ```
 src/
 ├─ content/
-|  ├─ lib.js
+|  ├─ lib.ts
 |  ├─ index.css
-|  └─ index.js -> entrypoint
+|  └─ index.ts -> entrypoint
 └─ contents/
-   ├─ content-one.js -> entrypoint
+   ├─ content-one.ts -> entrypoint
    └─ content-two/
       ├─ index.css
-      └─ index.js -> entrypoint
+      └─ index.ts -> entrypoint
 ```
 
-## Entrypoint Types
+## Entry Types
 
 ### Background
 
@@ -54,16 +54,6 @@ Generate the entry automatically.
 ```shell
 npx web-extend g background
 ```
-
-Alternatively, create the `src/background.js` file manually whose content is as follows:
-
-::: code-group
-
-```js [src/background.js]
-console.log("This is a background script.");
-```
-
-:::
 
 See [with-background](https://github.com/web-extend/examples/tree/main/with-background).
 
@@ -95,29 +85,19 @@ npx web-extend g bookmarks
 | `contents/{name}.(js\|jsx\|ts\|tsx)`       | `contents/{name}.js` |
 | `contents/{name}/index.(js\|jsx\|ts\|tsx)` | `contents/{name}.js` |
 
-#### Adding a single content script
+#### Adding content scripts
 
-A single content entry will be reflected to the `content_scripts[0].js` field in `manifest.json`.
+Content entries will be reflected to the `content_scripts[index].js` field in `manifest.josn` respectively.
 
 Generate the entry automatically.
 
 ```shell
+# for a single content script
 npx web-extend g content
-```
 
-Alternatively, create the `src/content.js` or`src/content/index.js` file manually.
-
-#### Adding multiple content scripts
-
-Multiple content entries will be reflected to the `content_scripts[index].js` field in `manifest.josn` respectively.
-
-Generate the entry automatically.
-
-```shell
+# for multiple content scripts
 npx web-extend g contents/site-one,contents/site-two
 ```
-
-Alternatively, create the `src/contents/*.js` or `src/contents/*/index.js` file manually.
 
 #### Adding CSS
 
@@ -256,17 +236,11 @@ npx web-extend g panel
 npx web-extend g panels/panel1,panels/panel2
 ```
 
-Alternatively, create `src/panel/index.js` file for a single panel, or create `src/panels/panel1/index.js` for multiple panels.
-
 Then you can use the panel in the detools entry, as follows.
 
 ::: code-group
 
 ```js [src/devtools.js]
-// for a single panel
-chrome.devtools.panels.create("My panel", "", "panel.html");
-
-// for multiple panels
 chrome.devtools.panels.create("My panel", "", "panels/panel1.html");
 ```
 
