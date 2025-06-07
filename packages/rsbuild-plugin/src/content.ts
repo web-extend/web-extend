@@ -1,5 +1,5 @@
 import type { EnvironmentConfig, RsbuildEntry, Rspack } from '@rsbuild/core';
-import { isDevMode, transformManifestEntry } from './helper.js';
+import { isDevMode, transformManifestEntry, getJsDistPath, getCssDistPath } from './helper.js';
 import type { NormalizeRsbuildEnvironmentProps } from './types.js';
 
 function getContentEnvironmentConfig({
@@ -10,7 +10,8 @@ function getContentEnvironmentConfig({
   const content = manifestEntries.content;
   const { mode } = manifestContext;
   const entry = transformManifestEntry(content);
-  if (!entry) return;
+  if (!content || !entry) return;
+
   return {
     source: {
       entry,
@@ -18,6 +19,14 @@ function getContentEnvironmentConfig({
     output: {
       target: 'web',
       injectStyles: isDevMode(mode),
+      distPath: {
+        js: '',
+        css: '',
+      },
+      filename: {
+        js: getJsDistPath(content),
+        css: getCssDistPath(content),
+      },
     },
     tools: {
       rspack: {

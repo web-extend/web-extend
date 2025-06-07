@@ -11,6 +11,7 @@ import {
   getAllRsbuildEntryFiles,
   getRsbuildEntryFiles,
   transformManifestEntry,
+  getJsDistPath,
 } from './helper.js';
 import type { EnviromentKey, NormalizeRsbuildEnvironmentProps, PluginWebExtendOptions } from './types.js';
 import { getWebEnvironmentConfig } from './web.js';
@@ -34,6 +35,12 @@ async function normalizeRsbuildEnvironments(options: NormalizeRsbuildEnvironment
       },
       output: {
         target: 'web-worker',
+        distPath: {
+          js: '',
+        },
+        filename: {
+          js: getJsDistPath(background),
+        },
       },
     };
   }

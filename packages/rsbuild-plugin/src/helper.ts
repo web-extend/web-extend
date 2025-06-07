@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import { readdir, unlink } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import type { RsbuildConfig, RsbuildEntry, Rspack } from '@rsbuild/core';
+import type { RsbuildConfig, RsbuildEntry, Rspack, FilenameConfig } from '@rsbuild/core';
 import type { ManifestEntryInput } from '@web-extend/manifest/types';
 
 export function isDevMode(mode: string | undefined) {
@@ -89,3 +89,29 @@ export async function clearOutdatedHotUpdateFiles(distPath: string, statsList: R
     await unlink(resolve(distPath, file));
   }
 }
+
+const isProd = process.env.NODE_ENV === 'production';
+const jsDistPath = 'static/js';
+const cssDistPath = 'static/css';
+
+export const getJsDistPath = (manifestEntry: ManifestEntryInput): FilenameConfig['js'] => {
+  return (pathData) => {
+    const chunkName = pathData.chunk?.name;
+    if (chunkName && manifestEntry[chunkName] && manifestEntry[chunkName].entryType !== 'html') {
+      return '[name].js';
+    }
+    const name = isProd ? '[name].[contenthash:8].js' : '[name].js';
+    return `${jsDistPath}/${name}`;
+  };
+};
+
+export const getCssDistPath = (manifestEntry: ManifestEntryInput): FilenameConfig['css'] => {
+  return (pathData) => {
+    const chunkName = pathData.chunk?.name;
+    if (chunkName && manifestEntry[chunkName]?.entryType === 'style') {
+      return '[name].css';
+    }
+    const name = isProd ? '[name].[contenthash:8].css' : '[name].css';
+    return `${cssDistPath}/${name}`;
+  };
+};

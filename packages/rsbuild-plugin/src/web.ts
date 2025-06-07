@@ -1,10 +1,6 @@
 import type { EnvironmentConfig } from '@rsbuild/core';
-import { transformManifestEntry } from './helper.js';
+import { transformManifestEntry, getJsDistPath, getCssDistPath } from './helper.js';
 import type { NormalizeRsbuildEnvironmentProps } from './types.js';
-
-const isProd = process.env.NODE_ENV === 'production';
-const jsDistPath = 'static/js';
-const cssDistPath = 'static/css';
 
 export function getWebEnvironmentConfig({
   manifestEntries,
@@ -27,22 +23,8 @@ export function getWebEnvironmentConfig({
         css: '',
       },
       filename: {
-        js: (pathData) => {
-          const chunkName = pathData.chunk?.name;
-          if (chunkName && webEntry[chunkName] && webEntry[chunkName].entryType !== 'html') {
-            return '[name].js';
-          }
-          const name = isProd ? '[name].[contenthash:8].js' : '[name].js';
-          return `${jsDistPath}/${name}`;
-        },
-        css: (pathData) => {
-          const chunkName = pathData.chunk?.name;
-          if (chunkName && webEntry[chunkName]?.entryType === 'style') {
-            return '[name].css';
-          }
-          const name = isProd ? '[name].[contenthash:8].css' : '[name].css';
-          return `${cssDistPath}/${name}`;
-        },
+        js: getJsDistPath(webEntry),
+        css: getCssDistPath(webEntry),
       },
     },
   };
