@@ -26,10 +26,9 @@ async function normalizeRsbuildEnvironments(options: NormalizeRsbuildEnvironment
   const environments: {
     [key in EnviromentKey]?: EnvironmentConfig;
   } = {};
-  let defaultEnvironment: EnvironmentConfig | null = null;
 
   if (background) {
-    defaultEnvironment = environments.background = {
+    environments.background = {
       source: {
         entry: transformManifestEntry(background),
       },
@@ -188,8 +187,8 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       });
     });
 
-    api.processAssets({ stage: 'optimize' }, async ({ assets, compilation }) => {
-      if (!manifestEntries) return;
+    api.processAssets({ stage: 'optimize' }, async ({ assets, compilation, sources, environment }) => {
+      if (environment.name !== 'web' || !manifestEntries) return;
       const manifestEntryInput = Object.values(manifestEntries).reduce((acc, entry) => {
         for (const key in entry) {
           acc[key] = entry[key];
@@ -197,13 +196,19 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         return acc;
       }, {});
 
-      // Remove assets that are not needed in the final build
       for (const name in assets) {
         if (name.endsWith('.js')) {
           const assetName = name.replace(/\.js$/, '');
           const entryType = manifestEntryInput[assetName]?.entryType;
           if (entryType === 'image' || entryType === 'style' || assetName.includes('_empty')) {
+            // Remove assets that are not needed in the final build
             compilation.deleteAsset(name);
+          } else if (entryType === 'script') {
+            // disable hmr for script entry
+            const oldContent = assets[name].source() as string;
+            const newContent = oldContent.replace(/connect\(\);/g, '');
+            const source = new sources.RawSource(newContent);
+            compilation.updateAsset(name, source);
           }
         }
       }

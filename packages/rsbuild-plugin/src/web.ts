@@ -8,7 +8,6 @@ const cssDistPath = 'static/css';
 
 export function getWebEnvironmentConfig({
   manifestEntries,
-  context,
 }: NormalizeRsbuildEnvironmentProps): EnvironmentConfig | undefined {
   const webEntry = Object.values(manifestEntries)
     .filter(Boolean)
