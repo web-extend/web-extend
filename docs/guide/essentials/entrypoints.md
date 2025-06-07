@@ -44,6 +44,11 @@ src/
 
 The background entry will be reflected to the `background.service_worker` or `background.scripts` field in `manifest.json`.
 
+| Entry Path                  | Output Path     |
+| --------------------------- | --------------- |
+| `barkground.(js\|ts)`       | `background.js` |
+| `barkground/index.(js\|ts)` | `background.js` |
+
 Generate the entry automatically.
 
 ```shell
@@ -68,17 +73,27 @@ See [with-background](https://github.com/web-extend/examples/tree/main/with-back
 
 The bookmarks entry will be reflected to the `chrome_url_overrides.bookmarks` field in `manifest.json`.
 
+| Entry Path                           | Output Path      |
+| ------------------------------------ | ---------------- |
+| `bookmarks.(js\|jsx\|ts\|tsx)`       | `bookmarks.html` |
+| `bookmarks/index.(js\|jsx\|ts\|tsx)` | `bookmarks.html` |
+
 Generate the entry automatically.
 
 ```shell
 npx web-extend g bookmarks
 ```
 
-Alternatively, create the `src/bookmarks.js` or `src/bookmarks/index.js` file manually.
-
 ### Content Scripts
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_scripts)
+
+| Entry Path                                 | Output Path          |
+| ------------------------------------------ | -------------------- |
+| `content.(js\|jsx\|ts\|tsx)`               | `content.js`         |
+| `content/index.(js\|jsx\|ts\|tsx)`         | `content.js`         |
+| `contents/{name}.(js\|jsx\|ts\|tsx)`       | `contents/{name}.js` |
+| `contents/{name}/index.(js\|jsx\|ts\|tsx)` | `contents/{name}.js` |
 
 #### Adding a single content script
 
@@ -209,17 +224,27 @@ See [with-content](https://github.com/web-extend/examples/tree/main/with-content
 
 The devtools entry will be reflected to the `devtools_page` field in `manifest.json`.
 
+| Entry Path                          | Output Path     |
+| ----------------------------------- | --------------- |
+| `devtools.(js\|jsx\|ts\|tsx)`       | `devtools.html` |
+| `devtools/index.(js\|jsx\|ts\|tsx)` | `devtools.html` |
+
 Generate the entry automatically.
 
 ```shell
 npx web-extend g devtools
 ```
 
-Alternatively, create the `src/devtools.js` file manually.
-
 #### Adding panels
 
-The devtools page is composed of a single panel or multiple panels. There are two methods to create panels.
+The devtools page is composed of a single panel or multiple panels.
+
+| Entry Path                               | Output Path          |
+| ---------------------------------------- | -------------------- |
+| `panel.(js\|jsx\|ts\|tsx)`               | `panel.html`         |
+| `panel/index.(js\|jsx\|ts\|tsx)`         | `panel.html`         |
+| `panels/{name}.(js\|jsx\|ts\|tsx)`       | `panels/{name}.html` |
+| `panels/{name}/index.(js\|jsx\|ts\|tsx)` | `panels/{name}.html` |
 
 Generate the panel automatically.
 
@@ -255,13 +280,16 @@ See [with-devtools](https://github.com/web-extend/examples/tree/main/with-devtoo
 
 The history entry will be reflected to the `chrome_url_overrides.history` field in `manifest.json`.
 
+| Entry Path                         | Output Path    |
+| ---------------------------------- | -------------- |
+| `history.(js\|jsx\|ts\|tsx)`       | `history.html` |
+| `history/index.(js\|jsx\|ts\|tsx)` | `history.html` |
+
 Generate the entry automatically.
 
 ```shell
 npx web-extend g history
 ```
-
-Alternatively, create the `src/history.js` or `src/history/index.js` file manually.
 
 ### Icons
 
@@ -291,13 +319,16 @@ See [with-icons](https://github.com/web-extend/examples/tree/main/with-icons).
 
 The newtab entry will be reflected to the `chrome_url_overrides.newtab` field in `manifest.json`.
 
+| Entry Path                        | Output Path   |
+| --------------------------------- | ------------- |
+| `newtab.(js\|jsx\|ts\|tsx)`       | `newtab.html` |
+| `newtab/index.(js\|jsx\|ts\|tsx)` | `newtab.html` |
+
 Generate the entry automatically.
 
 ```shell
 npx web-extend g newtab
 ```
-
-Alternatively, create the `src/newtab.js` or `src/newtab/index.js` file manually.
 
 ### Options
 
@@ -305,13 +336,16 @@ Alternatively, create the `src/newtab.js` or `src/newtab/index.js` file manually
 
 The options entry will be reflected to the `options_ui.page` field in `manifest.json`.
 
+| Entry Path                         | Output Path    |
+| ---------------------------------- | -------------- |
+| `options.(js\|jsx\|ts\|tsx)`       | `options.html` |
+| `options/index.(js\|jsx\|ts\|tsx)` | `options.html` |
+
 Generate the entry automatically.
 
 ```shell
 npx web-extend g options
 ```
-
-Alternatively, create the `src/options.js` or `src/options/index.js` file manually.
 
 See [with-options](https://github.com/web-extend/examples/tree/main/with-options).
 
@@ -320,6 +354,11 @@ See [with-options](https://github.com/web-extend/examples/tree/main/with-options
 [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/action) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/action)
 
 The popup entry will be reflected to the `action.default_popup` field in `manifest.json`.
+
+| Entry Path                       | Output Path  |
+| -------------------------------- | ------------ |
+| `popup.(js\|jsx\|ts\|tsx)`       | `popup.html` |
+| `popup/index.(js\|jsx\|ts\|tsx)` | `popup.html` |
 
 Generate the entry automatically.
 
@@ -357,6 +396,13 @@ See [with-popup](https://github.com/web-extend/examples/tree/main/with-popup).
 
 The sandbox entry will be reflected to the `sandbox.pages` field in `manifest.json`.
 
+| Entry Path                                  | Output Path             |
+| ------------------------------------------- | ----------------------- |
+| `sandbox.(js\|jsx\|ts\|tsx)`                | `sandbox.html`          |
+| `sandbox/index.(js\|jsx\|ts\|tsx)`          | `sandbox.html`          |
+| `sandboxes/{name}.(js\|jsx\|ts\|tsx)`       | `sandboxes/{name}.html` |
+| `sandboxes/{name}/index.(js\|jsx\|ts\|tsx)` | `sandboxes/{name}.html` |
+
 Generate the entry automatically.
 
 ```shell
@@ -367,8 +413,6 @@ npx web-extend g sandbox
 npx web-extend g sandboxes/sandbox1,sandboxes/sandbox2
 
 ```
-
-Alternatively, create the `src/sandbox.js` or `src/sandboxes/*.js` file manually.
 
 To use the sandbox, you can embed it as an iframe inside an extension page or a content script.
 
@@ -396,12 +440,40 @@ See [with-sandbox](https://github.com/web-extend/examples/tree/main/with-sandbox
 
 The sidepanel entry will be reflected to the `side_panel.default_path` or `sidebar_action.default_panel` field in `manifest.json`.
 
+| Entry Path                           | Output Path      |
+| ------------------------------------ | ---------------- |
+| `sidepanel.(js\|jsx\|ts\|tsx)`       | `sidepanel.html` |
+| `sidepanel/index.(js\|jsx\|ts\|tsx)` | `sidepanel.html` |
+
 Generate the entry automatically.
 
 ```shell
 npx web-extend g sidepanel
 ```
 
-Alternatively, create the `src/sidepanel.js` or `src/sidepanel/index.js` file manually.
-
 See [with-sidepanel](https://github.com/web-extend/examples/tree/main/with-sidepanel).
+
+### Scripting
+
+[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/scripting) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/scripting)
+
+| Entry Path                                 | Output Path            |
+| ------------------------------------------ | ---------------------- |
+| `scripting/{name}.(js\|jsx\|ts\|tsx)`      | `scripting/{name}.js`  |
+| `scripting/{name}.(css\|less\|sass\|scss)` | `scripting/{name}.css` |
+
+Example.
+
+```ts [background.ts]
+chrome.tabs.onActivated.addListener((e) => {
+  chrome.scripting.executeScript({
+    target: { tabId: e.tabId },
+    files: ["scripting/injected-script.js"],
+  });
+
+  chrome.scripting.insertCSS({
+    target: { tabId: e.tabId },
+    files: ["scripting/injected-style.css"],
+  });
+});
+```

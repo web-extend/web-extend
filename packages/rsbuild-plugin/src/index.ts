@@ -167,8 +167,8 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
     api.onBeforeStartDevServer(() => {
       api.transform({ test: /\.js$/ }, ({ resourcePath, code, environment }) => {
         const liveReload = api.getNormalizedConfig().dev.liveReload;
-        const hmr = resourcePath.endsWith('hmr.js');
-        if (environment.name === 'content' && liveReload && hmr) {
+        const isHMR = resourcePath.endsWith('hmr.js');
+        if (environment.name === 'content' && liveReload && isHMR) {
           const reloadExtensionCode = `
             const bridgeEl = document.getElementById('web-extend-content-bridge');
             if (bridgeEl) {
