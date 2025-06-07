@@ -1,11 +1,11 @@
 import { resolve } from 'node:path';
-import { isDevMode, matchDeclarativeSingleEntryFile } from './common.js';
-import type { ManifestEntryInput, ManifestEntryProcessor, WebExtensionManifest } from './types.js';
+import { isDevMode, matchSingleDeclarativeEntryFile } from './common.js';
+import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'background';
 
 const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
-  matchDeclarativeSingleEntryFile(key, file);
+  matchSingleDeclarativeEntryFile(key, file);
 
 const normalizeBackgroundEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, files, context }) => {
   const { rootPath, srcDir, mode, target, runtime } = context;
@@ -55,7 +55,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest }) => {
   const entry: ManifestEntryInput = {
     background: {
       input,
-      html: false,
+      entryType: 'script',
     },
   };
   return entry;

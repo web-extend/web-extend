@@ -2,17 +2,21 @@ import { existsSync } from 'node:fs';
 import { readdir, unlink } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import type { RsbuildConfig, RsbuildEntry, Rspack } from '@rsbuild/core';
-import type { ManifestEntryInput } from '@web-extend/manifest/types';
+import type { ManifestEntryInput, ManifestEntries } from '@web-extend/manifest/types';
 
 export function isDevMode(mode: string | undefined) {
   return mode === 'development';
+}
+
+export function getAssetEntryType(name: string, manifestEntries: ManifestEntries) {
+  
 }
 
 export function transformManifestEntry(entry: ManifestEntryInput | undefined) {
   if (!entry) return;
   const res: RsbuildEntry = {};
   for (const key in entry) {
-    const { input, html } = entry[key];
+    const { input, entryType = 'html' } = entry[key];
     let imports = input;
 
     if (key.startsWith('icons')) {
@@ -21,10 +25,10 @@ export function transformManifestEntry(entry: ManifestEntryInput | undefined) {
 
     res[key] = {
       import: imports,
-      html,
+      html: entryType === 'html',
     };
   }
-  return res;
+  return Object.keys(res).length ? res : undefined;
 }
 
 export function getRsbuildEntryFiles(entries: RsbuildEntry, key: string) {

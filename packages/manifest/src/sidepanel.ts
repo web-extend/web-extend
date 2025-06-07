@@ -1,11 +1,11 @@
 import { resolve } from 'node:path';
-import { matchDeclarativeSingleEntryFile } from './common.js';
+import { matchSingleDeclarativeEntryFile } from './common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'sidepanel';
 
 const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
-  matchDeclarativeSingleEntryFile(key, file);
+  matchSingleDeclarativeEntryFile(key, file);
 
 const normalizeSidepanelEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, context, files }) => {
   const { rootPath, srcDir } = context;
@@ -30,7 +30,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest }) => {
   const entry: ManifestEntryInput = {
     sidepanel: {
       input: [input],
-      html: true,
+      entryType: 'html',
     },
   };
   return entry;

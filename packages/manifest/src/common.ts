@@ -1,13 +1,18 @@
 import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { basename, extname, isAbsolute, join, relative, resolve, sep } from 'node:path';
-import type { ExtensionTarget, WebExtensionManifest } from './types.js';
+import type { ExtensionTarget, WebExtensionManifest, ManifestEntryItem } from './types.js';
 
-const jsFileExts = ['.ts', '.js', '.tsx', '.jsx', '.mts', '.cts', '.mjs', '.cjs'];
+const scriptExts = ['.ts', '.js', '.tsx', '.jsx', '.mts', '.cts', '.mjs', '.cjs'];
+const styleExts = ['.css', '.scss', '.sass', '.less', '.styl', '.stylus'];
 
-function isJavaScriptFile(file: string) {
+function isScriptFile(file: string) {
   if (file.endsWith('.d.ts')) return false;
-  return jsFileExts.some((ext) => file.endsWith(ext));
+  return scriptExts.some((ext) => file.endsWith(ext));
+}
+
+function isStyleFile(file: string) {
+  return styleExts.some((ext) => file.endsWith(ext));
 }
 
 export function getEntryName(file: string, rootPath: string, srcDir: string) {
@@ -24,22 +29,30 @@ export function getEntryName(file: string, rootPath: string, srcDir: string) {
 }
 
 export function getEntryFileVariants(name: string, ext: string) {
-  if (!isJavaScriptFile(`${name}${ext}`)) {
+  if (!isScriptFile(`${name}${ext}`)) {
     return [`${name}${ext}`];
   }
-  return jsFileExts.flatMap((item) => [`${name}${item}`, `${name}${sep}index${item}`]);
+  return scriptExts.flatMap((item) => [`${name}${item}`, `${name}${sep}index${item}`]);
 }
 
-export const matchDeclarativeSingleEntryFile = (key: string, file: string) => {
+export const matchSingleDeclarativeEntryFile = (key: string, file: string) => {
   const res = getEntryFileVariants(key, '.js').includes(file);
   return res ? { name: key, ext: extname(file) } : null;
 };
 
-export const matchDeclarativeMultipleEntryFile = (key: string, file: string) => {
-  if (!isJavaScriptFile(file)) return null;
+export const matchMultipleDeclarativeEntryFile = (
+  key: string,
+  file: string,
+  entryType?: ManifestEntryItem['entryType'][],
+) => {
+  let allowable = isScriptFile(file);
+  if (entryType?.includes('style')) {
+    allowable = allowable || isStyleFile(file);
+  }
+  if(!allowable) return null;
 
   const ext = extname(file);
-  // match [key]/*.js or [key]/*/index.js
+  // match [key]/*.[ext] or [key]/*/index.[ext]
   let name = '';
   const slices = file.split(sep);
   if (slices[0] === key) {

@@ -1,13 +1,13 @@
 // import { existsSync } from 'node:fs';
 // import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import { matchDeclarativeSingleEntryFile } from './common.js';
+import { matchSingleDeclarativeEntryFile } from './common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'popup';
 
 const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
-  matchDeclarativeSingleEntryFile(key, file);
+  matchSingleDeclarativeEntryFile(key, file);
 
 const normalizePopupEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, context, files }) => {
   const { rootPath, srcDir } = context;
@@ -34,7 +34,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest }) => {
   const entry: ManifestEntryInput = {
     popup: {
       input: [input],
-      html: true,
+      entryType: 'html',
     },
   };
   return entry;

@@ -75,7 +75,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest }) => {
     ? {
         [key]: {
           input: Array.from(files),
-          html: false,
+          entryType: 'image'
         },
       }
     : null;

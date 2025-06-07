@@ -6,10 +6,11 @@ function getContentEnvironmentConfig({
   manifestEntries,
   manifestContext,
   context,
-}: NormalizeRsbuildEnvironmentProps): EnvironmentConfig {
+}: NormalizeRsbuildEnvironmentProps): EnvironmentConfig | undefined {
   const content = manifestEntries.content;
   const { mode } = manifestContext;
   const entry = transformManifestEntry(content);
+  if (!entry) return;
   return {
     source: {
       entry,

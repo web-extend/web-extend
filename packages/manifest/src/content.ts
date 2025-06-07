@@ -4,8 +4,8 @@ import { basename, posix, resolve } from 'node:path';
 import {
   getEntryName,
   isDevMode,
-  matchDeclarativeMultipleEntryFile,
-  matchDeclarativeSingleEntryFile,
+  matchMultipleDeclarativeEntryFile,
+  matchSingleDeclarativeEntryFile,
 } from './common.js';
 import { parseExportObject } from './parser/export.js';
 import type { ContentScriptConfig, Manifest, ManifestEntryInput, ManifestEntryProcessor } from './types.js';
@@ -13,7 +13,7 @@ import type { ContentScriptConfig, Manifest, ManifestEntryInput, ManifestEntryPr
 const key = 'content';
 
 const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
-  matchDeclarativeSingleEntryFile(key, file) || matchDeclarativeMultipleEntryFile('contents', file);
+  matchSingleDeclarativeEntryFile(key, file) || matchMultipleDeclarativeEntryFile('contents', file, ['script']);
 
 const normalizeContentEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, files, context }) => {
   const { rootPath, srcDir } = context;
@@ -57,7 +57,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest, context }) =
     const { name, input } = info;
     entry[name] = {
       input,
-      html: false,
+      entryType: 'script',
     };
   });
   return entry;

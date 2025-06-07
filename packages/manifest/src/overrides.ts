@@ -1,12 +1,12 @@
 import { resolve } from 'node:path';
-import { matchDeclarativeSingleEntryFile } from './common.js';
-import type { Manifest, ManifestEntryInput, ManifestEntryProcessor, PageToOverride } from './types.js';
+import { matchSingleDeclarativeEntryFile } from './common.js';
+import type { Manifest, ManifestEntryInput, ManifestEntryProcessor, ManifestEntryKey } from './types.js';
 
-const overrides: PageToOverride[] = ['newtab', 'history', 'bookmarks'];
+const overrides: ManifestEntryKey[] = ['newtab', 'history', 'bookmarks'];
 
 const overrideProcessors = overrides.map((key) => {
   const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
-    matchDeclarativeSingleEntryFile(key, file);
+    matchSingleDeclarativeEntryFile(key, file);
 
   const normalizeOverridesEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, context, files }) => {
     const { rootPath, srcDir } = context;
@@ -14,7 +14,7 @@ const overrideProcessors = overrides.map((key) => {
     if (Object.keys(chrome_url_overrides).length) return;
 
     const entryPath = files
-      .filter((file) => matchDeclarativeSingleEntryFile(key, file))
+      .filter((file) => matchSingleDeclarativeEntryFile(key, file))
       .map((file) => resolve(rootPath, srcDir, file))[0];
 
     if (entryPath) {
@@ -34,7 +34,7 @@ const overrideProcessors = overrides.map((key) => {
     if (input) {
       entry[key] = {
         input: [input],
-        html: true,
+        entryType: 'html'
       };
     }
     return Object.keys(entry).length ? entry : null;

@@ -1,12 +1,12 @@
 import { readdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import { getEntryName, matchDeclarativeMultipleEntryFile, matchDeclarativeSingleEntryFile } from './common.js';
+import { getEntryName, matchMultipleDeclarativeEntryFile, matchSingleDeclarativeEntryFile } from './common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'panel';
 
 const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
-  matchDeclarativeSingleEntryFile(key, file) || matchDeclarativeMultipleEntryFile('panels', file);
+  matchSingleDeclarativeEntryFile(key, file) || matchMultipleDeclarativeEntryFile('panels', file);
 
 const readEntry: ManifestEntryProcessor['readEntry'] = async ({ manifest, context }) => {
   const { devtools_page } = manifest || {};
@@ -24,7 +24,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = async ({ manifest, contex
     if (name) {
       entry[name] = {
         input: [file],
-        html: true,
+        entryType: 'html',
       };
     }
   }

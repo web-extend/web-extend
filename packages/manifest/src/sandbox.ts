@@ -1,11 +1,11 @@
 import { resolve } from 'node:path';
-import { getEntryName, matchDeclarativeMultipleEntryFile, matchDeclarativeSingleEntryFile } from './common.js';
+import { getEntryName, matchMultipleDeclarativeEntryFile, matchSingleDeclarativeEntryFile } from './common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'sandbox';
 
 const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
-  matchDeclarativeSingleEntryFile(key, file) || matchDeclarativeMultipleEntryFile('sandboxes', file);
+  matchSingleDeclarativeEntryFile(key, file) || matchMultipleDeclarativeEntryFile('sandboxes', file);
 
 const normalizeSandboxEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, files, context }) => {
   const { srcDir, rootPath, target } = context;
@@ -31,7 +31,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest, context }) =
     const name = getEntryName(page, context.rootPath, context.srcDir);
     entry[name] = {
       input: [page],
-      html: true,
+      entryType: 'html',
     };
   });
   return entry;

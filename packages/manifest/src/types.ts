@@ -62,8 +62,6 @@ interface ManifestSidePanel {
   default_path?: string;
 }
 
-export type PageToOverride = 'newtab' | 'history' | 'bookmarks';
-
 export type ManifestEntryKey =
   | 'icons'
   | 'background'
@@ -74,12 +72,16 @@ export type ManifestEntryKey =
   | 'devtools'
   | 'panel'
   | 'sandbox'
-  | PageToOverride;
+  | 'newtab'
+  | 'history'
+  | 'bookmarks'
+  | 'scripting';
 
-interface ManifestEntryItem {
+export interface ManifestEntryItem {
   input: string[];
   output: string[];
-  html?: boolean;
+  // html?: boolean;
+  entryType: 'script' | 'style' | 'html' | 'image'; // default is 'html'
 }
 
 export type ManifestEntryInput = Record<string, Omit<ManifestEntryItem, 'output'>>;

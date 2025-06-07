@@ -13,6 +13,7 @@ import { polyfillManifest } from './polyfill.js';
 import popupProcessor from './popup.js';
 import sandboxProcessor from './sandbox.js';
 import sidepanelProcessor from './sidepanel.js';
+import scriptingProcessor from './scripting.js';
 import type {
   ExtensionTarget,
   ManifestContext,
@@ -33,6 +34,7 @@ const entryProcessors: ManifestEntryProcessor[] = [
   panelProcessor,
   sandboxProcessor,
   iconsProcessor,
+  scriptingProcessor,
   ...overrideProcessors,
 ];
 
@@ -65,6 +67,7 @@ async function normalizeManifest({ manifest = {} as WebExtensionManifest, contex
 
   try {
     const srcPath = resolve(rootPath, srcDir);
+    // 优化，避免读取非入口文件
     const files = await readdir(srcPath, { recursive: true });
     for (const processor of entryProcessors) {
       if (!processor.normalize) continue;

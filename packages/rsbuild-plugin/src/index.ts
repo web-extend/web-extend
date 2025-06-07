@@ -3,8 +3,9 @@ import { fileURLToPath } from 'node:url';
 import type { EnvironmentConfig, RsbuildConfig, RsbuildPlugin } from '@rsbuild/core';
 import { ManifestManager } from '@web-extend/manifest';
 import { getEntryFileVariants } from '@web-extend/manifest/common';
-import type { ManifestEntryOutput, WebExtensionManifest } from '@web-extend/manifest/types';
+import type { ManifestEntryOutput, WebExtensionManifest, ManifestEntries } from '@web-extend/manifest/types';
 import { getContentEnvironmentConfig } from './content.js';
+import { getWebEnvironmentConfig } from './web.js';
 import { DownloadRemotePlugin } from './download-remote.js';
 import {
   clearOutdatedHotUpdateFiles,
@@ -39,27 +40,24 @@ async function normalizeRsbuildEnvironments(options: NormalizeRsbuildEnvironment
   }
 
   if (content) {
-    defaultEnvironment = environments.content = getContentEnvironmentConfig(options);
+    environments.content = getContentEnvironmentConfig(options);
   }
 
-  const webEntry = Object.values(others)
-    .filter(Boolean)
-    .reduce((res, cur) => Object.assign(res, cur), {});
-  if (Object.values(webEntry).length || !defaultEnvironment) {
-    defaultEnvironment = environments.web = {
+  environments.web = getWebEnvironmentConfig({
+    ...options,
+    manifestEntries: others,
+  });
+
+  // void the empty entry error
+  if (Object.keys(manifestEntries).length === 0) {
+    environments.web = {
       source: {
-        entry: Object.values(webEntry).length
-          ? transformManifestEntry(webEntry)
-          : {
-              // void the empty entry error
-              empty: {
-                import: resolve(selfRootPath, './static/empty-entry.js'),
-                html: false,
-              },
-            },
-      },
-      output: {
-        target: 'web',
+        entry: {
+          _empty: {
+            import: resolve(selfRootPath, './static/empty-entry.js'),
+            html: false,
+          },
+        },
       },
     };
   }
@@ -71,6 +69,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
   name: 'plugin-web-extend',
   setup: (api) => {
     const manifestManager = new ManifestManager();
+    let manifestEntries: ManifestEntries | null = null;
 
     api.modifyRsbuildConfig(async (config, { mergeRsbuildConfig }) => {
       const rootPath = api.context.rootPath;
@@ -89,7 +88,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         manifest: options.manifest as WebExtensionManifest,
       });
 
-      const manifestEntries = await manifestManager.readEntries();
+      manifestEntries = await manifestManager.readEntries();
       const environments = await normalizeRsbuildEnvironments({
         manifestEntries,
         config,
@@ -189,10 +188,21 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       });
     });
 
-    api.processAssets({ stage: 'optimize' }, async ({ assets, compilation, environment }) => {
-      if (environment.name === 'web') {
-        for (const name in assets) {
-          if (name.endsWith('.js') && (name.includes('icons') || name.includes('empty'))) {
+    api.processAssets({ stage: 'optimize' }, async ({ assets, compilation }) => {
+      if (!manifestEntries) return;
+      const manifestEntryInput = Object.values(manifestEntries).reduce((acc, entry) => {
+        for (const key in entry) {
+          acc[key] = entry[key];
+        }
+        return acc;
+      }, {});
+
+      // Remove assets that are not needed in the final build
+      for (const name in assets) {
+        if (name.endsWith('.js')) {
+          const assetName = name.replace(/\.js$/, '');
+          const entryType = manifestEntryInput[assetName]?.entryType;
+          if (entryType === 'image' || entryType === 'style' || assetName.includes('_empty')) {
             compilation.deleteAsset(name);
           }
         }

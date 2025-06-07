@@ -1,11 +1,11 @@
 import { resolve } from 'node:path';
-import { matchDeclarativeSingleEntryFile } from './common.js';
+import { matchSingleDeclarativeEntryFile } from './common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'devtools';
 
 const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
-  matchDeclarativeSingleEntryFile(key, file);
+  matchSingleDeclarativeEntryFile(key, file);
 
 const normalizeDevtoolsEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, files, context }) => {
   const { rootPath, srcDir } = context;
@@ -25,7 +25,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = async ({ manifest, contex
   const entry: ManifestEntryInput = {
     devtools: {
       input: [devtools_page],
-      html: true,
+      entryType: 'html',
     },
   };
 
