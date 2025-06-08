@@ -14,12 +14,16 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
   const srcPath = resolve(rootPath, srcDir);
 
   const entryPath = files.filter(matchDeclarativeEntryFile).map((file) => resolve(srcPath, file));
+  // add permissions for scripting
   if (entryPath.length) {
-    // TODO: 添加权限
-    manifest.permissions ||= [];
-    if (!manifest.permissions.includes('scripting')) {
-      manifest.permissions.push('scripting');
+    const permissions = manifest.permissions || [];
+    if (!permissions.includes('scripting')) {
+      permissions.push('scripting');
     }
+    if (!manifest.host_permissions && !permissions.includes('activeTab')) {
+      permissions.push('activeTab');
+    }
+    manifest.permissions = permissions;
   }
 };
 
