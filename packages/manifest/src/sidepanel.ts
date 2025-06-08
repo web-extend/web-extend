@@ -4,7 +4,7 @@ import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'sidepanel';
 
-const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
+const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file) =>
   matchSingleDeclarativeEntryFile(key, file);
 
 const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context, files }) => {
@@ -14,10 +14,10 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
     return;
   }
 
-  const entryPath = files.filter(matchDeclarativeEntryFile).map((file) => resolve(rootPath, srcDir, file))[0];
-  if (entryPath) {
+  const entryFile = files.filter(matchDeclarativeEntry).map((file) => resolve(rootPath, srcDir, file))[0];
+  if (entryFile) {
     manifest.side_panel = {
-      default_path: entryPath,
+      default_path: entryFile,
     };
   }
 };
@@ -49,7 +49,7 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, name }) =>
 
 const sidepanelProcessor: ManifestEntryProcessor = {
   key,
-  matchDeclarativeEntryFile,
+  matchDeclarativeEntry,
   normalizeEntry,
   readEntry,
   writeEntry,

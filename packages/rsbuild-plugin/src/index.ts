@@ -132,7 +132,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
                     if (stats?.isFile()) {
                       if (stats.size === 0) return true;
 
-                      const entry = ManifestManager.matchDeclarativeEntryFile(relativePath);
+                      const entry = ManifestManager.matchDeclarativeEntry(relativePath);
                       if (!entry) return true;
 
                       const entryFileVariants = getEntryFileVariants(entry.name, entry.ext).map((file) =>

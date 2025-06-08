@@ -6,7 +6,7 @@ import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'popup';
 
-const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
+const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file) =>
   matchSingleDeclarativeEntryFile(key, file);
 
 const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context, files }) => {
@@ -16,12 +16,12 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
 
   if (pointer?.default_popup) return;
 
-  const entryPath = files.filter(matchDeclarativeEntryFile).map((file) => resolve(rootPath, srcDir, file))[0];
-  if (entryPath) {
+  const entryFile = files.filter(matchDeclarativeEntry).map((file) => resolve(rootPath, srcDir, file))[0];
+  if (entryFile) {
     if (!pointer) {
       pointer = manifest.action = {};
     }
-    pointer.default_popup ??= entryPath;
+    pointer.default_popup ??= entryFile;
   }
 };
 
@@ -61,7 +61,7 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = async ({ manifest, name
 
 const popupProcessor: ManifestEntryProcessor = {
   key,
-  matchDeclarativeEntryFile,
+  matchDeclarativeEntry,
   normalizeEntry,
   readEntry,
   writeEntry,

@@ -5,7 +5,7 @@ import type { Manifest, ManifestEntryInput, ManifestEntryKey, ManifestEntryProce
 const overrides: ManifestEntryKey[] = ['newtab', 'history', 'bookmarks'];
 
 const overrideProcessors = overrides.map((key) => {
-  const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
+  const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file) =>
     matchSingleDeclarativeEntryFile(key, file);
 
   const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context, files }) => {
@@ -13,14 +13,14 @@ const overrideProcessors = overrides.map((key) => {
     const { chrome_url_overrides = {} } = manifest;
     if (Object.keys(chrome_url_overrides).length) return;
 
-    const entryPath = files
+    const entryFile = files
       .filter((file) => matchSingleDeclarativeEntryFile(key, file))
       .map((file) => resolve(rootPath, srcDir, file))[0];
 
-    if (entryPath) {
+    if (entryFile) {
       manifest.chrome_url_overrides = {
         ...(manifest.chrome_url_overrides || {}),
-        [key]: entryPath,
+        [key]: entryFile,
       };
     }
   };
@@ -52,7 +52,7 @@ const overrideProcessors = overrides.map((key) => {
 
   return {
     key,
-    matchDeclarativeEntryFile,
+    matchDeclarativeEntry,
     normalizeEntry,
     readEntry,
     writeEntry,

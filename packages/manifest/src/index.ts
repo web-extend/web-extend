@@ -215,10 +215,10 @@ export class ManifestManager {
     await cp(publicPath, distPath, { recursive: true, dereference: true });
   }
 
-  static matchDeclarativeEntryFile(file: string) {
+  static matchDeclarativeEntry(file: string) {
     for (const processor of entryProcessors) {
-      if (!processor.matchDeclarativeEntryFile) continue;
-      const item = processor.matchDeclarativeEntryFile(file);
+      if (!processor.matchDeclarativeEntry) continue;
+      const item = processor.matchDeclarativeEntry(file);
       if (item) return item;
     }
     return null;

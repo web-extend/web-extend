@@ -12,20 +12,20 @@ import type { ContentScriptConfig, Manifest, ManifestEntryInput, ManifestEntryPr
 
 const key = 'content';
 
-const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
+const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file) =>
   matchSingleDeclarativeEntryFile(key, file) || matchMultipleDeclarativeEntryFile('contents', file, ['script']);
 
 const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, files, context }) => {
   const { rootPath, srcDir } = context;
 
   if (!manifest.content_scripts?.length) {
-    const entryPath = files
-      .filter((file) => matchDeclarativeEntryFile(file))
+    const entryFile = files
+      .filter((file) => matchDeclarativeEntry(file))
       .map((file) => resolve(rootPath, srcDir, file));
 
-    if (entryPath.length) {
+    if (entryFile.length) {
       manifest.content_scripts ??= [];
-      for (const filePath of entryPath) {
+      for (const filePath of entryFile) {
         manifest.content_scripts.push({
           matches: [], // get from entry in writeContentEntry
           js: [filePath],
@@ -162,7 +162,7 @@ const onAfterBuild: ManifestEntryProcessor['onAfterBuild'] = async ({ distPath, 
 
 const contentProcessor: ManifestEntryProcessor = {
   key,
-  matchDeclarativeEntryFile,
+  matchDeclarativeEntry,
   normalizeEntry,
   readEntry,
   writeEntry,

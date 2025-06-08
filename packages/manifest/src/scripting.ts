@@ -6,16 +6,16 @@ import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'scripting';
 
-const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
+const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file) =>
   matchMultipleDeclarativeEntryFile('scripting', file, ['script', 'style']);
 
 const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, files, context }) => {
   const { srcDir, rootPath } = context;
   const srcPath = resolve(rootPath, srcDir);
 
-  const entryPath = files.filter(matchDeclarativeEntryFile).map((file) => resolve(srcPath, file));
+  const entryFile = files.filter(matchDeclarativeEntry).map((file) => resolve(srcPath, file));
   // add permissions for scripting
-  if (entryPath.length) {
+  if (entryFile.length) {
     const permissions = manifest.permissions || [];
     if (!permissions.includes('scripting')) {
       permissions.push('scripting');
@@ -41,7 +41,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = async ({ context }) => {
   const files = await readdir(scriptingPath, { recursive: true });
   const scripting = files
     .map((file) => join('scripting', file))
-    .filter(matchDeclarativeEntryFile)
+    .filter(matchDeclarativeEntry)
     .map((file) => resolve(srcPath, file));
 
   for (const file of scripting) {
@@ -59,7 +59,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = async ({ context }) => {
 
 const processor: ManifestEntryProcessor = {
   key,
-  matchDeclarativeEntryFile,
+  matchDeclarativeEntry,
   normalizeEntry,
   readEntry,
 };

@@ -4,7 +4,7 @@ import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'background';
 
-const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
+const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file) =>
   matchSingleDeclarativeEntryFile(key, file);
 
 const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, files, context }) => {
@@ -17,11 +17,11 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
   } else if (background?.scripts) {
     scripts.push(...background.scripts);
   } else {
-    const entryPath = files
-      .filter((file) => matchDeclarativeEntryFile(file))
+    const entryFile = files
+      .filter((file) => matchDeclarativeEntry(file))
       .map((file) => resolve(rootPath, srcDir, file))[0];
-    if (entryPath) {
-      scripts.push(entryPath);
+    if (entryFile) {
+      scripts.push(entryFile);
     }
   }
   if (isDevMode(mode) && runtime?.background) {
@@ -75,7 +75,7 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, output }) 
 
 const backgroundProcessor: ManifestEntryProcessor = {
   key,
-  matchDeclarativeEntryFile,
+  matchDeclarativeEntry,
   normalizeEntry,
   readEntry,
   writeEntry,

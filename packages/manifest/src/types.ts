@@ -80,7 +80,6 @@ export type ManifestEntryKey =
 export interface ManifestEntryItem {
   input: string[];
   output: string[];
-  // html?: boolean;
   entryType: 'script' | 'style' | 'html' | 'image'; // default is 'html'
 }
 
@@ -91,7 +90,7 @@ export type MaybePromise<T = unknown> = T | Promise<T>;
 
 export interface ManifestEntryProcessor {
   key: ManifestEntryKey;
-  matchDeclarativeEntryFile?: (file: string) => null | { name: string; ext: string };
+  matchDeclarativeEntry?: (file: string) => null | { name: string; ext: string };
   normalizeEntry?: (props: NormalizeMainfestEntryProps) => MaybePromise<void>;
   readEntry?: (props: ReadManifestEntryItemProps) => MaybePromise<ManifestEntryInput | null>;
   writeEntry?: (props: WriteMainfestEntryItemProps) => MaybePromise<void>;

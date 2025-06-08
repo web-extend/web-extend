@@ -5,7 +5,7 @@ import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'panel';
 
-const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
+const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file) =>
   matchSingleDeclarativeEntryFile(key, file) || matchMultipleDeclarativeEntryFile('panels', file);
 
 const readEntry: ManifestEntryProcessor['readEntry'] = async ({ manifest, context }) => {
@@ -17,7 +17,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = async ({ manifest, contex
   const { rootPath, srcDir } = context;
   const srcPath = resolve(rootPath, srcDir);
   const files = await readdir(srcPath, { recursive: true });
-  const panels = files.filter(matchDeclarativeEntryFile).map((file) => resolve(srcPath, file));
+  const panels = files.filter(matchDeclarativeEntry).map((file) => resolve(srcPath, file));
 
   for (const file of panels) {
     const name = getEntryName(file, rootPath, srcDir);
@@ -34,7 +34,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = async ({ manifest, contex
 
 const panelProcessor: ManifestEntryProcessor = {
   key,
-  matchDeclarativeEntryFile,
+  matchDeclarativeEntry,
   readEntry,
 };
 
