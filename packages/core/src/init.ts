@@ -335,9 +335,6 @@ export async function copyEntryFiles(source: string, dest: string, entries?: str
     const item = entrypoints.find((item) => entry.startsWith(item.value));
     if (!item) continue;
 
-    if(item.name !== entry && entry.startsWith(`${item.name}/`)) {
-    }
-    
     const templateName = item.template;
     const file = files.find((item) => item.name.startsWith(templateName));
     if (!file) continue;
