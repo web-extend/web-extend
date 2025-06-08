@@ -2,39 +2,67 @@
 outline: deep
 ---
 
-# Browsers
+# Browser Support
+
+WebExtend is designed to help you build cross-browser extensions with ease. This guide covers everything you need to know about browser compatibility, configuration, and development workflow.
 
 ## Browser Targets
 
-WebExtend supports the following extension targets.
+WebExtend supports the following extension targets:
 
-- `chrome-mv3` (default)
-- `firefox-mv2` (recommended for Firefox)
-- `firefox-mv3` (experimental, doesn't work in dev mode)
-- `safari-mv3`
-- `edge-mv3`
-- `opera-mv3`
+| Target        | Description         | Status                               |
+| ------------- | ------------------- | ------------------------------------ |
+| `chrome-mv3`  | Chrome Manifest V3  | Default, stable                      |
+| `firefox-mv2` | Firefox Manifest V2 | Recommended for Firefox              |
+| `firefox-mv3` | Firefox Manifest V3 | Experimental, dev mode not supported |
+| `safari-mv3`  | Safari Manifest V3  | Stable                               |
+| `edge-mv3`    | Edge Manifest V3    | Stable                               |
+| `opera-mv3`   | Opera Manifest V3   | Stable                               |
 
-When the target is `chrome-mv3`, the built extension can be used in most Chromium-based browsers, such as Chrome, Edge, Brave, Opera, etc.
+When using `chrome-mv3`, the built extension is compatible with most Chromium-based browsers, including:
 
-To use a specific target, you can set the `--target` or `-t` flag for `web-extend` subcommands, for example:
+- Google Chrome
+- Microsoft Edge
+- Brave
+- Opera
+- Other Chromium-based browsers
+
+To specify a target browser, use the `--target` or `-t` flag with `web-extend` commands:
 
 ```shell
+# Development mode
 web-extend rsbuild:dev -t firefox-mv2
+
+# Production build
 web-extend rsbuild:build -t firefox-mv2
+
+# Preview build
 web-extend preview -t firefox-mv2
+
+# Create zip package
 web-extend zip -t firefox-mv2
 ```
 
-Webextend injects the `import.meta.env.WEB_EXTEND_TARGET` environment variable into the code during build, which is helpful for dealing with specificity between different browsers, for example:
+### Environment Variables
+
+WebExtend injects the `import.meta.env.WEB_EXTEND_TARGET` environment variable during build, which helps handle browser-specific code:
 
 ::: code-group
 
 ```js [src/background.js]
 const target = import.meta.env.WEB_EXTEND_TARGET || "";
+
+// Chrome-specific code
 if (target.includes("chrome")) {
   chrome.sidePanel
     .setPanelBehavior({ openPanelOnActionClick: true })
+    .catch((error) => console.error(error));
+}
+
+// Firefox-specific code
+if (target.includes("firefox")) {
+  browser.sidebarAction
+    .setPanel({ url: "sidepanel.html" })
     .catch((error) => console.error(error));
 }
 ```
@@ -43,13 +71,20 @@ if (target.includes("chrome")) {
 
 ## Browser Compatibility
 
-There are two kinds of compatibility problems when developing a cross-browser extension: manifest config compatibility and extension API compatibility.
+When developing cross-browser extensions, you'll encounter two main types of compatibility challenges:
 
-### Manifest
+1. Manifest configuration compatibility
+2. Extension API compatibility
 
-WebExtend uses the file system to parse entry files and reflect them to items in `manifest.json` automatically, so you don't need to care about the campatibility of `manifest.json` between differnent browsers.
+### Manifest Configuration
 
-Additionally, you can define the manifest option as a function in `pluginWebExtend()` for custom manifest compatibility.
+WebExtend automatically handles manifest compatibility by:
+
+- Parsing entry files from the file system
+- Reflecting them to `manifest.json` items
+- Supporting custom manifest configuration through `pluginWebExtend()`
+
+Example of custom manifest configuration:
 
 ::: code-group
 
@@ -68,59 +103,61 @@ export default defineConfig({
 
 :::
 
-Manifest documents are as follows.
+Reference documentation:
 
-- [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest)
-- [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json)
+- [Chrome Manifest](https://developer.chrome.com/docs/extensions/reference/manifest)
+- [Firefox Manifest](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json)
 
 ### Extension API
 
-One thing that's important to note is that WebExtend won't deal with the compatibility of Extension APIs for now, so you need to do it yourself.
+WebExtend currently doesn't handle Extension API compatibility automatically. You'll need to manage this yourself using the following approaches:
 
-Extension API documents are as follows.
+#### For Chromium-based Browsers
 
-- [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api)
-- [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API)
+Use the `chrome` API directly:
 
-#### For Chromium-based
+```js
+// TypeScript support
+import { chrome } from "@types/chrome";
 
-You can use `chrome` API directly. If you use TypeScript, [`@types/chrome`](https://www.npmjs.com/package/@types/chrome) is recommended to be installed.
+chrome.storage.local.set({ key: "value" });
+chrome.runtime.sendMessage({ type: "message" });
+```
 
 #### For Firefox
 
-It is recommended to install [webextension-polyfill](https://www.npmjs.com/package/webextension-polyfill). If you use TypeScript, [@types/webextension-polyfill](https://www.npmjs.com/package/@types/webextension-polyfill) is also recommended. An example is as follows.
+Use the `webextension-polyfill` package:
 
-::: code-group
-
-```js [src/content.js]
+```js
 import browser from "webextension-polyfill";
 
-browser.storage.local
-  .set({
-    [window.location.hostname]: document.title,
-  })
-  .then(() => {
-    browser.runtime.sendMessage(
-      `Saved document title for ${window.location.hostname}`
-    );
-  });
+// The API is similar to chrome.* but uses promises
+browser.storage.local.set({ key: "value" });
+browser.runtime.sendMessage({ type: "message" });
 ```
 
-:::
+Recommended packages:
+
+- [@types/chrome](https://www.npmjs.com/package/@types/chrome)
+- [webextension-polyfill](https://www.npmjs.com/package/webextension-polyfill)
+- [@types/webextension-polyfill](https://www.npmjs.com/package/@types/webextension-polyfill)
 
 ## Browser Startup
 
-When running the following commands, `web-extend` will open a browser with the extension automatically. If the target is `firefox-mv2` or `firefox-mv3`, Firefox will be opened, otherwise Chrome will be opened.
+WebExtend automatically opens the appropriate browser when running development or preview commands:
 
 ```shell
-# developemnt
+# Development mode with auto-open
 web-extend rsbuild:dev --open
 
-# production
+# Preview production build
 web-extend preview
 ```
 
-The feature above is based on the `run` command of `web-ext`. To custom settings for the runner, you can create `web-ext.config.[m|c]js` in the root.
+The browser selection is based on the target:
+
+- Firefox for `firefox-mv2` or `firefox-mv3`
+- Chrome for all other targets
 
 See [web-ext run](https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#web-ext-run) for a full list of config. Here are some common custom settings.
 

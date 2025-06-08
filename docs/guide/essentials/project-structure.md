@@ -47,7 +47,7 @@ my-web-extension/
 └── tsconfig.json          # TypeScript configuration
 ```
 
-## Top-level Directory Structure
+## Top-level Directory
 
 The following table describes the main files and directories at the root of your project:
 
@@ -68,7 +68,7 @@ The following table describes the main files and directories at the root of your
 | `web-ext.config.js`      | Configuration file for web-ext CLI tool                          |
 | `tsconfig.json`          | TypeScript configuration (if using TypeScript)                   |
 
-## Source Directory Structure
+## Source Directory
 
 The `src/` directory contains your extension's source code, organized by feature/entry point. Here's the standard structure:
 
@@ -185,4 +185,4 @@ module.exports = {
 };
 ```
 
-See [web-ext run config](https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#web-ext-run) for more details.
+See [browser startup](./browsers.md#browser-startup) for more details.

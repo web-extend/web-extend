@@ -66,7 +66,7 @@ Write once, run everywhere. WebExtend handles browser-specific manifest configur
 - ✅ Safari
 - ✅ Edge
 
-See [browsers](../essentials/browsers.md) for more details.
+See [browser support](../essentials/browsers.md) for more details.
 
 ### ESM & TypeScript Support {#esm-typescript-support}
 

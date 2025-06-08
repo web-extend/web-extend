@@ -28,7 +28,7 @@ export default defineConfig({
             { text: 'Entry Points', link: 'entrypoints' },
             { text: 'Environment Variables', link: 'environment-variables' },
             { text: 'Using Libraries', link: 'using-libraries' },
-            { text: 'Browsers', link: 'browsers' },
+            { text: 'Browser Support', link: 'browsers' },
             { text: 'Remote Code', link: 'remote-code' },
           ],
         },
