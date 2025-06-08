@@ -20,11 +20,12 @@ hero:
 features:
   - icon: 📝
     title: Declarative Entry Points
-    details: Automatically parses entry files based on the file system, reducing manifest.json configuration burden
+    details: Automatically parses entry points based on the file system, reducing manifest.json configuration burden
     link: /guide/essentials/entrypoints
   - icon: ⚡️
     title: Seamless Development Experience
     details: Supports instant HMR, automatic browser opening and extension running
+    link: /guide/start/introduction#seamless-development-experience
   - icon: 🧭
     title: Multi-Browser Support
     details: Automatically handles manifest.json configuration differences for easy multi-browser support
