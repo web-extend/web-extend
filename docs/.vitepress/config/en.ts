@@ -25,7 +25,7 @@ export default defineConfig({
           base: '/guide/essentials/',
           items: [
             { text: 'Project Structure', link: 'project-structure' },
-            { text: 'Entrypoints', link: 'entrypoints' },
+            { text: 'Entry Points', link: 'entrypoints' },
             { text: 'Environment Variables', link: 'environment-variables' },
             { text: 'Using Libraries', link: 'using-libraries' },
             { text: 'Browsers', link: 'browsers' },
