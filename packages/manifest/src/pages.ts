@@ -39,7 +39,6 @@ const readEntry: ManifestEntryProcessor['readEntry'] = async ({ context }) => {
   return Object.keys(entry).length ? entry : null;
 };
 
-// deprecated
 const processor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntry,

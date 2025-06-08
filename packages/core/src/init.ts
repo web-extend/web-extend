@@ -70,7 +70,7 @@ export type EntryPointType =
   | 'options'
   | 'sidepanel'
   | 'devtools'
-  | 'panel'
+  | 'pages'
   | 'newtab'
   | 'bookmarks'
   | 'history'
@@ -110,8 +110,8 @@ export const entrypoints: { name: string; value: EntryPointType; template: Entry
     template: 'devtools',
   },
   {
-    name: 'panel',
-    value: 'panel',
+    name: 'pages',
+    value: 'pages',
     template: 'web',
   },
   {
@@ -335,6 +335,9 @@ export async function copyEntryFiles(source: string, dest: string, entries?: str
     const item = entrypoints.find((item) => entry.startsWith(item.value));
     if (!item) continue;
 
+    if(item.name !== entry && entry.startsWith(`${item.name}/`)) {
+    }
+    
     const templateName = item.template;
     const file = files.find((item) => item.name.startsWith(templateName));
     if (!file) continue;

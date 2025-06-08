@@ -32,7 +32,7 @@ const entryProcessors: ManifestEntryProcessor[] = [
   optionsProcessor,
   sidepanelProcessor,
   devtoolsProcessor,
-  panelProcessor, 
+  panelProcessor,
   sandboxProcessor,
   iconsProcessor,
   scriptingProcessor,
