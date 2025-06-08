@@ -24,8 +24,11 @@ my-web-extension/
 │   ├── content/           # Content script
 │   │   └── index.js
 │   ├── devtools.js        # DevTools page
-│   ├── panels/            # DevTools panels
-│   │   └── panel1/        # Panel implementation
+│   ├── pages/
+│   │   ├── welcome/
+│   │   │   ├── index.js
+│   │   │   └── style.css
+│   │   └── panel/         # Panel implementation
 │   │       ├── index.js
 │   │       └── style.css
 │   ├── popup/             # Popup UI
@@ -82,8 +85,8 @@ The `src/` directory contains your extension's source code, organized by feature
 | `history/`                 | History page override implementation                      |
 | `newtab/`                  | New tab page override implementation                      |
 | `options/`                 | Options page implementation                               |
+| `pages/`                   | HTML Pages                                                |
 | `popup/`                   | Extension popup UI implementation                         |
-| `panel/` or`panels/`       | DevTool's panels implementation                           |
 | `sandbox/` or `sandboxes/` | Sandbox pages (single or multiple)                        |
 | `sidepanel/`               | Side panel implementation                                 |
 | `scripting/`               | Scripting injection implementation                        |

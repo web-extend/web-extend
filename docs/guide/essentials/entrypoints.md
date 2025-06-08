@@ -29,7 +29,7 @@ src/
 
 When the entry point is a folder, and that folder contains a single entry point, the `index.js` file within that folder will be discovered as the entry point.
 
-When the entry point is a folder, and that folder contains multiple entry points, all the direct `*.js` or `*/index.js` files within that folder will be discovered as entry points. Only files in `contents`, `panels`, `sandboxes` and `scripting` folders will be discovered as multiple entry points currently.
+When the entry point is a folder, and that folder contains multiple entry points, all the direct `*.js` or `*/index.js` files within that folder will be discovered as entry points. Only files in `contents`, `pages`, `sandboxes` and `scripting` folders will be discovered as multiple entry points currently.
 
 ```
 src/
@@ -284,7 +284,7 @@ For example:
 chrome.devtools.panels.create(
   "My Panel", // Panel display name
   "icon-16.png", // Panel icon
-  "panels/main.html", // Panel page
+  "pages/panel.html", // Panel page
   (panel) => {
     // Panel created callback
     panel.onShown.addListener((window) => {
@@ -295,27 +295,6 @@ chrome.devtools.panels.create(
     });
   }
 );
-```
-
-#### Adding Panels
-
-Devtools can have multiple panels for different purposes. Each panel is a separate HTML page.
-
-| Entry Path                               | Output Path          |
-| ---------------------------------------- | -------------------- |
-| `panel.(js\|jsx\|ts\|tsx)`               | `panel.html`         |
-| `panel/index.(js\|jsx\|ts\|tsx)`         | `panel.html`         |
-| `panels/{name}.(js\|jsx\|ts\|tsx)`       | `panels/{name}.html` |
-| `panels/{name}/index.(js\|jsx\|ts\|tsx)` | `panels/{name}.html` |
-
-Generate panels automatically:
-
-```shell
-# create a single panel
-npx web-extend g panel
-
-# create multiple panels
-npx web-extend g panels/network,panels/performance
 ```
 
 See [with-devtools](https://github.com/web-extend/examples/tree/main/with-devtools).

@@ -7,7 +7,7 @@ import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 const key = 'pages';
 
 const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file) =>
-  matchMultipleDeclarativeEntryFile(key, file, ['html']);
+  matchMultipleDeclarativeEntryFile(key, file);
 
 const readEntry: ManifestEntryProcessor['readEntry'] = async ({ context }) => {
   const entry: ManifestEntryInput = {};
@@ -39,6 +39,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = async ({ context }) => {
   return Object.keys(entry).length ? entry : null;
 };
 
+// deprecated
 const processor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntry,

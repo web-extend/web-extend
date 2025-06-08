@@ -8,13 +8,13 @@ import devtoolsProcessor from './devtools.js';
 import iconsProcessor from './icons.js';
 import optionsProcessor from './options.js';
 import overrideProcessors from './overrides.js';
+import pagesProcessor from './pages.js';
 import panelProcessor from './panel.js';
 import { polyfillManifest } from './polyfill.js';
 import popupProcessor from './popup.js';
 import sandboxProcessor from './sandbox.js';
 import scriptingProcessor from './scripting.js';
 import sidepanelProcessor from './sidepanel.js';
-import pagesProcessor from './pages.js';
 import type {
   ExtensionTarget,
   ManifestContext,
@@ -32,7 +32,7 @@ const entryProcessors: ManifestEntryProcessor[] = [
   optionsProcessor,
   sidepanelProcessor,
   devtoolsProcessor,
-  panelProcessor,
+  panelProcessor, 
   sandboxProcessor,
   iconsProcessor,
   scriptingProcessor,
