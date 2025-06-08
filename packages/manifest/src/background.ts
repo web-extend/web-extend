@@ -7,7 +7,7 @@ const key = 'background';
 const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
   matchSingleDeclarativeEntryFile(key, file);
 
-const normalizeBackgroundEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, files, context }) => {
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, files, context }) => {
   const { rootPath, srcDir, mode, target, runtime } = context;
   const { background } = manifest;
   const scripts: string[] = [];
@@ -76,7 +76,7 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, output }) 
 const backgroundProcessor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntryFile,
-  normalize: normalizeBackgroundEntry,
+  normalizeEntry,
   readEntry,
   writeEntry,
 };

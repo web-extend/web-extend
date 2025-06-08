@@ -7,7 +7,7 @@ const key = 'sidepanel';
 const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
   matchSingleDeclarativeEntryFile(key, file);
 
-const normalizeSidepanelEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, context, files }) => {
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context, files }) => {
   const { rootPath, srcDir } = context;
   const { side_panel, sidebar_action } = manifest;
   if (side_panel?.default_path || sidebar_action?.default_panel) {
@@ -50,7 +50,7 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, name }) =>
 const sidepanelProcessor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntryFile,
-  normalize: normalizeSidepanelEntry,
+  normalizeEntry,
   readEntry,
   writeEntry,
 };

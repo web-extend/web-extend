@@ -7,7 +7,7 @@ const key = 'options';
 const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
   matchSingleDeclarativeEntryFile(key, file);
 
-const normalizeOptionsEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, context, files }) => {
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context, files }) => {
   const { rootPath, srcDir } = context;
   const { options_ui, options_page } = manifest;
   if (options_ui?.page || options_page) return;
@@ -52,7 +52,7 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, name }) =>
 const optionsProcessor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntryFile,
-  normalize: normalizeOptionsEntry,
+  normalizeEntry,
   readEntry,
   writeEntry,
 };

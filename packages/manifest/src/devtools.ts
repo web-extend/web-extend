@@ -7,7 +7,7 @@ const key = 'devtools';
 const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
   matchSingleDeclarativeEntryFile(key, file);
 
-const normalizeDevtoolsEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, files, context }) => {
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, files, context }) => {
   const { rootPath, srcDir } = context;
   const { devtools_page } = manifest;
   if (devtools_page) return;
@@ -39,7 +39,7 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, name }) =>
 const devtoolsProcessor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntryFile,
-  normalize: normalizeDevtoolsEntry,
+  normalizeEntry,
   readEntry,
   writeEntry,
 };

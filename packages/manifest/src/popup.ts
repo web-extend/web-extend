@@ -9,7 +9,7 @@ const key = 'popup';
 const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
   matchSingleDeclarativeEntryFile(key, file);
 
-const normalizePopupEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, context, files }) => {
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context, files }) => {
   const { rootPath, srcDir } = context;
   const { action, browser_action } = manifest;
   let pointer = action || browser_action;
@@ -62,7 +62,7 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = async ({ manifest, name
 const popupProcessor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntryFile,
-  normalize: normalizePopupEntry,
+  normalizeEntry,
   readEntry,
   writeEntry,
 };

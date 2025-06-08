@@ -1,13 +1,27 @@
 import { existsSync } from 'node:fs';
 import { readdir } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
-import { getEntryName, matchMultipleDeclarativeEntryFile, matchSingleDeclarativeEntryFile } from './common.js';
+import { getEntryName, matchMultipleDeclarativeEntryFile } from './common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'scripting';
 
 const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
   matchMultipleDeclarativeEntryFile('scripting', file, ['script', 'style']);
+
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, files, context }) => {
+  const { srcDir, rootPath } = context;
+  const srcPath = resolve(rootPath, srcDir);
+
+  const entryPath = files.filter(matchDeclarativeEntryFile).map((file) => resolve(srcPath, file));
+  if (entryPath.length) {
+    // TODO: 添加权限
+    manifest.permissions ||= [];
+    if (!manifest.permissions.includes('scripting')) {
+      manifest.permissions.push('scripting');
+    }
+  }
+};
 
 const readEntry: ManifestEntryProcessor['readEntry'] = async ({ context }) => {
   const entry: ManifestEntryInput = {};
@@ -42,6 +56,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = async ({ context }) => {
 const processor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntryFile,
+  normalizeEntry,
   readEntry,
 };
 

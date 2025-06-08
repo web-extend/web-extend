@@ -7,7 +7,7 @@ const key = 'sandbox';
 const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
   matchSingleDeclarativeEntryFile(key, file) || matchMultipleDeclarativeEntryFile('sandboxes', file);
 
-const normalizeSandboxEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, files, context }) => {
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, files, context }) => {
   const { srcDir, rootPath, target } = context;
   const srcPath = resolve(rootPath, srcDir);
   const pages = manifest.sandbox?.pages;
@@ -52,7 +52,7 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, name, norm
 const sandboxProcessor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntryFile,
-  normalize: normalizeSandboxEntry,
+  normalizeEntry,
   readEntry,
   writeEntry,
 };

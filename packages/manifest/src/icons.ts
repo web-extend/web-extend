@@ -28,7 +28,7 @@ const getDeclarativeIcons = (files: string[], srcPath: string) => {
   return Object.keys(res).length ? res : null;
 };
 
-const normalizeIconsEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, files, context }) => {
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, files, context }) => {
   const { rootPath, srcDir } = context;
   const declarativeIcons = getDeclarativeIcons(files, resolve(rootPath, srcDir));
   if (!declarativeIcons) return;
@@ -118,7 +118,7 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, output }) 
 const iconsProcessor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntryFile,
-  normalize: normalizeIconsEntry,
+  normalizeEntry,
   readEntry,
   writeEntry,
 };
