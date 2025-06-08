@@ -6,17 +6,27 @@ outline: deep
 
 ## Environment Preparation
 
-[Node.js >= 16](https://nodejs.org/en/download), and the Node.js LTS version is recommended.
+Before you begin, ensure you have the following prerequisites:
+
+- [Node.js >= 16](https://nodejs.org/en/download) (LTS version recommended)
 
 ## Automatic Installation
 
-It is recommended to use [`web-extend`](../../api/web-extend.md) for creating a project automatically. Just run the following command on the CLI:
+The easiest way to get started is using the `web-extend` CLI tool. This will set up a complete project structure with all necessary configurations.
 
 ```shell
 npx web-extend@latest init
 ```
 
-The `web-extend` tool provides the following templates, which all use TypeScript. If you want to use JavaScript, please modify the file extension names.
+During the initialization, you'll be prompted to:
+
+1. Choose a project name
+2. Select a template
+3. Configure additional features
+
+### Available Templates
+
+The `web-extend` tool provides the following templates, all using TypeScript by default:
 
 - Vanilla
 - [React](https://react.dev/)
@@ -24,13 +34,15 @@ The `web-extend` tool provides the following templates, which all use TypeScript
 - [Svelte](https://svelte.dev/)
 - [Solid](https://www.solidjs.com/)
 
-WebExtend is compatible with any frontend framework. For other frameworks, you might need manual installation.
+> Note: While these templates are provided out of the box, WebExtend is framework-agnostic and can work with any frontend framework. For other frameworks, you may need to follow the manual installation process.
 
-## Manual Installtion
+## Manual Installation
 
-### Install dependencies
+If you prefer to set up your project manually or use a different framework, follow these steps:
 
-Create a project and install dependencies. WebExtend uses [Rsbuild](https://rsbuild.dev/) as the bundler. And the feature of running the extension automatically is based on [web-ext](https://github.com/mozilla/web-ext).
+### 1. Install Dependencies
+
+Create a new project directory and initialize it:
 
 ::: code-group
 
@@ -60,11 +72,19 @@ yarn add -D web-extend @rsbuild/core @web-extend/rsbuild-plugin web-ext
 
 :::
 
-It is also recommended to install TypeScript、React/Vue、ESLint/Prettier/Biome etc, for enhancing the development experience (Optional).
+For a better development experience, consider installing these optional dependencies:
 
-### Add npm scripts
+```shell
+# TypeScript support
+npm add -D typescript
 
-Add the `"type": "module"` field and the following scripts into `package.json`.
+# Code quality tools
+npm add -D eslint prettier
+```
+
+### 2. Configure Package.json
+
+Add the following configuration to your `package.json`:
 
 ::: code-group
 
@@ -82,20 +102,11 @@ Add the `"type": "module"` field and the following scripts into `package.json`.
 
 :::
 
-The meanings of the commands above are as follows:
+### 3. Configure Build
 
-- `dev`: use Rsbuild for developing the extension. `--open` is used to open a browser automatically for running it.
-- `build`: use Rsbuild for building the extension for production.
-- `preview`: preview the extension for production.
-- `zip`: package the extension for production into a `.zip` file.
+Create `rsbuild.config.ts` in your project root:
 
-### Add Rsbuild config
-
-Create the `rsbuild.config.ts` file and add the following content.
-
-::: code-group
-
-```js [rsbuild.config.ts]
+```ts [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
 import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
 
@@ -104,15 +115,13 @@ export default defineConfig({
 });
 ```
 
-:::
+### 4. Create Entry Points
 
-### Add entry points
+Create your extension's entry points in the `src` directory. WebExtend automatically detects entry points based on the file system structure.
 
-Create the `src/popup.ts` file with the following content. WebExtend will parse [entrypoints](../essentials/entrypoints.md) automatically based on the file system. In this way, you no longer need to define entries in `manifest.json`.
+Example popup entry point:
 
-::: code-group
-
-```js [src/popup.ts]
+```ts [src/popup.ts]
 const root = document.querySelector("#root");
 if (root) {
   root.innerHTML = `
@@ -124,42 +133,28 @@ if (root) {
 }
 ```
 
-:::
-
-Alternatively, you can use the `web-extend` tool to generate entry files. Run the following command.
+Alternatively, generate entry points using the CLI:
 
 ```shell
-npx web-extend generate popup
+npx web-extend g popup
 ```
 
-If you prefer to define entries explicitly, or want to add extra manifest fields, please pass the `manifest` option, which has higher priority.
+## Development Workflow
 
-::: code-group
-
-```js [rsbuild.config.ts]
-import { defineConfig } from "@rsbuild/core";
-import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
-
-export default defineConfig({
-  plugins: [pluginWebExtend({
-    manifest: {...} // [!code ++]
-  })],
-});
-```
-
-:::
-
-## Run & Build
-
-Execute `npm run dev` for development, or `npm run build` for production.
+- Start the development serve: `npm run dev`.
+- Create a production build: `npm run build`.
+- Preview the production build: `npm run preview`.
 
 If you prefer to run the extension manually, please remove the `--open` option in the `dev` command, enable the deveoplment mode in the browser, and then load the `dist/chrome-mv3-dev` or `dist/chrome-mv3-prod` artifact directory.
 
 ## Publishing
 
-Execute `npm run zip` for packaging the extension, and then publish it on browser stores. More information about publish refers to:
+After building your extension, you can publish it to browser stores:
 
-- [Chrome Docs](https://developer.chrome.com/docs/webstore/publish/)
-- [Firefox Docs](https://extensionworkshop.com/documentation/publish/submitting-an-add-on/)
-- [Safari Docs](https://developer.apple.com/documentation/safariservices/converting-a-web-extension-for-safari)
-- [Microsoft Docs](https://learn.microsoft.com/en-us/microsoft-edge/extensions-chromium/publish/publish-extension)
+1. Create a production build: `npm run build`
+2. Package the extension: `npm run zip`
+3. Submit to browser stores:
+   - [Chrome Web Store](https://developer.chrome.com/docs/webstore/publish/)
+   - [Firefox Add-ons](https://extensionworkshop.com/documentation/publish/submitting-an-add-on/)
+   - [Safari Extensions](https://developer.apple.com/documentation/safariservices/converting-a-web-extension-for-safari)
+   - [Microsoft Edge Add-ons](https://learn.microsoft.com/en-us/microsoft-edge/extensions-chromium/publish/publish-extension)
