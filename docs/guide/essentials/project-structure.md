@@ -1,90 +1,188 @@
+---
+outline: deep
+---
+
 # Project Structure
 
-## Top-level Folder
+## Overview
 
-Top-level folder is used to organize the following files or folders.
+WebExtend provides a standardized project structure that helps you organize your browser extension code efficiently. This guide explains the key directories and files in a WebExtend project.
 
-| Name                     | Description                                                                 |
-| ------------------------ | --------------------------------------------------------------------------- |
-| `public/`                | Static assets to be copyed to dist directly                                 |
-| `src/`                   | Source folders                                                              |
-| `.web-extend/`           | Temp folder for WebExtend                                                   |
-| `.env`                   | Loaded by default in all scenarios.                                         |
-| `.env.local`             | Local usage of the .env file, should be added to `.gitignore`               |
-| `.env.development`       | Read when `process.env.NODE_ENV` is 'development'                           |
-| `.env.production`        | Read when `process.env.NODE_ENV` is 'production'                            |
-| `.env.development.local` | Local usage of the `.env.development` file, should be added to `.gitignore` |
-| `.env.production.local`  | Local usage of the `.env.production` file, should be added to `.gitignore`  |
-| `.gitignore`             | Git files and folders to ignore                                             |
-| `package.json`           | Project dependencies and scripts                                            |
-| `rsbuild.config.ts`      | Configuration file for Rsbuild                                              |
-| `web-ext.config.js`      | Configuration file for web-ext                                              |
-| `tsconfig.json`          | Configuration file for TypeScript                                           |
+A typical WebExtend project structure looks like this:
 
-## Source Folder
+```
+my-web-extension/
+├── public/                # Static assets
+│   └── _locales/          # Localization files
+├── src/                   # Source code
+│   ├── assets/            # Processed assets
+│   │   ├── icon-16.png
+│   │   ├── icon-32.png
+│   │   └── icon-128.png
+│   ├── background/        # Background script
+│   │   └── index.js
+│   ├── content/           # Content script
+│   │   └── index.js
+│   ├── devtools.js        # DevTools page
+│   ├── panels/            # DevTools panels
+│   │   └── panel1/        # Panel implementation
+│   │       ├── index.js
+│   │       └── style.css
+│   ├── popup/             # Popup UI
+│   │   ├── index.js
+│   │   └── style.css
+│   ├── options/           # Options page
+│   │   └── index.js
+│   ├── scripting/         # Scripting injection
+│   │   └── index.js
+│   └── sidepanel/         # Side panel
+│       └── index.js
+├── .env                   # Environment variables
+├── .env.development       # Development env vars
+├── .env.production        # Production env vars
+├── .gitignore             # Git ignore rules
+├── package.json           # Project metadata
+├── rsbuild.config.ts      # Build configuration
+├── web-ext.config.js      # Web-ext configuration
+└── tsconfig.json          # TypeScript configuration
+```
 
-Source folder is used to organize [entrypoints](./entrypoints.md), components, lib, etc folders or files.
+## Top-level Directory Structure
 
-| Name                     | Description                                     |
-| ------------------------ | ----------------------------------------------- |
-| `assets/`                | Static assets to be processed by the build tool |
-| `background`             | Background entry                                |
-| `content` or `contents`  | Content entry                                   |
-| `popup`                  | Popup entry                                     |
-| `options`                | Options entry                                   |
-| `sidepanel`              | Sidepanel entry                                 |
-| `devtools`               | Devtools entry                                  |
-| `sandbox` or `sandboxes` | Sandbox entry                                   |
-| `newtab`                 | Newtab entry                                    |
-| `bookmarks`              | Bookmarks entry                                 |
-| `history`                | History entry                                   |
+The following table describes the main files and directories at the root of your project:
 
-## Manifest Mapping
+| Name                     | Description                                                      |
+| ------------------------ | ---------------------------------------------------------------- |
+| `public/`                | Static assets that will be copied directly to the dist folder    |
+| `src/`                   | Source code directory containing your extension's implementation |
+| `.web-extend/`           | Temporary directory used by WebExtend for build artifacts        |
+| `.env`                   | Environment variables loaded in all scenarios                    |
+| `.env.local`             | Local environment overrides (should be added to `.gitignore`)    |
+| `.env.development`       | Development-specific environment variables                       |
+| `.env.production`        | Production-specific environment variables                        |
+| `.env.development.local` | Local development environment overrides (add to `.gitignore`)    |
+| `.env.production.local`  | Local production environment overrides (add to `.gitignore`)     |
+| `.gitignore`             | Specifies which files Git should ignore                          |
+| `package.json`           | Project metadata, dependencies and scripts                       |
+| `rsbuild.config.ts`      | Rsbuild configuration file for build customization               |
+| `web-ext.config.js`      | Configuration file for web-ext CLI tool                          |
+| `tsconfig.json`          | TypeScript configuration (if using TypeScript)                   |
 
-There is no need to maintain [`manifest.json`](https://developer.chrome.com/docs/extensions/reference/manifest) manually. WebExtend generates it automatically based on the file system. The mapping relationship is as follows.
+## Source Directory Structure
 
-| Manifest Keys                    | The Mapping Path                                 |
+The `src/` directory contains your extension's source code, organized by feature/entry point. Here's the standard structure:
+
+| Name                       | Description                                               |
+| -------------------------- | --------------------------------------------------------- |
+| `assets/`                  | Static assets that need processing (e.g., images, styles) |
+| `background/`              | Background script implementation                          |
+| `bookmarks/`               | Bookmarks page override implementation                    |
+| `content/` or `contents/`  | Content scripts (single or multiple)                      |
+| `devtools/`                | DevTools implementation                                   |
+| `history/`                 | History page override implementation                      |
+| `newtab/`                  | New tab page override implementation                      |
+| `options/`                 | Options page implementation                               |
+| `popup/`                   | Extension popup UI implementation                         |
+| `panel/` or`panels/`       | DevTool's panels implementation                           |
+| `sandbox/` or `sandboxes/` | Sandbox pages (single or multiple)                        |
+| `sidepanel/`               | Side panel implementation                                 |
+| `scripting/`               | Scripting injection implementation                        |
+
+## Manifest Generation
+
+One of WebExtend's key features is automatic `manifest.json` generation based on your project structure. The following table shows how your files map to manifest fields:
+
+| Manifest Keys                    | Source Location                                  |
 | -------------------------------- | ------------------------------------------------ |
-| `manifest_version`               | defaults to `3`                                  |
-| `name`                           | `displayName` or `name` in package.json          |
-| `version`                        | `version` in package.json                        |
-| `description`                    | `description` in package.json                    |
-| `author`                         | `author` in package.json                         |
-| `homepage_url`                   | `homepage` in package.json                       |
-| `icons` 、`action.default_icon`  | `src/assets/icon-[size].png`                     |
-| `action.default_popup`           | `src/popup.js` or `src/popup/index.js`           |
-| `background.service_worker`      | `src/background.js` or `src/background/index.js` |
-| `content_scripts`                | `src/content.js` or `src/contents/*.js`          |
-| `options_ui.page`                | `src/options.js` or `src/options/index.js`       |
-| `devtools_page`                  | `src/devtools.js` or `src/devtools/index.js`     |
-| `sandbox.pages`                  | `src/sandbox.js` or `src/sandboxes/*.js`         |
-| `chrome_url_overrides.newtab`    | `src/newtab.js` or `src/newtab/index.js`         |
-| `chrome_url_overrides.bookmarks` | `src/bookmarks.js` or `src/bookmarks/index.js`   |
-| `chrome_url_overrides.history`   | `src/history.js` or `src/history/index.js`       |
-| `side_panel.default_path`        | `src/sidepanel.js` or `src/sidepanel/index.js`   |
+| `manifest_version`               | Defaults to `3`                                  |
+| `name`                           | `displayName` or `name` from package.json        |
+| `version`                        | `version` from package.json                      |
+| `description`                    | `description` from package.json                  |
+| `author`                         | `author` from package.json                       |
+| `homepage_url`                   | `homepage` from package.json                     |
+| `icons`, `action.default_icon`   | `src/assets/icon-[size].png`                     |
+| `action.default_popup`           | `src/popup/index.js` or `src/popup.js`           |
+| `background.service_worker`      | `src/background/index.js` or `src/background.js` |
+| `content_scripts`                | `src/content/index.js` or `src/contents/*.js`    |
+| `options_ui.page`                | `src/options/index.js` or `src/options.js`       |
+| `devtools_page`                  | `src/devtools/index.js` or `src/devtools.js`     |
+| `sandbox.pages`                  | `src/sandbox/index.js` or `src/sandboxes/*.js`   |
+| `chrome_url_overrides.newtab`    | `src/newtab/index.js` or `src/newtab.js`         |
+| `chrome_url_overrides.bookmarks` | `src/bookmarks/index.js` or `src/bookmarks.js`   |
+| `chrome_url_overrides.history`   | `src/history/index.js` or `src/history.js`       |
+| `side_panel.default_path`        | `src/sidepanel/index.js` or `src/sidepanel.js`   |
 | `_locales`                       | `public/_locales/*`                              |
 | `web_accessible_resources`       | `public/*`                                       |
 
-## Custom Configuration
+## Configuration Files
 
-WebExtend also supports custom settings for the source folder, the dist folder, etc.
+### Environment Files
 
-::: code-group
+WebExtend uses a flexible environment configuration system:
 
-```js [rsbuild.config.ts]
+```
+.env                   # Base variables, always loaded
+.env.local             # Local overrides (git-ignored)
+.env.development       # Development-specific variables
+.env.production        # Production-specific variables
+.env.[mode].local      # Local mode-specific overrides (git-ignored)
+```
+
+Loading priority (highest to lowest):
+
+1. `.env.[mode].local`
+2. `.env.[mode]`
+3. `.env.local`
+4. `.env`
+
+Example configuration:
+
+```env
+# .env
+API_ENDPOINT=https://api.example.com
+DEBUG=false
+
+# .env.development
+API_ENDPOINT=https://dev-api.example.com
+DEBUG=true
+```
+
+See [environment variables](../essentials/environment-variables.md) for more details.
+
+### Build Configuration
+
+WebExtend allows customization of various aspects of your project through the `rsbuild.config.ts` file. For example:
+
+```ts [rsbuild.config.ts]
 import { defineConfig } from '@rsbuild/core';
 import { pluginWebExtend } from '@web-extend/rsbuild-plugin';
 
 export default defineConfig({
   plugins: [
     pluginWebExtend({
-      srcDir: "src", // default: "src" [!code highlight]
-      outDir: "dist", // default: "dist/[target]-[mode]" [!code highlight]
-      manifest: {...}, // default: {}  [!code highlight]
-      target: "firefox-mv2", // default: "chrome-mv3" [!code highlight]
+      srcDir: "src",              // Source directory (default: "src")
+      outDir: "dist",             // Output directory (default: "dist/[target]-[mode]")
+      manifest: {...},            // Custom manifest overrides (default: {})
+      target: "firefox-mv2",      // Browser target (default: "chrome-mv3")
     }),
   ],
 });
 ```
 
-:::
+See [@web-extend/rsbuild-plugin](../../api/rsbuild-plugin.md) for more details.
+
+### Web-ext Configuration
+
+The `web-ext.config.js` file configures the web-ext CLI tool. For example:
+
+```javascript [web-ext.config.js]
+module.exports = {
+  run: {
+    startUrl: ["about:debugging#/runtime/this-firefox"],
+    firefox: "firefoxdeveloperedition",
+    browserConsole: true,
+  },
+};
+```
+
+See [web-ext run config](https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#web-ext-run) for more details.
