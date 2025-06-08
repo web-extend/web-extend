@@ -383,6 +383,12 @@ Pages are HTML documents accessible by your extension. They are useful, for exam
 | `pages/{name}.(js\|jsx\|ts\|tsx)`       | `pages/{name}.html` |
 | `pages/{name}/index.(js\|jsx\|ts\|tsx)` | `pages/{name}.html` |
 
+Generate the entry automatically:
+
+```shell
+npx web-extend g pages/page1.ts
+```
+
 ### Popup
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/action) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/action)
