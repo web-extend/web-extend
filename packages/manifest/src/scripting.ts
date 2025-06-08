@@ -7,7 +7,7 @@ import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 const key = 'scripting';
 
 const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file) =>
-  matchMultipleDeclarativeEntryFile('scripting', file, ['script', 'style']);
+  matchMultipleDeclarativeEntryFile(key, file, ['script', 'style']);
 
 const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, files, context }) => {
   const { srcDir, rootPath } = context;
@@ -32,7 +32,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = async ({ context }) => {
 
   const { rootPath, srcDir } = context;
   const srcPath = resolve(rootPath, srcDir);
-  const scriptingPath = resolve(srcPath, 'scripting');
+  const scriptingPath = resolve(srcPath, key);
 
   if (!existsSync(scriptingPath)) {
     return null;
@@ -40,7 +40,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = async ({ context }) => {
 
   const files = await readdir(scriptingPath, { recursive: true });
   const scripting = files
-    .map((file) => join('scripting', file))
+    .map((file) => join(key, file))
     .filter(matchDeclarativeEntry)
     .map((file) => resolve(srcPath, file));
 

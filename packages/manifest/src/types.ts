@@ -75,7 +75,8 @@ export type ManifestEntryKey =
   | 'newtab'
   | 'history'
   | 'bookmarks'
-  | 'scripting';
+  | 'scripting'
+  | 'pages';
 
 export interface ManifestEntryItem {
   input: string[];

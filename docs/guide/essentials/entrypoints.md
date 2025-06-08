@@ -106,7 +106,8 @@ Content scripts are JavaScript files that run in the context of web pages. They 
 2. Avoid heavy operations that might slow down page load
 3. Consider using the `run_at` option to control when your script runs
 4. Use Shadow DOM when possible to avoid style conflicts
-   :::
+
+:::
 
 | Entry Path                                 | Output Path          |
 | ------------------------------------------ | -------------------- |
@@ -139,7 +140,8 @@ Be careful with CSS selectors in content scripts. They can conflict with the web
 1. Specific class names with a unique prefix
 2. Shadow DOM for complete style isolation
 3. CSS Modules for scoped styling
-   :::
+
+:::
 
 For example:
 
@@ -393,6 +395,15 @@ npx web-extend g options
 
 See [with-options](https://github.com/web-extend/examples/tree/main/with-options).
 
+### Pages
+
+Pages are HTML documents accessible by your extension. They are useful, for example, as a welcome page shown in a new tab upon installation.
+
+| Entry Path                              | Output Path         |
+| --------------------------------------- | ------------------- |
+| `pages/{name}.(js\|jsx\|ts\|tsx)`       | `pages/{name}.html` |
+| `pages/{name}/index.(js\|jsx\|ts\|tsx)` | `pages/{name}.html` |
+
 ### Popup
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/action) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/action)
@@ -483,8 +494,10 @@ The side panel provides a persistent panel that users can access while browsing.
 
 ::: warning Browser Differences
 Chrome calls it "Side Panel" while Firefox calls it "Sidebar". There are some API differences between browsers:
+
 - Chrome: Uses `side_panel.default_path`
 - Firefox: Uses `sidebar_action.default_panel`
+
 :::
 
 | Entry Path                           | Output Path      |

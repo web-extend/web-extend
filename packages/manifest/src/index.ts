@@ -14,6 +14,7 @@ import popupProcessor from './popup.js';
 import sandboxProcessor from './sandbox.js';
 import scriptingProcessor from './scripting.js';
 import sidepanelProcessor from './sidepanel.js';
+import pagesProcessor from './pages.js';
 import type {
   ExtensionTarget,
   ManifestContext,
@@ -35,6 +36,7 @@ const entryProcessors: ManifestEntryProcessor[] = [
   sandboxProcessor,
   iconsProcessor,
   scriptingProcessor,
+  pagesProcessor,
   ...overrideProcessors,
 ];
 
