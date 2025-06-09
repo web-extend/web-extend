@@ -4,7 +4,7 @@ import { basename, dirname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { checkbox, input, select } from '@inquirer/prompts';
 import chalk from 'chalk';
-import { entryTemplates, entrypointItems, frameworks, tools, type EntrypointItem } from './constant.js';
+import { type EntrypointItem, entryTemplates, entrypointItems, frameworks, tools } from './constant.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
