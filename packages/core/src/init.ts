@@ -70,7 +70,7 @@ export type EntryPointType =
   | 'options'
   | 'sidepanel'
   | 'devtools'
-  | 'pages'
+  | 'page'
   | 'newtab'
   | 'bookmarks'
   | 'history'
@@ -78,7 +78,14 @@ export type EntryPointType =
 
 export type EntryTemplateType = 'background' | 'content' | 'devtools' | 'web';
 
-export const entrypoints: { name: string; value: EntryPointType; template: EntryTemplateType }[] = [
+interface EntrypointItem {
+  name: string;
+  value: EntryPointType;
+  template: EntryTemplateType;
+  multiplePrefix?: string;
+}
+
+export const entrypointItems: EntrypointItem[] = [
   {
     name: 'background',
     value: 'background',
@@ -88,6 +95,7 @@ export const entrypoints: { name: string; value: EntryPointType; template: Entry
     name: 'content',
     value: 'content',
     template: 'content',
+    multiplePrefix: 'contents',
   },
   {
     name: 'popup',
@@ -110,9 +118,10 @@ export const entrypoints: { name: string; value: EntryPointType; template: Entry
     template: 'devtools',
   },
   {
-    name: 'pages',
-    value: 'pages',
+    name: 'page',
+    value: 'page',
     template: 'web',
+    multiplePrefix: 'pages',
   },
   {
     name: 'newtab',
@@ -133,10 +142,11 @@ export const entrypoints: { name: string; value: EntryPointType; template: Entry
     name: 'sandbox',
     value: 'sandbox',
     template: 'web',
+    multiplePrefix: 'sandboxes',
   },
 ];
 
-const templates = frameworks.flatMap((framework) =>
+const entryTemplates = frameworks.flatMap((framework) =>
   variants.filter((variant) => !variant.disabled).map((variant) => `${framework.value}-${variant.value}`),
 );
 
@@ -156,7 +166,7 @@ export async function resolveEntryTemplate(text?: string) {
     template = `${framework}-${variant}`;
   }
 
-  if (!templates.includes(template)) {
+  if (!entryTemplates.includes(template)) {
     throw new Error("Template doesn't exist");
   }
   return template;
@@ -197,7 +207,7 @@ export async function normalizeInitialOptions(options: InitialOptions) {
   if (!options.entries?.length) {
     options.entries = await checkbox({
       message: 'Select entrypoints',
-      choices: entrypoints,
+      choices: entrypointItems,
       loop: false,
       required: true,
     });
@@ -235,7 +245,10 @@ export async function createProject(options: InitialOptions) {
     await mkdir(destPath);
   }
   await copyTemplate(templatePath, destPath, options);
-  await copyEntryFiles(resolve(templatePath, 'src'), resolve(destPath, 'src'), options.entries);
+
+  const entrypoints = await checkEntrypoints(options.entries || []);
+  await copyEntryFiles(resolve(templatePath, 'src'), resolve(destPath, 'src'), entrypoints);
+
   await modifyPackageJson(destPath, options);
 }
 
@@ -249,7 +262,7 @@ export function getTemplatePath(template: string) {
 
 async function copyTemplate(source: string, dest: string, options: InitialOptions) {
   const files = await readdir(source, { withFileTypes: true });
-  const entryNames = [...entrypoints.map((item) => item.value), 'web'];
+  const entryNames = [...entrypointItems.map((item) => item.value), 'web'];
   const { tools = [] } = options;
 
   const ignores = ['node_modules', 'dist', '.web-extend'];
@@ -320,8 +333,29 @@ async function modifyPackageJson(root: string, options: InitialOptions) {
   await writeFile(pkgPath, JSON.stringify(newContent, null, 2), 'utf-8');
 }
 
-export async function copyEntryFiles(source: string, dest: string, entries?: string[]) {
-  if (!entries?.length) return;
+export async function checkEntrypoints(entries: string[]) {
+  const res: EntrypointItem[] = [];
+  for (const entry of entries) {
+    const item = entrypointItems.find(
+      (item) => entry === item.value || (item.multiplePrefix && entry.startsWith(`${item.multiplePrefix}/`)),
+    );
+    if (!item) {
+      console.warn(`Entry ${entry} is not supported, ignored`);
+      continue;
+    }
+
+    let entryName = entry;
+    if (entry === 'page') {
+      const name = await input({ message: 'What is the name of page?', required: true });
+      entryName = `${item.multiplePrefix}/${name}`;
+    }
+    res.push({ ...item, name: entryName });
+  }
+  return res;
+}
+
+export async function copyEntryFiles(source: string, dest: string, entrypoints?: EntrypointItem[]) {
+  if (!entrypoints?.length) return;
 
   if (!existsSync(source)) {
     throw new Error("Source directory doesn't exist");
@@ -331,17 +365,16 @@ export async function copyEntryFiles(source: string, dest: string, entries?: str
   }
 
   const files = await readdir(source, { withFileTypes: true });
-  for (const entry of entries) {
-    const item = entrypoints.find((item) => entry.startsWith(item.value));
-    if (!item) continue;
+  for (const item of entrypoints) {
+    const { name, template } = item;
+    const sourceFile = files.find((item) => item.name.startsWith(template));
+    if (!sourceFile) {
+      console.warn(`Template ${template} is not found`);
+      continue;
+    }
 
-    const templateName = item.template;
-    const file = files.find((item) => item.name.startsWith(templateName));
-    if (!file) continue;
-
-    const { name } = file;
-    const destName = file.isFile() ? name : entry;
-    await cp(resolve(source, name), resolve(dest, destName), { recursive: true });
+    const destName = sourceFile.isFile() ? sourceFile.name : name;
+    await cp(resolve(source, sourceFile.name), resolve(dest, destName), { recursive: true });
   }
 }
 
