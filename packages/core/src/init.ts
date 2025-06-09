@@ -4,151 +4,17 @@ import { basename, dirname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { checkbox, input, select } from '@inquirer/prompts';
 import chalk from 'chalk';
+import { entryTemplates, entrypointItems, frameworks, tools, type EntrypointItem } from './constant.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-
-type ProjectToolType = 'eslint' | 'prettier';
 
 export interface InitialOptions {
   projectName?: string;
   template?: string;
   entries?: string[];
   override?: boolean;
-  tools?: ProjectToolType[];
+  tools?: string[];
 }
-
-const frameworks = [
-  {
-    name: chalk.yellow('Vanilla'),
-    value: 'vanilla',
-  },
-  {
-    name: chalk.cyan('React'),
-    value: 'react',
-  },
-  {
-    name: chalk.green('Vue'),
-    value: 'vue',
-  },
-  {
-    name: chalk.red('Svelte'),
-    value: 'svelte',
-  },
-  {
-    name: chalk.blueBright('Solid'),
-    value: 'solid',
-  },
-];
-
-const variants = [
-  {
-    name: 'TypeScript',
-    value: 'ts',
-  },
-  {
-    name: 'JavaScript',
-    value: 'js',
-    disabled: true,
-  },
-];
-
-const tools: { name: string; value: ProjectToolType }[] = [
-  {
-    name: 'Add ESLint for code linting',
-    value: 'eslint',
-  },
-  {
-    name: 'Add Prettier for code formatting',
-    value: 'prettier',
-  },
-];
-
-export type EntryPointType =
-  | 'background'
-  | 'content'
-  | 'popup'
-  | 'options'
-  | 'sidepanel'
-  | 'devtools'
-  | 'page'
-  | 'newtab'
-  | 'bookmarks'
-  | 'history'
-  | 'sandbox';
-
-export type EntryTemplateType = 'background' | 'content' | 'devtools' | 'web';
-
-interface EntrypointItem {
-  name: string;
-  value: EntryPointType;
-  template: EntryTemplateType;
-  multiplePrefix?: string;
-}
-
-export const entrypointItems: EntrypointItem[] = [
-  {
-    name: 'background',
-    value: 'background',
-    template: 'background',
-  },
-  {
-    name: 'content',
-    value: 'content',
-    template: 'content',
-    multiplePrefix: 'contents',
-  },
-  {
-    name: 'popup',
-    value: 'popup',
-    template: 'web',
-  },
-  {
-    name: 'options',
-    value: 'options',
-    template: 'web',
-  },
-  {
-    name: 'sidepanel',
-    value: 'sidepanel',
-    template: 'web',
-  },
-  {
-    name: 'devtools',
-    value: 'devtools',
-    template: 'devtools',
-  },
-  {
-    name: 'page',
-    value: 'page',
-    template: 'web',
-    multiplePrefix: 'pages',
-  },
-  {
-    name: 'newtab',
-    value: 'newtab',
-    template: 'web',
-  },
-  {
-    name: 'bookmarks',
-    value: 'bookmarks',
-    template: 'web',
-  },
-  {
-    name: 'history',
-    value: 'history',
-    template: 'web',
-  },
-  {
-    name: 'sandbox',
-    value: 'sandbox',
-    template: 'web',
-    multiplePrefix: 'sandboxes',
-  },
-];
-
-const entryTemplates = frameworks.flatMap((framework) =>
-  variants.filter((variant) => !variant.disabled).map((variant) => `${framework.value}-${variant.value}`),
-);
 
 export async function resolveEntryTemplate(text?: string) {
   let template = '';
@@ -211,6 +77,10 @@ export async function normalizeInitialOptions(options: InitialOptions) {
       loop: false,
       required: true,
     });
+    if (options.entries.includes('page')) {
+      const name = await input({ message: 'What is the name of page?', required: true });
+      options.entries = options.entries.filter((item) => item !== 'page').concat(`pages/${name}`);
+    }
   }
 
   if (!options.tools?.length) {
