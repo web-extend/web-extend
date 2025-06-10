@@ -45,10 +45,8 @@ export const matchMultipleDeclarativeEntryFile = (
   file: string,
   entryType?: ManifestEntryItem['entryType'][],
 ) => {
-  let allowable = isScriptFile(file);
-  if (entryType?.includes('style')) {
-    allowable = allowable || isStyleFile(file);
-  }
+  const isScript = isScriptFile(file);
+  const allowable = isScript || (entryType?.includes('style') && isStyleFile(file));
   if (!allowable) return null;
 
   const ext = extname(file);
