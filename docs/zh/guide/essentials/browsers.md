@@ -1,19 +1,23 @@
 ---
-outline: deep
+outline: [2, 3]
 ---
 
-# 浏览器 {#browsers}
+# 浏览器支持 {#browsers}
+
+WebExtend 旨在帮助你轻松构建跨浏览器扩展程序。本指南涵盖了你需要了解的有关浏览器兼容性、配置和开发工作流程的所有信息。
 
 ## 浏览器目标 {#extension-target}
 
 WebExtend 支持以下浏览器扩展目标。
 
-- `chrome-mv3` (默认)
-- `firefox-mv2` (对于 Firefox，推荐使用 MV2 版本)
-- `firefox-mv3` (实验性支持，不能用于 dev 环境中)
-- `safari-mv3`
-- `edge-mv3`
-- `opera-mv3`
+| Target        | Description         | Status                          |
+| ------------- | ------------------- | ------------------------------- |
+| `chrome-mv3`  | Chrome Manifest V3  | 默认、稳定                      |
+| `firefox-mv2` | Firefox Manifest V2 | 对于 Firefox，推荐使用 MV2 版本 |
+| `firefox-mv3` | Firefox Manifest V3 | 实验性支持，不能用于 dev 环境中 |
+| `safari-mv3`  | Safari Manifest V3  | 实验性支持                      |
+| `edge-mv3`    | Edge Manifest V3    | 稳定                            |
+| `opera-mv3`   | Opera Manifest V3   | 稳定                            |
 
 当构建目标为 `chrome-mv3` 时，对应的构建产物可以在 Chromium 系列的浏览器中使用（包括 Chrome、Edge、Brave、Opera 等）。
 
@@ -26,26 +30,36 @@ web-extend preview -t firefox-mv2
 web-extend zip -t firefox-mv2
 ```
 
-Webextend 会在代码构建时注入一个环境变量 `import.meta.env.WEB_EXTEND_TARGET`，这有助于处理不同浏览器之间的特异性。
+### 环境变量
 
-::: code-group
+Webextend 会在代码构建时注入一个环境变量 `import.meta.env.WEB_EXTEND_TARGET`，这有助于处理不同浏览器之间的特异性。
 
 ```js [src/background.js]
 const target = import.meta.env.WEB_EXTEND_TARGET || "";
+
+// Chrome-specific code
 if (target.includes("chrome")) {
   chrome.sidePanel
     .setPanelBehavior({ openPanelOnActionClick: true })
     .catch((error) => console.error(error));
 }
-```
 
-:::
+// Firefox-specific code
+if (target.includes("firefox")) {
+  browser.sidebarAction
+    .setPanel({ url: "sidepanel.html" })
+    .catch((error) => console.error(error));
+}
+```
 
 ## 浏览器兼容性
 
-在开发跨浏览器扩展时，需要考虑两类兼容性问题：`maifest.json` 的兼容和扩展 API 的兼容。
+在开发跨浏览器扩展时，可能会遇到两类兼容性问题：
 
-### Manifest {#manifest}
+1. `maifest.json` 配置项兼容
+2. 扩展 API 兼容
+
+### Manifest 配置 {#manifest}
 
 WebExtend 会基于文件系统和构建目标，自动解析和生成 `manifest.json`，因此无需额外处理不同浏览器之间 Manifest 配置的差异性。
 
@@ -68,7 +82,7 @@ export default defineConfig({
 
 :::
 
-Manifest 文档：
+参考文档：
 
 - [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest)
 - [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json)
@@ -84,29 +98,30 @@ Extension API 文档：
 
 #### 适用于 Chromium
 
-可以直接使用 `chrome` API。如果使用 TypeScript，推荐安装 [`@types/chrome`](https://www.npmjs.com/package/@types/chrome)。
+可以直接使用 `chrome` API。
+
+```ts
+chrome.storage.local.set({ key: "value" });
+chrome.runtime.sendMessage({ type: "message" });
+```
+
+推荐包： [@types/chrome](https://www.npmjs.com/package/@types/chrome)。
 
 #### 适用于 Firefox
 
-如果需要支持或兼容 Firefox 浏览器，推荐使用 [webextension-polyfill](https://www.npmjs.com/package/webextension-polyfill)，它提供了统一的浏览器扩展 API，兼容 Firefox 和 Chrome 系列。如果使用 TypeScript，还需要安装 [@types/webextension-polyfill](https://www.npmjs.com/package/@types/webextension-polyfill)。示例如下。
+使用 `webextension-polyfill` 包：
 
-::: code-group
-
-```js [src/content.js]
+```js
 import browser from "webextension-polyfill";
 
-browser.storage.local
-  .set({
-    [window.location.hostname]: document.title,
-  })
-  .then(() => {
-    browser.runtime.sendMessage(
-      `Saved document title for ${window.location.hostname}`
-    );
-  });
+browser.storage.local.set({ key: "value" });
+browser.runtime.sendMessage({ type: "message" });
 ```
 
-:::
+推荐包：
+
+- [webextension-polyfill](https://www.npmjs.com/package/webextension-polyfill)
+- [@types/webextension-polyfill](https://www.npmjs.com/package/@types/webextension-polyfill)
 
 ## 浏览器运行 {#browser-startup}
 
@@ -122,13 +137,11 @@ npx web-extend preview
 
 上述能力基于 [`web-ext`](https://github.com/mozilla/web-ext) 的 `run` 命令实现。如果需要自定义运行器的配置，可以在根目录下创建一个 `web-ext.config.[m|c]js` 文件。
 
-以下是一些常见的自定义设置，完整的配置项请查阅 [web-ext run](https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#web-ext-run)。
+### 典型案例
 
-### 打开特定链接
+#### 打开特定链接
 
 在浏览器启动时，打开一个指定的链接。示例如下：
-
-::: code-group
 
 ```js [web-ext.config.js]
 import { defineWebExtConfig } from "web-extend";
@@ -140,13 +153,9 @@ export default defineWebExtConfig({
 });
 ```
 
-:::
-
-### 打开特定浏览器
+#### 打开特定浏览器
 
 设置一个 Chromium 或 Firefox 的可执行路径，来打开一个指定的浏览器。示例如下：
-
-::: code-group
 
 ```js [web-ext.config.js]
 import { defineWebExtConfig } from "web-extend";
@@ -159,9 +168,7 @@ export default defineWebExtConfig({
 });
 ```
 
-:::
-
-### 保存浏览器配置
+#### 保存浏览器配置
 
 `web-ext` 会在每次启动浏览器时创建一个新的临时的用户资料，可以指定一个路径。当下次再次打开浏览器时，将会使用之前保存的用户配置信息。
 

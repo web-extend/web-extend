@@ -15,7 +15,7 @@ WebExtend supports the following extension targets:
 | `chrome-mv3`  | Chrome Manifest V3  | Default, stable                      |
 | `firefox-mv2` | Firefox Manifest V2 | Recommended for Firefox              |
 | `firefox-mv3` | Firefox Manifest V3 | Experimental, dev mode not supported |
-| `safari-mv3`  | Safari Manifest V3  | Stable                               |
+| `safari-mv3`  | Safari Manifest V3  | Experimental                         |
 | `edge-mv3`    | Edge Manifest V3    | Stable                               |
 | `opera-mv3`   | Opera Manifest V3   | Stable                               |
 
@@ -47,8 +47,6 @@ web-extend zip -t firefox-mv2
 
 WebExtend injects the `import.meta.env.WEB_EXTEND_TARGET` environment variable during build, which helps handle browser-specific code:
 
-::: code-group
-
 ```js [src/background.js]
 const target = import.meta.env.WEB_EXTEND_TARGET || "";
 
@@ -67,8 +65,6 @@ if (target.includes("firefox")) {
 }
 ```
 
-:::
-
 ## Browser Compatibility
 
 When developing cross-browser extensions, you'll encounter two main types of compatibility challenges:
@@ -86,8 +82,6 @@ WebExtend automatically handles manifest compatibility by:
 
 Example of custom manifest configuration:
 
-::: code-group
-
 ```js [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
 import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
@@ -100,8 +94,6 @@ export default defineConfig({
   ],
 });
 ```
-
-:::
 
 Reference documentation:
 
@@ -116,19 +108,18 @@ WebExtend currently doesn't handle Extension API compatibility automatically. Yo
 
 Use the `chrome` API directly:
 
-```js
-// TypeScript support
-import { chrome } from "@types/chrome";
-
+```ts
 chrome.storage.local.set({ key: "value" });
 chrome.runtime.sendMessage({ type: "message" });
 ```
+
+Recommended packages: [@types/chrome](https://www.npmjs.com/package/@types/chrome)
 
 #### For Firefox
 
 Use the `webextension-polyfill` package:
 
-```js
+```ts
 import browser from "webextension-polyfill";
 
 // The API is similar to chrome.* but uses promises
@@ -138,7 +129,6 @@ browser.runtime.sendMessage({ type: "message" });
 
 Recommended packages:
 
-- [@types/chrome](https://www.npmjs.com/package/@types/chrome)
 - [webextension-polyfill](https://www.npmjs.com/package/webextension-polyfill)
 - [@types/webextension-polyfill](https://www.npmjs.com/package/@types/webextension-polyfill)
 

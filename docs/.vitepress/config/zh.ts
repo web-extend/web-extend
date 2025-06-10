@@ -28,7 +28,7 @@ export default defineConfig({
             { text: '入口', link: 'entrypoints' },
             { text: '环境变量', link: 'environment-variables' },
             { text: '使用库', link: 'using-libraries' },
-            { text: '浏览器', link: 'browsers' },
+            { text: '浏览器支持', link: 'browsers' },
             { text: '远程代码', link: 'remote-code' },
           ],
         },

@@ -35,7 +35,7 @@ npx web-extend@latest init [options] [dir]
 ```
 Options:
   -t, --template <name>  specify the template name
-  -e, --entry <name>     specify entrypoints
+  -e, --entry <name...>  specify entrypoints
   -h, --help             display help for command
 ```
 
@@ -46,7 +46,7 @@ Options:
 使用：
 
 ```shell
-npx web-extend generate|g [options] [entry]
+npx web-extend generate|g [options] [entry...]
 ```
 
 选项：
