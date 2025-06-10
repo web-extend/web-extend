@@ -86,8 +86,6 @@ npm add -D eslint prettier
 
 Add the following configuration to your `package.json`:
 
-::: code-group
-
 ```json [package.json]
 {
   "type": "module",
@@ -99,8 +97,6 @@ Add the following configuration to your `package.json`:
   }
 }
 ```
-
-:::
 
 ### 3. Configure Build
 

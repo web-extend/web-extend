@@ -1,5 +1,5 @@
 ---
-outline: deep
+outline: [2, 3]
 ---
 
 # Browser Support
@@ -159,13 +159,13 @@ The browser selection is based on the target:
 - Firefox for `firefox-mv2` or `firefox-mv3`
 - Chrome for all other targets
 
-See [web-ext run](https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#web-ext-run) for a full list of config. Here are some common custom settings.
+To customize settings for the runner, you can create a `web-ext.config.[m|c]js` file in the root directory. See [web-ext run](https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#web-ext-run) for a full list of configurations.
 
-### Open the specific URL
+### Recipes
+
+#### Open the specific URL
 
 Open a tab at the specificed URL when the browser starts. Example:
-
-::: code-group
 
 ```js [web-ext.config.js]
 import { defineWebExtConfig } from "web-extend";
@@ -177,13 +177,9 @@ export default defineWebExtConfig({
 });
 ```
 
-:::
-
-### Open the specific browser
+#### Open the specific browser
 
 Provide a custom Chromium or Firefox executable path to open the specific browser.
-
-::: code-group
 
 ```js [web-ext.config.js]
 import { defineWebExtConfig } from "web-extend";
@@ -196,9 +192,7 @@ export default defineWebExtConfig({
 });
 ```
 
-:::
-
-### Preserve profile changes
+#### Preserve profile changes
 
 `web-ext` creates a new temporary profile each time the browser starts. You can provide a profile path to keep profile changes. Example:
 
