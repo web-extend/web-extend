@@ -144,7 +144,7 @@ Now that you understand what WebExtend offers, you're ready to build your first 
 Getting started with WebExtend is straightforward:
 
 ```bash
-npx web-extend@latest init my-extension
+npx web-extend@latest init
 ```
 
 Head over to our [Quick Start](./quick-start.md) guide to begin your journey.

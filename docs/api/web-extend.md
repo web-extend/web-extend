@@ -35,7 +35,7 @@ Options:
 ```
 Options:
   -t, --template <name>  specify the template name
-  -e, --entry <name>     specify entrypoints
+  -e, --entry <name...>  specify entrypoints
   -h, --help             display help for command
 ```
 
@@ -46,7 +46,7 @@ The `generate` command is used to generate entry files.
 Usage:
 
 ```shell
-npx web-extend generate|g [options] [entry]
+npx web-extend generate|g [options] [entry...]
 ```
 
 Options:

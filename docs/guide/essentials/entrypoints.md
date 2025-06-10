@@ -127,7 +127,7 @@ Generate the entry automatically:
 npx web-extend g content
 
 # for multiple content scripts
-npx web-extend g contents/site-one,contents/site-two
+npx web-extend g contents/site-one contents/site-two
 ```
 
 #### Adding CSS
@@ -376,7 +376,7 @@ See [with-options](https://github.com/web-extend/examples/tree/main/with-options
 
 ### Pages
 
-Pages are HTML documents accessible by your extension. They are useful, for example, as a welcome page shown in a new tab upon installation.
+Pages are HTML documents that are not listed in `manifest.json`, but can be accessed by your extension. They are useful in certain situations, such as serving as a welcome page shown in a new tab upon installation.
 
 | Entry Path                              | Output Path         |
 | --------------------------------------- | ------------------- |
@@ -386,7 +386,7 @@ Pages are HTML documents accessible by your extension. They are useful, for exam
 Generate the entry automatically:
 
 ```shell
-npx web-extend g pages/page1.ts
+npx web-extend g pages/welcome pages/panel
 ```
 
 ### Popup
@@ -447,7 +447,7 @@ Generate the entry automatically.
 npx web-extend g sandbox
 
 # create multiple entries
-npx web-extend g sandboxes/sandbox1,sandboxes/sandbox2
+npx web-extend g sandboxes/sandbox1 sandboxes/sandbox2
 
 ```
 

@@ -39,7 +39,7 @@ export async function resolveEntryTemplate(text?: string) {
 }
 
 export async function normalizeInitialOptions(options: InitialOptions) {
-  console.log(chalk.bgCyan('\n Welcome to WebExtend \n'));
+  console.log(chalk.bgCyan('\n Welcome to WebExtend! \n'));
 
   if (!options.projectName) {
     options.projectName = await input({ message: 'Project name or path', default: 'my-extension-app' });
