@@ -310,7 +310,7 @@ The history entry will be reflected to the `chrome_url_overrides.history` field 
 | `history.(js\|jsx\|ts\|tsx)`       | `history.html` |
 | `history/index.(js\|jsx\|ts\|tsx)` | `history.html` |
 
-Generate the entry automatically.
+Generate the entry automatically:
 
 ```shell
 npx web-extend g history
@@ -349,7 +349,7 @@ The new tab page replaces the browser's default new tab page. The new tab entry 
 | `newtab.(js\|jsx\|ts\|tsx)`       | `newtab.html` |
 | `newtab/index.(js\|jsx\|ts\|tsx)` | `newtab.html` |
 
-Generate the entry automatically.
+Generate the entry automatically:
 
 ```shell
 npx web-extend g newtab
@@ -366,7 +366,7 @@ The options page provides a way for users to customize your extension. The optio
 | `options.(js\|jsx\|ts\|tsx)`       | `options.html` |
 | `options/index.(js\|jsx\|ts\|tsx)` | `options.html` |
 
-Generate the entry automatically.
+Generate the entry automatically:
 
 ```shell
 npx web-extend g options
@@ -453,8 +453,6 @@ npx web-extend g sandboxes/sandbox1 sandboxes/sandbox2
 
 To use the sandbox, you can embed it as an iframe inside an extension page or a content script.
 
-::: code-group
-
 ```js [src/popup/index.js]
 document.querySelector("#root").innerHTML = `
   <div class="content">
@@ -467,15 +465,13 @@ document.querySelector("#root").innerHTML = `
 }
 ```
 
-:::
-
 See [with-sandbox](https://github.com/web-extend/examples/tree/main/with-sandbox), [with-multi-sandboxes](https://github.com/web-extend/examples/tree/main/with-multi-sandboxes).
 
 ### Side Panel
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/sidePanel) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Sidebars)
 
-The side panel provides a persistent panel that users can access while browsing. The side panel entry point will be reflected to the `side_panel.default_path` or `sidebar_action.default_panel` field in `manifest.json`.
+The side panel entry point will be reflected to the `side_panel.default_path` or `sidebar_action.default_panel` field in `manifest.json`.
 
 ::: warning Browser Differences
 Chrome calls it "Side Panel" while Firefox calls it "Sidebar". There are some API differences between browsers:
@@ -524,7 +520,7 @@ The scripting API allows you to inject JavaScript and CSS into web pages program
 
 Example usage:
 
-```ts [background.ts]
+```ts [src/background.ts]
 chrome.tabs.onActivated.addListener((e) => {
   chrome.scripting.executeScript({
     target: { tabId: e.tabId },
