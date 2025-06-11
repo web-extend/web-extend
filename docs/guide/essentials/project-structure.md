@@ -88,8 +88,8 @@ The `src/` directory contains your extension's source code, organized by feature
 | `pages/`                   | HTML Pages                                                |
 | `popup/`                   | Extension popup UI implementation                         |
 | `sandbox/` or `sandboxes/` | Sandbox pages (single or multiple)                        |
-| `sidepanel/`               | Side panel implementation                                 |
 | `scripting/`               | Scripting injection implementation                        |
+| `sidepanel/`               | Side panel implementation                                 |
 
 ## Manifest Generation
 

@@ -1,4 +1,54 @@
-# 项目结构 {#project-structure}
+---
+outline: deep
+---
+
+# 目录结构 {#project-structure}
+
+## 概览
+
+WebExtend 提供了一个标准化的项目结构，可帮助你有效地组织浏览器扩展代码。本指南介绍了 WebExtend 项目中的关键目录和文件。
+
+一个典型的 WebExtend 项目目录结构如下。
+
+```
+my-web-extension/
+├── public/                # Static assets
+│   └── _locales/          # Localization files
+├── src/                   # Source code
+│   ├── assets/            # Processed assets
+│   │   ├── icon-16.png
+│   │   ├── icon-32.png
+│   │   └── icon-128.png
+│   ├── background/        # Background script
+│   │   └── index.js
+│   ├── content/           # Content script
+│   │   └── index.js
+│   ├── devtools.js        # DevTools page
+│   ├── pages/
+│   │   ├── welcome/
+│   │   │   ├── index.js
+│   │   │   └── style.css
+│   │   └── panel/         # Panel implementation
+│   │       ├── index.js
+│   │       └── style.css
+│   ├── popup/             # Popup UI
+│   │   ├── index.js
+│   │   └── style.css
+│   ├── options/           # Options page
+│   │   └── index.js
+│   ├── scripting/         # Scripting injection
+│   │   └── index.js
+│   └── sidepanel/         # Side panel
+│       └── index.js
+├── .env                   # Environment variables
+├── .env.development       # Development env vars
+├── .env.production        # Production env vars
+├── .gitignore             # Git ignore rules
+├── package.json           # Project metadata
+├── rsbuild.config.ts      # Build configuration
+├── web-ext.config.js      # Web-ext configuration
+└── tsconfig.json          # TypeScript configuration
+```
 
 ## 顶层目录 {#top-level-folder}
 
@@ -23,23 +73,26 @@
 
 ## 源码目录 {#source-folder}
 
-项目的源码目录用于组织[入口](./entrypoints.md)、组件、库等目录或文件。
+项目的源码目录用于组织入口、组件、库等目录或文件。
 
 | 名称                     | 描述                                                      |
 | ------------------------ | --------------------------------------------------------- |
 | `assets/`                | 静态资源目录，存放 icons 等文件，这些资源会被构建工具处理 |
 | `background`             | background 入口                                           |
-| `content` 或 `contents`  | 单个或多个 content 入口                                   |
-| `popup`                  | popup 入口                                                |
-| `options`                | options 入口                                              |
-| `sidepanel`              | sidepanel 入口                                            |
-| `devtools`               | devtools 入口                                             |
-| `sandbox` 或 `sandboxes` | 单个或多个 sandbox 入口                                   |
-| `newtab`                 | newtab 入口                                               |
 | `bookmarks`              | bookmarks 入口                                            |
+| `content` 或 `contents`  | 单个或多个 content 入口                                   |
+| `devtools`               | devtools 入口                                             |
 | `history`                | history 入口                                              |
+| `newtab`                 | newtab 入口                                               |
+| `options`                | options 入口                                              |
+| `pages/`                 | HTML 页面                                                 |
+| `popup`                  | popup 入口                                                |
+| `sidepanel`              | sidepanel 入口                                            |
+| `sandbox` 或 `sandboxes` | 单个或多个 sandbox 入口                                   |
+| `scripting/`             | Scripting 注入                                            |
+| `sidepanel/`             | Side panel 入口                                           |
 
-## Manifest 映射 {#manifest-mapping}
+## Manifest 生成 {#manifest-mapping}
 
 WebExtend 中无需手动维护 [`manifest.json`](https://developer.chrome.com/docs/extensions/reference/manifest) 文件，它会基于文件系统自动生成 `manifest.json` 中的配置项，对应的映射关系如下。
 
@@ -65,11 +118,44 @@ WebExtend 中无需手动维护 [`manifest.json`](https://developer.chrome.com/d
 | `_locales`                       | `public/_locales/*`                              |
 | `web_accessible_resources`       | `public/*`                                       |
 
-## 自定义配置
+## 配置文件
+
+### 环境变量配置
+
+WebExtend 使用灵活的环境配置系统：
+
+```
+.env                   # Base variables, always loaded
+.env.local             # Local overrides (git-ignored)
+.env.development       # Development-specific variables
+.env.production        # Production-specific variables
+.env.[mode].local      # Local mode-specific overrides (git-ignored)
+```
+
+优先级从高到低依次如下：
+
+1. `.env.[mode].local`
+2. `.env.[mode]`
+3. `.env.local`
+4. `.env`
+
+配置示例
+
+```env
+# .env
+API_ENDPOINT=https://api.example.com
+DEBUG=false
+
+# .env.development
+API_ENDPOINT=https://dev-api.example.com
+DEBUG=true
+```
+
+参考 [environment variables](../essentials/environment-variables.md)。
+
+### 构建配置
 
 WebExtend 支持自定义项目中的源码目录、输出目录等信息。
-
-::: code-group
 
 ```js [rsbuild.config.ts]
 import { defineConfig } from '@rsbuild/core';
@@ -87,4 +173,20 @@ export default defineConfig({
 });
 ```
 
-:::
+参考 [@web-extend/rsbuild-plugin](../../api/rsbuild-plugin.md)。
+
+### Web-ext 配置
+
+`web-ext.config.js` 用于配置 web-ext 工具，示例如下：
+
+```javascript [web-ext.config.js]
+module.exports = {
+  run: {
+    startUrl: ["about:debugging#/runtime/this-firefox"],
+    firefox: "firefoxdeveloperedition",
+    browserConsole: true,
+  },
+};
+```
+
+参考 [browser startup](./browsers.md#browser-startup)。
