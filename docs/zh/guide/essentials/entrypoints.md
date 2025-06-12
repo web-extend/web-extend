@@ -438,25 +438,6 @@ document.querySelector("#root").innerHTML = `
 
 参考 [with-sandbox](https://github.com/web-extend/examples/tree/main/with-sandbox)、[with-multi-sandboxes](https://github.com/web-extend/examples/tree/main/with-multi-sandboxes)。
 
-### Side panel
-
-[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/sidePanel) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Sidebars)
-
-Sidepanel 入口对应了 `manifest.json` 中的 `side_panel.default_path` 或 `sidebar_action.default_panel` 字段。
-
-| Entry Path                           | Output Path      |
-| ------------------------------------ | ---------------- |
-| `sidepanel.(js\|jsx\|ts\|tsx)`       | `sidepanel.html` |
-| `sidepanel/index.(js\|jsx\|ts\|tsx)` | `sidepanel.html` |
-
-自动生成入口：
-
-```shell
-npx web-extend g sidepanel
-```
-
-参考 [with-sidepanel](https://github.com/web-extend/examples/tree/main/with-sidepanel)。
-
 ### Scripting
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/scripting) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/scripting)
@@ -485,3 +466,22 @@ chrome.tabs.onActivated.addListener((e) => {
 ```
 
 参考 [with-scripting](https://github.com/web-extend/examples/tree/main/with-scripting).
+
+### Side panel
+
+[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/sidePanel) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Sidebars)
+
+Sidepanel 入口对应了 `manifest.json` 中的 `side_panel.default_path` 或 `sidebar_action.default_panel` 字段。
+
+| Entry Path                           | Output Path      |
+| ------------------------------------ | ---------------- |
+| `sidepanel.(js\|jsx\|ts\|tsx)`       | `sidepanel.html` |
+| `sidepanel/index.(js\|jsx\|ts\|tsx)` | `sidepanel.html` |
+
+自动生成入口：
+
+```shell
+npx web-extend g sidepanel
+```
+
+参考 [with-sidepanel](https://github.com/web-extend/examples/tree/main/with-sidepanel)。

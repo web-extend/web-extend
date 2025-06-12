@@ -467,33 +467,6 @@ document.querySelector("#root").innerHTML = `
 
 See [with-sandbox](https://github.com/web-extend/examples/tree/main/with-sandbox), [with-multi-sandboxes](https://github.com/web-extend/examples/tree/main/with-multi-sandboxes).
 
-### Side Panel
-
-[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/sidePanel) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Sidebars)
-
-The side panel entry point will be reflected to the `side_panel.default_path` or `sidebar_action.default_panel` field in `manifest.json`.
-
-::: warning Browser Differences
-Chrome calls it "Side Panel" while Firefox calls it "Sidebar". There are some API differences between browsers:
-
-- Chrome: Uses `side_panel.default_path`
-- Firefox: Uses `sidebar_action.default_panel`
-
-:::
-
-| Entry Path                           | Output Path      |
-| ------------------------------------ | ---------------- |
-| `sidepanel.(js\|jsx\|ts\|tsx)`       | `sidepanel.html` |
-| `sidepanel/index.(js\|jsx\|ts\|tsx)` | `sidepanel.html` |
-
-Generate the entry automatically:
-
-```shell
-npx web-extend g sidepanel
-```
-
-See [with-sidepanel](https://github.com/web-extend/examples/tree/main/with-sidepanel).
-
 ### Scripting
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/scripting) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/scripting)
@@ -535,3 +508,30 @@ chrome.tabs.onActivated.addListener((e) => {
 ```
 
 See [with-scripting](https://github.com/web-extend/examples/tree/main/with-scripting).
+
+### Side Panel
+
+[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/sidePanel) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Sidebars)
+
+The side panel entry point will be reflected to the `side_panel.default_path` or `sidebar_action.default_panel` field in `manifest.json`.
+
+::: warning Browser Differences
+Chrome calls it "Side Panel" while Firefox calls it "Sidebar". There are some API differences between browsers:
+
+- Chrome: Uses `side_panel.default_path`
+- Firefox: Uses `sidebar_action.default_panel`
+
+:::
+
+| Entry Path                           | Output Path      |
+| ------------------------------------ | ---------------- |
+| `sidepanel.(js\|jsx\|ts\|tsx)`       | `sidepanel.html` |
+| `sidepanel/index.(js\|jsx\|ts\|tsx)` | `sidepanel.html` |
+
+Generate the entry automatically:
+
+```shell
+npx web-extend g sidepanel
+```
+
+See [with-sidepanel](https://github.com/web-extend/examples/tree/main/with-sidepanel).

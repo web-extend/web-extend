@@ -74,13 +74,33 @@ yarn add -D web-extend @rsbuild/core @web-extend/rsbuild-plugin web-ext
 
 为了获得更好的开发体验，建议安装以下可选依赖：
 
-```shell
-# TypeScript 支持
+::: code-group
+
+```shell [npm]
+# TypeScript support
 npm add -D typescript
 
-# 代码质量工具
+# Code quality tools
 npm add -D eslint prettier
 ```
+
+```shell [pnpm]
+# TypeScript support
+pnpm add -D typescript
+
+# Code quality tools
+pnpm add -D eslint prettier
+```
+
+```shell [yarn]
+# TypeScript support
+yarn add -D typescript
+
+# Code quality tools
+yarn add -D eslint prettier
+```
+
+:::
 
 ### 2. 配置 Package.json {#configure-package-json}
 

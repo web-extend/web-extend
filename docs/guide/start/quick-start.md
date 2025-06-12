@@ -74,13 +74,33 @@ yarn add -D web-extend @rsbuild/core @web-extend/rsbuild-plugin web-ext
 
 For a better development experience, consider installing these optional dependencies:
 
-```shell
+::: code-group
+
+```shell [npm]
 # TypeScript support
 npm add -D typescript
 
 # Code quality tools
 npm add -D eslint prettier
 ```
+
+```shell [pnpm]
+# TypeScript support
+pnpm add -D typescript
+
+# Code quality tools
+pnpm add -D eslint prettier
+```
+
+```shell [yarn]
+# TypeScript support
+yarn add -D typescript
+
+# Code quality tools
+yarn add -D eslint prettier
+```
+
+:::
 
 ### 2. Configure Package.json
 
