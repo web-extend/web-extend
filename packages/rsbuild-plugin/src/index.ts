@@ -3,16 +3,18 @@ import { fileURLToPath } from 'node:url';
 import type { EnvironmentConfig, RsbuildConfig, RsbuildPlugin } from '@rsbuild/core';
 import { ManifestManager } from '@web-extend/manifest';
 import { getEntryFileVariants } from '@web-extend/manifest/common';
-import type { ManifestEntryOutput, WebExtensionManifest } from '@web-extend/manifest/types';
+import type { ManifestEntries, ManifestEntryOutput, WebExtensionManifest } from '@web-extend/manifest/types';
 import { getContentEnvironmentConfig } from './content.js';
 import { DownloadRemotePlugin } from './download-remote.js';
 import {
   clearOutdatedHotUpdateFiles,
   getAllRsbuildEntryFiles,
+  getJsDistPath,
   getRsbuildEntryFiles,
   transformManifestEntry,
 } from './helper.js';
 import type { EnviromentKey, NormalizeRsbuildEnvironmentProps, PluginWebExtendOptions } from './types.js';
+import { getWebEnvironmentConfig } from './web.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -25,41 +27,43 @@ async function normalizeRsbuildEnvironments(options: NormalizeRsbuildEnvironment
   const environments: {
     [key in EnviromentKey]?: EnvironmentConfig;
   } = {};
-  let defaultEnvironment: EnvironmentConfig | null = null;
 
   if (background) {
-    defaultEnvironment = environments.background = {
+    environments.background = {
       source: {
         entry: transformManifestEntry(background),
       },
       output: {
         target: 'web-worker',
+        distPath: {
+          js: '',
+        },
+        filename: {
+          js: getJsDistPath(background),
+        },
       },
     };
   }
 
   if (content) {
-    defaultEnvironment = environments.content = getContentEnvironmentConfig(options);
+    environments.content = getContentEnvironmentConfig(options);
   }
 
-  const webEntry = Object.values(others)
-    .filter(Boolean)
-    .reduce((res, cur) => Object.assign(res, cur), {});
-  if (Object.values(webEntry).length || !defaultEnvironment) {
-    defaultEnvironment = environments.web = {
+  environments.web = getWebEnvironmentConfig({
+    ...options,
+    manifestEntries: others,
+  });
+
+  // void the empty entry error
+  if (Object.keys(manifestEntries).length === 0) {
+    environments.web = {
       source: {
-        entry: Object.values(webEntry).length
-          ? transformManifestEntry(webEntry)
-          : {
-              // void the empty entry error
-              empty: {
-                import: resolve(selfRootPath, './static/empty-entry.js'),
-                html: false,
-              },
-            },
-      },
-      output: {
-        target: 'web',
+        entry: {
+          _empty: {
+            import: resolve(selfRootPath, './static/empty-entry.js'),
+            html: false,
+          },
+        },
       },
     };
   }
@@ -71,6 +75,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
   name: 'plugin-web-extend',
   setup: (api) => {
     const manifestManager = new ManifestManager();
+    let manifestEntries: ManifestEntries | null = null;
 
     api.modifyRsbuildConfig(async (config, { mergeRsbuildConfig }) => {
       const rootPath = api.context.rootPath;
@@ -89,7 +94,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         manifest: options.manifest as WebExtensionManifest,
       });
 
-      const manifestEntries = await manifestManager.readEntries();
+      manifestEntries = await manifestManager.readEntries();
       const environments = await normalizeRsbuildEnvironments({
         manifestEntries,
         config,
@@ -127,7 +132,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
                     if (stats?.isFile()) {
                       if (stats.size === 0) return true;
 
-                      const entry = ManifestManager.matchDeclarativeEntryFile(relativePath);
+                      const entry = ManifestManager.matchDeclarativeEntry(relativePath);
                       if (!entry) return true;
 
                       const entryFileVariants = getEntryFileVariants(entry.name, entry.ext).map((file) =>
@@ -169,8 +174,8 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
     api.onBeforeStartDevServer(() => {
       api.transform({ test: /\.js$/ }, ({ resourcePath, code, environment }) => {
         const liveReload = api.getNormalizedConfig().dev.liveReload;
-        const hmr = resourcePath.endsWith('hmr.js');
-        if (environment.name === 'content' && liveReload && hmr) {
+        const isHMR = resourcePath.endsWith('hmr.js');
+        if (environment.name === 'content' && liveReload && isHMR) {
           const reloadExtensionCode = `
             const bridgeEl = document.getElementById('web-extend-content-bridge');
             if (bridgeEl) {
@@ -189,11 +194,28 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       });
     });
 
-    api.processAssets({ stage: 'optimize' }, async ({ assets, compilation, environment }) => {
-      if (environment.name === 'web') {
-        for (const name in assets) {
-          if (name.endsWith('.js') && (name.includes('icons') || name.includes('empty'))) {
+    api.processAssets({ stage: 'optimize' }, async ({ assets, compilation, sources, environment }) => {
+      if (environment.name !== 'web' || !manifestEntries) return;
+      const manifestEntryInput = Object.values(manifestEntries).reduce((acc, entry) => {
+        for (const key in entry) {
+          acc[key] = entry[key];
+        }
+        return acc;
+      }, {});
+
+      for (const name in assets) {
+        if (name.endsWith('.js')) {
+          const assetName = name.replace(/\.js$/, '');
+          const entryType = manifestEntryInput[assetName]?.entryType;
+          if (entryType === 'image' || entryType === 'style' || assetName.includes('_empty')) {
+            // Remove assets that are not needed in the final build
             compilation.deleteAsset(name);
+          } else if (entryType === 'script') {
+            // disable hmr for script entry
+            const oldContent = assets[name].source() as string;
+            const newContent = oldContent.replace(/connect\(\);/g, '');
+            const source = new sources.RawSource(newContent);
+            compilation.updateAsset(name, source);
           }
         }
       }

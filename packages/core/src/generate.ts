@@ -2,7 +2,8 @@ import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { checkbox } from '@inquirer/prompts';
 import { resolveSrcDir } from '@web-extend/manifest/common';
-import { copyEntryFiles, entrypoints, getTemplatePath, resolveEntryTemplate } from './init.js';
+import { entrypointItems } from './constant.js';
+import { checkEntrypoints, copyEntryFiles, getTemplatePath, resolveEntryTemplate } from './init.js';
 
 export interface GenerateOptions {
   entries: string[];
@@ -52,17 +53,22 @@ async function generateIcons({ root, template, outDir, size = ICON_SIZES.join(',
 }
 
 async function generateEntryFiles({ root, template, outDir, entries }: GenerateOptions) {
+  const entrypoints = await checkEntrypoints(entries || []);
+  if (!entrypoints.length) {
+    throw Error('Please select an entrypoint at least.');
+  }
+
   const finalTemplate = await resolveEntryTemplate(template);
   const templatePath = getTemplatePath(finalTemplate);
   const destPath = outDir ? resolve(root, outDir) : resolve(root, resolveSrcDir(root));
-  await copyEntryFiles(resolve(templatePath, 'src'), destPath, entries);
+  await copyEntryFiles(resolve(templatePath, 'src'), destPath, entrypoints);
 }
 
 export async function generate(options: GenerateOptions) {
   if (!options.entries.length) {
     options.entries = await checkbox({
       message: 'Select entrypoints',
-      choices: [...entrypoints, { name: 'icons', value: 'icons' }],
+      choices: [...entrypointItems, { name: 'icons', value: 'icons' }],
       loop: false,
       required: true,
     });

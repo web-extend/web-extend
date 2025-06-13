@@ -4,28 +4,28 @@ import { basename, posix, resolve } from 'node:path';
 import {
   getEntryName,
   isDevMode,
-  matchDeclarativeMultipleEntryFile,
-  matchDeclarativeSingleEntryFile,
+  matchMultipleDeclarativeEntryFile,
+  matchSingleDeclarativeEntryFile,
 } from './common.js';
 import { parseExportObject } from './parser/export.js';
 import type { ContentScriptConfig, Manifest, ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'content';
 
-const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
-  matchDeclarativeSingleEntryFile(key, file) || matchDeclarativeMultipleEntryFile('contents', file);
+const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file) =>
+  matchSingleDeclarativeEntryFile(key, file) || matchMultipleDeclarativeEntryFile('contents', file, ['script']);
 
-const normalizeContentEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, files, context }) => {
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, files, context }) => {
   const { rootPath, srcDir } = context;
 
   if (!manifest.content_scripts?.length) {
-    const entryPath = files
-      .filter((file) => matchDeclarativeEntryFile(file))
+    const entryFile = files
+      .filter((file) => matchDeclarativeEntry(file))
       .map((file) => resolve(rootPath, srcDir, file));
 
-    if (entryPath.length) {
+    if (entryFile.length) {
       manifest.content_scripts ??= [];
-      for (const filePath of entryPath) {
+      for (const filePath of entryFile) {
         manifest.content_scripts.push({
           matches: [], // get from entry in writeContentEntry
           js: [filePath],
@@ -57,7 +57,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest, context }) =
     const { name, input } = info;
     entry[name] = {
       input,
-      html: false,
+      entryType: 'script',
     };
   });
   return entry;
@@ -162,8 +162,8 @@ const onAfterBuild: ManifestEntryProcessor['onAfterBuild'] = async ({ distPath, 
 
 const contentProcessor: ManifestEntryProcessor = {
   key,
-  matchDeclarativeEntryFile,
-  normalize: normalizeContentEntry,
+  matchDeclarativeEntry,
+  normalizeEntry,
   readEntry,
   writeEntry,
   onAfterBuild,

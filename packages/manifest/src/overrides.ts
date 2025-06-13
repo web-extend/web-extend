@@ -1,26 +1,26 @@
 import { resolve } from 'node:path';
-import { matchDeclarativeSingleEntryFile } from './common.js';
-import type { Manifest, ManifestEntryInput, ManifestEntryProcessor, PageToOverride } from './types.js';
+import { matchSingleDeclarativeEntryFile } from './common.js';
+import type { Manifest, ManifestEntryInput, ManifestEntryKey, ManifestEntryProcessor } from './types.js';
 
-const overrides: PageToOverride[] = ['newtab', 'history', 'bookmarks'];
+const overrides: ManifestEntryKey[] = ['newtab', 'history', 'bookmarks'];
 
 const overrideProcessors = overrides.map((key) => {
-  const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
-    matchDeclarativeSingleEntryFile(key, file);
+  const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file) =>
+    matchSingleDeclarativeEntryFile(key, file);
 
-  const normalizeOverridesEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, context, files }) => {
+  const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context, files }) => {
     const { rootPath, srcDir } = context;
     const { chrome_url_overrides = {} } = manifest;
     if (Object.keys(chrome_url_overrides).length) return;
 
-    const entryPath = files
-      .filter((file) => matchDeclarativeSingleEntryFile(key, file))
+    const entryFile = files
+      .filter((file) => matchSingleDeclarativeEntryFile(key, file))
       .map((file) => resolve(rootPath, srcDir, file))[0];
 
-    if (entryPath) {
+    if (entryFile) {
       manifest.chrome_url_overrides = {
         ...(manifest.chrome_url_overrides || {}),
-        [key]: entryPath,
+        [key]: entryFile,
       };
     }
   };
@@ -34,7 +34,7 @@ const overrideProcessors = overrides.map((key) => {
     if (input) {
       entry[key] = {
         input: [input],
-        html: true,
+        entryType: 'html',
       };
     }
     return Object.keys(entry).length ? entry : null;
@@ -52,8 +52,8 @@ const overrideProcessors = overrides.map((key) => {
 
   return {
     key,
-    matchDeclarativeEntryFile,
-    normalize: normalizeOverridesEntry,
+    matchDeclarativeEntry,
+    normalizeEntry,
     readEntry,
     writeEntry,
   } as ManifestEntryProcessor;

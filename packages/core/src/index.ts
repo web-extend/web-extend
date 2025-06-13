@@ -36,10 +36,10 @@ function applyInitCommand(command: Command) {
   command
     .argument('[dir]')
     .option('-t, --template <name>', 'specify the template name')
-    .option('-e, --entry <name>', 'specify entrypoints')
-    .action(async (projectName, cliOptions) => {
+    .option('-e, --entry <name...>', 'specify entrypoints')
+    .action(async (projectName: string, cliOptions: { entry?: string[]; template?: string }) => {
       const { entry, ...otherOptions } = cliOptions;
-      const entries = entry ? entry.split(',') : [];
+      const entries = entry?.flatMap((item) => item.split(',')) || [];
       try {
         await init({
           projectName,
@@ -60,14 +60,14 @@ function applyInitCommand(command: Command) {
 
 function applyGenerateCommand(command: Command) {
   command
-    .argument('[entry]', 'specify entrypoints')
+    .argument('[entry...]', 'specify entrypoints')
     .option('-r, --root <dir>', 'specify the project root directory')
     .option('-t, --template <name>', 'specify the template name or path')
     .option('-o, --out-dir <dir>', 'specify the output directory, defaults to `src`')
     .option('--size <size>', 'specify sizes for output icons, defaults to 16,32,48,128')
-    .action(async (entry: string | undefined, options: GenerateOptions) => {
+    .action(async (entry: string[], options: GenerateOptions) => {
       try {
-        options.entries = entry?.split(',') || [];
+        options.entries = entry.flatMap((item) => item.split(','));
         if (!options.root) {
           options.root = process.cwd();
         }

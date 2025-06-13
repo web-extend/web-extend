@@ -1,26 +1,26 @@
 import { resolve } from 'node:path';
-import { matchDeclarativeSingleEntryFile } from './common.js';
+import { matchSingleDeclarativeEntryFile } from './common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'options';
 
-const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
-  matchDeclarativeSingleEntryFile(key, file);
+const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file) =>
+  matchSingleDeclarativeEntryFile(key, file);
 
-const normalizeOptionsEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, context, files }) => {
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context, files }) => {
   const { rootPath, srcDir } = context;
   const { options_ui, options_page } = manifest;
   if (options_ui?.page || options_page) return;
 
-  const entryPath = files
-    .filter((file) => matchDeclarativeEntryFile(file))
+  const entryFile = files
+    .filter((file) => matchDeclarativeEntry(file))
     .map((file) => resolve(rootPath, srcDir, file))[0];
 
-  if (entryPath) {
+  if (entryFile) {
     manifest.options_ui = {
       open_in_tab: true,
       ...(options_ui || {}),
-      page: entryPath,
+      page: entryFile,
     };
   }
 };
@@ -33,7 +33,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest }) => {
   const entry: ManifestEntryInput = {
     options: {
       input: [input],
-      html: true,
+      entryType: 'html',
     },
   };
   return entry;
@@ -51,8 +51,8 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, name }) =>
 
 const optionsProcessor: ManifestEntryProcessor = {
   key,
-  matchDeclarativeEntryFile,
-  normalize: normalizeOptionsEntry,
+  matchDeclarativeEntry,
+  normalizeEntry,
   readEntry,
   writeEntry,
 };

@@ -8,10 +8,12 @@ import devtoolsProcessor from './devtools.js';
 import iconsProcessor from './icons.js';
 import optionsProcessor from './options.js';
 import overrideProcessors from './overrides.js';
+import pagesProcessor from './pages.js';
 import panelProcessor from './panel.js';
 import { polyfillManifest } from './polyfill.js';
 import popupProcessor from './popup.js';
 import sandboxProcessor from './sandbox.js';
+import scriptingProcessor from './scripting.js';
 import sidepanelProcessor from './sidepanel.js';
 import type {
   ExtensionTarget,
@@ -33,6 +35,8 @@ const entryProcessors: ManifestEntryProcessor[] = [
   panelProcessor,
   sandboxProcessor,
   iconsProcessor,
+  scriptingProcessor,
+  pagesProcessor,
   ...overrideProcessors,
 ];
 
@@ -67,8 +71,8 @@ async function normalizeManifest({ manifest = {} as WebExtensionManifest, contex
     const srcPath = resolve(rootPath, srcDir);
     const files = await readdir(srcPath, { recursive: true });
     for (const processor of entryProcessors) {
-      if (!processor.normalize) continue;
-      await processor.normalize({
+      if (!processor.normalizeEntry) continue;
+      await processor.normalizeEntry({
         manifest: finalManifest,
         files,
         context,
@@ -212,10 +216,10 @@ export class ManifestManager {
     await cp(publicPath, distPath, { recursive: true, dereference: true });
   }
 
-  static matchDeclarativeEntryFile(file: string) {
+  static matchDeclarativeEntry(file: string) {
     for (const processor of entryProcessors) {
-      if (!processor.matchDeclarativeEntryFile) continue;
-      const item = processor.matchDeclarativeEntryFile(file);
+      if (!processor.matchDeclarativeEntry) continue;
+      const item = processor.matchDeclarativeEntry(file);
       if (item) return item;
     }
     return null;

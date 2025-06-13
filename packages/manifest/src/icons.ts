@@ -3,7 +3,7 @@ import type { ManifestEntryProcessor, WebExtensionManifest } from './types.js';
 
 const key = 'icons';
 
-const matchDeclarativeEntryFile = (file: string) => {
+const matchDeclarativeEntry = (file: string) => {
   const ext = '.png';
   const match = file.match(/^assets[\\/]icon-?(\d+)\.png$/);
   const size = match ? Number(match[1]) : null;
@@ -20,7 +20,7 @@ const matchDeclarativeEntryFile = (file: string) => {
 const getDeclarativeIcons = (files: string[], srcPath: string) => {
   const res: WebExtensionManifest['icons'] = {};
   for (const file of files) {
-    const size = matchDeclarativeEntryFile(file)?.size || null;
+    const size = matchDeclarativeEntry(file)?.size || null;
     if (size) {
       res[size] = resolve(srcPath, file);
     }
@@ -28,7 +28,7 @@ const getDeclarativeIcons = (files: string[], srcPath: string) => {
   return Object.keys(res).length ? res : null;
 };
 
-const normalizeIconsEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, files, context }) => {
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, files, context }) => {
   const { rootPath, srcDir } = context;
   const declarativeIcons = getDeclarativeIcons(files, resolve(rootPath, srcDir));
   if (!declarativeIcons) return;
@@ -75,7 +75,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest }) => {
     ? {
         [key]: {
           input: Array.from(files),
-          html: false,
+          entryType: 'image',
         },
       }
     : null;
@@ -117,8 +117,8 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, output }) 
 
 const iconsProcessor: ManifestEntryProcessor = {
   key,
-  matchDeclarativeEntryFile,
-  normalize: normalizeIconsEntry,
+  matchDeclarativeEntry,
+  normalizeEntry,
   readEntry,
   writeEntry,
 };

@@ -62,8 +62,6 @@ interface ManifestSidePanel {
   default_path?: string;
 }
 
-export type PageToOverride = 'newtab' | 'history' | 'bookmarks';
-
 export type ManifestEntryKey =
   | 'icons'
   | 'background'
@@ -74,12 +72,16 @@ export type ManifestEntryKey =
   | 'devtools'
   | 'panel'
   | 'sandbox'
-  | PageToOverride;
+  | 'newtab'
+  | 'history'
+  | 'bookmarks'
+  | 'scripting'
+  | 'pages';
 
-interface ManifestEntryItem {
+export interface ManifestEntryItem {
   input: string[];
   output: string[];
-  html?: boolean;
+  entryType: 'script' | 'style' | 'html' | 'image'; // default is 'html'
 }
 
 export type ManifestEntryInput = Record<string, Omit<ManifestEntryItem, 'output'>>;
@@ -89,8 +91,8 @@ export type MaybePromise<T = unknown> = T | Promise<T>;
 
 export interface ManifestEntryProcessor {
   key: ManifestEntryKey;
-  matchDeclarativeEntryFile?: (file: string) => null | { name: string; ext: string };
-  normalize?: (props: NormalizeMainfestEntryProps) => MaybePromise<void>;
+  matchDeclarativeEntry?: (file: string) => null | { name: string; ext: string };
+  normalizeEntry?: (props: NormalizeMainfestEntryProps) => MaybePromise<void>;
   readEntry?: (props: ReadManifestEntryItemProps) => MaybePromise<ManifestEntryInput | null>;
   writeEntry?: (props: WriteMainfestEntryItemProps) => MaybePromise<void>;
   onAfterBuild?: (props: WriteManifestFileProps) => MaybePromise<void>;

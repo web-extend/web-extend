@@ -2,63 +2,78 @@
 outline: [2, 3]
 ---
 
-# Entrypoints
+# Entry Points
 
-## Declarative Entrypoints
+::: tip What are Entry Points?
+Entry points are the core building blocks of a browser extension. They define different components like background, popup, or content scripts that make up your extension. WebExtend makes it easy to manage these entry points through a file-based convention system.
+:::
+
+## Declarative Entry Points
 
 WebExtend supports file-conventional entry points, meaning it parses entry points based on the file system and generates the corresponding manifest fields. So you no longer need to define these entry points manually in `manifest.json`.
 
+::: tip Why Declarative Entry Points?
+Declarative entry points reduce boilerplate code and make your extension more maintainable. Instead of managing complex manifest configurations, you can focus on writing the actual extension code.
+:::
+
 In WebExtend, all entry points are located in the source directory. Every entry point can be a folder or a file.
 
-When the entry is a file, only the file ends with `.js|.jsx|.ts|.tsx` will be discovered. The build tool injects an HTML template for each entry, if necessary, and generates the corresponding HTML file.
+When the entry point is a file, only files ending with `.js|.jsx|.ts|.tsx` will be discovered. The build tool injects an HTML template for each entry point, if necessary, and generates the corresponding HTML file.
 
 ```
 src/
-├─ background.js -> entrypoint
-├─ popup.js -> entrypoint
-└─ content.js -> entrypoint
+├─ background.ts -> entry point
+├─ popup.ts -> entry point
+└─ content.ts -> entry point
 ```
 
-When the entry is a folder, and that folder contains a single entry, the `index.js` file within that folder will be discovered as the entry point.
+When the entry point is a folder, and that folder contains a single entry point, the `index.js` file within that folder will be discovered as the entry point.
 
-When the entry is a folder, and that folder contains multiple entries, all the direct `*.js` or `*/index.js` files within that folder will be discovered as entry points. Only files in `contents`, `sandboxes` and `panels` folders will be discovered as multiple entries currently.
+When the entry point is a folder, and that folder contains multiple entry points, all the direct `*.js` or `*/index.js` files within that folder will be discovered as entry points. Only files in `contents`, `pages`, `sandboxes` and `scripting` folders will be discovered as multiple entry points currently.
 
 ```
 src/
 ├─ content/
-|  ├─ lib.js
+|  ├─ lib.ts
 |  ├─ index.css
-|  └─ index.js -> entrypoint
+|  └─ index.ts -> entry point
 └─ contents/
-   ├─ content-one.js -> entrypoint
+   ├─ content-one.ts -> entry point
    └─ content-two/
       ├─ index.css
-      └─ index.js -> entrypoint
+      └─ index.ts -> entry point
 ```
 
-## Entrypoint Types
+::: warning Note
+Make sure to follow the exact file naming conventions. For example, `background.ts` will be recognized, but `my-background.ts` won't be.
+:::
+
+## Entry Point Types
 
 ### Background
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest/background) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/background)
 
-The background entry will be reflected to the `background.service_worker` or `background.scripts` field in `manifest.json`.
+The background script runs in the extension's background context. The background entry point will be reflected to the `background.service_worker` or `background.scripts` field in `manifest.json`.
 
-Generate the entry automatically.
+| Entry Path                  | Output Path     |
+| --------------------------- | --------------- |
+| `background.(js\|ts)`       | `background.js` |
+| `background/index.(js\|ts)` | `background.js` |
+
+Generate the entry automatically:
 
 ```shell
 npx web-extend g background
 ```
 
-Alternatively, create the `src/background.js` file manually whose content is as follows:
+Example usage:
 
-::: code-group
-
-```js [src/background.js]
-console.log("This is a background script.");
+```ts [src/background.ts]
+chrome.runtime.onInstalled.addListener(() => {
+  console.log("Extension installed");
+});
 ```
-
-:::
 
 See [with-background](https://github.com/web-extend/examples/tree/main/with-background).
 
@@ -68,47 +83,67 @@ See [with-background](https://github.com/web-extend/examples/tree/main/with-back
 
 The bookmarks entry will be reflected to the `chrome_url_overrides.bookmarks` field in `manifest.json`.
 
+| Entry Path                           | Output Path      |
+| ------------------------------------ | ---------------- |
+| `bookmarks.(js\|jsx\|ts\|tsx)`       | `bookmarks.html` |
+| `bookmarks/index.(js\|jsx\|ts\|tsx)` | `bookmarks.html` |
+
 Generate the entry automatically.
 
 ```shell
 npx web-extend g bookmarks
 ```
 
-Alternatively, create the `src/bookmarks.js` or `src/bookmarks/index.js` file manually.
-
 ### Content Scripts
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_scripts)
 
-#### Adding a single content script
+Content scripts are JavaScript files that run in the context of web pages. They can read and modify the content of web pages that your extension interacts with.
 
-A single content entry will be reflected to the `content_scripts[0].js` field in `manifest.json`.
+::: tip Best Practices
 
-Generate the entry automatically.
+1. Use content scripts sparingly and only on necessary pages
+2. Avoid heavy operations that might slow down page load
+3. Consider using the `run_at` option to control when your script runs
+4. Use Shadow DOM when possible to avoid style conflicts
+
+:::
+
+| Entry Path                                 | Output Path          |
+| ------------------------------------------ | -------------------- |
+| `content.(js\|jsx\|ts\|tsx)`               | `content.js`         |
+| `content/index.(js\|jsx\|ts\|tsx)`         | `content.js`         |
+| `contents/{name}.(js\|jsx\|ts\|tsx)`       | `contents/{name}.js` |
+| `contents/{name}/index.(js\|jsx\|ts\|tsx)` | `contents/{name}.js` |
+
+#### Adding content scripts
+
+Content entries will be reflected to the `content_scripts[index].js` field in `manifest.json` respectively.
+
+Generate the entry automatically:
 
 ```shell
+# for a single content script
 npx web-extend g content
+
+# for multiple content scripts
+npx web-extend g contents/site-one contents/site-two
 ```
-
-Alternatively, create the `src/content.js` or`src/content/index.js` file manually.
-
-#### Adding multiple content scripts
-
-Multiple content entries will be reflected to the `content_scripts[index].js` field in `manifest.josn` respectively.
-
-Generate the entry automatically.
-
-```shell
-npx web-extend g contents/site-one,contents/site-two
-```
-
-Alternatively, create the `src/contents/*.js` or `src/contents/*/index.js` file manually.
 
 #### Adding CSS
 
 Import CSS files directly in the `content` entry file, which will be reflected to the `content_scripts[index].css` field in `manifest.json`.
 
-For example.
+::: warning CSS Scope
+Be careful with CSS selectors in content scripts. They can conflict with the webpage's existing styles. Consider using:
+
+1. Specific class names with a unique prefix
+2. Shadow DOM for complete style isolation
+3. CSS Modules for scoped styling
+
+:::
+
+For example:
 
 ```css [src/content/index.css]
 .web-extend-content-container {
@@ -147,9 +182,9 @@ if (!root) {
 }
 ```
 
-You can also apply CSS inside Shadow DOM, which is helpful to avoid style conflicts with the styles in the main site.
+#### Using Shadow DOM
 
-For example.
+Shadow DOM provides better encapsulation for both DOM and styles. Here's how to use it:
 
 ```ts [src/content/index.ts]
 import inlineStyles from "./index.css?inline";
@@ -177,17 +212,26 @@ if (!host) {
 }
 ```
 
-For advanced styling, you can utilize CSS Modules, CSS preprocessors, Tailwind CSS, or UnoCSS. See [using CSS libraries](./using-libraries.md#css-libraries).
+#### Adding Configuration
 
-#### Adding config
+Export an object named `config` in the `content` entry to configure how and where your content script runs. This will be reflected to other fields in `content_scripts[index]`.
 
-Export an obejct named `config` in the `content` entry, which will be reflected to other fields in `content_scripts[index]`, as follows.
+::: tip Configuration Options
+Common configuration options include:
+
+- `matches`: URL patterns where the script should run
+- `exclude_matches`: URL patterns to exclude
+- `run_at`: When to inject the script (`document_start`, `document_end`, or `document_idle`)
+- `all_frames`: Whether to run in all frames
+  :::
 
 ::: code-group
 
 ```js [src/content/index.js]
 export const config = {
   matches: ["https://www.google.com/*"],
+  run_at: "document_end",
+  all_frames: false,
 };
 ```
 
@@ -196,10 +240,21 @@ import type { ContentScriptConfig } from "web-extend";
 
 export const config: ContentScriptConfig = {
   matches: ["https://www.google.com/*"],
+  run_at: "document_end",
+  all_frames: false,
 };
 ```
 
 :::
+
+::: warning Troubleshooting
+Common issues with content scripts:
+
+1. Script not running? Check your `matches` patterns
+2. Styles not applying? Check for conflicts or try Shadow DOM
+3. Can't access page variables? Remember content scripts run in an isolated world
+4. Performance issues? Consider using `run_at` and load only what's necessary
+   :::
 
 See [with-content](https://github.com/web-extend/examples/tree/main/with-content), [with-multi-contents](https://github.com/web-extend/examples/tree/main/with-multi-contents).
 
@@ -207,45 +262,40 @@ See [with-content](https://github.com/web-extend/examples/tree/main/with-content
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/how-to/devtools/extend-devtools) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/devtools_page)
 
+The devtools entry allows you to extend the browser's developer tools with custom functionality. This is perfect for creating debugging tools, performance analyzers, or specialized inspectors.
+
 The devtools entry will be reflected to the `devtools_page` field in `manifest.json`.
 
-Generate the entry automatically.
+| Entry Path                          | Output Path     |
+| ----------------------------------- | --------------- |
+| `devtools.(js\|jsx\|ts\|tsx)`       | `devtools.html` |
+| `devtools/index.(js\|jsx\|ts\|tsx)` | `devtools.html` |
+
+Generate the entry automatically:
 
 ```shell
 npx web-extend g devtools
 ```
 
-Alternatively, create the `src/devtools.js` file manually.
+For example:
 
-#### Adding panels
-
-The devtools page is composed of a single panel or multiple panels. There are two methods to create panels.
-
-Generate the panel automatically.
-
-```shell
-# create a single panel
-npx web-extend g panel
-
-# create multiple panels
-npx web-extend g panels/panel1,panels/panel2
+```ts [src/devtools.ts]
+// Create a panel when DevTools are opened
+chrome.devtools.panels.create(
+  "My Panel", // Panel display name
+  "icon-16.png", // Panel icon
+  "pages/panel.html", // Panel page
+  (panel) => {
+    // Panel created callback
+    panel.onShown.addListener((window) => {
+      console.log("Panel shown");
+    });
+    panel.onHidden.addListener(() => {
+      console.log("Panel hidden");
+    });
+  }
+);
 ```
-
-Alternatively, create `src/panel/index.js` file for a single panel, or create `src/panels/panel1/index.js` for multiple panels.
-
-Then you can use the panel in the detools entry, as follows.
-
-::: code-group
-
-```js [src/devtools.js]
-// for a single panel
-chrome.devtools.panels.create("My panel", "", "panel.html");
-
-// for multiple panels
-chrome.devtools.panels.create("My panel", "", "panels/panel1.html");
-```
-
-:::
 
 See [with-devtools](https://github.com/web-extend/examples/tree/main/with-devtools).
 
@@ -255,13 +305,16 @@ See [with-devtools](https://github.com/web-extend/examples/tree/main/with-devtoo
 
 The history entry will be reflected to the `chrome_url_overrides.history` field in `manifest.json`.
 
-Generate the entry automatically.
+| Entry Path                         | Output Path    |
+| ---------------------------------- | -------------- |
+| `history.(js\|jsx\|ts\|tsx)`       | `history.html` |
+| `history/index.(js\|jsx\|ts\|tsx)` | `history.html` |
+
+Generate the entry automatically:
 
 ```shell
 npx web-extend g history
 ```
-
-Alternatively, create the `src/history.js` or `src/history/index.js` file manually.
 
 ### Icons
 
@@ -289,52 +342,77 @@ See [with-icons](https://github.com/web-extend/examples/tree/main/with-icons).
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/chrome_url_overrides)
 
-The newtab entry will be reflected to the `chrome_url_overrides.newtab` field in `manifest.json`.
+The new tab page replaces the browser's default new tab page. The new tab entry point will be reflected to the `chrome_url_overrides.newtab` field in `manifest.json`.
 
-Generate the entry automatically.
+| Entry Path                        | Output Path   |
+| --------------------------------- | ------------- |
+| `newtab.(js\|jsx\|ts\|tsx)`       | `newtab.html` |
+| `newtab/index.(js\|jsx\|ts\|tsx)` | `newtab.html` |
+
+Generate the entry automatically:
 
 ```shell
 npx web-extend g newtab
 ```
 
-Alternatively, create the `src/newtab.js` or `src/newtab/index.js` file manually.
-
 ### Options
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/options-page) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/options_ui)
 
-The options entry will be reflected to the `options_ui.page` field in `manifest.json`.
+The options page provides a way for users to customize your extension. The options entry point will be reflected to the `options_ui.page` field in `manifest.json`.
 
-Generate the entry automatically.
+| Entry Path                         | Output Path    |
+| ---------------------------------- | -------------- |
+| `options.(js\|jsx\|ts\|tsx)`       | `options.html` |
+| `options/index.(js\|jsx\|ts\|tsx)` | `options.html` |
+
+Generate the entry automatically:
 
 ```shell
 npx web-extend g options
 ```
 
-Alternatively, create the `src/options.js` or `src/options/index.js` file manually.
-
 See [with-options](https://github.com/web-extend/examples/tree/main/with-options).
+
+### Pages
+
+Pages are HTML documents that are not listed in `manifest.json`, but can be accessed by your extension. They are useful in certain situations, such as serving as a welcome page shown in a new tab upon installation.
+
+| Entry Path                              | Output Path         |
+| --------------------------------------- | ------------------- |
+| `pages/{name}.(js\|jsx\|ts\|tsx)`       | `pages/{name}.html` |
+| `pages/{name}/index.(js\|jsx\|ts\|tsx)` | `pages/{name}.html` |
+
+Generate the entry automatically:
+
+```shell
+npx web-extend g pages/welcome pages/panel
+```
 
 ### Popup
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/action) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/action)
 
-The popup entry will be reflected to the `action.default_popup` field in `manifest.json`.
+The popup is a temporary UI that appears when users click your extension's icon. The popup entry will be reflected to the `action.default_popup` field in `manifest.json`.
 
-Generate the entry automatically.
+| Entry Path                       | Output Path  |
+| -------------------------------- | ------------ |
+| `popup.(js\|jsx\|ts\|tsx)`       | `popup.html` |
+| `popup/index.(js\|jsx\|ts\|tsx)` | `popup.html` |
+
+Generate the entry automatically:
 
 ```shell
 npx web-extend g popup
 ```
 
-Alternatively, create the `src/popup.js` or `src/popup/index.js` file manually whose content is as follows:
+Here's a basic popup setup using React:
 
-::: code-group
-
-```tsx [src/popup/index.jsx]
+```tsx [src/popup/index.tsx]
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
+import "./index.css";
 
 const rootEl = document.getElementById("root");
 if (rootEl) {
@@ -347,8 +425,6 @@ if (rootEl) {
 }
 ```
 
-:::
-
 See [with-popup](https://github.com/web-extend/examples/tree/main/with-popup).
 
 ### Sandbox
@@ -357,6 +433,13 @@ See [with-popup](https://github.com/web-extend/examples/tree/main/with-popup).
 
 The sandbox entry will be reflected to the `sandbox.pages` field in `manifest.json`.
 
+| Entry Path                                  | Output Path             |
+| ------------------------------------------- | ----------------------- |
+| `sandbox.(js\|jsx\|ts\|tsx)`                | `sandbox.html`          |
+| `sandbox/index.(js\|jsx\|ts\|tsx)`          | `sandbox.html`          |
+| `sandboxes/{name}.(js\|jsx\|ts\|tsx)`       | `sandboxes/{name}.html` |
+| `sandboxes/{name}/index.(js\|jsx\|ts\|tsx)` | `sandboxes/{name}.html` |
+
 Generate the entry automatically.
 
 ```shell
@@ -364,15 +447,11 @@ Generate the entry automatically.
 npx web-extend g sandbox
 
 # create multiple entries
-npx web-extend g sandboxes/sandbox1,sandboxes/sandbox2
+npx web-extend g sandboxes/sandbox1 sandboxes/sandbox2
 
 ```
 
-Alternatively, create the `src/sandbox.js` or `src/sandboxes/*.js` file manually.
-
 To use the sandbox, you can embed it as an iframe inside an extension page or a content script.
-
-::: code-group
 
 ```js [src/popup/index.js]
 document.querySelector("#root").innerHTML = `
@@ -386,22 +465,73 @@ document.querySelector("#root").innerHTML = `
 }
 ```
 
-:::
-
 See [with-sandbox](https://github.com/web-extend/examples/tree/main/with-sandbox), [with-multi-sandboxes](https://github.com/web-extend/examples/tree/main/with-multi-sandboxes).
 
-### Sidepanel
+### Scripting
+
+[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/scripting) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/scripting)
+
+The scripting API allows you to inject JavaScript and CSS into web pages programmatically. This is different from content scripts as it provides more flexibility in when and where to inject the code.
+
+::: tip When to Use Scripting vs Content Scripts
+
+- Use Content Scripts when you need:
+  - Consistent injection on specific pages
+  - Early access to page load events
+  - Persistent presence on the page
+- Use Scripting API when you need:
+  - Dynamic injection based on user action
+  - One-time script execution
+  - More control over injection timing
+
+:::
+
+| Entry Path                                 | Output Path            |
+| ------------------------------------------ | ---------------------- |
+| `scripting/{name}.(js\|jsx\|ts\|tsx)`      | `scripting/{name}.js`  |
+| `scripting/{name}.(css\|less\|sass\|scss)` | `scripting/{name}.css` |
+
+Example usage:
+
+```ts [src/background.ts]
+chrome.tabs.onActivated.addListener((e) => {
+  chrome.scripting.executeScript({
+    target: { tabId: e.tabId },
+    files: ["scripting/injected-script.js"],
+  });
+
+  chrome.scripting.insertCSS({
+    target: { tabId: e.tabId },
+    files: ["scripting/injected-style.css"],
+  });
+});
+```
+
+See [with-scripting](https://github.com/web-extend/examples/tree/main/with-scripting).
+
+### Side Panel
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/sidePanel) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Sidebars)
 
-The sidepanel entry will be reflected to the `side_panel.default_path` or `sidebar_action.default_panel` field in `manifest.json`.
+The side panel entry point will be reflected to the `side_panel.default_path` or `sidebar_action.default_panel` field in `manifest.json`.
 
-Generate the entry automatically.
+::: warning Browser Differences
+Chrome calls it "Side Panel" while Firefox calls it "Sidebar". There are some API differences between browsers:
+
+- Chrome: Uses `side_panel.default_path`
+- Firefox: Uses `sidebar_action.default_panel`
+
+:::
+
+| Entry Path                           | Output Path      |
+| ------------------------------------ | ---------------- |
+| `sidepanel.(js\|jsx\|ts\|tsx)`       | `sidepanel.html` |
+| `sidepanel/index.(js\|jsx\|ts\|tsx)` | `sidepanel.html` |
+
+Generate the entry automatically:
 
 ```shell
 npx web-extend g sidepanel
 ```
-
-Alternatively, create the `src/sidepanel.js` or `src/sidepanel/index.js` file manually.
 
 See [with-sidepanel](https://github.com/web-extend/examples/tree/main/with-sidepanel).

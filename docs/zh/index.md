@@ -25,6 +25,7 @@ features:
   - icon: ⚡️
     title: 无缝的开发体验
     details: 支持即时 HMR、自动打开浏览器和运行扩展
+    link: /zh/guide/start/introduction#seamless-development-experience
   - icon: 🧭
     title: 多浏览器支持
     details: 自动处理 manifest.json 配置差异，轻松实现多浏览器支持

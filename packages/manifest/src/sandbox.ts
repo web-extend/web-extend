@@ -1,23 +1,23 @@
 import { resolve } from 'node:path';
-import { getEntryName, matchDeclarativeMultipleEntryFile, matchDeclarativeSingleEntryFile } from './common.js';
+import { getEntryName, matchMultipleDeclarativeEntryFile, matchSingleDeclarativeEntryFile } from './common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'sandbox';
 
-const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
-  matchDeclarativeSingleEntryFile(key, file) || matchDeclarativeMultipleEntryFile('sandboxes', file);
+const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file) =>
+  matchSingleDeclarativeEntryFile(key, file) || matchMultipleDeclarativeEntryFile('sandboxes', file);
 
-const normalizeSandboxEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, files, context }) => {
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, files, context }) => {
   const { srcDir, rootPath, target } = context;
   const srcPath = resolve(rootPath, srcDir);
   const pages = manifest.sandbox?.pages;
   if (pages?.length || target.includes('firefox')) return;
 
-  const entryPath = files.filter(matchDeclarativeEntryFile).map((file) => resolve(srcPath, file));
-  if (entryPath.length) {
+  const entryFile = files.filter(matchDeclarativeEntry).map((file) => resolve(srcPath, file));
+  if (entryFile.length) {
     manifest.sandbox = {
       ...(manifest.sandbox || {}),
-      pages: entryPath,
+      pages: entryFile,
     };
   }
 };
@@ -31,7 +31,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest, context }) =
     const name = getEntryName(page, context.rootPath, context.srcDir);
     entry[name] = {
       input: [page],
-      html: true,
+      entryType: 'html',
     };
   });
   return entry;
@@ -51,8 +51,8 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, name, norm
 
 const sandboxProcessor: ManifestEntryProcessor = {
   key,
-  matchDeclarativeEntryFile,
-  normalize: normalizeSandboxEntry,
+  matchDeclarativeEntry,
+  normalizeEntry,
   readEntry,
   writeEntry,
 };

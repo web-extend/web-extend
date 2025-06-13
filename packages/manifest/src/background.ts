@@ -1,13 +1,13 @@
 import { resolve } from 'node:path';
-import { isDevMode, matchDeclarativeSingleEntryFile } from './common.js';
-import type { ManifestEntryInput, ManifestEntryProcessor, WebExtensionManifest } from './types.js';
+import { isDevMode, matchSingleDeclarativeEntryFile } from './common.js';
+import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'background';
 
-const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
-  matchDeclarativeSingleEntryFile(key, file);
+const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file) =>
+  matchSingleDeclarativeEntryFile(key, file);
 
-const normalizeBackgroundEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, files, context }) => {
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, files, context }) => {
   const { rootPath, srcDir, mode, target, runtime } = context;
   const { background } = manifest;
   const scripts: string[] = [];
@@ -17,11 +17,11 @@ const normalizeBackgroundEntry: ManifestEntryProcessor['normalize'] = async ({ m
   } else if (background?.scripts) {
     scripts.push(...background.scripts);
   } else {
-    const entryPath = files
-      .filter((file) => matchDeclarativeEntryFile(file))
+    const entryFile = files
+      .filter((file) => matchDeclarativeEntry(file))
       .map((file) => resolve(rootPath, srcDir, file))[0];
-    if (entryPath) {
-      scripts.push(entryPath);
+    if (entryFile) {
+      scripts.push(entryFile);
     }
   }
   if (isDevMode(mode) && runtime?.background) {
@@ -55,7 +55,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest }) => {
   const entry: ManifestEntryInput = {
     background: {
       input,
-      html: false,
+      entryType: 'script',
     },
   };
   return entry;
@@ -75,8 +75,8 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, output }) 
 
 const backgroundProcessor: ManifestEntryProcessor = {
   key,
-  matchDeclarativeEntryFile,
-  normalize: normalizeBackgroundEntry,
+  matchDeclarativeEntry,
+  normalizeEntry,
   readEntry,
   writeEntry,
 };

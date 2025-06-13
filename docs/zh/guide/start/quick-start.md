@@ -2,21 +2,31 @@
 outline: deep
 ---
 
-# 快速上手 {#quick-start}
+# 快速开始 {#quick-start}
 
-## 准备环境 {#preparation}
+## 环境准备 {#environment-preparation}
 
-[Node.js >= 16](https://nodejs.org/en/download)，推荐使用 Node LTS 版本。
+在开始之前，请确保你已安装以下必备条件：
+
+- [Node.js >= 16](https://nodejs.org/en/download)（推荐使用 LTS 版本）
 
 ## 自动安装 {#automatic-installation}
 
-推荐使用 [`web-extend`](../../api/web-extend.md) 工具自动创建项目。在命令行界面运行命令：
+最简单的方式是使用 `web-extend` CLI 工具。这将为你设置一个包含所有必要配置的完整项目结构。
 
 ```shell
 npx web-extend@latest init
 ```
 
-`web-extend` 内置了以下模板。这些模板都使用 TypeScript，如果需要使用 JavaScript，可以在生成项目后手动将 `.ts` 文件后缀名改为 `.js`。
+在初始化过程中，你需要：
+
+1. 选择项目名称
+2. 选择模板
+3. 配置其他功能
+
+### 可用模板 {#available-templates}
+
+`web-extend` 工具提供以下模板，默认都使用 TypeScript：
 
 - Vanilla
 - [React](https://react.dev/)
@@ -24,13 +34,15 @@ npx web-extend@latest init
 - [Svelte](https://svelte.dev/)
 - [Solid](https://www.solidjs.com/)
 
-WebExtend 兼容任何前端框架，如需在其他框架中使用，请参考手动安装的部分。
+> 注意：虽然这些模板是开箱即用的，但 WebExtend 是框架无关的，可以与任何前端框架一起使用。对于其他框架，你可能需要遵循手动安装流程。
 
 ## 手动安装 {#manual-installation}
 
-### 安装依赖项 {#install-dependencies}
+如果你更喜欢手动设置项目或使用其他框架，请按照以下步骤操作：
 
-创建项目并安装依赖项。WebExtend 使用 [Rsbuild](https://rsbuild.dev/) 作为底层构建工具，并使用 [web-ext](https://github.com/mozilla/web-ext) 实现在浏览器中自动运行插件。
+### 1. 安装依赖 {#install-dependencies}
+
+创建新项目目录并初始化：
 
 ::: code-group
 
@@ -60,13 +72,39 @@ yarn add -D web-extend @rsbuild/core @web-extend/rsbuild-plugin web-ext
 
 :::
 
-推荐安装 TypeScript、React/Vue、ESLint/Prettier/Biome 等前端工具，提升开发体验（可选）。
-
-### 添加 npm 脚本命令 {#add-npm-scripts}
-
-修改 `package.json`，添加 `"type": "module"` 字段及如下命令：
+为了获得更好的开发体验，建议安装以下可选依赖：
 
 ::: code-group
+
+```shell [npm]
+# TypeScript support
+npm add -D typescript
+
+# Code quality tools
+npm add -D eslint prettier
+```
+
+```shell [pnpm]
+# TypeScript support
+pnpm add -D typescript
+
+# Code quality tools
+pnpm add -D eslint prettier
+```
+
+```shell [yarn]
+# TypeScript support
+yarn add -D typescript
+
+# Code quality tools
+yarn add -D eslint prettier
+```
+
+:::
+
+### 2. 配置 Package.json {#configure-package-json}
+
+在 `package.json` 中添加以下配置：
 
 ```json [package.json]
 {
@@ -80,22 +118,11 @@ yarn add -D web-extend @rsbuild/core @web-extend/rsbuild-plugin web-ext
 }
 ```
 
-:::
+### 3. 配置构建 {#configure-build}
 
-上述命令的含义如下：
+在项目根目录创建 `rsbuild.config.ts`：
 
-- `dev`: 使用 Rsbuild 在开发环境构建扩展，同时打开浏览器运行扩展。
-- `build`: 使用 Rsbuild 构建生产版本的扩展。
-- `preview`: 预览生产版本的扩展。需要先执行 `build` 命令。
-- `zip`: 将生产版本的扩展压缩为一个 `.zip` 文件，以备发布。需要先执行 `build` 命令。
-
-### 添加 Rsbuild 配置 {#add-rsbuild-configuration}
-
-创建 `rsbuild.config.ts`，添加如下内容。
-
-::: code-group
-
-```js [rsbuild.config.ts]
+```ts [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
 import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
 
@@ -104,15 +131,13 @@ export default defineConfig({
 });
 ```
 
-:::
+### 4. 创建入口点 {#create-entry-points}
 
-### 添加入口 {#add-entry-files}
+在 `src` 目录中创建扩展的入口点。WebExtend 会根据文件系统结构自动检测入口点。
 
-创建 src 源码目录，并创建 `popup.js` 文件，文件内容如下。WebExtend 将基于文件系统[自动解析入口](../essentials/entrypoints.md)。
+弹出窗口入口点示例：
 
-::: code-group
-
-```js [src/popup.js]
+```ts [src/popup.ts]
 const root = document.querySelector("#root");
 if (root) {
   root.innerHTML = `
@@ -124,43 +149,30 @@ if (root) {
 }
 ```
 
-:::
-
-`web-extend` 工具提供了自动生成入口文件的功能，也可以使用它来添加入口文件，运行命令。
+或者，使用 CLI 生成入口点：
 
 ```shell
-npx web-extend generate popup
+npx web-extend g popup
 ```
 
-如果您更偏向显式定义入口，或者想要添加额外的 manifest 字段，请传递 `manifest` 选项，它拥有更高的优先级。
+## 开发工作流 {#development-workflow}
 
-::: code-group
+- 启动开发服务器：`npm run dev`
+- 创建生产构建：`npm run build`
+- 预览生产构建：`npm run preview`
 
-```js [rsbuild.config.ts]
-import { defineConfig } from "@rsbuild/core";
-import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
+如果你更喜欢手动运行扩展，请移除 `dev` 命令中的 `--open` 选项，在浏览器中启用开发者模式，然后加载 `dist/chrome-mv3-dev` 或 `dist/chrome-mv3-prod` 构建目录。
 
-export default defineConfig({
-  plugins: [pluginWebExtend({
-    manifest: {...} // [!code ++]
-  })],
-});
-```
+## 发布 {#publishing}
 
-:::
+构建扩展后，你可以将其发布到浏览器商店：
 
-## 运行和构建 {#run-and-build}
+1. 创建生产构建：`npm run build`
+2. 打包扩展：`npm run zip`
+3. 提交到浏览器商店：
+   - [Chrome Web Store](https://developer.chrome.com/docs/webstore/publish/)
+   - [Firefox Add-ons](https://extensionworkshop.com/documentation/publish/submitting-an-add-on/)
+   - [Safari Extensions](https://developer.apple.com/documentation/safariservices/converting-a-web-extension-for-safari)
+   - [Microsoft Edge Add-ons](https://learn.microsoft.com/en-us/microsoft-edge/extensions-chromium/publish/publish-extension)
 
-- 执行 `npm run dev` 命令，启动服务器，自动打开浏览器并运行扩展。
-- 执行 `npm run build` 命令，构建生产版本的扩展。
-
-如果需要手动加载扩展，请移除 `dev` 命令中的 `--open` 选项，在浏览器扩展页面开启开发者模式，加载 `dist/chrome-mv3-dev` 或 `dist/chrome-mv3-prod` 目录。
-
-## 发布 {#publish}
-
-执行 `npm run zip` 命令压缩生产版本的扩展，在浏览器的应用商店进行发布。
-
-- [Chrome Docs](https://developer.chrome.com/docs/webstore/publish/)
-- [Firefox Docs](https://extensionworkshop.com/documentation/publish/submitting-an-add-on/)
-- [Safari Docs](https://developer.apple.com/documentation/safariservices/converting-a-web-extension-for-safari)
-- [Microsoft Docs](https://learn.microsoft.com/en-us/microsoft-edge/extensions-chromium/publish/publish-extension)
+<br />

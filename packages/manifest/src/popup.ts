@@ -1,27 +1,27 @@
 // import { existsSync } from 'node:fs';
 // import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import { matchDeclarativeSingleEntryFile } from './common.js';
+import { matchSingleDeclarativeEntryFile } from './common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
 
 const key = 'popup';
 
-const matchDeclarativeEntryFile: ManifestEntryProcessor['matchDeclarativeEntryFile'] = (file) =>
-  matchDeclarativeSingleEntryFile(key, file);
+const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file) =>
+  matchSingleDeclarativeEntryFile(key, file);
 
-const normalizePopupEntry: ManifestEntryProcessor['normalize'] = async ({ manifest, context, files }) => {
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context, files }) => {
   const { rootPath, srcDir } = context;
   const { action, browser_action } = manifest;
   let pointer = action || browser_action;
 
   if (pointer?.default_popup) return;
 
-  const entryPath = files.filter(matchDeclarativeEntryFile).map((file) => resolve(rootPath, srcDir, file))[0];
-  if (entryPath) {
+  const entryFile = files.filter(matchDeclarativeEntry).map((file) => resolve(rootPath, srcDir, file))[0];
+  if (entryFile) {
     if (!pointer) {
       pointer = manifest.action = {};
     }
-    pointer.default_popup ??= entryPath;
+    pointer.default_popup ??= entryFile;
   }
 };
 
@@ -34,7 +34,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest }) => {
   const entry: ManifestEntryInput = {
     popup: {
       input: [input],
-      html: true,
+      entryType: 'html',
     },
   };
   return entry;
@@ -61,8 +61,8 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = async ({ manifest, name
 
 const popupProcessor: ManifestEntryProcessor = {
   key,
-  matchDeclarativeEntryFile,
-  normalize: normalizePopupEntry,
+  matchDeclarativeEntry,
+  normalizeEntry,
   readEntry,
   writeEntry,
 };
