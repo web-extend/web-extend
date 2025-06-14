@@ -5,17 +5,15 @@ import type { RsbuildMode } from '@rsbuild/core';
 import type { ExtensionTarget } from '@web-extend/manifest/types';
 import chalk from 'chalk';
 import type { FSWatcher } from 'chokidar';
+import { loadWebExtendConfig } from './config.js';
 import { cacheBuildInfo } from './result.js';
 import { type ExtensionRunner, importWebExt, normalizeRunnerConfig, run } from './runner.js';
 import { type WatchCallback, watchFiles as chokidarWatchFiles } from './watcher.js';
 import { zip } from './zip.js';
-import { loadWebExtendConfig } from './config.js';
 
-export interface StartOptions {
-  target?: string;
+interface RsbuildCommonOptions {
   root?: string;
   mode?: RsbuildMode;
-  config?: string;
   envDir?: string;
   envMode?: string;
   environment?: string[];
@@ -23,6 +21,10 @@ export interface StartOptions {
   host?: string;
   port?: number;
   watch?: boolean;
+}
+
+export interface StartOptions extends RsbuildCommonOptions {
+  target?: string;
   zip?: boolean;
   outDir?: string;
 }
@@ -38,7 +40,6 @@ const loadRsbuildConfig = async (root: string) => {
 
   const { content: config, filePath } = await loadConfig({
     cwd: root,
-    path: commonOptions.config,
     envMode: commonOptions.envMode,
   });
 

@@ -3,8 +3,8 @@ import { relative, resolve } from 'node:path';
 import { defaultExtensionTarget } from '@web-extend/manifest/common';
 import type { ExtensionTarget } from '@web-extend/manifest/types';
 import chalk from 'chalk';
-import { resolveBuildInfo } from './result.js';
 import { loadConfig } from './config.js';
+import { resolveBuildInfo } from './result.js';
 
 type TargetType = 'firefox-desktop' | 'firefox-android' | 'chromium';
 
@@ -19,7 +19,7 @@ interface WebExtRunConfig {
   keepProfileChanges?: boolean;
   ignoreFiles?: string[];
   noInput?: boolean;
-  noReload?: boolean;
+  // noReload?: boolean;
   preInstall?: boolean;
   sourceDir?: string;
   watchFile?: string[];
@@ -58,7 +58,7 @@ export interface PreviewOptions {
   outDir?: string;
 }
 
-const posibleConfigFiles = ['web-ext.config.mjs', 'web-ext.config.js'];
+const webExtConfigFiles = ['web-ext.config.mjs', 'web-ext.config.ts', 'web-ext.config.js'];
 
 export async function normalizeRunnerConfig(
   root: string,
@@ -68,12 +68,12 @@ export async function normalizeRunnerConfig(
 ) {
   const userConfig = await loadConfig<WebExtConfig>({
     root,
-    configFiles: posibleConfigFiles,
+    configFiles: webExtConfigFiles,
   });
   const userRunconfig = userConfig?.run || {};
   const sourceDir = resolve(root, outDir);
 
-  const config: WebExtRunConfig = {
+  const config: WebExtRunConfig & { noReload?: boolean } = {
     target: extensionTarget?.includes('firefox') ? 'firefox-desktop' : 'chromium',
     sourceDir,
     ...options,

@@ -78,6 +78,9 @@ importers:
       '@web-extend/manifest':
         specifier: workspace:*
         version: link:../manifest
+      jiti:
+        specifier: ^2.4.2
+        version: 2.4.2
       typescript:
         specifier: ^5.7.3
         version: 5.8.3

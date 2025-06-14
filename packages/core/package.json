@@ -14,16 +14,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "npm run build"
   },
-  "files": [
-    "dist",
-    "bin",
-    "templates"
-  ],
-  "keywords": [
-    "web extensions",
-    "browser extensions",
-    "CLI"
-  ],
+  "files": ["dist", "bin", "templates"],
+  "keywords": ["web extensions", "browser extensions", "CLI"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/web-extend/web-extend.git"
@@ -48,18 +40,23 @@
     "@types/archiver": "^6.0.3",
     "@types/node": "^22.13.1",
     "@web-extend/manifest": "workspace:*",
+    "jiti": "^2.4.2",
     "typescript": "^5.7.3",
     "web-ext": "^8.5.0"
   },
   "peerDependencies": {
     "@rsbuild/core": "^1.1.6",
-    "web-ext": "^8.3.0"
+    "web-ext": "^8.3.0",
+    "jiti": "^2.4.2"
   },
   "peerDependenciesMeta": {
     "@rsbuild/core": {
       "optional": true
     },
     "web-ext": {
+      "optional": true
+    },
+    "jiti": {
       "optional": true
     }
   },
