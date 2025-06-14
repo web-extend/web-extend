@@ -31,6 +31,7 @@ npx web-extend@latest init
 - Vanilla
 - [React](https://react.dev/)
 - [Vue](https://vuejs.org/)
+- [Preact](https://preactjs.com/)
 - [Svelte](https://svelte.dev/)
 - [Solid](https://www.solidjs.com/)
 

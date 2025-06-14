@@ -88,7 +88,7 @@ src/
 
 ### 极速性能 {#lightning-fast-performance}
 
-基于 [Rsbuild](https://rsbuild.dev/) 构建，WebExtend 提供卓越的性能：
+基于 [Rsbuild](https://rsbuild.rs/) 构建，WebExtend 提供卓越的性能：
 
 - ⚡️ 极快的开发服务器启动
 - 📦 高效的打包，自动代码分割

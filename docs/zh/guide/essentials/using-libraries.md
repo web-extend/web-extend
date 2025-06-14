@@ -4,7 +4,7 @@ outline: deep
 
 # 使用库
 
-WebExtend 支持众多前端框架或库，这得益于 [Rsbuild 提供的功能](https://rsbuild.dev/guide/start/features)。本章覆盖了一些常用的使用案例。
+WebExtend 支持众多前端框架或库，这得益于 [Rsbuild 提供的功能](https://rsbuild.rs/guide/start/features)。本章覆盖了一些常用的使用案例。
 
 ## UI 库
 
@@ -16,7 +16,7 @@ WebExtend 支持众多前端框架或库，这得益于 [Rsbuild 提供的功能
 npx web-extend@latest init --template react
 ```
 
-若要在已有的 WebExtend 项目中使用 React，则需要引入 [Rsbuild React 插件](https://rsbuild.dev/plugins/list/plugin-react)。
+若要在已有的 WebExtend 项目中使用 React，则需要引入 [Rsbuild React 插件](https://rsbuild.rs/plugins/list/plugin-react)。
 
 ```ts [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
@@ -36,7 +36,7 @@ export default defineConfig({
 npx web-extend@latest init --template vue
 ```
 
-若要在已有的 WebExtend 项目中使用 Vue，则需要引入 [Rsbuild Vue 插件](https://rsbuild.dev/plugins/list/plugin-vue)。
+若要在已有的 WebExtend 项目中使用 Vue，则需要引入 [Rsbuild Vue 插件](https://rsbuild.rs/plugins/list/plugin-vue)。
 
 ```ts [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
@@ -54,6 +54,25 @@ export default defineConfig({
 });
 ```
 
+### Preact
+
+若要使用 Preact 创建一个新的 WebExtend 项目，请执行以下命令。
+
+```shell
+npx web-extend@latest init --template preact
+```
+
+若要在已有的 WebExtend 项目中使用 React，则需要引入 [Rsbuild Preact 插件](https://rsbuild.rs/plugins/list/plugin-preact)。
+
+```ts [rsbuild.config.ts]
+import { defineConfig } from "@rsbuild/core";
+import { pluginPreact } from "@rsbuild/plugin-preact";
+
+export default defineConfig({
+  plugins: [pluginReact()],
+});
+```
+
 ### Svelte
 
 若要使用 Svelte 创建一个新的 WebExtend 项目，请执行以下命令。
@@ -62,7 +81,7 @@ export default defineConfig({
 npx web-extend@latest init --template svelte
 ```
 
-若要在已有的 WebExtend 项目中使用 Svelte，则需要引入 [Rsbuild Svelte 插件](https://rsbuild.dev/plugins/list/plugin-svelte)。
+若要在已有的 WebExtend 项目中使用 Svelte，则需要引入 [Rsbuild Svelte 插件](https://rsbuild.rs/plugins/list/plugin-svelte)。
 
 ```ts [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
@@ -82,7 +101,7 @@ export default defineConfig({
 npx web-extend@latest init --template solid
 ```
 
-若要在已有的 WebExtend 项目中使用 Solid，则需要引入 [Rsbuild Solid 插件](https://rsbuild.dev/plugins/list/plugin-solid)。
+若要在已有的 WebExtend 项目中使用 Solid，则需要引入 [Rsbuild Solid 插件](https://rsbuild.rs/plugins/list/plugin-solid)。
 
 ```ts [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
@@ -127,9 +146,9 @@ export default () => {
 
 在 WebExtend 项目中可以使用 CSS 预处理器，包括 Sass、Less 和 Stylus。为了使用它们，需要引入对应的插件。
 
-- [Sass 插件](https://rsbuild.dev/plugins/list/plugin-sass)
-- [Less 插件](https://rsbuild.dev/plugins/list/plugin-less)
-- [Stylus 插件](https://rsbuild.dev/plugins/list/plugin-stylus)
+- [Sass 插件](https://rsbuild.rs/plugins/list/plugin-sass)
+- [Less 插件](https://rsbuild.rs/plugins/list/plugin-less)
+- [Stylus 插件](https://rsbuild.rs/plugins/list/plugin-stylus)
 
 ::: code-group
 

@@ -4,7 +4,7 @@ outline: deep
 
 # Using Libraries
 
-WebExtend supports lots of frontend frameworks or libraries, which benefits from [Rsbuild's features](https://rsbuild.dev/guide/start/features). This chapter covers most commonly used cases.
+WebExtend supports lots of frontend frameworks or libraries, which benefits from [Rsbuild's features](https://rsbuild.rs/guide/start/features). This chapter covers most commonly used cases.
 
 ## UI Libraries
 
@@ -16,7 +16,7 @@ To create a project with WebExtend and React, just run the following command.
 npx web-extend@latest init --template react
 ```
 
-To use React in an existing WebExtend project, you need to register the [Rsbuild React plugin](https://rsbuild.dev/plugins/list/plugin-react).
+To use React in an existing WebExtend project, you need to register the [Rsbuild React plugin](https://rsbuild.rs/plugins/list/plugin-react).
 
 ```ts [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
@@ -36,7 +36,7 @@ To create a project with WebExtend and Vue, just run the following command.
 npx web-extend@latest init --template vue
 ```
 
-To use Vue in an existing WebExtend project, you need to register the [Rsbuild Vue plugin](https://rsbuild.dev/plugins/list/plugin-vue).
+To use Vue in an existing WebExtend project, you need to register the [Rsbuild Vue plugin](https://rsbuild.rs/plugins/list/plugin-vue).
 
 ```ts [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
@@ -54,6 +54,25 @@ export default defineConfig({
 });
 ```
 
+### Preact
+
+To create a project with WebExtend and React, just run the following command.
+
+```shell
+npx web-extend@latest init --template preact
+```
+
+To use Preact in an existing WebExtend project, you need to register the [Rsbuild Rreact plugin](https://rsbuild.rs/plugins/list/plugin-preact).
+
+```ts [rsbuild.config.ts]
+import { defineConfig } from "@rsbuild/core";
+import { pluginPreact } from "@rsbuild/plugin-preact";
+
+export default defineConfig({
+  plugins: [pluginReact()],
+});
+```
+
 ### Svelte
 
 To create a project with WebExtend and Svelte, just run the following command.
@@ -62,7 +81,7 @@ To create a project with WebExtend and Svelte, just run the following command.
 npx web-extend@latest init --template svelte
 ```
 
-To use Svelte in an existing WebExtend project, you need to register the [Rsbuild Svelte plugin](https://rsbuild.dev/plugins/list/plugin-svelte).
+To use Svelte in an existing WebExtend project, you need to register the [Rsbuild Svelte plugin](https://rsbuild.rs/plugins/list/plugin-svelte).
 
 ```ts [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
@@ -82,7 +101,7 @@ To create a project with WebExtend and Solid, just run the following command.
 npx web-extend@latest init --template solid
 ```
 
-To use Solid in an existing WebExtend project, you need to register the [Rsbuild Solid plugin](https://rsbuild.dev/plugins/list/plugin-solid).
+To use Solid in an existing WebExtend project, you need to register the [Rsbuild Solid plugin](https://rsbuild.rs/plugins/list/plugin-solid).
 
 ```ts [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
@@ -127,9 +146,9 @@ export default () => {
 
 You can use CSS preprocessors in a WebExtend project, including Sass, Less and Stylus. To use one of them, you need to register the corresponding Rsbuild plugin.
 
-- [Sass Plugin](https://rsbuild.dev/plugins/list/plugin-sass)
-- [Less Plugin](https://rsbuild.dev/plugins/list/plugin-less)
-- [Stylus Plugin](https://rsbuild.dev/plugins/list/plugin-stylus)
+- [Sass Plugin](https://rsbuild.rs/plugins/list/plugin-sass)
+- [Less Plugin](https://rsbuild.rs/plugins/list/plugin-less)
+- [Stylus Plugin](https://rsbuild.rs/plugins/list/plugin-stylus)
 
 ::: code-group
 

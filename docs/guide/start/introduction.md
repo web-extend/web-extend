@@ -88,7 +88,7 @@ See [using libraries](../essentials/using-libraries.md) for integration guides.
 
 ### Lightning Fast Performance {#lightning-fast-performance}
 
-Built on [Rsbuild](https://rsbuild.dev/), WebExtend delivers exceptional performance:
+Built on [Rsbuild](https://rsbuild.rs/), WebExtend delivers exceptional performance:
 
 - ⚡️ Blazing fast dev server startup
 - 📦 Efficient bundling with automatic code splitting

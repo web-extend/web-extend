@@ -106,7 +106,7 @@ WebExtend 底层使用 Rsbuild 作为构建工具，因此需要从 Vite 迁移�
 1. 在项目根目录下创建 `rsbuild.config.ts` 配置文件。
 2. 添加插件：
    - [@web-extend/rsbuild-plugin](https://www.npmjs.com/package/@web-extend/rsbuild-plugin)
-   - [@rsbuild/plugin-vue](https://rsbuild.dev/plugins/list/plugin-vue)
+   - [@rsbuild/plugin-vue](https://rsbuild.rs/plugins/list/plugin-vue)
    - [unplugin-vue-components/rspack](https://github.com/unplugin/unplugin-vue-components)
    - [unplugin-auto-import/rspack](https://github.com/unplugin/unplugin-auto-import)
    - [unplugin-icons/rspack](https://github.com/unplugin/unplugin-icons)
@@ -223,7 +223,7 @@ export default defineConfig({
 
 如果您在项目中有其他自定义配置，请参考：
 
-- [Rsbuild Vite](https://rsbuild.dev/guide/migration/vite)
+- [Rsbuild Vite](https://rsbuild.rs/guide/migration/vite)
 - [UnoCSS](https://unocss.dev/integrations/postcss)
 
 ## 更新源码内容

@@ -106,7 +106,7 @@ WebExtend uses Rsbuild under the hood, so you need to migrate the bundler from V
 1. Create `rsbuild.config.ts` in the root.
 2. Add the following plugins.
    - [@web-extend/rsbuild-plugin](https://www.npmjs.com/package/@web-extend/rsbuild-plugin)
-   - [@rsbuild/plugin-vue](https://rsbuild.dev/plugins/list/plugin-vue)
+   - [@rsbuild/plugin-vue](https://rsbuild.rs/plugins/list/plugin-vue)
    - [unplugin-vue-components/rspack](https://github.com/unplugin/unplugin-vue-components)
    - [unplugin-auto-import/rspack](https://github.com/unplugin/unplugin-auto-import)
    - [unplugin-icons/rspack](https://github.com/unplugin/unplugin-icons)
@@ -223,7 +223,7 @@ export default defineConfig({
 
 To custom other config in the project, please refer to:
 
-- [Rsbuild Vite](https://rsbuild.dev/guide/migration/vite)
+- [Rsbuild Vite](https://rsbuild.rs/guide/migration/vite)
 - [UnoCSS](https://unocss.dev/integrations/postcss)
 
 ## Updating source code

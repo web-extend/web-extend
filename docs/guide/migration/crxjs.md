@@ -50,8 +50,8 @@ Next, update scripts with the following WebExtend's CLI commands in `package.jso
 When migrating bundler from Vite to Rsbuild, the main changes are as follows.
 
 1. Create `rsbuild.config.ts` in the root and import the`@web-extend/rsbuild-plugin` plugin.
-2. Migrate plugins, see [rsbuild-migrating-plugins](https://rsbuild.dev/guide/migration/vite#migrating-plugins).
-3. Migrate configuration, see [rsbuild-configuration-migration](https://rsbuild.dev/guide/migration/vite#configuration-migration).
+2. Migrate plugins, see [rsbuild-migrating-plugins](https://rsbuild.rs/guide/migration/vite#migrating-plugins).
+3. Migrate configuration, see [rsbuild-configuration-migration](https://rsbuild.rs/guide/migration/vite#configuration-migration).
 
 Example.
 

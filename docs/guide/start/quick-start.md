@@ -31,6 +31,7 @@ The `web-extend` tool provides the following templates, all using TypeScript by 
 - Vanilla
 - [React](https://react.dev/)
 - [Vue](https://vuejs.org/)
+- [Preact](https://preactjs.com/)
 - [Svelte](https://svelte.dev/)
 - [Solid](https://www.solidjs.com/)
 

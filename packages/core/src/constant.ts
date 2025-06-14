@@ -14,6 +14,10 @@ export const frameworks = [
     value: 'vue',
   },
   {
+    name: chalk.magenta('Preact'),
+    value: 'preact',
+  },
+  {
     name: chalk.red('Svelte'),
     value: 'svelte',
   },

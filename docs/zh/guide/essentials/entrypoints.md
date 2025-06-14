@@ -18,7 +18,7 @@ WebExtend 会基于文件系统自动解析入口文件，生成对应的 manife
 
 在 WebExtend 中，入口文件位于源码目录下。入口可以是目录或文件中任意一种形式。
 
-当入口为文件时，仅支持扩展名为 `.js|.jsx|.ts|.tsx` 的入口文件。构建工具会自动为每个入口注入一个 [HTML 模板](https://rsbuild.dev/guide/basic/html-template)，生成对应的 HTML 文件。
+当入口为文件时，仅支持扩展名为 `.js|.jsx|.ts|.tsx` 的入口文件。构建工具会自动为每个入口注入一个 [HTML 模板](https://rsbuild.rs/guide/basic/html-template)，生成对应的 HTML 文件。
 
 ```
 src/
