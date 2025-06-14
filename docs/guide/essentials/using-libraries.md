@@ -21,10 +21,9 @@ To use React in an existing WebExtend project, you need to register the [Rsbuild
 ```ts [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
 import { pluginReact } from "@rsbuild/plugin-react";
-import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
 
 export default defineConfig({
-  plugins: [pluginReact(), pluginWebExtend()],
+  plugins: [pluginReact()],
 });
 ```
 
@@ -41,10 +40,9 @@ To use Vue in an existing WebExtend project, you need to register the [Rsbuild V
 ```ts [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
 import { pluginVue } from "@rsbuild/plugin-vue";
-import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
 
 export default defineConfig({
-  plugins: [pluginVue(), pluginWebExtend()],
+  plugins: [pluginVue()],
   output: {
     // https://github.com/web-infra-dev/rsbuild/issues/3217
     sourceMap: {
@@ -86,10 +84,9 @@ To use Svelte in an existing WebExtend project, you need to register the [Rsbuil
 ```ts [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
 import { pluginSvelte } from "@rsbuild/plugin-svelte";
-import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
 
 export default defineConfig({
-  plugins: [pluginSvelte(), pluginWebExtend()],
+  plugins: [pluginSvelte()],
 });
 ```
 
@@ -107,7 +104,6 @@ To use Solid in an existing WebExtend project, you need to register the [Rsbuild
 import { defineConfig } from "@rsbuild/core";
 import { pluginBabel } from "@rsbuild/plugin-babel";
 import { pluginSolid } from "@rsbuild/plugin-solid";
-import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
 
 export default defineConfig({
   plugins: [
@@ -115,7 +111,6 @@ export default defineConfig({
       include: /\.(?:jsx|tsx)$/,
     }),
     pluginSolid(),
-    pluginWebExtend(),
   ],
 });
 ```

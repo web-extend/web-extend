@@ -52,7 +52,7 @@ mkdir my-extension-app
 cd my-extension-app
 
 npm init -y
-npm add -D web-extend @rsbuild/core @web-extend/rsbuild-plugin web-ext
+npm add -D web-extend @rsbuild/core web-ext
 ```
 
 ```shell [pnpm]
@@ -60,7 +60,7 @@ mkdir my-extension-app
 cd my-extension-app
 
 npm init -y
-pnpm add -D web-extend @rsbuild/core @web-extend/rsbuild-plugin web-ext
+pnpm add -D web-extend @rsbuild/core web-ext
 ```
 
 ```shell [yarn]
@@ -68,7 +68,7 @@ mkdir my-extension-app
 cd my-extension-app
 
 npm init -y
-yarn add -D web-extend @rsbuild/core @web-extend/rsbuild-plugin web-ext
+yarn add -D web-extend @rsbuild/core web-ext
 ```
 
 :::
@@ -119,20 +119,7 @@ yarn add -D eslint prettier
 }
 ```
 
-### 3. 配置构建 {#configure-build}
-
-在项目根目录创建 `rsbuild.config.ts`：
-
-```ts [rsbuild.config.ts]
-import { defineConfig } from "@rsbuild/core";
-import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
-
-export default defineConfig({
-  plugins: [pluginWebExtend()],
-});
-```
-
-### 4. 创建入口点 {#create-entry-points}
+### 3. 创建入口点 {#create-entry-points}
 
 在 `src` 目录中创建扩展的入口点。WebExtend 会根据文件系统结构自动检测入口点。
 

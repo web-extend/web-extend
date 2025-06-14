@@ -13,17 +13,17 @@ Install the following dependencies.
 ::: code-group
 
 ```shell [npm]
-npm add -D @rsbuild/core @web-extend/rsbuild-plugin web-extend
+npm add -D web-extend @rsbuild/core
 npm add -D @rsbuild/plugin-vue @unocss/postcss
 ```
 
 ```shell [pnpm]
-pnpm add -D @rsbuild/core @web-extend/rsbuild-plugin web-extend
+pnpm add -D web-extend @rsbuild/core
 pnpm add -D @rsbuild/plugin-vue @unocss/postcss
 ```
 
 ```shell [yarn]
-yarn add -D @rsbuild/core @web-extend/rsbuild-plugin web-extend
+yarn add -D web-extend @rsbuild/core
 yarn add -D @rsbuild/plugin-vue @unocss/postcss
 ```
 
@@ -103,29 +103,41 @@ Next, add the `"type": "module"` field and update scripts with the following Web
 
 WebExtend uses Rsbuild under the hood, so you need to migrate the bundler from Vite to Rsbuild. Nevertheless, the migration process is easy, and the main changes are as follows.
 
-1. Create `rsbuild.config.ts` in the root.
-2. Add the following plugins.
-   - [@web-extend/rsbuild-plugin](https://www.npmjs.com/package/@web-extend/rsbuild-plugin)
+1. Create `web-extend.config.ts` for manifest configuration.
+2. Create `rsbuild.config.ts` for bundler configuration.
+3. Add the following plugins.
    - [@rsbuild/plugin-vue](https://rsbuild.rs/plugins/list/plugin-vue)
    - [unplugin-vue-components/rspack](https://github.com/unplugin/unplugin-vue-components)
    - [unplugin-auto-import/rspack](https://github.com/unplugin/unplugin-auto-import)
    - [unplugin-icons/rspack](https://github.com/unplugin/unplugin-icons)
-3. Migrate the following config.
+4. Migrate the following config.
    - `resolve.alias` -> `resolve.alias`
    - `define` -> `source.define`
    - set `html.mountId: "app"`. Rsbuild will inject an HTML file for each entry file, so the original HTML files in source are useless.
-4. Support UnoCSS.
+5. Support UnoCSS.
    - Create `postcss.config.mjs`, and import the `@unocss/postcss` plugin.
    - Adjust the content of `unocss.config.ts`.
    - Remove `import 'uno.css'` from JS files, and insert `@unocss;` into the corresponding CSS files.
 
 The full list of all config are as follows.
 
+::: details web-extend.config.ts
+
+```ts
+import { defineConfig } from "web-extend";
+import manifest from "./src/manifest";
+
+export default defineConfig({
+  manifest,
+});
+```
+
+:::
+
 ::: details rsbuild.config.ts
 
 ```ts
 import { defineConfig } from "@rsbuild/core";
-import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
 import { pluginVue } from "@rsbuild/plugin-vue";
 import Components from "unplugin-vue-components/rspack";
 import AutoImport from "unplugin-auto-import/rspack";
@@ -136,12 +148,7 @@ import packageJson from "./package.json";
 import manifest from "./src/manifest";
 
 export default defineConfig({
-  plugins: [
-    pluginVue(),
-    pluginWebExtend({
-      manifest,
-    }),
-  ],
+  plugins: [pluginVue()],
   html: {
     mountId: "app",
   },

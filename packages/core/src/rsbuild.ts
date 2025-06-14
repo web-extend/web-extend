@@ -186,7 +186,7 @@ async function startDevServer(options: StartOptions) {
   if (options.open && webExt) {
     rsbuild.onDevCompileDone(async () => {
       if (extensionRunner !== null) return;
-      // run after manifest.json written in @web-extend/rsbuild-plugin
+      // run after manifest.json written
       setTimeout(async () => {
         const { rootPath, distPath } = rsbuild.context;
         const config = await normalizeRunnerConfig(rootPath, distPath, getBuildTarget(), {
@@ -229,7 +229,7 @@ async function startBuild(options: StartOptions) {
     isBuildWatch: options.watch,
   });
 
-  // run after manifest.json written in @web-extend/rsbuild-plugin
+  // run after manifest.json written
   rsbuild.onCloseBuild(async () => {
     const { rootPath, distPath } = rsbuild.context;
 

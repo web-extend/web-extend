@@ -54,7 +54,7 @@ export default defineConfig({
           collapsed: false,
           items: [
             { text: 'web-extend', link: 'web-extend' },
-            { text: '@web-extend/rsbuild-plugin', link: 'rsbuild-plugin' },
+            // { text: '@web-extend/rsbuild-plugin', link: 'rsbuild-plugin' },
           ],
         },
       ],

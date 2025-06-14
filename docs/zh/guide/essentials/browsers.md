@@ -63,24 +63,21 @@ if (target.includes("firefox")) {
 
 WebExtend 会基于文件系统和构建目标，自动解析和生成 `manifest.json`，因此无需额外处理不同浏览器之间 Manifest 配置的差异性。
 
-此外，可以为`pluginWebExtend()` 中的 `manifest` 选项传递一个函数来自定义 manifest 兼容性。
+此外，可以自定义 manifest 兼容性，示例如下：
 
-::: code-group
 
-```js [rsbuild.config.ts]
+```js [web-extend.configjs]
 import { defineConfig } from "@rsbuild/core";
-import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
 
 export default defineConfig({
-  plugins: [
-    pluginWebExtend({
-      manifest: ({ target, mode }) => ({...})
-    }),
-  ],
+  manifest: ({ target, mode }) => {
+    return {
+      // ...
+    }
+  }
 });
 ```
 
-:::
 
 参考文档：
 

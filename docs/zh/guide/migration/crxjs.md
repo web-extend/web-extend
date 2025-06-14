@@ -11,15 +11,15 @@ outline: deep
 ::: code-group
 
 ```shell [npm]
-npm add -D @rsbuild/core @web-extend/rsbuild-plugin web-extend web-ext
+npm add -D web-extend @rsbuild/core web-ext
 ```
 
 ```shell [pnpm]
-pnpm add -D @rsbuild/core @web-extend/rsbuild-plugin web-extend web-ext
+pnpm add -D web-extend @rsbuild/core web-ext
 ```
 
 ```shell [yarn]
-yarn add -D @rsbuild/core @web-extend/rsbuild-plugin web-extend web-ext
+yarn add -D web-extend @rsbuild/core web-ext
 ```
 
 :::
@@ -45,20 +45,28 @@ yarn add -D @rsbuild/core @web-extend/rsbuild-plugin web-extend web-ext
 
 在迁移 Vite 到 Rsbuild 的过程中，主要的改动点如下。
 
-1. 在根目录下创建 `rsbuild.config.ts`，并引入 `@web-extend/rsbuild-plugin` 插件。
-2. 迁移插件，参考 [rsbuild-migrating-plugins](https://rsbuild.rs/guide/migration/vite#migrating-plugins)。
-3. 迁移配置项，参考 [rsbuild-configuration-migration](https://rsbuild.rs/guide/migration/vite#configuration-migration)。
+1. 创建 `wen-extend.config.ts`，用于配置 manifest。
+2. 创建 `rsbuild.config.ts`，用于配置 Rsbuild.
+3. 迁移插件，参考 [rsbuild-migrating-plugins](https://rsbuild.rs/guide/migration/vite#migrating-plugins)。
+4. 迁移配置项，参考 [rsbuild-configuration-migration](https://rsbuild.rs/guide/migration/vite#configuration-migration)。
 
-示例如下。
+示例如下：
 
 ::: code-group
+
+```ts [web-extend.config.ts]
+import { defineConfig } from "web-extend";
+import manifest from "./manifest.config";
+
+export default defineConfig({
+  manifest,
+});
+```
 
 ```ts [rsbuild.config.ts]
 import { resolve } from "node:path";
 import { defineConfig } from "@rsbuild/core";
 import { pluginReact } from "@rsbuild/plugin-react";
-import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
-import manifest from "./manifest.config";
 
 export default defineConfig({
   resolve: {
@@ -66,12 +74,7 @@ export default defineConfig({
       "@": `${resolve(__dirname, "src")}`,
     },
   },
-  plugins: [
-    pluginReact(),
-    pluginWebExtend({
-      manifest,
-    }),
-  ],
+  plugins: [pluginReact()],
 });
 ```
 
@@ -82,8 +85,6 @@ export default defineConfig({
 WebExtend 也支持 CRXJS 中的 `mainfest` 文件，不过需要将所有 `*.html` 入口点改为 `*.js` 入口点。
 
 示例如下：
-
-::: code-group
 
 ```ts [manifest.config.ts]
 import pkg from "./package.json"; // [!code --]
@@ -104,8 +105,6 @@ export default {
   ],
 };
 ```
-
-:::
 
 此外，WebExtend 也支持[声明式入口](../essentials/entrypoints.md)。如果使用这种方式，你将不再需要手动定义入口文件。
 

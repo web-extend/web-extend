@@ -1,9 +1,8 @@
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import type { CustomManifest, ExtensionTarget } from '@web-extend/manifest/types';
-// import type { RsbuildConfig } from '@rsbuild/core';
 import type { Jiti } from 'jiti';
+import type { PluginWebExtendOptions } from '@web-extend/rsbuild-plugin';
 
 export async function loadConfig<T>({
   root,
@@ -38,13 +37,7 @@ export async function loadConfig<T>({
   }
 }
 
-export interface WebExtendConfig {
-  srcDir?: string;
-  outDir?: string;
-  target?: ExtensionTarget;
-  manifest?: CustomManifest;
-  // rsbuild?: RsbuildConfig;
-}
+export interface WebExtendConfig extends PluginWebExtendOptions {}
 
 const webExtendConfigFiles = ['web-extend.config.mjs', 'web-extend.config.ts', 'web-extend.config.js'];
 

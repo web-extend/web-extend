@@ -13,17 +13,17 @@ outline: deep
 ::: code-group
 
 ```shell [npm]
-npm add -D @rsbuild/core @web-extend/rsbuild-plugin web-extend
+npm add -D @rsbuild/core web-extend
 npm add -D @rsbuild/plugin-vue @unocss/postcss
 ```
 
 ```shell [pnpm]
-pnpm add -D @rsbuild/core @web-extend/rsbuild-plugin web-extend
+pnpm add -D @rsbuild/core web-extend
 pnpm add -D @rsbuild/plugin-vue @unocss/postcss
 ```
 
 ```shell [yarn]
-yarn add -D @rsbuild/core @web-extend/rsbuild-plugin web-extend
+yarn add -D @rsbuild/core web-extend
 yarn add -D @rsbuild/plugin-vue @unocss/postcss
 ```
 
@@ -103,29 +103,41 @@ yarn add -D unplugin-icons@latest
 
 WebExtend 底层使用 Rsbuild 作为构建工具，因此需要从 Vite 迁移至 Rsbuild。整个迁移过程比较简单，主要改动如下：
 
-1. 在项目根目录下创建 `rsbuild.config.ts` 配置文件。
-2. 添加插件：
-   - [@web-extend/rsbuild-plugin](https://www.npmjs.com/package/@web-extend/rsbuild-plugin)
+1. 创建 `wen-extend.config.ts`，用于配置 manifest。
+2. 创建 `rsbuild.config.ts`，用于配置 Rsbuild.
+3. 添加插件：
    - [@rsbuild/plugin-vue](https://rsbuild.rs/plugins/list/plugin-vue)
    - [unplugin-vue-components/rspack](https://github.com/unplugin/unplugin-vue-components)
    - [unplugin-auto-import/rspack](https://github.com/unplugin/unplugin-auto-import)
    - [unplugin-icons/rspack](https://github.com/unplugin/unplugin-icons)
-3. 迁移配置项：
+4. 迁移配置项：
    - `resolve.alias` -> `resolve.alias`
    - `define` -> `source.define`
    - 设置 `html.mountId: "app"`，Rsbuild 会为每个入口自动注入 HTML 文件，项目中 options、popup、sidepanel 等目录下的 HTML 文件不再被使用。
-4. 支持 UnoCSS：
+5. 支持 UnoCSS：
    - 创建 `postcss.config.mjs` ，并引入 `@unocss/postcss` 插件
    - 调整 `unocss.config.ts` 文件内容
    - 移除 JS 文件中的`import 'uno.css'`，改为在相应的 CSS 文件中添加 `@unocss;`
 
 相关配置文件的完整内容如下：
 
+::: details web-extend.config.ts
+
+```ts
+import { defineConfig } from "web-extend";
+import manifest from "./src/manifest";
+
+export default defineConfig({
+  manifest,
+});
+```
+
+:::
+
 ::: details rsbuild.config.ts
 
 ```ts
 import { defineConfig } from "@rsbuild/core";
-import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
 import { pluginVue } from "@rsbuild/plugin-vue";
 import Components from "unplugin-vue-components/rspack";
 import AutoImport from "unplugin-auto-import/rspack";
@@ -136,12 +148,7 @@ import packageJson from "./package.json";
 import manifest from "./src/manifest";
 
 export default defineConfig({
-  plugins: [
-    pluginVue(),
-    pluginWebExtend({
-      manifest,
-    }),
-  ],
+  plugins: [pluginVue()],
   html: {
     mountId: "app",
   },

@@ -78,20 +78,19 @@ WebExtend automatically handles manifest compatibility by:
 
 - Parsing entry files from the file system
 - Reflecting them to `manifest.json` items
-- Supporting custom manifest configuration through `pluginWebExtend()`
+- Supporting custom manifest configuration
 
 Example of custom manifest configuration:
 
-```js [rsbuild.config.ts]
-import { defineConfig } from "@rsbuild/core";
-import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
+```js [web-extend.config.ts]
+import { defineConfig } from "web-extend";
 
 export default defineConfig({
-  plugins: [
-    pluginWebExtend({
-      manifest: ({ target, mode }) => ({...})
-    }),
-  ],
+  manifest: ({ target, mode }) => {
+    return {
+      // ...
+    };
+  },
 });
 ```
 

@@ -47,6 +47,7 @@ my-web-extension/
 ├── package.json           # Project metadata
 ├── rsbuild.config.ts      # Build configuration
 ├── web-ext.config.js      # Web-ext configuration
+├── web-extend.config.js   # Web-extend configuration
 └── tsconfig.json          # TypeScript configuration
 ```
 
@@ -69,6 +70,7 @@ my-web-extension/
 | `package.json`           | 项目的依赖和脚本                                                                            |
 | `rsbuild.config.ts`      | Rsbuild 配置文件                                                                            |
 | `web-ext.config.js`      | web-ext 配置文件                                                                            |
+| `web-extend.config.js`   | WebExtend 配置文件                                                                          |
 | `tsconfig.json`          | TypeScript 配置文件                                                                         |
 
 ## 源码目录 {#source-folder}
@@ -120,7 +122,7 @@ WebExtend 中无需手动维护 [`manifest.json`](https://developer.chrome.com/d
 
 ## 配置文件
 
-### 环境变量配置
+### .env
 
 WebExtend 使用灵活的环境配置系统：
 
@@ -153,29 +155,22 @@ DEBUG=true
 
 参考 [environment variables](../essentials/environment-variables.md)。
 
-### 构建配置
+### web-extend.config.js
 
 WebExtend 支持自定义项目中的源码目录、输出目录等信息。
 
-```js [rsbuild.config.ts]
-import { defineConfig } from '@rsbuild/core';
-import { pluginWebExtend } from '@web-extend/rsbuild-plugin';
+```ts [web-extend.config.js]
+import { defineConfig } from 'web-extend';
 
 export default defineConfig({
-  plugins: [
-    pluginWebExtend({
-      srcDir: "src", // default: "src" [!code highlight]
-      outDir: "dist", // default: "dist/[target]-[mode]" [!code highlight]
-      manifest: {...}, // default: {}  [!code highlight]
-      target: "firefox-mv2", // default: "chrome-mv3" [!code highlight]
-    }),
-  ],
+  srcDir: "src",              // Source directory (default: "src")
+  outDir: "dist",             // Output directory (default: "dist/[target]-[mode]")
+  manifest: {...},            // Custom manifest overrides (default: {})
+  target: "firefox-mv2",      // Browser target (default: "chrome-mv3")
 });
 ```
 
-参考 [@web-extend/rsbuild-plugin](../../api/rsbuild-plugin.md)。
-
-### Web-ext 配置
+### web-ext.config.js
 
 `web-ext.config.js` 用于配置 web-ext 工具，示例如下：
 
@@ -189,4 +184,17 @@ module.exports = {
 };
 ```
 
-参考 [browser startup](./browsers.md#browser-startup)。
+### rsbuild.config.js
+
+WebExtend 在底层使用 Rsbulid 作为打包器，可以通过 `rsbuild.config.(mjs|ts|js)` 自定义 Rsbuild 配置项，例如在项目中使用 React 的示例如下。
+
+```ts [rsbuild.config.ts]
+import { defineConfig } from "@rsbuild/core";
+import { pluginReact } from "@rsbuild/plugin-react";
+
+export default defineConfig({
+  plugins: [pluginReact()],
+});
+```
+
+参考 [配置 Rsbuild](https://rsbuild.rs/guide/configuration/rsbuild)。
