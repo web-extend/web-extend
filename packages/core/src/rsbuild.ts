@@ -33,8 +33,6 @@ let commonOptions: StartOptions = {};
 let extensionRunner: ExtensionRunner | null = null;
 let watchers: FSWatcher[] = [];
 
-const PUBLIC_DIR = 'public';
-
 const loadRsbuildConfig = async (root: string) => {
   const { loadConfig } = await import('@rsbuild/core');
 
@@ -112,8 +110,7 @@ async function initRsbuild({
     },
   });
 
-  const hasWebExtendPlugin = rsbuild.getPlugins().some((plugin) => plugin.name === 'plugin-web-extend');
-  if (!hasWebExtendPlugin) {
+  if (!rsbuild.isPluginExists('plugin-web-extend')) {
     const webExtendConfig = await loadWebExtendConfig(root);
     const { pluginWebExtend } = await import('@web-extend/rsbuild-plugin');
     rsbuild.addPlugins([pluginWebExtend(webExtendConfig || {})]);
@@ -129,8 +126,8 @@ async function initRsbuild({
     if (!restart) return;
 
     const files = [];
-
     const config = rsbuild.getNormalizedConfig();
+
     if (config.dev?.watchFiles) {
       const watchFiles = [config.dev.watchFiles].flat().filter((item) => item.type === 'reload-server');
       for (const watchFilesConfig of watchFiles) {
@@ -148,17 +145,20 @@ async function initRsbuild({
         }
       }
     }
-
     const watcher = chokidarWatchFiles({ files, root, callback: restart });
     watcher && watchers.push(watcher);
 
-    const publicWatcher = chokidarWatchFiles({
-      files: [PUBLIC_DIR],
-      root,
-      callback: ({ rootPath, filePath }) =>
-        rewritePublicFile({ rootPath, distPath: rsbuild.context.distPath, filePath }),
-    });
-    publicWatcher && watchers.push(publicWatcher);
+    const publicDirInfo = config.server?.publicDir;
+    const publicDir = publicDirInfo ? [publicDirInfo].flat()[0]?.name : undefined;
+    if (publicDir) {
+      const publicWatcher = chokidarWatchFiles({
+        files: [publicDir],
+        root,
+        callback: ({ rootPath, filePath }) =>
+          rewritePublicFile({ rootPath, distPath: rsbuild.context.distPath, filePath, publicDir }),
+      });
+      publicWatcher && watchers.push(publicWatcher);
+    }
   });
 
   return rsbuild;
@@ -306,9 +306,10 @@ async function rewritePublicFile({
   rootPath,
   distPath,
   filePath,
-}: { rootPath: string; distPath: string; filePath: string }) {
-  if (!filePath) return;
-  const publicPath = resolve(rootPath, PUBLIC_DIR);
+  publicDir,
+}: { rootPath: string; distPath: string; filePath: string; publicDir: string }) {
+  if (!filePath || !publicDir) return;
+  const publicPath = resolve(rootPath, publicDir);
   const publichFilePath = isAbsolute(filePath) ? filePath : resolve(rootPath, filePath);
   const distFilePath = resolve(distPath, relative(publicPath, publichFilePath));
 

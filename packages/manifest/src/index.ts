@@ -132,6 +132,7 @@ export class ManifestManager {
       target,
       mode,
     });
+    const publicDir = options.publicDir || 'public';
 
     this.context = {
       mode,
@@ -139,6 +140,7 @@ export class ManifestManager {
       rootPath,
       srcDir,
       outDir,
+      publicDir,
       runtime: options?.runtime,
     };
 
@@ -209,8 +211,8 @@ export class ManifestManager {
   }
 
   async copyPublicFiles() {
-    const { rootPath, outDir } = this.context;
-    const publicPath = resolve(rootPath, 'public');
+    const { rootPath, outDir, publicDir } = this.context;
+    const publicPath = resolve(rootPath, publicDir);
     const distPath = resolve(rootPath, outDir);
     if (!existsSync(publicPath) || !existsSync(distPath)) return;
     await cp(publicPath, distPath, { recursive: true, dereference: true });

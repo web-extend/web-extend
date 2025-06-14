@@ -17,4 +17,5 @@ export type PluginWebExtendOptions<T = CustomManifest> = {
   target?: ExtensionTarget;
   srcDir?: string;
   outDir?: string;
+  publicDir?: string;
 };
