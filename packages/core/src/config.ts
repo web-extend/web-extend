@@ -1,8 +1,8 @@
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import type { Jiti } from 'jiti';
 import type { PluginWebExtendOptions } from '@web-extend/rsbuild-plugin';
+import type { Jiti } from 'jiti';
 
 export async function loadConfig<T>({
   root,

@@ -6,8 +6,6 @@
 
 在项目中引入 [Google Analytics](https://developers.google.com/analytics/devguides/collection/ga4) 的示例代码如下。
 
-::: code-group
-
 ```ts [src/utils/google-analytics.ts]
 import "https://www.googletagmanager.com/gtag/js?id=G-XXXXXX";
 
@@ -20,5 +18,3 @@ export function gtag() {
 gtag("js", new Date());
 gtag("config", "G-XXXXXX");
 ```
-
-:::

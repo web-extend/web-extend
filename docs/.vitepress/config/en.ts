@@ -6,12 +6,11 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: 'Guide', link: '/guide/start/introduction' },
-      { text: 'API', link: '/api/web-extend' },
       { text: 'Examples', link: 'https://github.com/web-extend/examples' },
     ],
 
     sidebar: {
-      '/guide/': [
+      '/': [
         {
           text: 'Getting Started',
           base: '/guide/start/',
@@ -46,15 +45,12 @@ export default defineConfig({
             },
           ],
         },
-      ],
-      '/api/': [
         {
           text: 'API Reference',
           base: '/api/',
           collapsed: false,
           items: [
             { text: 'web-extend', link: 'web-extend' },
-            // { text: '@web-extend/rsbuild-plugin', link: 'rsbuild-plugin' },
           ],
         },
       ],

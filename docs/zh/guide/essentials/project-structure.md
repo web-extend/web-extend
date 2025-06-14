@@ -186,7 +186,7 @@ module.exports = {
 
 ### rsbuild.config.js
 
-WebExtend 在底层使用 Rsbulid 作为打包器，可以通过 `rsbuild.config.(mjs|ts|js)` 自定义 Rsbuild 配置项，例如在项目中使用 React 的示例如下。
+WebExtend 在底层使用 Rsbulid 作为打包器，可以通过 `rsbuild.config.(ts|js|mjs)` 自定义 Rsbuild 配置项，例如在项目中使用 React 的示例如下。
 
 ```ts [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";

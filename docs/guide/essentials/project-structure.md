@@ -185,7 +185,7 @@ module.exports = {
 
 ### rsbuild.config.js
 
-WebExtend uses Rsbuild as the bundler. You can costumize Rsbuild configurations through `rsbuild.config.(mjs|ts|js)`. Here's a basic example of using React.
+WebExtend uses Rsbuild as the bundler. You can costumize Rsbuild configurations through `rsbuild.config.(ts|js|mjs)`. Here's a basic example of using React.
 
 ```js [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";

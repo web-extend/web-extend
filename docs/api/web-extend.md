@@ -151,13 +151,40 @@ Options:
 
 ## Functions
 
-### defineWebExtConfig
+### defineConfig
 
-`defineWebExtConfig` is a function that helps you to custom web-ext's config.
+`defineConfig` function help you to customize WebExtend's configuration options.
+
+Options:
+
+- **manifest**: Customize `manifest` configuration which defaults to `{}`. WebExtend will merge the `manifest` option and the fields parsed from entry files (the previous is prior), and generate `manifest.json` automatically.
+- **target**: Customize browser target which suppports the following targets. -`chrome-mv3` (default)
+  - `firefox-mv2` (recommended for Firefox)
+  - `firefox-mv3` (experimental, doesn't work in dev mode)
+  - `safari-mv3`
+  - `edge-mv3`
+  - `opera-mv3`
+- **srcDir**: Customize source directory which defaults to the `./src` directory, falling back to the project root path if `./src` doesn't exists.
+- **outDir**: Customize dist path which defaults to the `dist/[target]-[mode]` directory, such as `dist/chrome-mv3-dev` (in development mode) or`dist/chrome-mv3-prod` (in production mode).
 
 Usage:
 
-::: code-group
+```ts [web-extend.config.js]
+import { defineConfig } from 'web-extend';
+
+export default defineConfig({
+  srcDir: "src",
+  outDir: "dist",
+  manifest: {...},
+  target: "firefox-mv2",
+});
+```
+
+### defineWebExtConfig
+
+`defineWebExtConfig` function helps you to customize web-ext's configuration options.
+
+Usage:
 
 ```js [web-ext.config.js]
 import { defineWebExtConfig } from "web-extend";
@@ -168,8 +195,6 @@ export default defineWebExtConfig({
   },
 });
 ```
-
-:::
 
 Source: [runner.ts](https://github.com/web-extend/web-extend/blob/main/packages/core/src/runner.ts#L130).
 
