@@ -115,9 +115,6 @@ importers:
       '@types/react-dom':
         specifier: ^19.0.0
         version: 19.0.4(@types/react@19.0.10)
-      '@web-extend/rsbuild-plugin':
-        specifier: 0.0.1-beta.7
-        version: 0.0.1-beta.7(@rsbuild/core@1.3.6)
       eslint:
         specifier: ^9.18.0
         version: 9.24.0(jiti@2.4.2)
@@ -167,9 +164,6 @@ importers:
       '@types/chrome':
         specifier: ^0.0.290
         version: 0.0.290
-      '@web-extend/rsbuild-plugin':
-        specifier: 0.0.1-beta.7
-        version: 0.0.1-beta.7(@rsbuild/core@1.3.6)
       eslint:
         specifier: ^9.23.0
         version: 9.24.0(jiti@2.4.2)
@@ -210,9 +204,6 @@ importers:
       '@types/chrome':
         specifier: ^0.0.290
         version: 0.0.290
-      '@web-extend/rsbuild-plugin':
-        specifier: 0.0.1-beta.7
-        version: 0.0.1-beta.7(@rsbuild/core@1.3.6)
       eslint:
         specifier: ^9.18.0
         version: 9.24.0(jiti@2.4.2)
@@ -252,9 +243,6 @@ importers:
       '@types/chrome':
         specifier: ^0.0.290
         version: 0.0.290
-      '@web-extend/rsbuild-plugin':
-        specifier: 0.0.1-beta.7
-        version: 0.0.1-beta.7(@rsbuild/core@1.3.6)
       eslint:
         specifier: ^9.18.0
         version: 9.24.0(jiti@2.4.2)
@@ -295,9 +283,6 @@ importers:
       '@types/chrome':
         specifier: ^0.0.290
         version: 0.0.290
-      '@web-extend/rsbuild-plugin':
-        specifier: 0.0.1-beta.7
-        version: 0.0.1-beta.7(@rsbuild/core@1.3.6)
       eslint:
         specifier: ^9.18.0
         version: 9.24.0(jiti@2.4.2)
@@ -2145,14 +2130,6 @@ packages:
 
   '@vueuse/shared@12.7.0':
     resolution: {integrity: sha512-coLlUw2HHKsm7rPN6WqHJQr18WymN4wkA/3ThFaJ4v4gWGWAQQGK+MJxLuJTBs4mojQiazlVWAKNJNpUWGRkNw==}
-
-  '@web-extend/rsbuild-plugin@0.0.1-beta.7':
-    resolution: {integrity: sha512-uSFs28m5wCXNubPdcwMe9Di0cMPsrPWC1A58p77xYb40c6i4l4NsRGr4/ebwtyPRR2KABqUrOmGYOlxigGSWwA==}
-    peerDependencies:
-      '@rsbuild/core': ^1.1.6
-    peerDependenciesMeta:
-      '@rsbuild/core':
-        optional: true
 
   '@webassemblyjs/ast@1.14.1':
     resolution: {integrity: sha512-nuBEDgQfm1ccRp/8bCQrx1frohyufl4JlbMMZ4P1wpeOfDhF6FQkxZJ1b/e+PLwr6X1Nhw6OLme5usuBWYBvuQ==}
@@ -5156,7 +5133,7 @@ snapshots:
       '@babel/traverse': 7.27.0
       '@babel/types': 7.27.0
       convert-source-map: 2.0.0
-      debug: 4.4.0
+      debug: 4.4.1
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -5369,7 +5346,7 @@ snapshots:
       '@babel/parser': 7.27.0
       '@babel/template': 7.27.0
       '@babel/types': 7.27.0
-      debug: 4.4.0
+      debug: 4.4.1
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -6874,16 +6851,6 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  '@web-extend/rsbuild-plugin@0.0.1-beta.7(@rsbuild/core@1.3.6)':
-    dependencies:
-      '@babel/parser': 7.27.0
-      '@babel/traverse': 7.27.0
-      '@babel/types': 7.27.0
-    optionalDependencies:
-      '@rsbuild/core': 1.3.6
-    transitivePeerDependencies:
-      - supports-color
-
   '@webassemblyjs/ast@1.14.1':
     dependencies:
       '@webassemblyjs/helper-numbers': 1.13.2
@@ -7251,7 +7218,7 @@ snapshots:
 
   browserslist@4.24.4:
     dependencies:
-      caniuse-lite: 1.0.30001713
+      caniuse-lite: 1.0.30001723
       electron-to-chromium: 1.5.102
       node-releases: 2.0.19
       update-browserslist-db: 1.1.2(browserslist@4.24.4)

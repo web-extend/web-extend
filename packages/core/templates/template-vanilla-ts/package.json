@@ -15,7 +15,6 @@
     "@eslint/js": "^9.18.0",
     "@rsbuild/core": "^1.2.3",
     "@types/chrome": "^0.0.290",
-    "@web-extend/rsbuild-plugin": "0.0.1-beta.7",
     "eslint": "^9.18.0",
     "globals": "^15.14.0",
     "prettier": "^3.4.2",
