@@ -1,10 +1,10 @@
 import { existsSync } from 'node:fs';
 import { relative, resolve } from 'node:path';
-import { pathToFileURL } from 'node:url';
 import { defaultExtensionTarget } from '@web-extend/manifest/common';
 import type { ExtensionTarget } from '@web-extend/manifest/types';
 import chalk from 'chalk';
 import { resolveBuildInfo } from './result.js';
+import { loadConfig } from './config.js';
 
 type TargetType = 'firefox-desktop' | 'firefox-android' | 'chromium';
 
@@ -19,7 +19,7 @@ interface WebExtRunConfig {
   keepProfileChanges?: boolean;
   ignoreFiles?: string[];
   noInput?: boolean;
-  // noReload?: boolean;
+  noReload?: boolean;
   preInstall?: boolean;
   sourceDir?: string;
   watchFile?: string[];
@@ -58,20 +58,7 @@ export interface PreviewOptions {
   outDir?: string;
 }
 
-const posibleConfigFiles = ['web-ext.config.mjs', 'web-ext.config.cjs', 'web-ext.config.js'];
-
-async function loadWebExtConfig(root: string) {
-  const configFile = posibleConfigFiles.map((item) => resolve(root, item)).find((item) => existsSync(item));
-  if (!configFile) return null;
-  try {
-    const fileUrl = pathToFileURL(configFile).href;
-    const { default: config } = await import(fileUrl);
-    return config;
-  } catch (err) {
-    console.error(`Loading ${configFile} failed. \n`, err);
-    return null;
-  }
-}
+const posibleConfigFiles = ['web-ext.config.mjs', 'web-ext.config.js'];
 
 export async function normalizeRunnerConfig(
   root: string,
@@ -79,7 +66,10 @@ export async function normalizeRunnerConfig(
   extensionTarget = defaultExtensionTarget,
   options: WebExtRunConfig = {},
 ) {
-  const userConfig = await loadWebExtConfig(root);
+  const userConfig = await loadConfig<WebExtConfig>({
+    root,
+    configFiles: posibleConfigFiles,
+  });
   const userRunconfig = userConfig?.run || {};
   const sourceDir = resolve(root, outDir);
 

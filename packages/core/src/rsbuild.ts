@@ -9,6 +9,7 @@ import { cacheBuildInfo } from './result.js';
 import { type ExtensionRunner, importWebExt, normalizeRunnerConfig, run } from './runner.js';
 import { type WatchCallback, watchFiles as chokidarWatchFiles } from './watcher.js';
 import { zip } from './zip.js';
+import { loadWebExtendConfig } from './config.js';
 
 export interface StartOptions {
   target?: string;
@@ -29,40 +30,21 @@ export interface StartOptions {
 let commonOptions: StartOptions = {};
 let extensionRunner: ExtensionRunner | null = null;
 let watchers: FSWatcher[] = [];
+
 const PUBLIC_DIR = 'public';
 
-// forked from https://github.com/web-infra-dev/rsbuild/blob/main/packages/core/src/cli/init.ts
-async function init({
-  cliOptions,
-  isBuildWatch,
-  isDev,
-}: { cliOptions?: StartOptions; isRestart?: boolean; isBuildWatch?: boolean; isDev?: boolean }) {
-  const { createRsbuild, loadConfig, loadEnv } = await import('@rsbuild/core');
+const loadRsbuildConfig = async (root: string) => {
+  const { loadConfig } = await import('@rsbuild/core');
 
-  if (cliOptions) {
-    commonOptions = cliOptions;
-  }
-
-  const cwd = process.cwd();
-  const root = commonOptions.root ? resolve(cwd, commonOptions.root) : cwd;
-  const envDirPath = commonOptions.envDir ? resolve(cwd, commonOptions.envDir) : cwd;
-
-  const envs = loadEnv({
-    cwd: envDirPath,
-    mode: commonOptions.envMode,
-  });
-
-  const { content: config, filePath: configFilePath } = await loadConfig({
+  const { content: config, filePath } = await loadConfig({
     cwd: root,
     path: commonOptions.config,
     envMode: commonOptions.envMode,
   });
 
+  config.dev ||= {};
   config.source ||= {};
-  config.source.define = {
-    ...envs.publicVars,
-    ...config.source.define,
-  };
+  config.server ||= {};
 
   if (commonOptions.root) {
     config.root = root;
@@ -73,34 +55,68 @@ async function init({
   }
 
   if (commonOptions.open && !config.server?.open) {
-    config.server ||= {};
     config.server.open = commonOptions.open;
   }
 
   if (commonOptions.host) {
-    config.server ||= {};
     config.server.host = commonOptions.host;
   }
 
   if (commonOptions.port) {
-    config.server ||= {};
     config.server.port = commonOptions.port;
   }
 
   // enable CLI shortcuts by default when using Rsbuild CLI
   if (config.dev?.cliShortcuts === undefined) {
-    config.dev ||= {};
     config.dev.cliShortcuts = true;
   }
 
+  // watch the config file
+  if (filePath) {
+    config.dev.watchFiles ||= [];
+    config.dev.watchFiles = [
+      ...[config.dev.watchFiles].flat(),
+      {
+        paths: filePath,
+        type: 'reload-server',
+      },
+    ];
+  }
+
+  return config;
+};
+
+// forked from https://github.com/web-infra-dev/rsbuild/blob/main/packages/core/src/cli/init.ts
+async function initRsbuild({
+  cliOptions,
+  isBuildWatch,
+  isDev,
+}: { cliOptions?: StartOptions; isRestart?: boolean; isBuildWatch?: boolean; isDev?: boolean }) {
+  if (cliOptions) {
+    commonOptions = cliOptions;
+  }
+
+  const cwd = process.cwd();
+  const root = commonOptions.root ? resolve(cwd, commonOptions.root) : cwd;
+  const envDirPath = commonOptions.envDir ? resolve(cwd, commonOptions.envDir) : cwd;
+
+  const { createRsbuild } = await import('@rsbuild/core');
   const rsbuild = await createRsbuild({
     cwd: root,
-    rsbuildConfig: config,
+    rsbuildConfig: () => loadRsbuildConfig(root),
     environment: commonOptions.environment,
+    loadEnv: {
+      cwd: envDirPath,
+      mode: commonOptions.envMode,
+    },
   });
 
-  rsbuild.onCloseBuild(envs.cleanup);
-  rsbuild.onCloseDevServer(envs.cleanup);
+  const hasWebExtendPlugin = rsbuild.getPlugins().some((plugin) => plugin.name === 'plugin-web-extend');
+  if (!hasWebExtendPlugin) {
+    const webExtendConfig = await loadWebExtendConfig(root);
+    const { pluginWebExtend } = await import('@web-extend/rsbuild-plugin');
+    rsbuild.addPlugins([pluginWebExtend(webExtendConfig || {})]);
+  }
 
   for (const wather of watchers) {
     await wather?.close();
@@ -111,10 +127,7 @@ async function init({
     const restart = isDev ? restartDevServer : isBuildWatch ? restartBuild : null;
     if (!restart) return;
 
-    const files = [...envs.filePaths];
-    if (configFilePath) {
-      files.push(configFilePath);
-    }
+    const files = [];
 
     const config = rsbuild.getNormalizedConfig();
     if (config.dev?.watchFiles) {
@@ -161,7 +174,7 @@ async function startDevServer(options: StartOptions) {
     }
   }
 
-  const rsbuild = await init({
+  const rsbuild = await initRsbuild({
     cliOptions: {
       ...options,
       open: webExt ? false : options.open,
@@ -195,7 +208,7 @@ async function startDevServer(options: StartOptions) {
 const restartDevServer: WatchCallback = async ({ filePath, rootPath }) => {
   await beforeRestart({ rootPath, filePath, clear: true, id: 'server' });
 
-  const rsbuild = await init({ isDev: true, isRestart: true });
+  const rsbuild = await initRsbuild({ isDev: true, isRestart: true });
   if (!rsbuild) return;
 
   if (extensionRunner) {
@@ -210,7 +223,7 @@ const restartDevServer: WatchCallback = async ({ filePath, rootPath }) => {
 async function startBuild(options: StartOptions) {
   prepareEnv('build', options);
 
-  const rsbuild = await init({
+  const rsbuild = await initRsbuild({
     cliOptions: options,
     isBuildWatch: options.watch,
   });
@@ -244,7 +257,7 @@ async function startBuild(options: StartOptions) {
 const restartBuild: WatchCallback = async ({ rootPath, filePath }) => {
   await beforeRestart({ rootPath, filePath, clear: true, id: 'build' });
 
-  const rsbuild = await init({ isBuildWatch: true, isRestart: true });
+  const rsbuild = await initRsbuild({ isBuildWatch: true, isRestart: true });
   if (!rsbuild) return;
 
   rsbuild.onCloseBuild(async () => {
