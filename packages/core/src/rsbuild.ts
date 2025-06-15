@@ -5,7 +5,7 @@ import type { RsbuildMode } from '@rsbuild/core';
 import type { ExtensionTarget } from '@web-extend/manifest/types';
 import chalk from 'chalk';
 import type { FSWatcher } from 'chokidar';
-import { loadWebExtendConfig } from './config.js';
+import { loadWebExtendConfig, type WebExtendConfigResult } from './config.js';
 import { cacheBuildInfo } from './result.js';
 import { type ExtensionRunner, importWebExt, normalizeRunnerConfig, run } from './runner.js';
 import { type WatchCallback, watchFiles as chokidarWatchFiles } from './watcher.js';
@@ -32,14 +32,17 @@ export interface StartOptions extends RsbuildCommonOptions {
 let commonOptions: StartOptions = {};
 let extensionRunner: ExtensionRunner | null = null;
 let watchers: FSWatcher[] = [];
+let webExtendConfig: WebExtendConfigResult = {};
 
 const loadRsbuildConfig = async (root: string) => {
-  const { loadConfig } = await import('@rsbuild/core');
+  const { loadConfig, mergeRsbuildConfig } = await import('@rsbuild/core');
 
-  const { content: config, filePath } = await loadConfig({
+  const { content: config1, filePath: rsbuildConfigPath } = await loadConfig({
     cwd: root,
     envMode: commonOptions.envMode,
   });
+  const { content: config2, filePath: webExtendConfigPath } = webExtendConfig;
+  const config = mergeRsbuildConfig(config1, config2?.rsbuild || {});
 
   config.dev ||= {};
   config.source ||= {};
@@ -71,12 +74,12 @@ const loadRsbuildConfig = async (root: string) => {
   }
 
   // watch the config file
-  if (filePath) {
+  if (rsbuildConfigPath || webExtendConfigPath) {
     config.dev.watchFiles ||= [];
     config.dev.watchFiles = [
       ...[config.dev.watchFiles].flat(),
       {
-        paths: filePath,
+        paths: [rsbuildConfigPath, webExtendConfigPath].filter(Boolean) as string[],
         type: 'reload-server',
       },
     ];
@@ -99,6 +102,8 @@ async function initRsbuild({
   const root = commonOptions.root ? resolve(cwd, commonOptions.root) : cwd;
   const envDirPath = commonOptions.envDir ? resolve(cwd, commonOptions.envDir) : cwd;
 
+  webExtendConfig = await loadWebExtendConfig(root);
+
   const { createRsbuild } = await import('@rsbuild/core');
   const rsbuild = await createRsbuild({
     cwd: root,
@@ -111,9 +116,8 @@ async function initRsbuild({
   });
 
   if (!rsbuild.isPluginExists('plugin-web-extend')) {
-    const webExtendConfig = await loadWebExtendConfig(root);
     const { pluginWebExtend } = await import('@web-extend/rsbuild-plugin');
-    rsbuild.addPlugins([pluginWebExtend(webExtendConfig || {})]);
+    rsbuild.addPlugins([pluginWebExtend(webExtendConfig?.content || {})]);
   }
 
   for (const wather of watchers) {

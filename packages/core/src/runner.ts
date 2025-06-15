@@ -3,7 +3,7 @@ import { relative, resolve } from 'node:path';
 import { defaultExtensionTarget } from '@web-extend/manifest/common';
 import type { ExtensionTarget } from '@web-extend/manifest/types';
 import chalk from 'chalk';
-import { loadConfig } from './config.js';
+import { loadConfig, loadWebExtendConfig } from './config.js';
 import { resolveBuildInfo } from './result.js';
 
 type TargetType = 'firefox-desktop' | 'firefox-android' | 'chromium';
@@ -43,7 +43,7 @@ interface WebExtRunConfig {
   chromiumProfile?: string;
 }
 
-interface WebExtConfig {
+export interface WebExtConfig {
   run?: WebExtRunConfig;
 }
 
@@ -66,26 +66,27 @@ export async function normalizeRunnerConfig(
   extensionTarget = defaultExtensionTarget,
   options: WebExtRunConfig = {},
 ) {
-  const userConfig = await loadConfig<WebExtConfig>({
+  const config: WebExtConfig = {};
+  const { content: webExtConfig } = await loadConfig<WebExtConfig>({
     root,
     configFiles: webExtConfigFiles,
   });
-  const userRunconfig = userConfig?.run || {};
-  const sourceDir = resolve(root, outDir);
+  const { content: webExtendConfig } = await loadWebExtendConfig(root);
+  Object.assign(config, webExtConfig || {}, webExtendConfig?.webExt || {});
 
-  const config: WebExtRunConfig & { noReload?: boolean } = {
+  const runConfig: WebExtRunConfig & { noReload?: boolean } = {
     target: extensionTarget?.includes('firefox') ? 'firefox-desktop' : 'chromium',
-    sourceDir,
+    sourceDir: resolve(root, outDir),
     ...options,
-    ...userRunconfig,
+    ...(config.run || {}),
     noReload: true,
   };
 
   // https://github.com/mozilla/web-ext/issues/3443
-  config.args ||= [];
-  config.args.push('--disable-features=DisableLoadExtensionCommandLineSwitch');
+  runConfig.args ||= [];
+  runConfig.args.push('--disable-features=DisableLoadExtensionCommandLineSwitch');
 
-  return config;
+  return runConfig;
 }
 
 export async function importWebExt() {
