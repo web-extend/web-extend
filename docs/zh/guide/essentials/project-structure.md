@@ -45,9 +45,9 @@ my-web-extension/
 ├── .env.production        # Production env vars
 ├── .gitignore             # Git ignore rules
 ├── package.json           # Project metadata
-├── rsbuild.config.ts      # Build configuration
-├── web-ext.config.js      # Web-ext configuration
 ├── web-extend.config.js   # Web-extend configuration
+├── web-ext.config.js      # Web-ext configuration
+├── rsbuild.config.ts      # Rsbuild configuration
 └── tsconfig.json          # TypeScript configuration
 ```
 
@@ -69,8 +69,8 @@ my-web-extension/
 | `.gitignore`             | Git 的忽略文件                                                                              |
 | `package.json`           | 项目的依赖和脚本                                                                            |
 | `rsbuild.config.ts`      | Rsbuild 配置文件                                                                            |
-| `web-ext.config.js`      | web-ext 配置文件                                                                            |
 | `web-extend.config.js`   | WebExtend 配置文件                                                                          |
+| `web-ext.config.js`      | web-ext 配置文件                                                                            |
 | `tsconfig.json`          | TypeScript 配置文件                                                                         |
 
 ## 源码目录 {#source-folder}
@@ -175,13 +175,11 @@ export default defineConfig({
 `web-ext.config.js` 用于配置 web-ext 工具，示例如下：
 
 ```javascript [web-ext.config.js]
-module.exports = {
-  run: {
-    startUrl: ["about:debugging#/runtime/this-firefox"],
-    firefox: "firefoxdeveloperedition",
-    browserConsole: true,
-  },
-};
+import { defineWebExtConfig } from "web-extend";
+
+export default defineWebExtConfig({
+  startUrl: ["https://example.com"],
+});
 ```
 
 ### rsbuild.config.js

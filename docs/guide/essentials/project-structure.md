@@ -45,9 +45,9 @@ my-web-extension/
 ├── .env.production        # Production env vars
 ├── .gitignore             # Git ignore rules
 ├── package.json           # Project metadata
-├── rsbuild.config.ts      # Build configuration
-├── web-ext.config.js      # Web-ext configuration
 ├── web-extend.config.js   # WebExtend configuration
+├── web-ext.config.js      # Web-ext configuration
+├── rsbuild.config.ts      # Rsbuild configuration
 └── tsconfig.json          # TypeScript configuration
 ```
 
@@ -69,8 +69,8 @@ The following table describes the main files and directories at the root of your
 | `.gitignore`             | Specifies which files Git should ignore                          |
 | `package.json`           | Project metadata, dependencies and scripts                       |
 | `rsbuild.config.ts`      | Rsbuild configuration file for build customization               |
-| `web-ext.config.js`      | Configuration file for web-ext                                   |
 | `web-extend.config.js`   | Configuration file for WebExtend                                 |
+| `web-ext.config.js`      | Configuration file for web-ext                                   |
 | `tsconfig.json`          | TypeScript configuration (if using TypeScript)                   |
 
 ## Source Directory
@@ -174,13 +174,11 @@ export default defineConfig({
 WebExtend uses web-ext as the browser runner. You can costumize runner configurations `web-ext.config.(ts|js|mjs)` file. For example:
 
 ```javascript [web-ext.config.js]
-module.exports = {
-  run: {
-    startUrl: ["about:debugging#/runtime/this-firefox"],
-    firefox: "firefoxdeveloperedition",
-    browserConsole: true,
-  },
-};
+import { defineWebExtConfig } from "web-extend";
+
+export default defineWebExtConfig({
+  startUrl: ["https://example.com"],
+});
 ```
 
 ### rsbuild.config.js

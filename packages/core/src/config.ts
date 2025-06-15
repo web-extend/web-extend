@@ -1,9 +1,9 @@
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import type { RsbuildConfig } from '@rsbuild/core';
 import type { PluginWebExtendOptions } from '@web-extend/rsbuild-plugin';
 import type { Jiti } from 'jiti';
-import type { RsbuildConfig } from '@rsbuild/core';
 import type { WebExtConfig } from './runner.js';
 
 type ConfigResult<T> = {

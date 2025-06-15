@@ -5,7 +5,7 @@ import type { RsbuildMode } from '@rsbuild/core';
 import type { ExtensionTarget } from '@web-extend/manifest/types';
 import chalk from 'chalk';
 import type { FSWatcher } from 'chokidar';
-import { loadWebExtendConfig, type WebExtendConfigResult } from './config.js';
+import { type WebExtendConfigResult, loadWebExtendConfig } from './config.js';
 import { cacheBuildInfo } from './result.js';
 import { type ExtensionRunner, importWebExt, normalizeRunnerConfig, run } from './runner.js';
 import { type WatchCallback, watchFiles as chokidarWatchFiles } from './watcher.js';
