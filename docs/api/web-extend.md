@@ -55,7 +55,6 @@ Options:
 Options:
   -r, --root <dir>       specify the project root directory
   -t, --template <name>  specify the template name or path
-  -o, --out-dir <dir>    specify the output directory
   --size <size>          specify sizes of output icons (defaults to 16,32,48,128)
   -h, --help             display help for command
 ```
