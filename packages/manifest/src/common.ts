@@ -125,13 +125,12 @@ interface GetOutDirProps {
 }
 
 export function resolveOutDir({ outdir, distPath, target, mode, tag }: GetOutDirProps) {
+  if (outdir) return outdir;
+
   const envOutdir = process.env.WEB_EXTEND_OUT_DIR;
   if (envOutdir) return envOutdir;
 
-  if (outdir) return outdir;
-
   const dir = distPath || 'dist';
-
   let postfix = '';
   if (tag) {
     postfix = tag;
@@ -144,12 +143,6 @@ export function resolveOutDir({ outdir, distPath, target, mode, tag }: GetOutDir
   }
   const subDir = [target || defaultExtensionTarget, postfix].filter(Boolean).join('-');
   return join(dir, subDir);
-}
-
-export function setOutDirEnv(outDir: string) {
-  if (outDir) {
-    process.env.WEB_EXTEND_OUT_DIR = outDir;
-  }
 }
 
 export async function readManifestFile(distPath: string) {

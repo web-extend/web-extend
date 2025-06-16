@@ -2,9 +2,9 @@ import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { checkbox } from '@inquirer/prompts';
 import { resolveSrcDir } from '@web-extend/manifest/common';
+import { loadWebExtendConfig } from './config.js';
 import { entrypointItems } from './constant.js';
 import { checkEntrypoints, copyEntryFiles, getTemplatePath, resolveEntryTemplate } from './init.js';
-import { loadWebExtendConfig } from './config.js';
 
 export interface GenerateOptions {
   entries: string[];
