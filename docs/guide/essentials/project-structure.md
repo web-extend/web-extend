@@ -163,7 +163,7 @@ import { defineConfig } from 'web-extend';
 
 export default defineConfig({
   srcDir: "src",              // Source directory (default: "src")
-  outDir: "dist",             // Output directory (default: "dist/[target]-[mode]")
+  outDir: ".output",             // Output directory (default: "dist")
   manifest: {...},            // Custom manifest overrides (default: {})
   target: "firefox-mv2",      // Browser target (default: "chrome-mv3")
 });

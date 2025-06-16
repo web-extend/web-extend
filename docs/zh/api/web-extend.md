@@ -165,7 +165,7 @@ Options:
   - `edge-mv3`
   - `opera-mv3`
 - **srcDir**：源码目录，默认为项目跟路径下的 `./src` 目录，如果 `./src` 目录不存在，则默认为项目根目录。
-- **outDir**：设置构建产物目录，默认为 `dist/[target]-[mode]`，比如 `dist/chrome-mv3-dev`（开发环境）、`dist/chrome-mv3-prod`（生产环境）。
+- **outDir**：设置构建产物目录，默认为 `dist`。
 
 使用：
 

@@ -66,7 +66,7 @@ WebExtend 会基于文件系统和构建目标，自动解析和生成 `manifest
 此外，可以自定义 manifest 兼容性，示例如下：
 
 
-```js [web-extend.configjs]
+```js [web-extend.config.js]
 import { defineConfig } from "@rsbuild/core";
 
 export default defineConfig({

@@ -26,7 +26,6 @@ interface RsbuildCommonOptions {
 export interface StartOptions extends RsbuildCommonOptions {
   target?: string;
   zip?: boolean;
-  outDir?: string;
 }
 
 let commonOptions: StartOptions = {};
@@ -287,17 +286,13 @@ const restartBuild: WatchCallback = async ({ rootPath, filePath }) => {
 };
 
 function prepareEnv(command: 'dev' | 'build', options: StartOptions) {
-  const { target, outDir } = options;
+  const { target } = options;
   if (!process.env.NODE_ENV) {
     process.env.NODE_ENV = command === 'build' ? 'production' : 'development';
   }
 
   if (target) {
     process.env.WEB_EXTEND_TARGET = target;
-  }
-
-  if (outDir) {
-    process.env.WEB_EXTEND_OUT_DIR = outDir;
   }
 }
 

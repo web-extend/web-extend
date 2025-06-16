@@ -164,7 +164,7 @@ Options:
   - `edge-mv3`
   - `opera-mv3`
 - **srcDir**: Customize source directory which defaults to the `./src` directory, falling back to the project root path if `./src` doesn't exists.
-- **outDir**: Customize dist path which defaults to the `dist/[target]-[mode]` directory, such as `dist/chrome-mv3-dev` (in development mode) or`dist/chrome-mv3-prod` (in production mode).
+- **outDir**: Customize dist path which defaults to the `dist` directory.
 
 Usage:
 

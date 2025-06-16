@@ -115,7 +115,6 @@ function applyRsbuildBuildCommand(command: Command) {
 function applyCommonRunOptions(command: Command) {
   command
     .option('-r, --root <root>', 'specify the project root directory')
-    .option('-o, --out-dir <dir>', 'specify the output directory')
     .option('-m, --mode <mode>', 'specify the build mode, can be `development`, `production` or `none`')
     .option('--env-mode <mode>', 'specify the env mode to load the `.env.[mode]` file')
     .option('--env-dir <dir>', 'specify the directory to load `.env` files')

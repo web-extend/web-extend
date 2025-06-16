@@ -116,32 +116,31 @@ export function resolveSrcDir(rootPath: string, srcDir?: string) {
   return existsSync(resolve(rootPath, './src')) ? './src' : './';
 }
 
-interface GetOutDirProps {
-  outdir?: string | undefined;
-  distPath?: string | undefined;
+interface ResolveOutDirProps {
+  outDir?: string | undefined;
   target?: ExtensionTarget;
   mode?: string | undefined;
-  tag?: string | undefined;
+  buildDirTemplate?: string | undefined;
 }
 
-export function resolveOutDir({ outdir, distPath, target, mode, tag }: GetOutDirProps) {
-  if (outdir) return outdir;
-
-  const envOutdir = process.env.WEB_EXTEND_OUT_DIR;
-  if (envOutdir) return envOutdir;
-
-  const dir = distPath || 'dist';
+export function resolveOutDir({
+  outDir,
+  target = defaultExtensionTarget,
+  mode,
+  buildDirTemplate = '{target}-{mode}',
+}: ResolveOutDirProps) {
+  const dir = outDir || 'dist';
   let postfix = '';
-  if (tag) {
-    postfix = tag;
-  } else if (isDevMode(mode)) {
+  if (isDevMode(mode)) {
     postfix = 'dev';
   } else if (isProdMode(mode)) {
     postfix = 'prod';
   } else {
     postfix = mode || '';
   }
-  const subDir = [target || defaultExtensionTarget, postfix].filter(Boolean).join('-');
+
+  const subDir = buildDirTemplate.replace(/\{target\}/g, target).replace(/\{mode\}/g, postfix);
+
   return join(dir, subDir);
 }
 

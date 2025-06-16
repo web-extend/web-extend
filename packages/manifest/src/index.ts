@@ -117,7 +117,7 @@ export class ManifestManager {
   async normalize(
     options: Partial<ManifestContext> & {
       manifest?: WebExtensionManifest | ((props: { target: ExtensionTarget; mode: string }) => WebExtensionManifest);
-      distPath?: string;
+      buildDirTemplate?: string;
     },
   ) {
     const mode = options.mode || process.env.NODE_ENV || 'none';
@@ -127,10 +127,10 @@ export class ManifestManager {
     const rootPath = options.rootPath || process.cwd();
     const srcDir = resolveSrcDir(rootPath, options.srcDir);
     const outDir = resolveOutDir({
-      outdir: options.outDir,
-      distPath: options.distPath,
+      outDir: options.outDir,
       target,
       mode,
+      buildDirTemplate: options.buildDirTemplate,
     });
     const publicDir = options.publicDir || 'public';
 
