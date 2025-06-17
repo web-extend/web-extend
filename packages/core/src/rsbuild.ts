@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import { copyFile, unlink } from 'node:fs/promises';
 import { isAbsolute, relative, resolve } from 'node:path';
-import type { RsbuildMode } from '@rsbuild/core';
+import type { RsbuildMode, RsbuildConfig } from '@rsbuild/core';
 import type { ExtensionTarget } from '@web-extend/manifest/types';
 import chalk from 'chalk';
 import type { FSWatcher } from 'chokidar';
@@ -34,14 +34,22 @@ let watchers: FSWatcher[] = [];
 let webExtendConfig: WebExtendConfigResult = {};
 
 const loadRsbuildConfig = async (root: string) => {
-  const { loadConfig, mergeRsbuildConfig } = await import('@rsbuild/core');
+  const { loadConfig } = await import('@rsbuild/core');
 
-  const { content: config1, filePath: rsbuildConfigPath } = await loadConfig({
-    cwd: root,
-    envMode: commonOptions.envMode,
-  });
-  const { content: config2, filePath: webExtendConfigPath } = webExtendConfig;
-  const config = mergeRsbuildConfig(config1, config2?.rsbuild || {});
+  let config: RsbuildConfig = {};
+  let filePath = '';
+  const { content: webExtendContent, filePath: webExtendConfigPath } = webExtendConfig;
+  if (webExtendContent?.rsbuild) {
+    config = webExtendContent.rsbuild;
+    filePath = webExtendConfigPath as string;
+  } else {
+    const { content: rsbuildContent, filePath: rsbuildConfigPath } = await loadConfig({
+      cwd: root,
+      envMode: commonOptions.envMode,
+    });
+    config = rsbuildContent || {};
+    filePath = rsbuildConfigPath as string;
+  }
 
   config.dev ||= {};
   config.source ||= {};
@@ -73,12 +81,12 @@ const loadRsbuildConfig = async (root: string) => {
   }
 
   // watch the config file
-  if (rsbuildConfigPath || webExtendConfigPath) {
+  if (filePath) {
     config.dev.watchFiles ||= [];
     config.dev.watchFiles = [
       ...[config.dev.watchFiles].flat(),
       {
-        paths: [rsbuildConfigPath, webExtendConfigPath].filter(Boolean) as string[],
+        paths: [filePath],
         type: 'reload-server',
       },
     ];

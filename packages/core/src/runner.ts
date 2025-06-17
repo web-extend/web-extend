@@ -66,13 +66,20 @@ export async function normalizeRunnerConfig(
   extensionTarget = defaultExtensionTarget,
   options: WebExtRunConfig = {},
 ) {
-  const config: WebExtConfig = {};
-  const { content: webExtConfig } = await loadConfig<WebExtConfig>({
-    root,
-    configFiles: webExtConfigFiles,
-  });
+  let config: WebExtConfig = {};
+
   const { content: webExtendConfig } = await loadWebExtendConfig(root);
-  Object.assign(config, webExtConfig || {}, webExtendConfig?.webExt || {});
+  if (webExtendConfig?.webExt) {
+    config = webExtendConfig.webExt;
+  } else {
+    const { content: webExtConfig } = await loadConfig<WebExtConfig>({
+      root,
+      configFiles: webExtConfigFiles,
+    });
+    if (webExtConfig) {
+      config = webExtConfig;
+    }
+  }
 
   const runConfig: WebExtRunConfig & { noReload?: boolean } = {
     target: extensionTarget?.includes('firefox') ? 'firefox-desktop' : 'chromium',
