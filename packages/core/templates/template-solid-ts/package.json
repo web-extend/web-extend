@@ -23,7 +23,7 @@
     "eslint": "^9.23.0",
     "globals": "^16.0.0",
     "prettier": "^3.5.3",
-    "typescript": "^5.8.2",
+    "typescript": "^5.8.3",
     "typescript-eslint": "^8.29.0",
     "web-ext": "^8.5.0",
     "web-extend": "0.0.1-beta.7"
