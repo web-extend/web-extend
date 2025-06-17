@@ -166,6 +166,9 @@ Options:
   - `opera-mv3`
 - **srcDir**：源码目录，默认为项目跟路径下的 `./src` 目录，如果 `./src` 目录不存在，则默认为项目根目录。
 - **outDir**：设置构建产物目录，默认为 `dist`。
+- **publicDir**: 设置公共目录，默认为 `dist`。
+- **webExt**: web-ext 配置。
+- **rsbuild**: Rsbuild 配置。
 
 使用：
 

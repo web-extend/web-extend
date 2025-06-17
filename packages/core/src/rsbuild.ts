@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import { copyFile, unlink } from 'node:fs/promises';
 import { isAbsolute, relative, resolve } from 'node:path';
-import type { RsbuildMode, RsbuildConfig } from '@rsbuild/core';
+import type { RsbuildConfig, RsbuildMode } from '@rsbuild/core';
 import type { ExtensionTarget } from '@web-extend/manifest/types';
 import chalk from 'chalk';
 import type { FSWatcher } from 'chokidar';

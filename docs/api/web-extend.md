@@ -165,6 +165,10 @@ Options:
   - `opera-mv3`
 - **srcDir**: Customize source directory which defaults to the `./src` directory, falling back to the project root path if `./src` doesn't exists.
 - **outDir**: Customize dist path which defaults to the `dist` directory.
+- **publicDir**: Customize public path which defaults to the `public` directory.
+- **webExt**: web-ext configuration.
+- **rsbuild**: Rsbuild configuration.
+
 
 Usage:
 
