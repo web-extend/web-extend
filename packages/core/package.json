@@ -42,7 +42,7 @@
     "@web-extend/manifest": "workspace:*",
     "jiti": "^2.4.2",
     "typescript": "^5.8.3",
-    "web-ext": "^8.5.0"
+    "web-ext": "^8.7.1"
   },
   "peerDependencies": {
     "@rsbuild/core": "^1.1.6",

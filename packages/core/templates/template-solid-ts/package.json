@@ -25,7 +25,7 @@
     "prettier": "^3.5.3",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.29.0",
-    "web-ext": "^8.5.0",
+    "web-ext": "^8.7.1",
     "web-extend": "0.0.1-beta.7"
   }
 }
