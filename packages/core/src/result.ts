@@ -12,18 +12,18 @@ interface CacheResult {
   build?: CacheBuildInfo[];
 }
 
-const cacheDir = '.web-extend';
+const defaultCacheDir = '.web-extend';
 const resultFile = 'results.json';
 
 async function initCacheDir(root: string) {
-  const dirPath = resolve(root, cacheDir);
+  const dirPath = resolve(root, defaultCacheDir);
   await mkdir(dirPath);
   await writeFile(resolve(dirPath, '.gitignore'), '**/*', 'utf-8');
 }
 
 async function readResultFromCache(root: string) {
   try {
-    const cachePath = resolve(root, cacheDir, resultFile);
+    const cachePath = resolve(root, defaultCacheDir, resultFile);
     if (!existsSync(cachePath)) return null;
     const res = await readFile(cachePath, 'utf-8');
     const data = JSON.parse(res);
@@ -34,7 +34,7 @@ async function readResultFromCache(root: string) {
 }
 
 export async function cacheBuildInfo(root: string, data: CacheBuildInfo) {
-  const resultPath = resolve(root, cacheDir, resultFile);
+  const resultPath = resolve(root, defaultCacheDir, resultFile);
   if (!existsSync(dirname(resultPath))) {
     initCacheDir(root);
   }

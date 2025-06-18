@@ -171,7 +171,9 @@ export default defineConfig({
 
 ### web-ext.config.js
 
-WebExtend uses web-ext as the browser runner. You can costumize runner configurations `web-ext.config.(ts|js|mjs)` file. For example:
+WebExtend uses web-ext as the browser runner. You can costumize runner configurations `web-ext.config.(ts|js|mjs)` file.
+
+For example:
 
 ```javascript [web-ext.config.js]
 import { defineWebExtConfig } from "web-extend";
@@ -183,7 +185,9 @@ export default defineWebExtConfig({
 
 ### rsbuild.config.js
 
-WebExtend uses Rsbuild as the bundler. You can costumize Rsbuild configurations through `rsbuild.config.(ts|js|mjs)`. Here's a basic example of using React.
+WebExtend uses Rsbuild as the bundler. You can costumize Rsbuild configurations through `rsbuild.config.(ts|js|mjs)`.
+
+Here's a basic example of using React.
 
 ```js [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";

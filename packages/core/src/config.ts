@@ -6,6 +6,11 @@ import type { PluginWebExtendOptions } from '@web-extend/rsbuild-plugin';
 import type { Jiti } from 'jiti';
 import type { WebExtConfig } from './runner.js';
 
+export interface WebExtendConfig extends PluginWebExtendOptions {
+  rsbuild?: RsbuildConfig;
+  webExt?: WebExtConfig;
+}
+
 type ConfigResult<T> = {
   content?: T;
   filePath?: string;
@@ -44,11 +49,6 @@ export async function loadConfig<T>({
     console.error(`Loading ${configFile} failed. \n`, err);
     return {};
   }
-}
-
-export interface WebExtendConfig extends PluginWebExtendOptions {
-  rsbuild?: RsbuildConfig;
-  webExt?: WebExtConfig;
 }
 
 const webExtendConfigFiles = ['web-extend.config.mjs', 'web-extend.config.ts', 'web-extend.config.js'];
