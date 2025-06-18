@@ -157,22 +157,33 @@ DEBUG=true
 
 ### web-extend.config.js
 
-WebExtend 支持自定义项目中的源码目录、输出目录等信息。
+WebExtend 允许你通过 `web-extend.config.(ts|js|mjs)` 文件来自定义项目的各个方面。
+
+示例如下：
 
 ```ts [web-extend.config.js]
-import { defineConfig } from 'web-extend';
+import { defineConfig } from "web-extend";
 
 export default defineConfig({
-  srcDir: "src",              // Source directory (default: "src")
-  outDir: ".output",             // Output directory (default: "dist")
-  manifest: {...},            // Custom manifest overrides (default: {})
-  target: "firefox-mv2",      // Browser target (default: "chrome-mv3")
+  srcDir: "src", // Source directory (default: "src")
+  outDir: ".output", // Output directory (default: "dist")
+  manifest: {}, // Custom manifest overrides (default: {})
+  target: "firefox-mv2", // Browser target (default: "chrome-mv3")
+  webExt: {}, // Customize web-ext configurations
+  rsbuild: {}, // Customize Rsbuild configurations
 });
 ```
 
 ### web-ext.config.js
 
-`web-ext.config.js` 用于配置 web-ext 工具，示例如下：
+WebExtend 使用 [web-ext](https://github.com/mozilla/web-ext) 作为浏览器运行器。你可以通过以下两种方式来自定义运行器配置：
+
+- `web-extend.config.js` 文件中的 `webExt` 选项
+- 独立的 `web-ext.config.(ts|js|mjs)` 文件
+
+当两种配置方法都提供时，`web-extend.config.js` 中的 `webExt` 选项将优先，`web-ext.config.js` 将被忽略。
+
+示例如下：
 
 ```javascript [web-ext.config.js]
 import { defineWebExtConfig } from "web-extend";
@@ -184,9 +195,16 @@ export default defineWebExtConfig({
 
 ### rsbuild.config.js
 
-WebExtend 在底层使用 Rsbulid 作为打包器，可以通过 `rsbuild.config.(ts|js|mjs)` 自定义 Rsbuild 配置项，例如在项目中使用 React 的示例如下。
+WebExtend 使用 [Rsbuild](https://rsbuild.rs/) 作为打包器。你可以通过以下两种方式来自定义 Rsbuild 配置：
 
-```ts [rsbuild.config.ts]
+- `web-extend.config.js` 文件中的 `rsbuild` 选项
+- 独立的 `rsbuild.config.(ts|js|mjs)` 文件
+
+当两种配置方法都提供时，`web-extend.config.js` 中的 `rsbuild` 选项将优先，`rsbuild.config.js` 将被忽略。
+
+示例如下：
+
+```js [rsbuild.config.js]
 import { defineConfig } from "@rsbuild/core";
 import { pluginReact } from "@rsbuild/plugin-react";
 
@@ -194,5 +212,3 @@ export default defineConfig({
   plugins: [pluginReact()],
 });
 ```
-
-参考 [配置 Rsbuild](https://rsbuild.rs/guide/configuration/rsbuild)。
