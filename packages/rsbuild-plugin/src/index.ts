@@ -49,10 +49,13 @@ async function normalizeRsbuildEnvironments(options: NormalizeRsbuildEnvironment
     environments.content = getContentEnvironmentConfig(options);
   }
 
-  environments.web = getWebEnvironmentConfig({
+  const webEnv = getWebEnvironmentConfig({
     ...options,
     manifestEntries: others,
   });
+  if (webEnv) {
+    environments.web = webEnv;
+  }
 
   // void the empty entry error
   if (Object.keys(manifestEntries).length === 0) {
