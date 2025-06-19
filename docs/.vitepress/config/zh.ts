@@ -6,12 +6,11 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: '指南', link: '/zh/guide/start/introduction' },
-      { text: 'API', link: '/zh/api/web-extend' },
       { text: '示例', link: 'https://github.com/web-extend/examples' },
     ],
 
     sidebar: {
-      '/zh/guide/': [
+      '/zh/': [
         {
           text: '开始',
           base: '/zh/guide/start/',
@@ -46,16 +45,11 @@ export default defineConfig({
             },
           ],
         },
-      ],
-      '/zh/api/': [
         {
           text: 'API 参考',
           base: '/zh/api/',
           collapsed: false,
-          items: [
-            { text: 'web-extend', link: 'web-extend' },
-            { text: '@web-extend/rsbuild-plugin', link: 'rsbuild-plugin' },
-          ],
+          items: [{ text: 'web-extend', link: 'web-extend' }],
         },
       ],
     },

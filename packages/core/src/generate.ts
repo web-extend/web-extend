@@ -2,6 +2,7 @@ import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { checkbox } from '@inquirer/prompts';
 import { resolveSrcDir } from '@web-extend/manifest/common';
+import { loadWebExtendConfig } from './config.js';
 import { entrypointItems } from './constant.js';
 import { checkEntrypoints, copyEntryFiles, getTemplatePath, resolveEntryTemplate } from './init.js';
 
@@ -9,7 +10,6 @@ export interface GenerateOptions {
   entries: string[];
   root: string;
   template?: string;
-  outDir?: string;
   size?: string; // just for icons
 }
 
@@ -34,7 +34,12 @@ function getIconTemplatePath(root: string, template?: string) {
 
 const ICON_SIZES = [16, 32, 48, 128];
 
-async function generateIcons({ root, template, outDir, size = ICON_SIZES.join(',') }: GenerateOptions) {
+async function generateIcons({
+  root,
+  template,
+  srcDir,
+  size = ICON_SIZES.join(','),
+}: GenerateOptions & { srcDir: string }) {
   const sharp = await import('sharp').then((mod) => mod.default);
 
   const templatePath = getIconTemplatePath(root, template);
@@ -47,12 +52,12 @@ async function generateIcons({ root, template, outDir, size = ICON_SIZES.join(',
 
   for (const size of sizes) {
     const name = filename.replace('{size}', String(size));
-    const destPath = outDir ? resolve(root, outDir) : resolve(root, resolveSrcDir(root), 'assets');
+    const destPath = resolve(root, srcDir, 'assets');
     await sharp(templatePath).resize(size).toFile(resolve(destPath, name));
   }
 }
 
-async function generateEntryFiles({ root, template, outDir, entries }: GenerateOptions) {
+async function generateEntryFiles({ root, template, srcDir, entries }: GenerateOptions & { srcDir: string }) {
   const entrypoints = await checkEntrypoints(entries || []);
   if (!entrypoints.length) {
     throw Error('Please select an entrypoint at least.');
@@ -60,7 +65,7 @@ async function generateEntryFiles({ root, template, outDir, entries }: GenerateO
 
   const finalTemplate = await resolveEntryTemplate(template);
   const templatePath = getTemplatePath(finalTemplate);
-  const destPath = outDir ? resolve(root, outDir) : resolve(root, resolveSrcDir(root));
+  const destPath = resolve(root, srcDir);
   await copyEntryFiles(resolve(templatePath, 'src'), destPath, entrypoints);
 }
 
@@ -80,8 +85,11 @@ export async function generate(options: GenerateOptions) {
     throw Error('Please select an entrypoint at least.');
   }
 
+  const { content: webExtendConfig } = await loadWebExtendConfig(options.root);
+  const srcDir = webExtendConfig?.srcDir || resolveSrcDir(options.root);
+
   if (entries.includes('icons')) {
-    await generateIcons(options);
+    await generateIcons({ ...options, srcDir });
   }
 
   const otherEntries = entries.filter((item) => item !== 'icons');
@@ -89,6 +97,7 @@ export async function generate(options: GenerateOptions) {
     await generateEntryFiles({
       ...options,
       entries: otherEntries,
+      srcDir,
     });
   }
 }

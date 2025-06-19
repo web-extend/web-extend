@@ -1,20 +1,19 @@
 import { existsSync } from 'node:fs';
 import { copyFile, unlink } from 'node:fs/promises';
 import { isAbsolute, relative, resolve } from 'node:path';
-import type { RsbuildMode } from '@rsbuild/core';
+import type { RsbuildConfig, RsbuildMode } from '@rsbuild/core';
 import type { ExtensionTarget } from '@web-extend/manifest/types';
 import chalk from 'chalk';
 import type { FSWatcher } from 'chokidar';
+import { type WebExtendConfigResult, loadWebExtendConfig } from './config.js';
 import { cacheBuildInfo } from './result.js';
 import { type ExtensionRunner, importWebExt, normalizeRunnerConfig, run } from './runner.js';
 import { type WatchCallback, watchFiles as chokidarWatchFiles } from './watcher.js';
 import { zip } from './zip.js';
 
-export interface StartOptions {
-  target?: string;
+interface RsbuildCommonOptions {
   root?: string;
   mode?: RsbuildMode;
-  config?: string;
   envDir?: string;
   envMode?: string;
   environment?: string[];
@@ -22,47 +21,39 @@ export interface StartOptions {
   host?: string;
   port?: number;
   watch?: boolean;
+}
+
+export interface StartOptions extends RsbuildCommonOptions {
+  target?: string;
   zip?: boolean;
-  outDir?: string;
 }
 
 let commonOptions: StartOptions = {};
 let extensionRunner: ExtensionRunner | null = null;
 let watchers: FSWatcher[] = [];
-const PUBLIC_DIR = 'public';
+let webExtendConfig: WebExtendConfigResult = {};
 
-// forked from https://github.com/web-infra-dev/rsbuild/blob/main/packages/core/src/cli/init.ts
-async function init({
-  cliOptions,
-  isBuildWatch,
-  isDev,
-}: { cliOptions?: StartOptions; isRestart?: boolean; isBuildWatch?: boolean; isDev?: boolean }) {
-  const { createRsbuild, loadConfig, loadEnv } = await import('@rsbuild/core');
+const loadRsbuildConfig = async (root: string) => {
+  const { loadConfig } = await import('@rsbuild/core');
 
-  if (cliOptions) {
-    commonOptions = cliOptions;
+  let config: RsbuildConfig = {};
+  let filePath = '';
+  const { content: webExtendContent, filePath: webExtendConfigPath } = webExtendConfig;
+  if (webExtendContent?.rsbuild) {
+    config = webExtendContent.rsbuild;
+    filePath = webExtendConfigPath as string;
+  } else {
+    const { content: rsbuildContent, filePath: rsbuildConfigPath } = await loadConfig({
+      cwd: root,
+      envMode: commonOptions.envMode,
+    });
+    config = rsbuildContent || {};
+    filePath = rsbuildConfigPath as string;
   }
 
-  const cwd = process.cwd();
-  const root = commonOptions.root ? resolve(cwd, commonOptions.root) : cwd;
-  const envDirPath = commonOptions.envDir ? resolve(cwd, commonOptions.envDir) : cwd;
-
-  const envs = loadEnv({
-    cwd: envDirPath,
-    mode: commonOptions.envMode,
-  });
-
-  const { content: config, filePath: configFilePath } = await loadConfig({
-    cwd: root,
-    path: commonOptions.config,
-    envMode: commonOptions.envMode,
-  });
-
+  config.dev ||= {};
   config.source ||= {};
-  config.source.define = {
-    ...envs.publicVars,
-    ...config.source.define,
-  };
+  config.server ||= {};
 
   if (commonOptions.root) {
     config.root = root;
@@ -73,34 +64,68 @@ async function init({
   }
 
   if (commonOptions.open && !config.server?.open) {
-    config.server ||= {};
     config.server.open = commonOptions.open;
   }
 
   if (commonOptions.host) {
-    config.server ||= {};
     config.server.host = commonOptions.host;
   }
 
   if (commonOptions.port) {
-    config.server ||= {};
     config.server.port = commonOptions.port;
   }
 
   // enable CLI shortcuts by default when using Rsbuild CLI
   if (config.dev?.cliShortcuts === undefined) {
-    config.dev ||= {};
     config.dev.cliShortcuts = true;
   }
 
+  // watch the config file
+  if (filePath) {
+    config.dev.watchFiles ||= [];
+    config.dev.watchFiles = [
+      ...[config.dev.watchFiles].flat(),
+      {
+        paths: [filePath],
+        type: 'reload-server',
+      },
+    ];
+  }
+
+  return config;
+};
+
+// forked from https://github.com/web-infra-dev/rsbuild/blob/main/packages/core/src/cli/init.ts
+async function initRsbuild({
+  cliOptions,
+  isBuildWatch,
+  isDev,
+}: { cliOptions?: StartOptions; isRestart?: boolean; isBuildWatch?: boolean; isDev?: boolean }) {
+  if (cliOptions) {
+    commonOptions = cliOptions;
+  }
+
+  const cwd = process.cwd();
+  const root = commonOptions.root ? resolve(cwd, commonOptions.root) : cwd;
+  const envDirPath = commonOptions.envDir ? resolve(cwd, commonOptions.envDir) : cwd;
+
+  webExtendConfig = await loadWebExtendConfig(root);
+
+  const { createRsbuild } = await import('@rsbuild/core');
   const rsbuild = await createRsbuild({
     cwd: root,
-    rsbuildConfig: config,
+    rsbuildConfig: () => loadRsbuildConfig(root),
     environment: commonOptions.environment,
+    loadEnv: {
+      cwd: envDirPath,
+      mode: commonOptions.envMode,
+    },
   });
 
-  rsbuild.onCloseBuild(envs.cleanup);
-  rsbuild.onCloseDevServer(envs.cleanup);
+  if (!rsbuild.isPluginExists('plugin-web-extend')) {
+    const { pluginWebExtend } = await import('@web-extend/rsbuild-plugin');
+    rsbuild.addPlugins([pluginWebExtend(webExtendConfig?.content || {})]);
+  }
 
   for (const wather of watchers) {
     await wather?.close();
@@ -111,12 +136,9 @@ async function init({
     const restart = isDev ? restartDevServer : isBuildWatch ? restartBuild : null;
     if (!restart) return;
 
-    const files = [...envs.filePaths];
-    if (configFilePath) {
-      files.push(configFilePath);
-    }
-
+    const files = [];
     const config = rsbuild.getNormalizedConfig();
+
     if (config.dev?.watchFiles) {
       const watchFiles = [config.dev.watchFiles].flat().filter((item) => item.type === 'reload-server');
       for (const watchFilesConfig of watchFiles) {
@@ -134,17 +156,20 @@ async function init({
         }
       }
     }
-
     const watcher = chokidarWatchFiles({ files, root, callback: restart });
     watcher && watchers.push(watcher);
 
-    const publicWatcher = chokidarWatchFiles({
-      files: [PUBLIC_DIR],
-      root,
-      callback: ({ rootPath, filePath }) =>
-        rewritePublicFile({ rootPath, distPath: rsbuild.context.distPath, filePath }),
-    });
-    publicWatcher && watchers.push(publicWatcher);
+    const publicDirInfo = config.server?.publicDir;
+    const publicDir = publicDirInfo ? [publicDirInfo].flat()[0]?.name : undefined;
+    if (publicDir) {
+      const publicWatcher = chokidarWatchFiles({
+        files: [publicDir],
+        root,
+        callback: ({ rootPath, filePath }) =>
+          rewritePublicFile({ rootPath, distPath: rsbuild.context.distPath, filePath, publicDir }),
+      });
+      publicWatcher && watchers.push(publicWatcher);
+    }
   });
 
   return rsbuild;
@@ -161,7 +186,7 @@ async function startDevServer(options: StartOptions) {
     }
   }
 
-  const rsbuild = await init({
+  const rsbuild = await initRsbuild({
     cliOptions: {
       ...options,
       open: webExt ? false : options.open,
@@ -172,7 +197,7 @@ async function startDevServer(options: StartOptions) {
   if (options.open && webExt) {
     rsbuild.onDevCompileDone(async () => {
       if (extensionRunner !== null) return;
-      // run after manifest.json written in @web-extend/rsbuild-plugin
+      // run after manifest.json written
       setTimeout(async () => {
         const { rootPath, distPath } = rsbuild.context;
         const config = await normalizeRunnerConfig(rootPath, distPath, getBuildTarget(), {
@@ -195,7 +220,7 @@ async function startDevServer(options: StartOptions) {
 const restartDevServer: WatchCallback = async ({ filePath, rootPath }) => {
   await beforeRestart({ rootPath, filePath, clear: true, id: 'server' });
 
-  const rsbuild = await init({ isDev: true, isRestart: true });
+  const rsbuild = await initRsbuild({ isDev: true, isRestart: true });
   if (!rsbuild) return;
 
   if (extensionRunner) {
@@ -210,12 +235,12 @@ const restartDevServer: WatchCallback = async ({ filePath, rootPath }) => {
 async function startBuild(options: StartOptions) {
   prepareEnv('build', options);
 
-  const rsbuild = await init({
+  const rsbuild = await initRsbuild({
     cliOptions: options,
     isBuildWatch: options.watch,
   });
 
-  // run after manifest.json written in @web-extend/rsbuild-plugin
+  // run after manifest.json written
   rsbuild.onCloseBuild(async () => {
     const { rootPath, distPath } = rsbuild.context;
 
@@ -244,7 +269,7 @@ async function startBuild(options: StartOptions) {
 const restartBuild: WatchCallback = async ({ rootPath, filePath }) => {
   await beforeRestart({ rootPath, filePath, clear: true, id: 'build' });
 
-  const rsbuild = await init({ isBuildWatch: true, isRestart: true });
+  const rsbuild = await initRsbuild({ isBuildWatch: true, isRestart: true });
   if (!rsbuild) return;
 
   rsbuild.onCloseBuild(async () => {
@@ -269,17 +294,13 @@ const restartBuild: WatchCallback = async ({ rootPath, filePath }) => {
 };
 
 function prepareEnv(command: 'dev' | 'build', options: StartOptions) {
-  const { target, outDir } = options;
+  const { target } = options;
   if (!process.env.NODE_ENV) {
     process.env.NODE_ENV = command === 'build' ? 'production' : 'development';
   }
 
   if (target) {
     process.env.WEB_EXTEND_TARGET = target;
-  }
-
-  if (outDir) {
-    process.env.WEB_EXTEND_OUT_DIR = outDir;
   }
 }
 
@@ -292,9 +313,10 @@ async function rewritePublicFile({
   rootPath,
   distPath,
   filePath,
-}: { rootPath: string; distPath: string; filePath: string }) {
-  if (!filePath) return;
-  const publicPath = resolve(rootPath, PUBLIC_DIR);
+  publicDir,
+}: { rootPath: string; distPath: string; filePath: string; publicDir: string }) {
+  if (!filePath || !publicDir) return;
+  const publicPath = resolve(rootPath, publicDir);
   const publichFilePath = isAbsolute(filePath) ? filePath : resolve(rootPath, filePath);
   const distFilePath = resolve(distPath, relative(publicPath, publichFilePath));
 

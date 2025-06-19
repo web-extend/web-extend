@@ -117,7 +117,7 @@ export class ManifestManager {
   async normalize(
     options: Partial<ManifestContext> & {
       manifest?: WebExtensionManifest | ((props: { target: ExtensionTarget; mode: string }) => WebExtensionManifest);
-      distPath?: string;
+      buildDirTemplate?: string;
     },
   ) {
     const mode = options.mode || process.env.NODE_ENV || 'none';
@@ -127,11 +127,12 @@ export class ManifestManager {
     const rootPath = options.rootPath || process.cwd();
     const srcDir = resolveSrcDir(rootPath, options.srcDir);
     const outDir = resolveOutDir({
-      outdir: options.outDir,
-      distPath: options.distPath,
+      outDir: options.outDir,
       target,
       mode,
+      buildDirTemplate: options.buildDirTemplate,
     });
+    const publicDir = options.publicDir || 'public';
 
     this.context = {
       mode,
@@ -139,6 +140,7 @@ export class ManifestManager {
       rootPath,
       srcDir,
       outDir,
+      publicDir,
       runtime: options?.runtime,
     };
 
@@ -209,8 +211,8 @@ export class ManifestManager {
   }
 
   async copyPublicFiles() {
-    const { rootPath, outDir } = this.context;
-    const publicPath = resolve(rootPath, 'public');
+    const { rootPath, outDir, publicDir } = this.context;
+    const publicPath = resolve(rootPath, publicDir);
     const distPath = resolve(rootPath, outDir);
     if (!existsSync(publicPath) || !existsSync(distPath)) return;
     await cp(publicPath, distPath, { recursive: true, dereference: true });

@@ -1,6 +1,7 @@
 body {
   margin: 0;
   min-width: 360px;
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
 .content {

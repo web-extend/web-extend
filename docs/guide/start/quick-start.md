@@ -31,6 +31,7 @@ The `web-extend` tool provides the following templates, all using TypeScript by 
 - Vanilla
 - [React](https://react.dev/)
 - [Vue](https://vuejs.org/)
+- [Preact](https://preactjs.com/)
 - [Svelte](https://svelte.dev/)
 - [Solid](https://www.solidjs.com/)
 
@@ -51,7 +52,7 @@ mkdir my-extension-app
 cd my-extension-app
 
 npm init -y
-npm add -D web-extend @rsbuild/core @web-extend/rsbuild-plugin web-ext
+npm add -D web-extend @rsbuild/core web-ext
 ```
 
 ```shell [pnpm]
@@ -59,7 +60,7 @@ mkdir my-extension-app
 cd my-extension-app
 
 npm init -y
-pnpm add -D web-extend @rsbuild/core @web-extend/rsbuild-plugin web-ext
+pnpm add -D web-extend @rsbuild/core web-ext
 ```
 
 ```shell [yarn]
@@ -67,7 +68,7 @@ mkdir my-extension-app
 cd my-extension-app
 
 npm init -y
-yarn add -D web-extend @rsbuild/core @web-extend/rsbuild-plugin web-ext
+yarn add -D web-extend @rsbuild/core web-ext
 ```
 
 :::
@@ -118,20 +119,7 @@ Add the following configuration to your `package.json`:
 }
 ```
 
-### 3. Configure Build
-
-Create `rsbuild.config.ts` in your project root:
-
-```ts [rsbuild.config.ts]
-import { defineConfig } from "@rsbuild/core";
-import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
-
-export default defineConfig({
-  plugins: [pluginWebExtend()],
-});
-```
-
-### 4. Create Entry Points
+### 3. Create Entry Points
 
 Create your extension's entry points in the `src` directory. WebExtend automatically detects entry points based on the file system structure.
 

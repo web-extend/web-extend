@@ -55,7 +55,6 @@ Options:
 Options:
   -r, --root <dir>       specify the project root directory
   -t, --template <name>  specify the template name or path
-  -o, --out-dir <dir>    specify the output directory
   --size <size>          specify sizes of output icons (defaults to 16,32,48,128)
   -h, --help             display help for command
 ```
@@ -75,8 +74,6 @@ Options:
 ```
 Options:
   -r, --root <root>      specify the project root directory
-  -c, --config <config>  specify the configuration file
-  -o, --out-dir <dir>    specify the output directory
   -m, --mode <mode>      specify the build mode, can be `development`, `production` or `none`
   --env-mode <mode>      specify the env mode to load the `.env.[mode]` file
   --env-dir <dir>        specify the directory to load `.env` files
@@ -101,8 +98,6 @@ Options:
 ```
 Options:
   -r, --root <root>      specify the project root directory
-  -c, --config <config>  specify the configuration file
-  -o, --out-dir <dir>    specify the output directory
   -m, --mode <mode>      specify the build mode, can be `development`, `production` or `none`
   --env-mode <mode>      specify the env mode to load the `.env.[mode]` file
   --env-dir <dir>        specify the directory to load `.env` files
@@ -153,13 +148,44 @@ Options:
 
 ## Functions
 
-### defineWebExtConfig
+### defineConfig
 
-`defineWebExtConfig` is a function that helps you to custom web-ext's config.
+`defineConfig` function help you to customize WebExtend's configuration options.
+
+Options:
+
+- **manifest**: Customize `manifest` configuration which defaults to `{}`. WebExtend will merge the `manifest` option and the fields parsed from entry files (the previous is prior), and generate `manifest.json` automatically.
+- **target**: Customize browser target which suppports the following targets. -`chrome-mv3` (default)
+  - `firefox-mv2` (recommended for Firefox)
+  - `firefox-mv3` (experimental, doesn't work in dev mode)
+  - `safari-mv3`
+  - `edge-mv3`
+  - `opera-mv3`
+- **srcDir**: Customize source directory which defaults to the `./src` directory, falling back to the project root path if `./src` doesn't exists.
+- **outDir**: Customize dist path which defaults to the `dist` directory.
+- **publicDir**: Customize public path which defaults to the `public` directory.
+- **webExt**: web-ext configuration.
+- **rsbuild**: Rsbuild configuration.
+
 
 Usage:
 
-::: code-group
+```ts [web-extend.config.js]
+import { defineConfig } from 'web-extend';
+
+export default defineConfig({
+  srcDir: "src",
+  outDir: "dist",
+  manifest: {...},
+  target: "firefox-mv2",
+});
+```
+
+### defineWebExtConfig
+
+`defineWebExtConfig` function helps you to customize web-ext's configuration options.
+
+Usage:
 
 ```js [web-ext.config.js]
 import { defineWebExtConfig } from "web-extend";
@@ -170,8 +196,6 @@ export default defineWebExtConfig({
   },
 });
 ```
-
-:::
 
 Source: [runner.ts](https://github.com/web-extend/web-extend/blob/main/packages/core/src/runner.ts#L130).
 

@@ -1,9 +1,9 @@
 import { existsSync } from 'node:fs';
 import { relative, resolve } from 'node:path';
-import { pathToFileURL } from 'node:url';
 import { defaultExtensionTarget } from '@web-extend/manifest/common';
 import type { ExtensionTarget } from '@web-extend/manifest/types';
 import chalk from 'chalk';
+import { loadConfig, loadWebExtendConfig } from './config.js';
 import { resolveBuildInfo } from './result.js';
 
 type TargetType = 'firefox-desktop' | 'firefox-android' | 'chromium';
@@ -43,7 +43,7 @@ interface WebExtRunConfig {
   chromiumProfile?: string;
 }
 
-interface WebExtConfig {
+export interface WebExtConfig {
   run?: WebExtRunConfig;
 }
 
@@ -58,20 +58,7 @@ export interface PreviewOptions {
   outDir?: string;
 }
 
-const posibleConfigFiles = ['web-ext.config.mjs', 'web-ext.config.cjs', 'web-ext.config.js'];
-
-async function loadWebExtConfig(root: string) {
-  const configFile = posibleConfigFiles.map((item) => resolve(root, item)).find((item) => existsSync(item));
-  if (!configFile) return null;
-  try {
-    const fileUrl = pathToFileURL(configFile).href;
-    const { default: config } = await import(fileUrl);
-    return config;
-  } catch (err) {
-    console.error(`Loading ${configFile} failed. \n`, err);
-    return null;
-  }
-}
+const webExtConfigFiles = ['web-ext.config.mjs', 'web-ext.config.ts', 'web-ext.config.js'];
 
 export async function normalizeRunnerConfig(
   root: string,
@@ -79,19 +66,34 @@ export async function normalizeRunnerConfig(
   extensionTarget = defaultExtensionTarget,
   options: WebExtRunConfig = {},
 ) {
-  const userConfig = await loadWebExtConfig(root);
-  const userRunconfig = userConfig?.run || {};
-  const sourceDir = resolve(root, outDir);
+  let config: WebExtConfig = {};
 
-  const config: WebExtRunConfig = {
+  const { content: webExtendConfig } = await loadWebExtendConfig(root);
+  if (webExtendConfig?.webExt) {
+    config = webExtendConfig.webExt;
+  } else {
+    const { content: webExtConfig } = await loadConfig<WebExtConfig>({
+      root,
+      configFiles: webExtConfigFiles,
+    });
+    if (webExtConfig) {
+      config = webExtConfig;
+    }
+  }
+
+  const runConfig: WebExtRunConfig & { noReload?: boolean } = {
     target: extensionTarget?.includes('firefox') ? 'firefox-desktop' : 'chromium',
-    sourceDir,
+    sourceDir: resolve(root, outDir),
     ...options,
-    ...userRunconfig,
+    ...(config.run || {}),
     noReload: true,
   };
 
-  return config;
+  // https://github.com/mozilla/web-ext/issues/3443
+  runConfig.args ||= [];
+  runConfig.args.push('--disable-features=DisableLoadExtensionCommandLineSwitch');
+
+  return runConfig;
 }
 
 export async function importWebExt() {

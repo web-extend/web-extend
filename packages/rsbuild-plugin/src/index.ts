@@ -86,6 +86,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         target: options.target,
         srcDir: options.srcDir,
         outDir: options.outDir,
+        publicDir: options.publicDir,
         rootPath,
         runtime: {
           background: resolve(selfRootPath, 'static/background-runtime.js'),
@@ -153,6 +154,9 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
           printUrls: false,
           cors: {
             origin: '*',
+          },
+          publicDir: {
+            name: manifestManager.context.publicDir,
           },
         },
         output: {

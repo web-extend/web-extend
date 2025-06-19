@@ -17,6 +17,6 @@
   "devDependencies": {
     "markdown-it-footnote": "^4.0.0",
     "vitepress": "^1.6.1",
-    "vitepress-plugin-group-icons": "^1.5.1"
+    "vitepress-plugin-group-icons": "^1.6.0"
   }
 }

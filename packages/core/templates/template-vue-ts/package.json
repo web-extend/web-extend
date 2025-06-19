@@ -19,14 +19,13 @@
     "@rsbuild/core": "^1.2.3",
     "@rsbuild/plugin-vue": "^1.0.5",
     "@types/chrome": "^0.0.290",
-    "@web-extend/rsbuild-plugin": "0.0.1-beta.7",
     "eslint": "^9.18.0",
     "eslint-plugin-vue": "^9.32.0",
     "globals": "^15.14.0",
     "prettier": "^3.4.2",
-    "typescript": "^5.7.2",
+    "typescript": "^5.8.3",
     "typescript-eslint": "^8.21.0",
-    "web-ext": "^8.5.0",
+    "web-ext": "^8.7.1",
     "web-extend": "0.0.1-beta.7"
   }
 }

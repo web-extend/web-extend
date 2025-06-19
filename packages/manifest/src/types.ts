@@ -109,6 +109,7 @@ export interface ManifestContext {
   rootPath: string;
   srcDir: string;
   outDir: string;
+  publicDir: string;
   runtime?: ManifestRuntime;
 }
 

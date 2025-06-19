@@ -45,8 +45,9 @@ my-web-extension/
 ├── .env.production        # Production env vars
 ├── .gitignore             # Git ignore rules
 ├── package.json           # Project metadata
-├── rsbuild.config.ts      # Build configuration
+├── web-extend.config.js   # WebExtend configuration
 ├── web-ext.config.js      # Web-ext configuration
+├── rsbuild.config.ts      # Rsbuild configuration
 └── tsconfig.json          # TypeScript configuration
 ```
 
@@ -68,7 +69,8 @@ The following table describes the main files and directories at the root of your
 | `.gitignore`             | Specifies which files Git should ignore                          |
 | `package.json`           | Project metadata, dependencies and scripts                       |
 | `rsbuild.config.ts`      | Rsbuild configuration file for build customization               |
-| `web-ext.config.js`      | Configuration file for web-ext CLI tool                          |
+| `web-extend.config.js`   | Configuration file for WebExtend                                 |
+| `web-ext.config.js`      | Configuration file for web-ext                                   |
 | `tsconfig.json`          | TypeScript configuration (if using TypeScript)                   |
 
 ## Source Directory
@@ -93,7 +95,7 @@ The `src/` directory contains your extension's source code, organized by feature
 
 ## Manifest Generation
 
-One of WebExtend's key features is automatic `manifest.json` generation based on your project structure. The following table shows how your files map to manifest fields:
+There is no need to manually write `manifest.json` file, WebExtend will generate it automatically based on your project structure. The following table shows how your files map to manifest fields:
 
 | Manifest Keys                    | Source Location                                  |
 | -------------------------------- | ------------------------------------------------ |
@@ -119,7 +121,7 @@ One of WebExtend's key features is automatic `manifest.json` generation based on
 
 ## Configuration Files
 
-### Environment Files
+### .env
 
 WebExtend uses a flexible environment configuration system:
 
@@ -152,40 +154,60 @@ DEBUG=true
 
 See [environment variables](../essentials/environment-variables.md) for more details.
 
-### Build Configuration
+### web-extend.config.js
 
-WebExtend allows customization of various aspects of your project through the `rsbuild.config.ts` file. For example:
+WebExtend allows customization of various aspects of your project through the `web-extend.config.(ts|js|mjs)` file. 
 
-```ts [rsbuild.config.ts]
-import { defineConfig } from '@rsbuild/core';
-import { pluginWebExtend } from '@web-extend/rsbuild-plugin';
+For example:
+
+```ts [web-extend.config.js]
+import { defineConfig } from "web-extend";
 
 export default defineConfig({
-  plugins: [
-    pluginWebExtend({
-      srcDir: "src",              // Source directory (default: "src")
-      outDir: "dist",             // Output directory (default: "dist/[target]-[mode]")
-      manifest: {...},            // Custom manifest overrides (default: {})
-      target: "firefox-mv2",      // Browser target (default: "chrome-mv3")
-    }),
-  ],
+  srcDir: "src", // Source directory (default: "src")
+  outDir: ".output", // Output directory (default: "dist")
+  manifest: {}, // Custom manifest overrides (default: {})
+  target: "firefox-mv2", // Browser target (default: "chrome-mv3")
+  webExt: {}, // Customize web-ext configurations
+  rsbuild: {}, // Customize Rsbuild configurations
 });
 ```
 
-See [@web-extend/rsbuild-plugin](../../api/rsbuild-plugin.md) for more details.
+### web-ext.config.js
 
-### Web-ext Configuration
+WebExtend uses [web-ext](https://github.com/mozilla/web-ext) as the browser runner. You can customize runner configurations through either:
 
-The `web-ext.config.js` file configures the web-ext CLI tool. For example:
+- The `webExt` option in `web-extend.config.js` file
+- A separate `web-ext.config.(ts|js|mjs)` file
+
+When both configuration methods are provided, the `webExt` option in `web-extend.config.js` will take precedence, and `web-ext.config.js` will be ignored.
+
+For example:
 
 ```javascript [web-ext.config.js]
-module.exports = {
-  run: {
-    startUrl: ["about:debugging#/runtime/this-firefox"],
-    firefox: "firefoxdeveloperedition",
-    browserConsole: true,
-  },
-};
+import { defineWebExtConfig } from "web-extend";
+
+export default defineWebExtConfig({
+  startUrl: ["https://example.com"],
+});
 ```
 
-See [browser startup](./browsers.md#browser-startup) for more details.
+### rsbuild.config.js
+
+WebExtend uses [Rsbuild](https://rsbuild.rs/) as the bundler. You can customize Rsbuild configurations through either:
+
+- The `rsbuild` option in `web-extend.config.js` file
+- A separate `rsbuild.config.(ts|js|mjs)` file
+
+When both configuration methods are provided, the `rsbuild` option in `web-extend.config.js` will take precedence, and `rsbuild.config.js` will be ignored.
+
+For example:
+
+```js [rsbuild.config.js]
+import { defineConfig } from "@rsbuild/core";
+import { pluginReact } from "@rsbuild/plugin-react";
+
+export default defineConfig({
+  plugins: [pluginReact()],
+});
+```
