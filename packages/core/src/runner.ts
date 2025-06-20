@@ -89,10 +89,6 @@ export async function normalizeRunnerConfig(
     noReload: true,
   };
 
-  // https://github.com/mozilla/web-ext/issues/3443
-  runConfig.args ||= [];
-  runConfig.args.push('--disable-features=DisableLoadExtensionCommandLineSwitch');
-
   return runConfig;
 }
 
