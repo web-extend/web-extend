@@ -1,6 +1,7 @@
 import { existsSync } from 'node:fs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
+import { loadWebExtendConfig } from './config.js';
 
 interface CacheBuildInfo {
   rootPath: string;
@@ -12,18 +13,17 @@ interface CacheResult {
   build?: CacheBuildInfo[];
 }
 
-const defaultCacheDir = '.web-extend';
+const defaultCacheDir = 'node_modules/.web-extend';
 const resultFile = 'results.json';
 
-async function initCacheDir(root: string) {
-  const dirPath = resolve(root, defaultCacheDir);
+async function initCacheDir(root: string, cacheDir: string) {
+  const dirPath = resolve(root, cacheDir);
   await mkdir(dirPath);
-  await writeFile(resolve(dirPath, '.gitignore'), '**/*', 'utf-8');
 }
 
-async function readResultFromCache(root: string) {
+async function readResultFromCache(root: string, cacheDir: string) {
   try {
-    const cachePath = resolve(root, defaultCacheDir, resultFile);
+    const cachePath = resolve(root, cacheDir, resultFile);
     if (!existsSync(cachePath)) return null;
     const res = await readFile(cachePath, 'utf-8');
     const data = JSON.parse(res);
@@ -33,13 +33,17 @@ async function readResultFromCache(root: string) {
   }
 }
 
-export async function cacheBuildInfo(root: string, data: CacheBuildInfo) {
-  const resultPath = resolve(root, defaultCacheDir, resultFile);
+export async function cacheBuildResult({
+  root,
+  data,
+  cacheDir = defaultCacheDir,
+}: { root: string; data: CacheBuildInfo; cacheDir?: string }) {
+  const resultPath = resolve(root, cacheDir, resultFile);
   if (!existsSync(dirname(resultPath))) {
-    initCacheDir(root);
+    initCacheDir(root, cacheDir);
   }
 
-  let result = await readResultFromCache(root);
+  let result = await readResultFromCache(root, cacheDir);
   if (!result) {
     result = {};
   }
@@ -57,7 +61,7 @@ export async function cacheBuildInfo(root: string, data: CacheBuildInfo) {
   await writeFile(resultPath, JSON.stringify(result), 'utf-8');
 }
 
-export async function resolveBuildInfo({
+export async function loadBuildResult({
   root,
   outDir,
   target,
@@ -66,10 +70,12 @@ export async function resolveBuildInfo({
   outDir?: string;
   target?: string;
 }) {
+  const { content: webExtendConfig } = await loadWebExtendConfig(root);
+  const cacheDir = webExtendConfig?.cacheDir || defaultCacheDir;
   const res = {
     rootPath: root,
   } as Partial<CacheBuildInfo>;
-  const cacheResult = await readResultFromCache(root);
+  const cacheResult = await readResultFromCache(root, cacheDir);
   const buildInfo = cacheResult?.build || [];
 
   if (outDir) {

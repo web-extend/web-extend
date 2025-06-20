@@ -4,7 +4,7 @@ import { readManifestFile } from '@web-extend/manifest/common';
 import type { ExtensionTarget } from '@web-extend/manifest/types';
 import archiver from 'archiver';
 import chalk from 'chalk';
-import { resolveBuildInfo } from './result.js';
+import { loadBuildResult } from './result.js';
 
 export interface ZipOptions {
   root?: string;
@@ -14,7 +14,7 @@ export interface ZipOptions {
 }
 
 export async function zip({ filename, outDir, root = process.cwd(), target }: ZipOptions) {
-  const { distPath } = await resolveBuildInfo({ root, outDir, target });
+  const { distPath } = await loadBuildResult({ root, outDir, target });
   if (!distPath) {
     throw Error('Cannot find build info; please build first or specify the artifact directory.');
   }

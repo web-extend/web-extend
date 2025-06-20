@@ -7,6 +7,7 @@ import type { Jiti } from 'jiti';
 import type { WebExtConfig } from './runner.js';
 
 export interface WebExtendConfig extends PluginWebExtendOptions {
+  cacheDir?: string;
   rsbuild?: RsbuildConfig;
   webExt?: WebExtConfig;
 }

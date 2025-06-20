@@ -4,7 +4,7 @@ import { defaultExtensionTarget } from '@web-extend/manifest/common';
 import type { ExtensionTarget } from '@web-extend/manifest/types';
 import chalk from 'chalk';
 import { loadConfig, loadWebExtendConfig } from './config.js';
-import { resolveBuildInfo } from './result.js';
+import { loadBuildResult } from './result.js';
 
 type TargetType = 'firefox-desktop' | 'firefox-android' | 'chromium';
 
@@ -115,7 +115,7 @@ export async function preview({ root = process.cwd(), outDir, target }: PreviewO
     throw Error(`Cannot find package 'web-ext'; please install web-ext first.`);
   }
 
-  const { distPath, target: finalTarget } = await resolveBuildInfo({ root, outDir, target });
+  const { distPath, target: finalTarget } = await loadBuildResult({ root, outDir, target });
   if (!distPath) {
     throw Error('Cannot find build info; please build first or specify the artifact directory.');
   }
