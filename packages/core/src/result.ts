@@ -1,6 +1,6 @@
 import { existsSync } from 'node:fs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import { dirname, resolve } from 'node:path';
+import { dirname, resolve, join } from 'node:path';
 import { loadWebExtendConfig } from './config.js';
 
 interface CacheBuildInfo {
@@ -13,7 +13,7 @@ interface CacheResult {
   build?: CacheBuildInfo[];
 }
 
-const defaultCacheDir = 'node_modules/.web-extend';
+const defaultCacheDir = join('node_modules', '.web-extend');
 const resultFile = 'results.json';
 
 async function initCacheDir(root: string, cacheDir: string) {

@@ -2,7 +2,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import http from 'node:http';
 import https from 'node:https';
-import path from 'node:path';
+import { join, resolve } from 'node:path';
 import type { Rspack } from '@rsbuild/core';
 
 interface DownloadRemotePluginOptions {
@@ -17,19 +17,13 @@ export class DownloadRemotePlugin {
 
   constructor(options: Partial<DownloadRemotePluginOptions> = {}) {
     const root = options.root || process.cwd();
-    const nodeModulesPath = findNearestNodeModules(root) || root;
-    const cacheDir = path.resolve(nodeModulesPath, '.remote-cache');
+    const cacheDir = options.cacheDir || join('node_modules', '.remote-cache');
 
     this.options = {
       root,
       cacheDir,
-      cacheTTL: 24 * 60 * 60 * 1000, // 24h
-      ...options,
+      cacheTTL: options.cacheTTL || 24 * 60 * 60 * 1000, // 24h
     };
-
-    if (!fs.existsSync(this.options.cacheDir)) {
-      fs.mkdirSync(this.options.cacheDir, { recursive: true });
-    }
   }
 
   apply(compiler: Rspack.Compiler) {
@@ -38,10 +32,10 @@ export class DownloadRemotePlugin {
         const { request } = data;
         if (this.isRemoteImport(request)) {
           const cacheKey = getCacheKey(request);
-          const cachePath = path.join(this.options.cacheDir, cacheKey);
+          const cachePath = resolve(this.options.root, this.options.cacheDir, cacheKey);
           try {
             await this.downloadWithCache(request, cachePath);
-            data.request = path.resolve(process.cwd(), cachePath);
+            data.request = resolve(this.options.root, cachePath);
           } catch (err) {
             return callback(err as Error);
           }
@@ -57,11 +51,9 @@ export class DownloadRemotePlugin {
 
   async downloadWithCache(remoteUrl: string, cachePath: string) {
     if (await this.isCacheValid(cachePath)) {
-      // console.log(`[Cache] Using cached version of ${remoteUrl}`);
       return;
     }
 
-    // console.log(`[Download] Fetching fresh copy of ${remoteUrl}`);
     await this.downloadFile(remoteUrl, cachePath);
   }
 
@@ -79,6 +71,10 @@ export class DownloadRemotePlugin {
   }
 
   async downloadFile(url: string, savePath: string) {
+    const cachePath = resolve(this.options.root, this.options.cacheDir);
+    if (!fs.existsSync(cachePath)) {
+      fs.mkdirSync(cachePath, { recursive: true });
+    }
     return new Promise((resolve, reject) => {
       const file = fs.createWriteStream(savePath);
       const protocol = url.startsWith('https') ? https : http;
@@ -102,24 +98,11 @@ export class DownloadRemotePlugin {
   }
 
   cleanCache() {
-    const dir = this.options.cacheDir;
-    if (fs.existsSync(dir)) {
-      fs.rmSync(dir, { recursive: true, force: true });
-      // console.log(`[Clean] Removed cache directory: ${dir}`);
+    const cachePath = resolve(this.options.root, this.options.cacheDir);
+    if (fs.existsSync(cachePath)) {
+      fs.rmSync(cachePath, { recursive: true, force: true });
     }
   }
-}
-
-function findNearestNodeModules(startDir = process.cwd()) {
-  let dir = startDir;
-  while (dir !== path.parse(dir).root) {
-    const nodeModulesPath = path.join(dir, 'node_modules');
-    if (fs.existsSync(nodeModulesPath)) {
-      return nodeModulesPath;
-    }
-    dir = path.dirname(dir);
-  }
-  return null;
 }
 
 function getCacheKey(url: string) {
