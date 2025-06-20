@@ -53,7 +53,7 @@ When you set the env mode is `test`.
 :::
 
 ```shell
-npx web-extend rsbuild:dev --env-mode test
+npx web-extend dev --env-mode test
 ```
 
 Then matched `env` files will be parse by the following order and the results will be merged.

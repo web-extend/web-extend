@@ -11,9 +11,9 @@ function runCli() {
 
   const initCommand = program.command('init').description('create a new project');
   const generateCommand = program.command('generate').alias('g').description('generate entry files');
-  const rsbuildDevCommand = program.command('rsbuild:dev').description('start the dev server with rsbuild');
+  const rsbuildDevCommand = program.command('dev').description('start the dev server with rsbuild');
   const rsbuildBuildCommand = program
-    .command('rsbuild:build')
+    .command('build')
     .description('build the extension for production with rsbuild');
   const previewCommand = program.command('preview').description('preview the built extension');
   const zipCommand = program.command('zip').description('package the built extension into a .zip file for publishing');

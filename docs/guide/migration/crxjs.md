@@ -35,8 +35,8 @@ Next, update scripts with the following WebExtend's CLI commands in `package.jso
 ```json [package.json]
 {
   "scripts": {
-    "dev": "web-extend rsbuild:dev --open",
-    "build": "web-extend rsbuild:build",
+    "dev": "web-extend dev --open",
+    "build": "web-extend build",
     "preview": "web-extend preview",
     "zip": "web-extend zip"
   }
