@@ -1,6 +1,6 @@
 import { existsSync } from 'node:fs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import { dirname, resolve, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { loadWebExtendConfig } from './config.js';
 
 interface CacheBuildInfo {
