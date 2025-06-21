@@ -14,8 +14,16 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "npm run build"
   },
-  "files": ["dist", "bin", "templates"],
-  "keywords": ["web extensions", "browser extensions", "CLI"],
+  "files": [
+    "dist",
+    "bin",
+    "templates"
+  ],
+  "keywords": [
+    "web extensions",
+    "browser extensions",
+    "CLI"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/web-extend/web-extend.git"
@@ -36,7 +44,7 @@
   "devDependencies": {
     "@microsoft/api-extractor": "^7.50.0",
     "@rsbuild/core": "^1.3.22",
-    "@rslib/core": "^0.10.0",
+    "@rslib/core": "^0.10.2",
     "@types/archiver": "^6.0.3",
     "@types/node": "^22.13.1",
     "@web-extend/manifest": "workspace:*",
