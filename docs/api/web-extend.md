@@ -59,14 +59,14 @@ Options:
   -h, --help             display help for command
 ```
 
-### web-extend rsbuild:dev
+### web-extend dev
 
-The `rsbuild:dev` command uses Rsbuild to build and run the extension in the development environment.
+The `dev` command uses Rsbuild to build and run the extension in the development environment.
 
 Usage:
 
 ```shell
-npx web-extend rsbuild:dev [options]
+npx web-extend dev [options]
 ```
 
 Options:
@@ -83,14 +83,14 @@ Options:
   -h, --help             display help for command
 ```
 
-### web-extend rsbuild:build
+### web-extend build
 
-The `rsbuild:dev` command uses Rsbuild to build the extension in the production environment.
+The `dev` command uses Rsbuild to build the extension in the production environment.
 
 Usage:
 
 ```shell
-npx web-extend rsbuild:build [options]
+npx web-extend build [options]
 ```
 
 Options:

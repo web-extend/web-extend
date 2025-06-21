@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "web-extend rsbuild:dev --open",
-    "build": "web-extend rsbuild:build",
+    "dev": "web-extend dev --open",
+    "build": "web-extend build",
     "preview": "web-extend preview",
     "zip": "web-extend zip",
     "format": "prettier --write .",
@@ -24,7 +24,7 @@
     "prettier": "^3.5.3",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.31.1",
-    "web-ext": "^8.7.1",
+    "web-ext": "^8.8.0",
     "web-extend": "0.0.1-beta.7"
   }
 }

@@ -53,7 +53,7 @@ FOO=Hello Test
 :::
 
 ```shell
-npx web-extend rsbuild:dev --env-mode test
+npx web-extend dev --env-mode test
 ```
 
 匹配的 `env` 文件将会按照以下顺序被解析，并且合并解析的结果。

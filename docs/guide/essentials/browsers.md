@@ -31,10 +31,10 @@ To specify a target browser, use the `--target` or `-t` flag with `web-extend` c
 
 ```shell
 # Development mode
-web-extend rsbuild:dev -t firefox-mv2
+web-extend dev -t firefox-mv2
 
 # Production build
-web-extend rsbuild:build -t firefox-mv2
+web-extend build -t firefox-mv2
 
 # Preview build
 web-extend preview -t firefox-mv2
@@ -137,7 +137,7 @@ WebExtend automatically opens the appropriate browser when running development o
 
 ```shell
 # Development mode with auto-open
-web-extend rsbuild:dev --open
+web-extend dev --open
 
 # Preview production build
 web-extend preview

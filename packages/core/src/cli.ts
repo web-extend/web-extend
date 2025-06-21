@@ -11,10 +11,8 @@ function runCli() {
 
   const initCommand = program.command('init').description('create a new project');
   const generateCommand = program.command('generate').alias('g').description('generate entry files');
-  const rsbuildDevCommand = program.command('rsbuild:dev').description('start the dev server with rsbuild');
-  const rsbuildBuildCommand = program
-    .command('rsbuild:build')
-    .description('build the extension for production with rsbuild');
+  const rsbuildDevCommand = program.command('dev').description('start the dev server with rsbuild');
+  const rsbuildBuildCommand = program.command('build').description('build the extension for production with rsbuild');
   const previewCommand = program.command('preview').description('preview the built extension');
   const zipCommand = program.command('zip').description('package the built extension into a .zip file for publishing');
 
@@ -141,8 +139,8 @@ function applyZipCommand(command: Command) {
   command
     .argument('[dir]', 'specify the artifact directory')
     .option('-r, --root <root>', 'specify the project root directory')
-    .option('-n, --filename <filename>', 'specify the output filename')
     .option('-t, --target <target>', 'specify the extension target')
+    .option('-n, --filename <filename>', 'specify the output filename')
     .action(async (outDir: string, options: ZipOptions) => {
       try {
         await zip({ ...options, outDir });

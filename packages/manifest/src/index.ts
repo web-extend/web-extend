@@ -117,7 +117,6 @@ export class ManifestManager {
   async normalize(
     options: Partial<ManifestContext> & {
       manifest?: WebExtensionManifest | ((props: { target: ExtensionTarget; mode: string }) => WebExtensionManifest);
-      buildDirTemplate?: string;
     },
   ) {
     const mode = options.mode || process.env.NODE_ENV || 'none';
@@ -130,7 +129,6 @@ export class ManifestManager {
       outDir: options.outDir,
       target,
       mode,
-      buildDirTemplate: options.buildDirTemplate,
     });
     const publicDir = options.publicDir || 'public';
 

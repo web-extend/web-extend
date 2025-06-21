@@ -5,7 +5,6 @@ import { ManifestManager } from '@web-extend/manifest';
 import { getEntryFileVariants } from '@web-extend/manifest/common';
 import type { ManifestEntries, ManifestEntryOutput, WebExtensionManifest } from '@web-extend/manifest/types';
 import { getContentEnvironmentConfig } from './content.js';
-import { DownloadRemotePlugin } from './download-remote.js';
 import {
   clearOutdatedHotUpdateFiles,
   getAllRsbuildEntryFiles,
@@ -49,10 +48,13 @@ async function normalizeRsbuildEnvironments(options: NormalizeRsbuildEnvironment
     environments.content = getContentEnvironmentConfig(options);
   }
 
-  environments.web = getWebEnvironmentConfig({
+  const webEnv = getWebEnvironmentConfig({
     ...options,
     manifestEntries: others,
   });
+  if (webEnv) {
+    environments.web = webEnv;
+  }
 
   // void the empty entry error
   if (Object.keys(manifestEntries).length === 0) {
@@ -166,7 +168,11 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         },
         tools: {
           rspack: {
-            plugins: [new DownloadRemotePlugin()],
+            experiments: {
+              buildHttp: {
+                allowedUris: [/https?:\/\//],
+              },
+            },
           },
         },
       };

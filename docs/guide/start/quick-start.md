@@ -111,8 +111,8 @@ Add the following configuration to your `package.json`:
 {
   "type": "module",
   "scripts": {
-    "dev": "web-extend rsbuild:dev --open",
-    "build": "web-extend rsbuild:build",
+    "dev": "web-extend dev --open",
+    "build": "web-extend build",
     "preview": "web-extend preview",
     "zip": "web-extend zip"
   }

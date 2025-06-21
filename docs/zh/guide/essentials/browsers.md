@@ -24,8 +24,8 @@ WebExtend 支持以下浏览器扩展目标。
 可以为 `web-extend` 的下列子命令传递 `--target` 或 `-t` 标志来指定目标。
 
 ```shell
-web-extend rsbuild:dev -t firefox-mv2
-web-extend rsbuild:build -t firefox-mv2
+web-extend dev -t firefox-mv2
+web-extend build -t firefox-mv2
 web-extend preview -t firefox-mv2
 web-extend zip -t firefox-mv2
 ```
@@ -126,7 +126,7 @@ browser.runtime.sendMessage({ type: "message" });
 
 ```shell
 # developemnt
-npx web-extend rsbuild:dev --open
+npx web-extend dev --open
 
 # production
 npx web-extend preview

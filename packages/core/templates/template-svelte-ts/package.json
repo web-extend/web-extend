@@ -4,8 +4,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "web-extend rsbuild:dev --open",
-    "build": "web-extend rsbuild:build",
+    "dev": "web-extend dev --open",
+    "build": "web-extend build",
     "preview": "web-extend preview",
     "zip": "web-extend zip",
     "svelte-check": "svelte-check --tsconfig ./tsconfig.json",
@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.18.0",
-    "@rsbuild/core": "^1.2.3",
+    "@rsbuild/core": "^1.3.22",
     "@rsbuild/plugin-svelte": "^1.0.5",
     "@types/chrome": "^0.0.290",
     "eslint": "^9.18.0",
@@ -27,7 +27,7 @@
     "svelte-check": "^4.1.1",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.21.0",
-    "web-ext": "^8.7.1",
+    "web-ext": "^8.8.0",
     "web-extend": "0.0.1-beta.7"
   }
 }

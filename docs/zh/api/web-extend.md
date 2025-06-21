@@ -59,14 +59,14 @@ Options:
   -h, --help             display help for command
 ```
 
-### web-extend rsbuild:dev
+### web-extend dev
 
-`rsbuild:dev` 命令使用 Rsbuild 作为构建工具，在开发环境中构建、运行扩展。
+`dev` 命令使用 Rsbuild 作为构建工具，在开发环境中构建、运行扩展。
 
 使用：
 
 ```shell
-npx web-extend rsbuild:dev [options]
+npx web-extend dev [options]
 ```
 
 选项：
@@ -83,14 +83,14 @@ Options:
   -h, --help             display help for command
 ```
 
-### web-extend rsbuild:build
+### web-extend build
 
-`rsbuild:build` 命令使用 Rsbuild 作为构建工具，构建生产版本的扩展。
+`build` 命令使用 Rsbuild 作为构建工具，构建生产版本的扩展。
 
 使用：
 
 ```shell
-npx web-extend rsbuild:build [options]
+npx web-extend build [options]
 ```
 
 选项：
