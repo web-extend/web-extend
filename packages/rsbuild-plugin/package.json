@@ -1,6 +1,6 @@
 {
   "name": "@web-extend/rsbuild-plugin",
-  "version": "0.0.1-beta.7",
+  "version": "0.0.1",
   "description": "A Rsbuild plugin of WebExtend.",
   "keywords": ["web extensions", "browser extensions", "rsbuild plugin"],
   "repository": {
@@ -24,7 +24,7 @@
     "dev": "rslib build --watch",
     "lint": "biome check .",
     "lint:write": "biome check . --write",
-    "prepare": "simple-git-hooks && npm run build",
+    "prepare": "npm run build",
     "test": "vitest"
   },
   "dependencies": {
