@@ -18,5 +18,4 @@ export type PluginWebExtendOptions<T = CustomManifest> = {
   srcDir?: string;
   outDir?: string;
   publicDir?: string;
-  cacheDir?: string;
 };
