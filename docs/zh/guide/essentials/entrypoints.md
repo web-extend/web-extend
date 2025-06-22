@@ -312,11 +312,14 @@ src/assets/
 └─ icon-128.png
 ```
 
-`web-extend` 工具支持基于一个高质量图片文件 `assets/icon.png` 作为模板（建议图片尺寸不小于 128\*128px），自动生成对应尺寸的 icon 文件。
+你还可以使用 WebExtend 的生成器来自动创建不同尺寸的图标。生成器会从 `src/assets` 目录中读取一个模板图标文件（名为 `icon.png`、`icon-1024.png`、`icon-512.png` 或 `icon-128.png`），并生成 16px、32px、48px 和 128px 的缩放版本。你也可以使用 `--size` 选项指定自定义尺寸：
 
 ```shell
+# generate icons in default sizes
 npx web-extend g icons
 
+# generate icons in custom sizes
+npx web-extend g icons --size 16 32 48 128
 ```
 
 参考 [with-icons](https://github.com/web-extend/examples/tree/main/with-icons)。

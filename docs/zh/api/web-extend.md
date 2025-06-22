@@ -55,7 +55,7 @@ npx web-extend generate|g [options] [entry...]
 Options:
   -r, --root <dir>       specify the project root directory
   -t, --template <name>  specify the template name or path
-  --size <size>          specify sizes of output icons (defaults to 16,32,48,128)
+  --size <size...>       specify sizes of output icons
   -h, --help             display help for command
 ```
 

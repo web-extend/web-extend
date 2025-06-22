@@ -10,7 +10,7 @@ export interface GenerateOptions {
   entries: string[];
   root: string;
   template?: string;
-  size?: string; // just for icons
+  size?: string[]; // just for icons
 }
 
 function getIconTemplatePath(root: string, template?: string) {
@@ -18,11 +18,14 @@ function getIconTemplatePath(root: string, template?: string) {
   if (template) {
     templatePath = resolve(root, template);
   } else {
-    const name = 'icon.png';
+    const templateNames = ['icon.png', 'icon-1024.png', 'icon-512.png', 'icon-128.png'];
     const srcPath = resolve(root, resolveSrcDir(root));
-    templatePath = resolve(srcPath, 'assets', name);
-    if (!existsSync(templatePath)) {
-      templatePath = resolve(srcPath, name);
+    for (const name of templateNames) {
+      const path = resolve(srcPath, 'assets', name);
+      if (existsSync(path)) {
+        templatePath = path;
+        break;
+      }
     }
   }
 
@@ -32,28 +35,22 @@ function getIconTemplatePath(root: string, template?: string) {
   return templatePath;
 }
 
-const ICON_SIZES = [16, 32, 48, 128];
+const ICON_SIZES = ['16', '32', '48', '128'];
 
-async function generateIcons({
-  root,
-  template,
-  srcDir,
-  size = ICON_SIZES.join(','),
-}: GenerateOptions & { srcDir: string }) {
+async function generateIcons({ root, template, srcDir, size = ICON_SIZES }: GenerateOptions & { srcDir: string }) {
   const sharp = await import('sharp').then((mod) => mod.default);
 
   const templatePath = getIconTemplatePath(root, template);
   const filename = 'icon-{size}.png';
 
-  const sizes = size
-    .split(',')
-    .map((item) => Number(item))
-    .filter((item) => Number.isInteger(item) && item > 0);
+  const sizes = size.map((item) => Number(item)).filter((item) => Number.isInteger(item) && item > 0);
 
   for (const size of sizes) {
     const name = filename.replace('{size}', String(size));
     const destPath = resolve(root, srcDir, 'assets');
-    await sharp(templatePath).resize(size).toFile(resolve(destPath, name));
+    const destFile = resolve(destPath, name);
+    if (existsSync(destFile)) continue;
+    await sharp(templatePath).resize(size).toFile(destFile);
   }
 }
 
