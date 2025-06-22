@@ -1,7 +1,7 @@
 {
   "name": "@web-extend/rsbuild-plugin",
-  "version": "0.0.1-beta.7",
-  "description": "A Rsbuild plugin of WebExtend.",
+  "version": "0.0.1",
+  "description": "An Rsbuild plugin for developing and building web extensions.",
   "keywords": ["web extensions", "browser extensions", "rsbuild plugin"],
   "repository": {
     "type": "git",
@@ -24,7 +24,7 @@
     "dev": "rslib build --watch",
     "lint": "biome check .",
     "lint:write": "biome check . --write",
-    "prepare": "simple-git-hooks && npm run build",
+    "prepare": "npm run build",
     "test": "vitest"
   },
   "dependencies": {
@@ -53,5 +53,8 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
+  },
+  "engines": {
+    "node": ">=16.7.0"
   }
 }

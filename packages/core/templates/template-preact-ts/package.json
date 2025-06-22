@@ -25,6 +25,6 @@
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.31.1",
     "web-ext": "^8.8.0",
-    "web-extend": "0.0.1-beta.7"
+    "web-extend": "0.0.1"
   }
 }

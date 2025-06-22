@@ -55,7 +55,7 @@ Options:
 Options:
   -r, --root <dir>       specify the project root directory
   -t, --template <name>  specify the template name or path
-  --size <size>          specify sizes of output icons (defaults to 16,32,48,128)
+  --size <size...>       specify sizes of output icons
   -h, --help             display help for command
 ```
 
@@ -166,7 +166,6 @@ Options:
 - **publicDir**: Customize public path which defaults to the `public` directory.
 - **webExt**: web-ext configuration.
 - **rsbuild**: Rsbuild configuration.
-
 
 Usage:
 

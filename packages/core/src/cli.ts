@@ -57,12 +57,15 @@ function applyGenerateCommand(command: Command) {
     .argument('[entry...]', 'specify entrypoints')
     .option('-r, --root <dir>', 'specify the project root directory')
     .option('-t, --template <name>', 'specify the template name or path')
-    .option('--size <size>', 'specify sizes for output icons, defaults to 16,32,48,128')
+    .option('--size <size...>', 'specify sizes for output icons')
     .action(async (entry: string[], options: GenerateOptions) => {
       try {
         options.entries = entry.flatMap((item) => item.split(','));
         if (!options.root) {
           options.root = process.cwd();
+        }
+        if (options.size) {
+          options.size = options.size.flatMap((item) => item.split(','));
         }
         await generate(options);
         console.log('Generated successfully!');

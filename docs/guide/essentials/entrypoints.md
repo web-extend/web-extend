@@ -330,10 +330,14 @@ src/assets/
 └─ icon-128.png
 ```
 
-Alternatively, you can use `web-extend` to generate the corressponding sized icons files, which needs a high quality image `assets/icon.png` (>= 128 \* 128 px) as the template.
+Alternatively, you can use WebExtend's generator to automatically create icons in different sizes. The generator will read a template icon file from the `src/assets` directory (named `icon.png`, `icon-1024.png`, `icon-512.png` or `icon-128.png`) and generate resized versions at 16px, 32px, 48px and 128px. You can also specify custom sizes using the `--size` option:
 
 ```shell
+# generate icons in default sizes
 npx web-extend g icons
+
+# generate icons in custom sizes
+npx web-extend g icons --size 16 32 48 128
 ```
 
 See [with-icons](https://github.com/web-extend/examples/tree/main/with-icons).

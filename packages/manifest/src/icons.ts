@@ -17,21 +17,18 @@ const matchDeclarativeEntry = (file: string) => {
   return null;
 };
 
-const getDeclarativeIcons = (files: string[], srcPath: string) => {
-  const res: WebExtensionManifest['icons'] = {};
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, files, context }) => {
+  const { rootPath, srcDir } = context;
+  const srcPath = resolve(rootPath, srcDir);
+
+  const declarativeIcons: WebExtensionManifest['icons'] = {};
   for (const file of files) {
     const size = matchDeclarativeEntry(file)?.size || null;
     if (size) {
-      res[size] = resolve(srcPath, file);
+      declarativeIcons[size] = resolve(srcPath, file);
     }
   }
-  return Object.keys(res).length ? res : null;
-};
-
-const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, files, context }) => {
-  const { rootPath, srcDir } = context;
-  const declarativeIcons = getDeclarativeIcons(files, resolve(rootPath, srcDir));
-  if (!declarativeIcons) return;
+  if (!Object.keys(declarativeIcons).length) return;
 
   if (!manifest.icons) {
     manifest.icons = {
@@ -51,15 +48,19 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
   }
 };
 
-const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest }) => {
+const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest, context }) => {
   const { icons, action, browser_action } = manifest || {};
+  const { rootPath } = context;
   const pointer = action || browser_action;
   const files = new Set<string>();
 
   function helper(icons?: WebExtensionManifest['icons']) {
     if (!icons) return;
     for (const size in icons) {
-      files.add(icons[size]);
+      const file = icons[size];
+      const isPublicFile = file.startsWith('/') && !file.startsWith(rootPath);
+      if (isPublicFile) continue;
+      files.add(file);
     }
   }
 
@@ -86,13 +87,18 @@ const getIconOutputName = (input: string, output: string[]) => {
   return output.find((item) => item.endsWith('.png') && basename(item).split('.')[0] === name);
 };
 
-const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, output }) => {
+const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, output, context }) => {
   if (!output?.length) return;
+
+  const { rootPath } = context;
 
   function helper(icons: WebExtensionManifest['icons']) {
     if (!icons) return;
     for (const size in icons) {
-      const res = getIconOutputName(icons[size], output || []);
+      const file = icons[size];
+      const isPublicFile = file.startsWith('/') && !file.startsWith(rootPath);
+      if (isPublicFile) continue;
+      const res = getIconOutputName(file, output || []);
       if (res) {
         icons[size] = res;
       } else {
