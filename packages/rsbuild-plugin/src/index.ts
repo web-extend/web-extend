@@ -89,6 +89,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         srcDir: options.srcDir,
         outDir: options.outDir,
         publicDir: options.publicDir,
+        buildDirTemplate: options.buildDirTemplate,
         rootPath,
         runtime: {
           background: resolve(selfRootPath, 'static/background-runtime.js'),
