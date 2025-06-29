@@ -2,6 +2,8 @@ import type { EnvironmentConfig, RsbuildEntry, Rspack } from '@rsbuild/core';
 import { getCssDistPath, getJsDistPath, isDevMode, transformManifestEntry } from './helper.js';
 import type { NormalizeRsbuildEnvironmentProps } from './types.js';
 
+const hotUpdateGlobal = 'webpackHotUpdateWebExtend';
+
 function getContentEnvironmentConfig({
   manifestEntries,
   manifestContext,
@@ -31,7 +33,7 @@ function getContentEnvironmentConfig({
     tools: {
       rspack: {
         output: {
-          hotUpdateGlobal: 'webpackHotUpdateWebExtend_content',
+          hotUpdateGlobal,
         },
         plugins: [
           new ContentRuntimePlugin({
@@ -53,7 +55,7 @@ type RspackContentRuntimePluginOptions = {
   mode: string;
 };
 
-class ContentRuntimePlugin {
+class ContentRuntimePlugin implements Rspack.RspackPluginInstance {
   name = 'ContentRuntimePlugin';
   #options: RspackContentRuntimePluginOptions | undefined;
 
@@ -65,6 +67,9 @@ class ContentRuntimePlugin {
     compiler.hooks.compilation.tap(this.name, (compilation) => {
       const { RuntimeGlobals, Compilation } = compiler.webpack;
       compilation.hooks.runtimeModule.tap(this.name, (module, chunk) => {
+        const entryName = chunk.getEntryOptions()?.name;
+        if (!entryName || !isContentEntry(entryName)) return;
+
         const { target = '' } = this.#options || {};
         if (module.name === 'load_script' && module.source) {
           const originSource = module.source.source.toString('utf-8');
@@ -89,8 +94,8 @@ class ContentRuntimePlugin {
           stage: Compilation.PROCESS_ASSETS_STAGE_ADDITIONS,
         },
         (assets) => {
-          const { entry, mode } = this.#options || {};
-          if (!entry || !isDevMode(mode)) return;
+          const { entry } = this.#options || {};
+          if (!entry) return;
 
           const entries = Object.keys(entry);
           const { RawSource } = compiler.webpack.sources;
@@ -98,12 +103,9 @@ class ContentRuntimePlugin {
           for (const name in assets) {
             const asset = assets[name];
             const entryName = entries.find((item) => name.includes(item));
-            if (entryName && name.endsWith('.js')) {
+            if (name.endsWith('.js') && entryName && isContentEntry(entryName) && asset) {
               const oldContent = asset.source() as string;
-              const newContent = oldContent.replaceAll(
-                'webpackHotUpdateWebExtend_content',
-                `webpackHotUpdateWebExtend_${entryName}`,
-              );
+              const newContent = oldContent.replaceAll(hotUpdateGlobal, `${hotUpdateGlobal}_${entryName}`);
               const source = new RawSource(newContent);
               compilation.updateAsset(name, source);
             }
@@ -112,6 +114,10 @@ class ContentRuntimePlugin {
       );
     });
   }
+}
+
+function isContentEntry(entryName: string) {
+  return entryName.startsWith('content');
 }
 
 function patchloadScriptCode(loadScriptName: string, loadScriptCode: string, target: string) {

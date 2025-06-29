@@ -48,7 +48,7 @@ src/
 Make sure to follow the exact file naming conventions. For example, `background.ts` will be recognized, but `my-background.ts` won't be.
 :::
 
-## Entry Point Types
+## Entry Types
 
 ### Background
 
