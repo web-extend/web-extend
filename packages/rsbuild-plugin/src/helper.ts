@@ -4,6 +4,8 @@ import { resolve } from 'node:path';
 import type { FilenameConfig, RsbuildConfig, RsbuildEntry, Rspack } from '@rsbuild/core';
 import type { ManifestEntryInput } from '@web-extend/manifest/types';
 
+export const hotUpdateGlobal = 'webpackHotUpdateWebExtend';
+
 export function isDevMode(mode: string | undefined) {
   return mode === 'development';
 }

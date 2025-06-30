@@ -1,52 +1,5 @@
-import type { EnvironmentConfig, RsbuildEntry, Rspack } from '@rsbuild/core';
-import { getCssDistPath, getJsDistPath, isDevMode, transformManifestEntry } from './helper.js';
-import type { NormalizeRsbuildEnvironmentProps } from './types.js';
-
-const hotUpdateGlobal = 'webpackHotUpdateWebExtend';
-
-function getContentEnvironmentConfig({
-  manifestEntries,
-  manifestContext,
-  context,
-}: NormalizeRsbuildEnvironmentProps): EnvironmentConfig | undefined {
-  const content = manifestEntries.content;
-  const { mode } = manifestContext;
-  const entry = transformManifestEntry(content);
-  if (!content || !entry) return;
-
-  return {
-    source: {
-      entry,
-    },
-    output: {
-      target: 'web',
-      injectStyles: isDevMode(mode),
-      distPath: {
-        js: '',
-        css: '',
-      },
-      filename: {
-        js: getJsDistPath(content),
-        css: getCssDistPath(content),
-      },
-    },
-    tools: {
-      rspack: {
-        output: {
-          hotUpdateGlobal,
-        },
-        plugins: [
-          new ContentRuntimePlugin({
-            getPort: () => context.devServer?.port,
-            target: manifestContext.target,
-            mode: manifestContext.mode,
-            entry: entry || {},
-          }),
-        ],
-      },
-    },
-  };
-}
+import type { RsbuildEntry, Rspack } from '@rsbuild/core';
+import { hotUpdateGlobal } from './helper.js';
 
 type RspackContentRuntimePluginOptions = {
   getPort: () => number | undefined;
@@ -139,4 +92,4 @@ ${loadScriptName} = async function (url, done, ...args) {
 };`;
 }
 
-export { getContentEnvironmentConfig };
+export { ContentRuntimePlugin };
