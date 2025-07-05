@@ -7,8 +7,8 @@ import type {
   ManifestEntries,
   ManifestEntryOutput,
   WebExtendContext,
-  WebExtensionManifest,
   WebExtendEntryKey,
+  WebExtensionManifest,
 } from '@web-extend/manifest/types';
 import { clearOutdatedHotUpdateFiles, getJsDistPath, getRsbuildEntryFiles, transformManifestEntry } from './helper.js';
 import type { EnviromentKey, NormalizeRsbuildEnvironmentProps, PluginWebExtendOptions } from './types.js';
@@ -95,11 +95,10 @@ const getDevWatchFiles = (context: WebExtendContext, entries?: ManifestEntries):
               const entry = matchDeclarativeEntry(relativePath, context);
               if (!entry) return true;
 
-              const entryFileVariants = getEntryFileVariants(entry.name, entry.ext).map((file) =>
-                resolve(entriesDirRootPath, file),
-              );
-              const hasEntry = entryFileVariants.some((file) => entryPaths.includes(file));
-              if (hasEntry) return true;
+              const existsEntry = getEntryFileVariants(entry.name, entry.ext)
+                .map((file) => resolve(entriesDirRootPath, file))
+                .some((file) => entryPaths.includes(file));
+              if (existsEntry) return true;
             }
             return false;
           }
