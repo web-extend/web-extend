@@ -22,7 +22,7 @@ export function getWebEnvironmentConfig({
     },
     output: {
       target: 'web',
-      injectStyles: isDevMode(mode), // needed for content entry
+      injectStyles: isDevMode(mode) && Object.keys(manifestEntries.content || {}).length > 0, // needed for content entry
       distPath: {
         js: '',
         css: '',

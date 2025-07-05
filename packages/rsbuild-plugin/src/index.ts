@@ -13,7 +13,6 @@ import {
 } from './helper.js';
 import type { EnviromentKey, NormalizeRsbuildEnvironmentProps, PluginWebExtendOptions } from './types.js';
 import { getWebEnvironmentConfig } from './web.js';
-import { getScriptingEnvironmentConfig } from './scripting.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -21,7 +20,7 @@ export type { PluginWebExtendOptions } from './types.js';
 
 async function normalizeRsbuildEnvironments(options: NormalizeRsbuildEnvironmentProps) {
   const { manifestEntries, selfRootPath } = options;
-  const { background, scripting, ...webEntries } = manifestEntries;
+  const { background, ...webEntries } = manifestEntries;
 
   const environments: {
     [key in EnviromentKey]?: EnvironmentConfig;
@@ -42,10 +41,6 @@ async function normalizeRsbuildEnvironments(options: NormalizeRsbuildEnvironment
         },
       },
     };
-  }
-
-  if (scripting) {
-    environments.scripting = getScriptingEnvironmentConfig(options);
   }
 
   const webEnv = getWebEnvironmentConfig({
@@ -183,11 +178,9 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
     });
 
     api.onBeforeStartDevServer(() => {
-      api.transform({ test: /\.(js|ts)$/ }, ({ resourcePath, code, environment }) => {
-        const liveReload = api.getNormalizedConfig().dev.liveReload;
-        const isHMR = resourcePath.endsWith('hmr.js');
-
-        if (environment.name === 'web' && liveReload && isHMR) {
+      api.transform({ test: /\.(js|ts)$/, environments: ['web'] }, ({ resourcePath, code, environment }) => {
+        const liveReload = environment.config.dev.liveReload;
+        if (liveReload && resourcePath.endsWith('hmr.js')) {
           const reloadExtensionCode = `
             const bridgeEl = document.getElementById('web-extend-content-bridge');
             if (bridgeEl) {
@@ -203,7 +196,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
           return newCode;
         }
 
-        if (environment.name === 'scripting' && resourcePath.includes('scripting/')) {
+        if (resourcePath.includes('scripting/')) {
           const newCode = `${code} \n
             if(module.hot) {
               module.hot.invalidate();
@@ -216,8 +209,51 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       });
     });
 
+    api.modifyBundlerChain(async (chain, { target, environment, isDev, CHAIN_ID, rspack }) => {
+      const config = environment.config;
+      const emitCss = config.output.emitCss ?? target === 'web';
+
+      if (!emitCss || !isDev || !config.output.injectStyles) return;
+
+      const scriptStyleImports = Object.values(manifestEntries?.scripting || {})
+        .filter((entry) => entry.entryType === 'style')
+        .flatMap((entry) => entry.input);
+      if (!scriptStyleImports.length) return;
+
+      const cssRule = chain.module.rule(CHAIN_ID.RULE.CSS);
+      const extractRule = cssRule.oneOf('css-extract-styles').resource((value) => scriptStyleImports.includes(value));
+      const injectRule = cssRule.oneOf('css-inject-styles');
+      const originalUses = cssRule.uses.entries();
+
+      Object.keys(originalUses).forEach((key) => {
+        const use = originalUses[key];
+        if (key === CHAIN_ID.USE.STYLE) {
+          extractRule.use(CHAIN_ID.USE.MINI_CSS_EXTRACT).loader(rspack.CssExtractRspackPlugin.loader);
+        } else {
+          extractRule
+            .use(key)
+            .loader(use.get('loader'))
+            .options(use.get('options') || {});
+        }
+
+        injectRule
+          .use(key)
+          .loader(use.get('loader'))
+          .options(use.get('options') || {});
+      });
+
+      const extractPluginOptions = config.tools.cssExtract.pluginOptions;
+      chain.plugin(CHAIN_ID.PLUGIN.MINI_CSS_EXTRACT).use(rspack.CssExtractRspackPlugin, [
+        {
+          ...extractPluginOptions,
+        },
+      ]);
+
+      cssRule.uses.clear();
+    });
+
     api.processAssets({ stage: 'optimize' }, async ({ assets, compilation, environment }) => {
-      if (environment.name === 'background' || !manifestEntries) return;
+      if (environment.name !== 'web' || !manifestEntries) return;
       const manifestEntryInput = Object.values(manifestEntries).reduce((acc, entry) => {
         for (const key in entry) {
           acc[key] = entry[key];
