@@ -1,6 +1,5 @@
 import type { RsbuildConfig, RsbuildContext } from '@rsbuild/core';
-import type { CustomManifest, ManifestContext, ManifestEntries } from '@web-extend/manifest/types';
-import type { ExtensionTarget } from '@web-extend/manifest/types';
+import type { ManifestContext, ManifestEntries, WebExtendCommonConfig } from '@web-extend/manifest/types';
 
 export type EnviromentKey = 'web' | 'background';
 
@@ -12,11 +11,4 @@ export type NormalizeRsbuildEnvironmentProps = {
   manifestContext: ManifestContext;
 };
 
-export type PluginWebExtendOptions<T = CustomManifest> = {
-  manifest?: T | ((props: { target: ExtensionTarget; mode: string }) => T);
-  target?: ExtensionTarget;
-  srcDir?: string;
-  outDir?: string;
-  buildDirTemplate?: string;
-  publicDir?: string;
-};
+export type PluginWebExtendOptions = WebExtendCommonConfig;

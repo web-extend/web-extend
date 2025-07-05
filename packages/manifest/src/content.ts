@@ -8,7 +8,12 @@ import {
   matchSingleDeclarativeEntryFile,
 } from './common.js';
 import { parseExportObject } from './parser/export.js';
-import type { ContentScriptConfig, Manifest, ManifestEntryInput, ManifestEntryProcessor } from './types.js';
+import type {
+  ContentScriptConfig,
+  ManifestEntryInput,
+  ManifestEntryProcessor,
+  ManifestContentScript,
+} from './types.js';
 
 const key = 'content';
 
@@ -35,7 +40,7 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
   }
 };
 
-function getContentScriptInfo(contentScript: Manifest.ContentScript, rootPath: string, srcDir: string) {
+function getContentScriptInfo(contentScript: ManifestContentScript, rootPath: string, srcDir: string) {
   const { js = [], css = [] } = contentScript;
   const input = [...js, ...css];
   if (!input[0]) return null;

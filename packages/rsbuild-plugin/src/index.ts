@@ -16,8 +16,6 @@ import { getWebEnvironmentConfig } from './web.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-export type { PluginWebExtendOptions } from './types.js';
-
 async function normalizeRsbuildEnvironments(options: NormalizeRsbuildEnvironmentProps) {
   const { manifestEntries, selfRootPath } = options;
   const { background, ...webEntries } = manifestEntries;

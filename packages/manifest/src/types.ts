@@ -2,15 +2,13 @@ import type { Manifest } from 'webextension-polyfill';
 
 export type ExtensionTarget = 'chrome-mv3' | 'firefox-mv2' | 'firefox-mv3' | 'safari-mv3' | 'edge-mv3' | 'opera-mv3';
 
-export type { Manifest };
-
 export interface WebExtensionManifest extends Manifest.WebExtensionManifest {
   sandbox?: ManifestSandbox;
   side_panel?: ManifestSidePanel;
   chrome_url_overrides?: ManifestChromeUrlOverrides;
 }
 
-interface ManifestChromeUrlOverrides {
+export interface ManifestChromeUrlOverrides {
   newtab?: string;
   history?: string;
   bookmarks?: string;
@@ -26,7 +24,7 @@ interface ManifestAction {
   default_popup?: string;
 }
 
-interface ManifestContentScript {
+export interface ManifestContentScript {
   matches: string[];
   exclude_matches?: string[];
   js?: string[];
@@ -66,12 +64,14 @@ export type ManifestEntryKey =
   | 'icons'
   | 'background'
   | 'content'
+  | 'contents'
   | 'popup'
   | 'options'
   | 'sidepanel'
   | 'devtools'
   | 'panel'
   | 'sandbox'
+  | 'sandboxes'
   | 'newtab'
   | 'history'
   | 'bookmarks'
@@ -186,11 +186,21 @@ export interface CustomManifest {
   side_panel?: ManifestSidePanel;
   version?: string;
   version_name?: string;
-  web_accessible_resources?:
-    | {
-        resources: string[];
-        matches?: string[];
-      }
-    | string[];
+  web_accessible_resources?: WebExtensionManifestWebAccessibleResourcesC2ItemType[] | string[];
   [key: string]: unknown; // allow other custom fields
+}
+
+export type WebExtensionManifestWebAccessibleResourcesC2ItemType = {
+  resources: string[];
+  matches?: string[];
+};
+
+export interface WebExtendCommonConfig {
+  manifest?: CustomManifest | ((props: { target: ExtensionTarget; mode: string }) => CustomManifest);
+  target?: ExtensionTarget;
+  srcDir?: string;
+  outDir?: string;
+  buildDirTemplate?: string;
+  publicDir?: string;
+  entriesDir?: Record<string, string>;
 }

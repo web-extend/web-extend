@@ -1,6 +1,11 @@
 import { resolve } from 'node:path';
 import { matchSingleDeclarativeEntryFile } from './common.js';
-import type { Manifest, ManifestEntryInput, ManifestEntryKey, ManifestEntryProcessor } from './types.js';
+import type {
+  ManifestEntryInput,
+  ManifestEntryKey,
+  ManifestEntryProcessor,
+  ManifestChromeUrlOverrides,
+} from './types.js';
 
 const overrides: ManifestEntryKey[] = ['newtab', 'history', 'bookmarks'];
 
@@ -30,7 +35,7 @@ const overrideProcessors = overrides.map((key) => {
     if (!chrome_url_overrides) return null;
 
     const entry: ManifestEntryInput = {};
-    const input = chrome_url_overrides[key as keyof Manifest.WebExtensionManifestChromeUrlOverridesType];
+    const input = chrome_url_overrides[key as keyof ManifestChromeUrlOverrides];
     if (input) {
       entry[key] = {
         input: [input],
@@ -44,7 +49,7 @@ const overrideProcessors = overrides.map((key) => {
     const { chrome_url_overrides } = manifest;
     if (!chrome_url_overrides) return;
 
-    const key = name as keyof Manifest.WebExtensionManifestChromeUrlOverridesType;
+    const key = name as keyof ManifestChromeUrlOverrides;
     if (chrome_url_overrides[key]) {
       chrome_url_overrides[key] = `${name}.html`;
     }

@@ -4,7 +4,7 @@ import { extname, resolve } from 'node:path';
 import { createRsbuild } from '@rsbuild/core';
 import { setTargetEnv } from '@web-extend/manifest/common';
 import { pluginWebExtend } from '../src/index.js';
-import type { PluginWebExtendOptions } from '../src/index.js';
+import type { PluginWebExtendOptions } from '../src/types.js';
 
 export { readManifestFile } from '@web-extend/manifest/common';
 
