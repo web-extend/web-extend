@@ -1,9 +1,10 @@
 import { existsSync } from 'node:fs';
 import { cp, mkdir, readdir, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
-import { isDevMode, readPackageJson, resolveOutDir, resolveSrcDir, resolveTarget, setTargetEnv } from './common.js';
-import { polyfillManifest } from './polyfill.js';
+import { isDevMode, readPackageJson } from './common.js';
 import { entryProcessors } from './entries/index.js';
+import { normalizeContext } from './context.js';
+import { polyfillManifest } from './polyfill.js';
 import type {
   ExtensionTarget,
   ManifestEntries,
@@ -93,30 +94,8 @@ export class ManifestManager {
       buildDirTemplate?: string;
     },
   ) {
-    const mode = options.mode || process.env.NODE_ENV || 'none';
-    const target = resolveTarget(options.target);
-    setTargetEnv(target);
-
-    const rootPath = options.rootPath || process.cwd();
-    const srcDir = resolveSrcDir(rootPath, options.srcDir);
-    const outDir = resolveOutDir({
-      outDir: options.outDir,
-      target,
-      mode,
-      buildDirTemplate: options.buildDirTemplate,
-    });
-    const publicDir = options.publicDir || 'public';
-
-    this.context = {
-      mode,
-      target,
-      rootPath,
-      srcDir,
-      outDir,
-      publicDir,
-      // entriesDir: options.entriesDir || {},
-      runtime: options?.runtime,
-    };
+    this.context = normalizeContext(options);
+    const { target, mode } = this.context;
 
     const optionManifest =
       typeof options.manifest === 'function' ? options.manifest({ target, mode }) : options.manifest;

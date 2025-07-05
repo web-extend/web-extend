@@ -1,3 +1,4 @@
+import type { ManifestEntryProcessor } from '../types.js';
 import backgroundProcessor from './background.js';
 import contentProcessor from './content.js';
 import devtoolsProcessor from './devtools.js';
@@ -10,7 +11,6 @@ import popupProcessor from './popup.js';
 import sandboxProcessor from './sandbox.js';
 import scriptingProcessor from './scripting.js';
 import sidepanelProcessor from './sidepanel.js';
-import type { ManifestEntryProcessor } from '../types.js';
 
 export const entryProcessors: ManifestEntryProcessor[] = [
   backgroundProcessor,

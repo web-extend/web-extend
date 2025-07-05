@@ -10,6 +10,7 @@ export type WebExtendEntryKey =
   | 'sidepanel'
   | 'devtools'
   | 'panel'
+  | 'panels'
   | 'sandbox'
   | 'sandboxes'
   | 'newtab'
@@ -193,7 +194,7 @@ export type ManifestWebAccessibleResourcesC2ItemType = {
   matches?: string[];
 };
 
-type WebExtendEntriesDir = Record<'root' | WebExtendEntryKey, string>;
+export type WebExtendEntriesDir = Record<'root' | WebExtendEntryKey, string>;
 
 export interface WebExtendContext {
   target: ExtensionTarget;

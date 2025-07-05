@@ -32,9 +32,6 @@ const readEntry: ManifestEntryProcessor['readEntry'] = async ({ manifest, contex
   return Object.keys(entry).length ? entry : null;
 };
 
-/**
- * @deprecated Use `pages` instead.
- */
 const panelProcessor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntry,

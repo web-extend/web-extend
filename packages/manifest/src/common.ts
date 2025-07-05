@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { basename, extname, isAbsolute, join, relative, resolve, sep } from 'node:path';
-import type { ExtensionTarget, WebExtendEntryDescription, WebExtensionManifest } from './types.js';
+import type { ExtensionTarget, WebExtendEntryDescription, WebExtensionManifest, WebExtendEntryKey } from './types.js';
 
 const scriptExts = ['.ts', '.js', '.tsx', '.jsx', '.mts', '.cts', '.mjs', '.cjs'];
 const styleExts = ['.css', '.scss', '.sass', '.less', '.styl', '.stylus'];
@@ -35,13 +35,13 @@ export function getEntryFileVariants(name: string, ext: string) {
   return scriptExts.flatMap((item) => [`${name}${item}`, `${name}${sep}index${item}`]);
 }
 
-export const matchSingleDeclarativeEntryFile = (key: string, file: string) => {
+export const matchSingleDeclarativeEntryFile = (key: WebExtendEntryKey, file: string) => {
   const res = getEntryFileVariants(key, '.js').includes(file);
   return res ? { name: key, ext: extname(file) } : null;
 };
 
 export const matchMultipleDeclarativeEntryFile = (
-  key: string,
+  key: WebExtendEntryKey,
   file: string,
   entryType?: WebExtendEntryDescription['entryType'][],
 ) => {
