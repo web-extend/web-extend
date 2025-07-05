@@ -10,7 +10,7 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
 };
 
 const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context, files }) => {
-  const { rootPath, srcDir } = context;
+  const { rootPath, entriesDir } = context;
   const { side_panel, sidebar_action } = manifest;
   if (side_panel?.default_path || sidebar_action?.default_panel) {
     return;
@@ -18,7 +18,7 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
 
   const entryFile = files
     .filter((file) => matchDeclarativeEntry(file, context))
-    .map((file) => resolve(rootPath, srcDir, file))[0];
+    .map((file) => resolve(rootPath, entriesDir.root, file))[0];
   if (entryFile) {
     manifest.side_panel = {
       default_path: entryFile,

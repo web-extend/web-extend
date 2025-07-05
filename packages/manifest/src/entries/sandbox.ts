@@ -31,9 +31,11 @@ const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest, context }) =
   const pages = manifest?.sandbox?.pages || [];
   if (!pages.length) return null;
 
+  const { rootPath, entriesDir } = context;
+
   const entry: ManifestEntryInput = {};
   pages.forEach((page) => {
-    const name = getEntryName(page, context.rootPath, context.srcDir);
+    const name = getEntryName(page, rootPath, entriesDir.root);
     entry[name] = {
       input: [page],
       entryType: 'html',
@@ -47,8 +49,9 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, name, norm
   const normalizedPages = normalizedManifest.sandbox?.pages || [];
   if (!pages.length || !normalizedPages.length) return;
 
+  const { rootPath, entriesDir } = context;
   normalizedPages.forEach((page, index) => {
-    if (getEntryName(page, context.rootPath, context.srcDir) === name) {
+    if (getEntryName(page, rootPath, entriesDir.root) === name) {
       pages[index] = `${name}.html`;
     }
   });

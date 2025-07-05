@@ -26,12 +26,12 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
 };
 
 const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, files, context }) => {
-  const { rootPath, srcDir } = context;
+  const { rootPath, entriesDir } = context;
 
   if (!manifest.content_scripts?.length) {
     const entryFile = files
       .filter((file) => matchDeclarativeEntry(file, context))
-      .map((file) => resolve(rootPath, srcDir, file));
+      .map((file) => resolve(rootPath, entriesDir.root, file));
 
     if (entryFile.length) {
       manifest.content_scripts ??= [];
@@ -45,11 +45,11 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
   }
 };
 
-function getContentScriptInfo(contentScript: ManifestContentScript, rootPath: string, srcDir: string) {
+function getContentScriptInfo(contentScript: ManifestContentScript, rootPath: string, entriesDir: string) {
   const { js = [], css = [] } = contentScript;
   const input = [...js, ...css];
   if (!input[0]) return null;
-  const name = getEntryName(input[0], rootPath, resolve(rootPath, srcDir));
+  const name = getEntryName(input[0], rootPath, resolve(rootPath, entriesDir));
   return {
     input,
     name,
@@ -62,7 +62,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest, context }) =
 
   const entry: ManifestEntryInput = {};
   content_scripts.forEach((contentScript) => {
-    const info = getContentScriptInfo(contentScript, context.rootPath, context.srcDir);
+    const info = getContentScriptInfo(contentScript, context.rootPath, context.entriesDir.root);
     if (!info) return;
     const { name, input } = info;
     entry[name] = {
@@ -84,8 +84,9 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = async ({
   const { content_scripts } = manifest;
   if (!content_scripts?.length || !output?.length) return;
 
+  const { rootPath, entriesDir } = context;
   const index = (normalizedManifest.content_scripts || []).findIndex((contentScript) => {
-    return getContentScriptInfo(contentScript, context.rootPath, context.srcDir)?.name === name;
+    return getContentScriptInfo(contentScript, rootPath, entriesDir.root)?.name === name;
   });
   if (index === -1) return;
 
@@ -95,7 +96,7 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = async ({
   content_scripts[index] = JSON.parse(JSON.stringify(normalizedContentScript));
 
   const entryMain = input?.[0];
-  const entryManinPath = resolve(context.rootPath, entryMain || '');
+  const entryManinPath = resolve(rootPath, entryMain || '');
   if (entryMain && existsSync(entryManinPath)) {
     const code = await readFile(entryManinPath, 'utf-8');
     const config = parseExportObject<ContentScriptConfig>(code, 'config') || {

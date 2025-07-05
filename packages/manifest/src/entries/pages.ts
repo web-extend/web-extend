@@ -14,8 +14,8 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
 const readEntry: ManifestEntryProcessor['readEntry'] = async ({ context }) => {
   const entry: ManifestEntryInput = {};
 
-  const { rootPath, srcDir } = context;
-  const srcPath = resolve(rootPath, srcDir);
+  const { rootPath, entriesDir } = context;
+  const srcPath = resolve(rootPath, entriesDir.root);
   const pagesPath = resolve(srcPath, key);
 
   if (!existsSync(pagesPath)) {
@@ -29,7 +29,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = async ({ context }) => {
     .map((file) => resolve(srcPath, file));
 
   for (const file of pages) {
-    const name = getEntryName(file, rootPath, srcDir);
+    const name = getEntryName(file, rootPath, entriesDir.root);
     if (name) {
       entry[name] = {
         input: [file],

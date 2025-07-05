@@ -10,7 +10,7 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
 };
 
 const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, files, context }) => {
-  const { rootPath, srcDir, mode, target, runtime } = context;
+  const { rootPath, mode, target, runtime, entriesDir } = context;
   const { background } = manifest;
   const scripts: string[] = [];
 
@@ -21,7 +21,7 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
   } else {
     const entryFile = files
       .filter((file) => matchDeclarativeEntry(file, context))
-      .map((file) => resolve(rootPath, srcDir, file))[0];
+      .map((file) => resolve(rootPath, entriesDir.root, file))[0];
     if (entryFile) {
       scripts.push(entryFile);
     }

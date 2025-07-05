@@ -21,8 +21,8 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
 };
 
 const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, files, context }) => {
-  const { rootPath, srcDir } = context;
-  const srcPath = resolve(rootPath, srcDir);
+  const { rootPath, entriesDir } = context;
+  const srcPath = resolve(rootPath, entriesDir.root);
 
   const declarativeIcons: WebExtensionManifest['icons'] = {};
   for (const file of files) {

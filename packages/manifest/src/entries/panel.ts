@@ -19,13 +19,13 @@ const readEntry: ManifestEntryProcessor['readEntry'] = async ({ manifest, contex
 
   const entry: ManifestEntryInput = {};
 
-  const { rootPath, srcDir } = context;
-  const srcPath = resolve(rootPath, srcDir);
+  const { rootPath, entriesDir } = context;
+  const srcPath = resolve(rootPath, entriesDir.root);
   const files = await readdir(srcPath, { recursive: true });
   const panels = files.filter((file) => matchDeclarativeEntry(file, context)).map((file) => resolve(srcPath, file));
 
   for (const file of panels) {
-    const name = getEntryName(file, rootPath, srcDir);
+    const name = getEntryName(file, rootPath, entriesDir.root);
     if (name) {
       entry[name] = {
         input: [file],

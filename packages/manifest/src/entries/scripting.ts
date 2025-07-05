@@ -31,8 +31,8 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
 const readEntry: ManifestEntryProcessor['readEntry'] = async ({ context }) => {
   const entry: ManifestEntryInput = {};
 
-  const { rootPath, srcDir } = context;
-  const srcPath = resolve(rootPath, srcDir);
+  const { rootPath, entriesDir } = context;
+  const srcPath = resolve(rootPath, entriesDir.root);
   const scriptingPath = resolve(srcPath, key);
 
   if (!existsSync(scriptingPath)) {
@@ -46,7 +46,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = async ({ context }) => {
     .map((file) => resolve(srcPath, file));
 
   for (const file of scripting) {
-    const name = getEntryName(file, rootPath, srcDir);
+    const name = getEntryName(file, rootPath, entriesDir.root);
     if (name) {
       entry[name] = {
         input: [file],

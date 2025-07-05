@@ -15,7 +15,7 @@ import type {
 } from './types.js';
 
 async function normalizeManifest({ manifest = {} as WebExtensionManifest, context }: NormalizeManifestProps) {
-  const { rootPath, target, mode, srcDir } = context;
+  const { rootPath, target, mode, entriesDir } = context;
   const defaultManifest = await initManifest(rootPath, target);
   const finalManifest = {
     ...defaultManifest,
@@ -42,8 +42,7 @@ async function normalizeManifest({ manifest = {} as WebExtensionManifest, contex
   }
 
   try {
-    const srcPath = resolve(rootPath, srcDir);
-    const files = await readdir(srcPath, { recursive: true });
+    const files = await readdir(resolve(rootPath, entriesDir.root), { recursive: true });
     for (const processor of entryProcessors) {
       if (!processor.normalizeEntry) continue;
       await processor.normalizeEntry({
@@ -95,8 +94,8 @@ export class ManifestManager {
     },
   ) {
     this.context = normalizeContext(options);
-    const { target, mode } = this.context;
 
+    const { target, mode } = this.context;
     const optionManifest =
       typeof options.manifest === 'function' ? options.manifest({ target, mode }) : options.manifest;
 

@@ -10,13 +10,13 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
 };
 
 const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context, files }) => {
-  const { rootPath, srcDir } = context;
+  const { rootPath, entriesDir } = context;
   const { options_ui, options_page } = manifest;
   if (options_ui?.page || options_page) return;
 
   const entryFile = files
     .filter((file) => matchDeclarativeEntry(file, context))
-    .map((file) => resolve(rootPath, srcDir, file))[0];
+    .map((file) => resolve(rootPath, entriesDir.root, file))[0];
 
   if (entryFile) {
     manifest.options_ui = {
