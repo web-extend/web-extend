@@ -1,11 +1,11 @@
 import { resolve } from 'node:path';
-import { matchSingleDeclarativeEntryFile } from './common.js';
+import { matchSingleDeclarativeEntryFile } from '../common.js';
 import type {
   ManifestChromeUrlOverrides,
   ManifestEntryInput,
-  WebExtendEntryKey,
   ManifestEntryProcessor,
-} from './types.js';
+  WebExtendEntryKey,
+} from '../types.js';
 
 const overrides: WebExtendEntryKey[] = ['newtab', 'history', 'bookmarks'];
 

@@ -1,44 +1,17 @@
 import { existsSync } from 'node:fs';
 import { cp, mkdir, readdir, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
-import backgroundProcessor from './background.js';
 import { isDevMode, readPackageJson, resolveOutDir, resolveSrcDir, resolveTarget, setTargetEnv } from './common.js';
-import contentProcessor from './content.js';
-import devtoolsProcessor from './devtools.js';
-import iconsProcessor from './icons.js';
-import optionsProcessor from './options.js';
-import overrideProcessors from './overrides.js';
-import pagesProcessor from './pages.js';
-import panelProcessor from './panel.js';
 import { polyfillManifest } from './polyfill.js';
-import popupProcessor from './popup.js';
-import sandboxProcessor from './sandbox.js';
-import scriptingProcessor from './scripting.js';
-import sidepanelProcessor from './sidepanel.js';
+import { entryProcessors } from './entries/index.js';
 import type {
   ExtensionTarget,
-  ManifestContext,
   ManifestEntries,
   ManifestEntryOutput,
-  ManifestEntryProcessor,
   NormalizeManifestProps,
+  WebExtendContext,
   WebExtensionManifest,
 } from './types.js';
-
-const entryProcessors: ManifestEntryProcessor[] = [
-  backgroundProcessor,
-  contentProcessor,
-  popupProcessor,
-  optionsProcessor,
-  sidepanelProcessor,
-  devtoolsProcessor,
-  panelProcessor,
-  sandboxProcessor,
-  iconsProcessor,
-  scriptingProcessor,
-  pagesProcessor,
-  ...overrideProcessors,
-];
 
 async function normalizeManifest({ manifest = {} as WebExtensionManifest, context }: NormalizeManifestProps) {
   const { rootPath, target, mode, srcDir } = context;
@@ -109,13 +82,13 @@ async function initManifest(rootPath: string, target?: ExtensionTarget) {
 }
 
 export class ManifestManager {
-  public context = {} as ManifestContext;
+  public context = {} as WebExtendContext;
   private manifest = {} as WebExtensionManifest;
   private normalizedManifest = {} as WebExtensionManifest;
   private entries: ManifestEntries | undefined;
 
   async normalize(
-    options: Partial<ManifestContext> & {
+    options: Partial<WebExtendContext> & {
       manifest?: WebExtensionManifest | ((props: { target: ExtensionTarget; mode: string }) => WebExtensionManifest);
       buildDirTemplate?: string;
     },
@@ -141,6 +114,7 @@ export class ManifestManager {
       srcDir,
       outDir,
       publicDir,
+      // entriesDir: options.entriesDir || {},
       runtime: options?.runtime,
     };
 

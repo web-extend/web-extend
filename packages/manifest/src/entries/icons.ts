@@ -1,5 +1,5 @@
 import { basename, resolve } from 'node:path';
-import type { ManifestEntryProcessor, WebExtensionManifest } from './types.js';
+import type { ManifestEntryProcessor, WebExtensionManifest } from '../types.js';
 
 const key = 'icons';
 

@@ -1,8 +1,8 @@
 import { existsSync } from 'node:fs';
 import { readdir } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
-import { getEntryName, matchMultipleDeclarativeEntryFile } from './common.js';
-import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
+import { getEntryName, matchMultipleDeclarativeEntryFile } from '../common.js';
+import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
 
 const key = 'scripting';
 

@@ -6,14 +6,14 @@ import {
   isDevMode,
   matchMultipleDeclarativeEntryFile,
   matchSingleDeclarativeEntryFile,
-} from './common.js';
-import { parseExportObject } from './parser/export.js';
+} from '../common.js';
+import { parseExportObject } from '../parser/export.js';
 import type {
   ContentScriptConfig,
   ManifestContentScript,
   ManifestEntryInput,
   ManifestEntryProcessor,
-} from './types.js';
+} from '../types.js';
 
 const key = 'content';
 

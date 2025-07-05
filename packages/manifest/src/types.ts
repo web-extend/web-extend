@@ -134,33 +134,23 @@ export interface ManifestEntryProcessor {
 
 interface ReadManifestEntryItemProps {
   manifest: WebExtensionManifest;
-  context: ManifestContext;
+  context: WebExtendContext;
 }
 
-export interface ManifestContext {
-  target: ExtensionTarget;
-  mode: string;
-  rootPath: string;
-  srcDir: string;
-  outDir: string;
-  publicDir: string;
-  runtime?: ManifestRuntime;
-}
-
-export interface ManifestRuntime {
+export interface WebExtendRuntime {
   background?: string;
   contentBridge?: string;
 }
 
 export interface NormalizeManifestProps {
   manifest?: WebExtensionManifest;
-  context: ManifestContext;
+  context: WebExtendContext;
 }
 
 export interface NormalizeMainfestEntryProps {
   manifest: WebExtensionManifest;
   files: string[];
-  context: ManifestContext;
+  context: WebExtendContext;
 }
 
 export interface WriteMainfestEntriesProps {
@@ -171,7 +161,7 @@ export interface WriteMainfestEntriesProps {
 }
 
 export interface WriteMainfestEntryItemProps extends Omit<WriteMainfestEntriesProps, 'entry'> {
-  context: ManifestContext;
+  context: WebExtendContext;
   name: string;
   input?: WebExtendEntryDescription['input'];
   output?: WebExtendEntryDescription['output'];
@@ -181,7 +171,7 @@ export interface WriteManifestFileProps {
   distPath: string;
   manifest: WebExtensionManifest;
   mode: string | undefined;
-  runtime?: ManifestRuntime;
+  runtime?: WebExtendRuntime;
 }
 
 export type ManifestEntries = {
@@ -203,6 +193,19 @@ export type ManifestWebAccessibleResourcesC2ItemType = {
   matches?: string[];
 };
 
+type WebExtendEntriesDir = Record<'root' | WebExtendEntryKey, string>;
+
+export interface WebExtendContext {
+  target: ExtensionTarget;
+  mode: string;
+  rootPath: string;
+  srcDir: string;
+  outDir: string;
+  publicDir: string;
+  entriesDir?: WebExtendEntriesDir;
+  runtime?: WebExtendRuntime;
+}
+
 export interface WebExtendCommonConfig {
   manifest?: WebExtensionManifest | ((props: { target: ExtensionTarget; mode: string }) => WebExtensionManifest);
   target?: ExtensionTarget;
@@ -210,5 +213,5 @@ export interface WebExtendCommonConfig {
   outDir?: string;
   buildDirTemplate?: string;
   publicDir?: string;
-  entriesDir?: Record<string, string>;
+  entriesDir?: Partial<WebExtendEntriesDir> | string;
 }
