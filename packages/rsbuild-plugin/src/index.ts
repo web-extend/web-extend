@@ -1,22 +1,22 @@
 import { dirname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import type { EnvironmentConfig, RsbuildConfig, RsbuildPlugin } from '@rsbuild/core';
-import { ManifestManager } from '@web-extend/manifest';
+import type { EnvironmentConfig, RsbuildConfig, RsbuildPlugin, WatchFiles } from '@rsbuild/core';
+import { ManifestManager, matchDeclarativeEntry } from '@web-extend/manifest';
 import { getEntryFileVariants } from '@web-extend/manifest/common';
-import type { ManifestEntries, ManifestEntryOutput, WebExtensionManifest } from '@web-extend/manifest/types';
-import {
-  clearOutdatedHotUpdateFiles,
-  getAllRsbuildEntryFiles,
-  getJsDistPath,
-  getRsbuildEntryFiles,
-  transformManifestEntry,
-} from './helper.js';
+import type {
+  ManifestEntries,
+  ManifestEntryOutput,
+  WebExtendContext,
+  WebExtensionManifest,
+  WebExtendEntryKey,
+} from '@web-extend/manifest/types';
+import { clearOutdatedHotUpdateFiles, getJsDistPath, getRsbuildEntryFiles, transformManifestEntry } from './helper.js';
 import type { EnviromentKey, NormalizeRsbuildEnvironmentProps, PluginWebExtendOptions } from './types.js';
 import { getWebEnvironmentConfig } from './web.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-async function normalizeRsbuildEnvironments(options: NormalizeRsbuildEnvironmentProps) {
+const normalizeRsbuildEnvironments = (options: NormalizeRsbuildEnvironmentProps) => {
   const { manifestEntries, selfRootPath } = options;
   const { background, ...webEntries } = manifestEntries;
 
@@ -64,7 +64,51 @@ async function normalizeRsbuildEnvironments(options: NormalizeRsbuildEnvironment
   }
 
   return environments;
-}
+};
+
+const getDevWatchFiles = (context: WebExtendContext, entries?: ManifestEntries): WatchFiles[] => {
+  if (!entries) return [];
+  const { rootPath, entriesDir } = context;
+  const entriesDirRootPath = resolve(rootPath, entriesDir.root);
+
+  const entryPaths: string[] = [];
+  for (const key in entries) {
+    const entry = entries[key as WebExtendEntryKey];
+    if (entry) {
+      const input = Object.values(entry).flatMap((item) => item.input);
+      entryPaths.push(...input);
+    }
+  }
+
+  return [
+    {
+      type: 'reload-server',
+      paths: [entriesDir.root],
+      options: {
+        cwd: rootPath,
+        ignored: (file, stats) => {
+          if (file.startsWith(entriesDirRootPath)) {
+            const relativePath = relative(entriesDirRootPath, file);
+            if (stats?.isFile()) {
+              if (stats.size === 0) return true;
+
+              const entry = matchDeclarativeEntry(relativePath, context);
+              if (!entry) return true;
+
+              const entryFileVariants = getEntryFileVariants(entry.name, entry.ext).map((file) =>
+                resolve(entriesDirRootPath, file),
+              );
+              const hasEntry = entryFileVariants.some((file) => entryPaths.includes(file));
+              if (hasEntry) return true;
+            }
+            return false;
+          }
+          return true;
+        },
+      },
+    },
+  ];
+};
 
 export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPlugin => ({
   name: 'plugin-web-extend',
@@ -92,16 +136,13 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       });
 
       manifestEntries = await manifestManager.readEntries();
-      const environments = await normalizeRsbuildEnvironments({
+      const environments = normalizeRsbuildEnvironments({
         manifestEntries,
         config,
         selfRootPath,
         context: api.context,
         manifestContext: manifestManager.context,
       });
-      const entryPaths = getAllRsbuildEntryFiles(environments);
-      const srcDir = manifestManager.context.srcDir;
-      const srcPath = resolve(rootPath, srcDir);
 
       const extraConfig: RsbuildConfig = {
         source: {
@@ -117,34 +158,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
             port: '<port>',
             protocol: 'ws',
           },
-          watchFiles: [
-            {
-              type: 'reload-server',
-              paths: [srcDir],
-              options: {
-                cwd: rootPath,
-                ignored: (file, stats) => {
-                  if (file.startsWith(srcPath)) {
-                    const relativePath = relative(srcPath, file);
-                    if (stats?.isFile()) {
-                      if (stats.size === 0) return true;
-
-                      const entry = manifestManager.matchDeclarativeEntry(relativePath);
-                      if (!entry) return true;
-
-                      const entryFileVariants = getEntryFileVariants(entry.name, entry.ext).map((file) =>
-                        resolve(srcPath, file),
-                      );
-                      const hasEntry = entryFileVariants.some((file) => entryPaths.includes(file));
-                      if (hasEntry) return true;
-                    }
-                    return false;
-                  }
-                  return true;
-                },
-              },
-            },
-          ],
+          watchFiles: getDevWatchFiles(manifestManager.context, manifestEntries),
         },
         server: {
           printUrls: false,

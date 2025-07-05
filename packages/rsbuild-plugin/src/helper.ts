@@ -42,19 +42,6 @@ export function getRsbuildEntryFiles(entries: RsbuildEntry, key: string) {
   return res;
 }
 
-export function getAllRsbuildEntryFiles(environments: RsbuildConfig['environments']) {
-  const res: string[] = [];
-  if (!environments) return [];
-  for (const key in environments) {
-    const entry = environments[key]?.source?.entry;
-    if (!entry) continue;
-    for (const entryName in entry) {
-      res.push(...getRsbuildEntryFiles(entry, entryName));
-    }
-  }
-  return res;
-}
-
 function getHotUpdateAssets(statsList: Rspack.Stats[]) {
   const entrypointsList = statsList.map((item) => item?.toJson().entrypoints).filter((item) => !!item);
   const res: string[] = [];
