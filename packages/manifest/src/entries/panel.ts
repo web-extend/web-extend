@@ -5,8 +5,13 @@ import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
 
 const key = 'panel';
 
-const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file) =>
-  matchSingleDeclarativeEntryFile(key, file) || matchMultipleDeclarativeEntryFile('panels', file);
+const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file, context) => {
+  const { entriesDir } = context;
+  return (
+    matchSingleDeclarativeEntryFile(entriesDir.panel, file) ||
+    matchMultipleDeclarativeEntryFile(entriesDir.panels, file)
+  );
+};
 
 const readEntry: ManifestEntryProcessor['readEntry'] = async ({ manifest, context }) => {
   const { devtools_page } = manifest || {};
@@ -17,7 +22,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = async ({ manifest, contex
   const { rootPath, srcDir } = context;
   const srcPath = resolve(rootPath, srcDir);
   const files = await readdir(srcPath, { recursive: true });
-  const panels = files.filter(matchDeclarativeEntry).map((file) => resolve(srcPath, file));
+  const panels = files.filter((file) => matchDeclarativeEntry(file, context)).map((file) => resolve(srcPath, file));
 
   for (const file of panels) {
     const name = getEntryName(file, rootPath, srcDir);

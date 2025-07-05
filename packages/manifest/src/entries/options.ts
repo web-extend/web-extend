@@ -4,8 +4,10 @@ import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
 
 const key = 'options';
 
-const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file) =>
-  matchSingleDeclarativeEntryFile(key, file);
+const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file, context) => {
+  const { entriesDir } = context;
+  return matchSingleDeclarativeEntryFile(entriesDir.options, file);
+};
 
 const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context, files }) => {
   const { rootPath, srcDir } = context;
@@ -13,7 +15,7 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
   if (options_ui?.page || options_page) return;
 
   const entryFile = files
-    .filter((file) => matchDeclarativeEntry(file))
+    .filter((file) => matchDeclarativeEntry(file, context))
     .map((file) => resolve(rootPath, srcDir, file))[0];
 
   if (entryFile) {

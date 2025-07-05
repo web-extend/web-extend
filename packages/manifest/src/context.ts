@@ -1,5 +1,5 @@
 import { resolveOutDir, resolveSrcDir, resolveTarget, setTargetEnv } from './common.js';
-import type { WebExtendContext } from './types.js';
+import type { WebExtendContext, WebExtendEntriesDir } from './types.js';
 
 export const normalizeContext = (
   options: Partial<WebExtendContext> & { buildDirTemplate?: string },
@@ -21,7 +21,7 @@ export const normalizeContext = (
 
   const publicDir = options.publicDir || 'public';
 
-  const entriesDir = {
+  const entriesDir: WebExtendEntriesDir = {
     root: srcDir,
     background: 'background',
     content: 'content',

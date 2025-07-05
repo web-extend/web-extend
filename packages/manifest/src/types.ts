@@ -126,7 +126,10 @@ export type MaybePromise<T = unknown> = T | Promise<T>;
 
 export interface ManifestEntryProcessor {
   key: WebExtendEntryKey;
-  matchDeclarativeEntry?: (file: string) => null | { name: string; ext: string };
+  matchDeclarativeEntry: (
+    file: string,
+    context: WebExtendContext,
+  ) => null | { name: string; ext: string; size?: number };
   normalizeEntry?: (props: NormalizeMainfestEntryProps) => MaybePromise<void>;
   readEntry?: (props: ReadManifestEntryItemProps) => MaybePromise<ManifestEntryInput | null>;
   writeEntry?: (props: WriteMainfestEntryItemProps) => MaybePromise<void>;
@@ -203,7 +206,7 @@ export interface WebExtendContext {
   srcDir: string;
   outDir: string;
   publicDir: string;
-  entriesDir?: WebExtendEntriesDir;
+  entriesDir: WebExtendEntriesDir;
   runtime?: WebExtendRuntime;
 }
 

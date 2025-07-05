@@ -3,9 +3,12 @@ import type { ManifestEntryProcessor, WebExtensionManifest } from '../types.js';
 
 const key = 'icons';
 
-const matchDeclarativeEntry = (file: string) => {
+const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file, context) => {
+  const { entriesDir } = context;
+  if (!file.startsWith(entriesDir.icons)) return null;
+
   const ext = '.png';
-  const match = file.match(/^assets[\\/]icon-?(\d+)\.png$/);
+  const match = file.match(/icon-?(\d+)\.png$/);
   const size = match ? Number(match[1]) : null;
   if (size) {
     return {
@@ -23,7 +26,7 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
 
   const declarativeIcons: WebExtensionManifest['icons'] = {};
   for (const file of files) {
-    const size = matchDeclarativeEntry(file)?.size || null;
+    const size = matchDeclarativeEntry(file, context)?.size || null;
     if (size) {
       declarativeIcons[size] = resolve(srcPath, file);
     }

@@ -4,8 +4,13 @@ import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
 
 const key = 'sandbox';
 
-const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file) =>
-  matchSingleDeclarativeEntryFile(key, file) || matchMultipleDeclarativeEntryFile('sandboxes', file);
+const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file, context) => {
+  const { entriesDir } = context;
+  return (
+    matchSingleDeclarativeEntryFile(entriesDir.sandbox, file) ||
+    matchMultipleDeclarativeEntryFile(entriesDir.sandboxes, file)
+  );
+};
 
 const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, files, context }) => {
   const { srcDir, rootPath, target } = context;
@@ -13,7 +18,7 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
   const pages = manifest.sandbox?.pages;
   if (pages?.length || target.includes('firefox')) return;
 
-  const entryFile = files.filter(matchDeclarativeEntry).map((file) => resolve(srcPath, file));
+  const entryFile = files.filter((file) => matchDeclarativeEntry(file, context)).map((file) => resolve(srcPath, file));
   if (entryFile.length) {
     manifest.sandbox = {
       ...(manifest.sandbox || {}),

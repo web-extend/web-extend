@@ -4,8 +4,10 @@ import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
 
 const key = 'background';
 
-const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file) =>
-  matchSingleDeclarativeEntryFile(key, file);
+const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file, context) => {
+  const { entriesDir } = context;
+  return matchSingleDeclarativeEntryFile(entriesDir.background, file);
+};
 
 const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, files, context }) => {
   const { rootPath, srcDir, mode, target, runtime } = context;
@@ -18,7 +20,7 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
     scripts.push(...background.scripts);
   } else {
     const entryFile = files
-      .filter((file) => matchDeclarativeEntry(file))
+      .filter((file) => matchDeclarativeEntry(file, context))
       .map((file) => resolve(rootPath, srcDir, file))[0];
     if (entryFile) {
       scripts.push(entryFile);

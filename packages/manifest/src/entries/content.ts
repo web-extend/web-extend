@@ -17,15 +17,20 @@ import type {
 
 const key = 'content';
 
-const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file) =>
-  matchSingleDeclarativeEntryFile(key, file) || matchMultipleDeclarativeEntryFile('contents', file, ['script']);
+const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file, context) => {
+  const { entriesDir } = context;
+  return (
+    matchSingleDeclarativeEntryFile(entriesDir.content, file) ||
+    matchMultipleDeclarativeEntryFile(entriesDir.contents, file)
+  );
+};
 
 const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, files, context }) => {
   const { rootPath, srcDir } = context;
 
   if (!manifest.content_scripts?.length) {
     const entryFile = files
-      .filter((file) => matchDeclarativeEntry(file))
+      .filter((file) => matchDeclarativeEntry(file, context))
       .map((file) => resolve(rootPath, srcDir, file));
 
     if (entryFile.length) {

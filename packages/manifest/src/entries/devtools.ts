@@ -4,21 +4,25 @@ import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
 
 const key = 'devtools';
 
-const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file) =>
-  matchSingleDeclarativeEntryFile(key, file);
+const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file, context) => {
+  const { entriesDir } = context;
+  return matchSingleDeclarativeEntryFile(entriesDir.devtools, file);
+};
 
 const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, files, context }) => {
   const { rootPath, srcDir } = context;
   const { devtools_page } = manifest;
   if (devtools_page) return;
 
-  const entryFile = files.filter(matchDeclarativeEntry).map((file) => resolve(rootPath, srcDir, file))[0];
+  const entryFile = files
+    .filter((file) => matchDeclarativeEntry(file, context))
+    .map((file) => resolve(rootPath, srcDir, file))[0];
   if (entryFile) {
     manifest.devtools_page = entryFile;
   }
 };
 
-const readEntry: ManifestEntryProcessor['readEntry'] = async ({ manifest, context }) => {
+const readEntry: ManifestEntryProcessor['readEntry'] = async ({ manifest }) => {
   const { devtools_page } = manifest || {};
   if (!devtools_page) return null;
 

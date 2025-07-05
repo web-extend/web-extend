@@ -6,8 +6,10 @@ import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
 
 const key = 'pages';
 
-const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file) =>
-  matchMultipleDeclarativeEntryFile(key, file);
+const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file, context) => {
+  const { entriesDir } = context;
+  return matchMultipleDeclarativeEntryFile(entriesDir.pages, file);
+};
 
 const readEntry: ManifestEntryProcessor['readEntry'] = async ({ context }) => {
   const entry: ManifestEntryInput = {};
@@ -23,7 +25,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = async ({ context }) => {
   const files = await readdir(pagesPath, { recursive: true });
   const pages = files
     .map((file) => join(key, file))
-    .filter(matchDeclarativeEntry)
+    .filter((file) => matchDeclarativeEntry(file, context))
     .map((file) => resolve(srcPath, file));
 
   for (const file of pages) {

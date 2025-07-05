@@ -2,8 +2,8 @@ import { existsSync } from 'node:fs';
 import { cp, mkdir, readdir, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { isDevMode, readPackageJson } from './common.js';
-import { entryProcessors } from './entries/index.js';
 import { normalizeContext } from './context.js';
+import { entryProcessors } from './entries/index.js';
 import { polyfillManifest } from './polyfill.js';
 import type {
   ExtensionTarget,
@@ -110,6 +110,7 @@ export class ManifestManager {
   async readEntries() {
     const manifest = this.normalizedManifest;
     const res = {} as ManifestEntries;
+    if (!this.context) return res;
     for (const processor of entryProcessors) {
       if (!processor.readEntry) continue;
       const entry = await processor.readEntry({
@@ -125,7 +126,7 @@ export class ManifestManager {
   }
 
   async writeEntries(result: ManifestEntryOutput) {
-    if (!this.entries) return;
+    if (!this.entries || !this.context) return;
     for (const entryName in result) {
       for (const processor of entryProcessors) {
         const entry = this.entries[processor.key] || {};
@@ -145,6 +146,7 @@ export class ManifestManager {
   }
 
   async writeManifestFile() {
+    if (!this.context) return;
     const { rootPath, outDir, mode, runtime } = this.context;
     const distPath = resolve(rootPath, outDir);
     const manifest = this.manifest;
@@ -164,6 +166,7 @@ export class ManifestManager {
   }
 
   async copyPublicFiles() {
+    if (!this.context) return;
     const { rootPath, outDir, publicDir } = this.context;
     const publicPath = resolve(rootPath, publicDir);
     const distPath = resolve(rootPath, outDir);
@@ -171,10 +174,11 @@ export class ManifestManager {
     await cp(publicPath, distPath, { recursive: true, dereference: true });
   }
 
-  static matchDeclarativeEntry(file: string) {
+  matchDeclarativeEntry(file: string) {
+    if (!this.context) return null;
     for (const processor of entryProcessors) {
       if (!processor.matchDeclarativeEntry) continue;
-      const item = processor.matchDeclarativeEntry(file);
+      const item = processor.matchDeclarativeEntry(file, this.context);
       if (item) return item;
     }
     return null;
