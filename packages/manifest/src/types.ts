@@ -1,7 +1,63 @@
-import type { Manifest } from 'webextension-polyfill';
-
 export type ExtensionTarget = 'chrome-mv3' | 'firefox-mv2' | 'firefox-mv3' | 'safari-mv3' | 'edge-mv3' | 'opera-mv3';
 
+export type WebExtendEntryKey =
+  | 'icons'
+  | 'background'
+  | 'content'
+  | 'contents'
+  | 'popup'
+  | 'options'
+  | 'sidepanel'
+  | 'devtools'
+  | 'panel'
+  | 'sandbox'
+  | 'sandboxes'
+  | 'newtab'
+  | 'history'
+  | 'bookmarks'
+  | 'scripting'
+  | 'pages';
+
+export interface WebExtensionManifest {
+  action?: ManifestAction;
+  browser_action?: ManifestAction;
+  background?: {
+    scripts?: string[];
+    service_worker?: string;
+    type?: 'module';
+  };
+  chrome_url_overrides?: ManifestChromeUrlOverrides;
+  commands?: Record<string, ManifestCommandItem>;
+  content_scripts?: ManifestContentScript[];
+  content_security_policy?:
+    | {
+        extension_pages?: string;
+        sandbox?: string;
+      }
+    | string;
+  description?: string;
+  default_locale?: string;
+  devtools_page?: string;
+  homepage_url?: string;
+  host_permissions?: string[];
+  icons?: ManifestIcons;
+  manifest_version?: number;
+  minimum_chrome_version?: string;
+  name?: string;
+  options_page?: string;
+  options_ui?: {
+    page?: string;
+    open_in_tab?: boolean;
+  };
+  permissions?: string[];
+  sandbox?: ManifestSandbox;
+  side_panel?: ManifestSidePanel;
+  sidebar_action?: ManifestSidebarActionType;
+  version?: string;
+  version_name?: string;
+  web_accessible_resources?: ManifestWebAccessibleResourcesC2ItemType[] | string[];
+  [key: string]: unknown; // allow other custom fields
+}
 export interface ManifestChromeUrlOverrides {
   newtab?: string;
   history?: string;
@@ -54,37 +110,21 @@ interface ManifestSidePanel {
   default_path?: string;
 }
 
-export type ManifestEntryKey =
-  | 'icons'
-  | 'background'
-  | 'content'
-  | 'contents'
-  | 'popup'
-  | 'options'
-  | 'sidepanel'
-  | 'devtools'
-  | 'panel'
-  | 'sandbox'
-  | 'sandboxes'
-  | 'newtab'
-  | 'history'
-  | 'bookmarks'
-  | 'scripting'
-  | 'pages';
+export type ManifestEntryType = 'script' | 'style' | 'html' | 'image';
 
-export interface ManifestEntryItem {
+export interface WebExtendEntryDescription {
   input: string[];
   output: string[];
-  entryType: 'script' | 'style' | 'html' | 'image'; // default is 'html'
+  entryType: ManifestEntryType; // default is 'html'
 }
 
-export type ManifestEntryInput = Record<string, Omit<ManifestEntryItem, 'output'>>;
-export type ManifestEntryOutput = Record<string, Pick<ManifestEntryItem, 'input' | 'output'>>;
+export type ManifestEntryInput = Record<string, Omit<WebExtendEntryDescription, 'output'>>;
+export type ManifestEntryOutput = Record<string, Pick<WebExtendEntryDescription, 'input' | 'output'>>;
 
 export type MaybePromise<T = unknown> = T | Promise<T>;
 
 export interface ManifestEntryProcessor {
-  key: ManifestEntryKey;
+  key: WebExtendEntryKey;
   matchDeclarativeEntry?: (file: string) => null | { name: string; ext: string };
   normalizeEntry?: (props: NormalizeMainfestEntryProps) => MaybePromise<void>;
   readEntry?: (props: ReadManifestEntryItemProps) => MaybePromise<ManifestEntryInput | null>;
@@ -133,8 +173,8 @@ export interface WriteMainfestEntriesProps {
 export interface WriteMainfestEntryItemProps extends Omit<WriteMainfestEntriesProps, 'entry'> {
   context: ManifestContext;
   name: string;
-  input?: ManifestEntryItem['input'];
-  output?: ManifestEntryItem['output'];
+  input?: WebExtendEntryDescription['input'];
+  output?: WebExtendEntryDescription['output'];
 }
 
 export interface WriteManifestFileProps {
@@ -145,12 +185,12 @@ export interface WriteManifestFileProps {
 }
 
 export type ManifestEntries = {
-  [key in ManifestEntryKey]?: ManifestEntryInput;
+  [key in WebExtendEntryKey]?: ManifestEntryInput;
 };
 
 type IconPath = Record<string, string> | string;
 
-interface WebExtensionManifestSidebarActionType {
+interface ManifestSidebarActionType {
   default_title?: string;
   default_icon?: IconPath;
   browser_style?: boolean;
@@ -158,48 +198,7 @@ interface WebExtensionManifestSidebarActionType {
   open_at_install?: boolean;
 }
 
-export interface WebExtensionManifest {
-  action?: ManifestAction;
-  browser_action?: ManifestAction;
-  background?: {
-    scripts?: string[];
-    service_worker?: string;
-    type?: 'module';
-  };
-  chrome_url_overrides?: ManifestChromeUrlOverrides;
-  commands?: Record<string, ManifestCommandItem>;
-  content_scripts?: ManifestContentScript[];
-  content_security_policy?:
-    | {
-        extension_pages?: string;
-        sandbox?: string;
-      }
-    | string;
-  description?: string;
-  default_locale?: string;
-  devtools_page?: string;
-  homepage_url?: string;
-  host_permissions?: string[];
-  icons?: ManifestIcons;
-  manifest_version?: number;
-  minimum_chrome_version?: string;
-  name?: string;
-  options_page?: string;
-  options_ui?: {
-    page?: string;
-    open_in_tab?: boolean;
-  };
-  permissions?: string[];
-  sandbox?: ManifestSandbox;
-  side_panel?: ManifestSidePanel;
-  sidebar_action?: WebExtensionManifestSidebarActionType;
-  version?: string;
-  version_name?: string;
-  web_accessible_resources?: WebExtensionManifestWebAccessibleResourcesC2ItemType[] | string[];
-  [key: string]: unknown; // allow other custom fields
-}
-
-export type WebExtensionManifestWebAccessibleResourcesC2ItemType = {
+export type ManifestWebAccessibleResourcesC2ItemType = {
   resources: string[];
   matches?: string[];
 };

@@ -1,5 +1,5 @@
 import { isDevMode } from './common.js';
-import type { NormalizeManifestProps, WebExtensionManifestWebAccessibleResourcesC2ItemType } from './types.js';
+import type { NormalizeManifestProps, ManifestWebAccessibleResourcesC2ItemType } from './types.js';
 
 function polyfillManifestBetweenBrowsers({ manifest, context }: NormalizeManifestProps) {
   if (!manifest) return;
@@ -78,7 +78,7 @@ function pollyfillManifestBetweenVersions({ manifest, context }: NormalizeManife
     }
 
     if (web_accessible_resources && typeof web_accessible_resources[0] === 'object') {
-      const resources = (web_accessible_resources as WebExtensionManifestWebAccessibleResourcesC2ItemType[]).flatMap(
+      const resources = (web_accessible_resources as ManifestWebAccessibleResourcesC2ItemType[]).flatMap(
         ({ resources }) => resources,
       );
       manifest.web_accessible_resources = resources;
