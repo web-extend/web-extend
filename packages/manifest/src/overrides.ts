@@ -1,10 +1,10 @@
 import { resolve } from 'node:path';
 import { matchSingleDeclarativeEntryFile } from './common.js';
 import type {
+  ManifestChromeUrlOverrides,
   ManifestEntryInput,
   ManifestEntryKey,
   ManifestEntryProcessor,
-  ManifestChromeUrlOverrides,
 } from './types.js';
 
 const overrides: ManifestEntryKey[] = ['newtab', 'history', 'bookmarks'];

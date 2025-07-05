@@ -2,12 +2,6 @@ import type { Manifest } from 'webextension-polyfill';
 
 export type ExtensionTarget = 'chrome-mv3' | 'firefox-mv2' | 'firefox-mv3' | 'safari-mv3' | 'edge-mv3' | 'opera-mv3';
 
-export interface WebExtensionManifest extends Manifest.WebExtensionManifest {
-  sandbox?: ManifestSandbox;
-  side_panel?: ManifestSidePanel;
-  chrome_url_overrides?: ManifestChromeUrlOverrides;
-}
-
 export interface ManifestChromeUrlOverrides {
   newtab?: string;
   history?: string;
@@ -154,19 +148,33 @@ export type ManifestEntries = {
   [key in ManifestEntryKey]?: ManifestEntryInput;
 };
 
-export interface CustomManifest {
+type IconPath = Record<string, string> | string;
+
+interface WebExtensionManifestSidebarActionType {
+  default_title?: string;
+  default_icon?: IconPath;
+  browser_style?: boolean;
+  default_panel: string;
+  open_at_install?: boolean;
+}
+
+export interface WebExtensionManifest {
   action?: ManifestAction;
+  browser_action?: ManifestAction;
   background?: {
+    scripts?: string[];
     service_worker?: string;
     type?: 'module';
   };
   chrome_url_overrides?: ManifestChromeUrlOverrides;
   commands?: Record<string, ManifestCommandItem>;
   content_scripts?: ManifestContentScript[];
-  content_security_policy?: {
-    extension_pages?: string;
-    sandbox?: string;
-  };
+  content_security_policy?:
+    | {
+        extension_pages?: string;
+        sandbox?: string;
+      }
+    | string;
   description?: string;
   default_locale?: string;
   devtools_page?: string;
@@ -184,6 +192,7 @@ export interface CustomManifest {
   permissions?: string[];
   sandbox?: ManifestSandbox;
   side_panel?: ManifestSidePanel;
+  sidebar_action?: WebExtensionManifestSidebarActionType;
   version?: string;
   version_name?: string;
   web_accessible_resources?: WebExtensionManifestWebAccessibleResourcesC2ItemType[] | string[];
@@ -196,7 +205,7 @@ export type WebExtensionManifestWebAccessibleResourcesC2ItemType = {
 };
 
 export interface WebExtendCommonConfig {
-  manifest?: CustomManifest | ((props: { target: ExtensionTarget; mode: string }) => CustomManifest);
+  manifest?: WebExtensionManifest | ((props: { target: ExtensionTarget; mode: string }) => WebExtensionManifest);
   target?: ExtensionTarget;
   srcDir?: string;
   outDir?: string;
