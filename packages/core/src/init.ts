@@ -3,10 +3,10 @@ import { copyFile, cp, mkdir, readFile, readdir, writeFile } from 'node:fs/promi
 import { basename, dirname, extname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { checkbox, input, select } from '@inquirer/prompts';
+import { normalizeEntriesDir } from '@web-extend/manifest/common';
+import type { WebExtendEntriesDir } from '@web-extend/manifest/types';
 import chalk from 'chalk';
 import { type EntrypointItem, entryTemplates, entrypointItems, frameworks, tools } from './constant.js';
-import type { WebExtendEntriesDir } from '@web-extend/manifest/types';
-import { normalizeEntriesDir } from '@web-extend/manifest/common';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -228,12 +228,12 @@ export async function normalizeEntrypoints(entries: string[], entriesDir: WebExt
     }
 
     // map entryName to entriesDir
-    if (item.multiplePrefix) {
-      const key = entriesDir[item.multiplePrefix as keyof WebExtendEntriesDir] || item.multiplePrefix;
+    if (entryName in entriesDir) {
+      const value = entriesDir[entryName as keyof WebExtendEntriesDir];
+      entryName = value;
+    } else if (item.multiplePrefix && item.multiplePrefix in entriesDir) {
+      const key = entriesDir[item.multiplePrefix as keyof WebExtendEntriesDir];
       entryName = entryName.replace(item.multiplePrefix, key);
-    } else if (item.name) {
-      const key = entriesDir[item.name as keyof WebExtendEntriesDir] || item.name;
-      entryName = entryName.replace(item.name, key);
     }
 
     res.push({ ...item, name: entryName });

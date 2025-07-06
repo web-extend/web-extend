@@ -5,7 +5,7 @@ import { normalizeEntriesDir } from '@web-extend/manifest/common';
 import type { WebExtendEntriesDir } from '@web-extend/manifest/types';
 import { loadWebExtendConfig } from './config.js';
 import { entrypointItems } from './constant.js';
-import { normalizeEntrypoints, copyEntryFiles, getTemplatePath, resolveEntryTemplate } from './init.js';
+import { copyEntryFiles, getTemplatePath, normalizeEntrypoints, resolveEntryTemplate } from './init.js';
 
 export interface GenerateOptions {
   entries: string[];
