@@ -4,22 +4,22 @@ import type { RsbuildConfig, RsbuildPlugin, WatchFiles } from '@rsbuild/core';
 import { ManifestManager, matchDeclarativeEntry } from '@web-extend/manifest';
 import { getEntryFileVariants, isDevMode } from '@web-extend/manifest/common';
 import type {
-  ManifestEntries,
+  WebExtendEntries,
   ManifestEntryOutput,
   WebExtendCommonConfig,
   WebExtendContext,
   WebExtendEntryKey,
   WebExtensionManifest,
 } from '@web-extend/manifest/types';
-import { clearOutdatedHotUpdateFiles, getRsbuildEntryFiles } from './helper.js';
-import { normalizeRsbuildEnvironments } from './environments.js';
 import { ContentRuntimePlugin, hotUpdateGlobal } from './content.js';
+import { normalizeRsbuildEnvironments } from './environments.js';
+import { clearOutdatedHotUpdateFiles, getRsbuildEntryFiles } from './helper.js';
 
 export type PluginWebExtendOptions = WebExtendCommonConfig;
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const getDevWatchFiles = (context: WebExtendContext, entries?: ManifestEntries): WatchFiles[] => {
+const getDevWatchFiles = (context: WebExtendContext, entries?: WebExtendEntries): WatchFiles[] => {
   if (!entries) return [];
   const { rootPath, entriesDir } = context;
   const entriesDirRootPath = resolve(rootPath, entriesDir.root);
@@ -66,7 +66,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
   name: 'plugin-web-extend',
   setup: (api) => {
     const manifestManager = new ManifestManager();
-    let manifestEntries: ManifestEntries | null = null;
+    let webExtendEntries: WebExtendEntries | null = null;
 
     api.modifyRsbuildConfig(async (config, { mergeRsbuildConfig }) => {
       const rootPath = api.context.rootPath;
@@ -87,9 +87,9 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         manifest: options.manifest as WebExtensionManifest,
       });
 
-      manifestEntries = await manifestManager.readEntries();
+      webExtendEntries = await manifestManager.readEntries();
       const environments = normalizeRsbuildEnvironments({
-        manifestEntries,
+        entries: webExtendEntries,
         isDev: isDevMode(manifestManager.context.mode),
       });
 
@@ -107,7 +107,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
             port: '<port>',
             protocol: 'ws',
           },
-          watchFiles: getDevWatchFiles(manifestManager.context, manifestEntries),
+          watchFiles: getDevWatchFiles(manifestManager.context, webExtendEntries),
         },
         server: {
           printUrls: false,
@@ -175,7 +175,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       const config = environment.config;
 
       // process content entry
-      const contentEntry = manifestEntries?.content;
+      const contentEntry = webExtendEntries?.content;
       if (contentEntry) {
         chain.output.set('hotUpdateGlobal', hotUpdateGlobal);
         chain.plugin('ContentRuntimePlugin').use(ContentRuntimePlugin, [
@@ -189,7 +189,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       }
 
       // process scripting entry
-      const scriptingEntry = manifestEntries?.scripting;
+      const scriptingEntry = webExtendEntries?.scripting;
       const emitCss = config.output.emitCss ?? target === 'web';
       const scriptStyleImports = Object.values(scriptingEntry || {})
         .filter((entry) => entry.entryType === 'style')
@@ -229,8 +229,8 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
     });
 
     api.processAssets({ stage: 'optimize' }, async ({ assets, compilation, environment }) => {
-      if (environment.name !== 'web' || !manifestEntries) return;
-      const manifestEntryInput = Object.values(manifestEntries).reduce((acc, entry) => {
+      if (environment.name !== 'web' || !webExtendEntries) return;
+      const manifestEntryInput = Object.values(webExtendEntries).reduce((acc, entry) => {
         for (const key in entry) {
           acc[key] = entry[key];
         }

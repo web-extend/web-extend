@@ -7,7 +7,7 @@ import { entryProcessors } from './entries/index.js';
 import { polyfillManifest } from './polyfill.js';
 import type {
   ExtensionTarget,
-  ManifestEntries,
+  WebExtendEntries,
   ManifestEntryOutput,
   NormalizeManifestProps,
   WebExtendContext,
@@ -85,7 +85,7 @@ export class ManifestManager {
   public context = {} as WebExtendContext;
   private manifest = {} as WebExtensionManifest;
   private normalizedManifest = {} as WebExtensionManifest;
-  private entries: ManifestEntries | undefined;
+  private entries: WebExtendEntries | undefined;
 
   async normalize(
     options: Partial<WebExtendContext> & {
@@ -108,7 +108,7 @@ export class ManifestManager {
 
   async readEntries() {
     const manifest = this.normalizedManifest;
-    const res = {} as ManifestEntries;
+    const res = {} as WebExtendEntries;
     if (!this.context) return res;
     for (const processor of entryProcessors) {
       if (!processor.readEntry) continue;

@@ -178,7 +178,7 @@ export interface WriteManifestFileProps {
   runtime?: WebExtendRuntime;
 }
 
-export type ManifestEntries = {
+export type WebExtendEntries = {
   [key in WebExtendEntryKey]?: ManifestEntryInput;
 };
 

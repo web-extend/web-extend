@@ -1,19 +1,16 @@
 import type { EnvironmentConfig } from '@rsbuild/core';
+import type { WebExtendEntries } from '@web-extend/manifest/types';
 import { getCssDistPath, getJsDistPath, transformManifestEntry } from './helper.js';
-import type { ManifestEntries } from '@web-extend/manifest/types';
 
 type EnviromentKey = 'web' | 'background';
 
 type NormalizeRsbuildEnvironmentProps = {
-  manifestEntries: ManifestEntries;
+  entries: WebExtendEntries;
   isDev: boolean;
 };
 
-function getWebEnvironmentConfig({
-  manifestEntries,
-  isDev,
-}: NormalizeRsbuildEnvironmentProps): EnvironmentConfig | undefined {
-  const webEntry = Object.values(manifestEntries)
+function getWebEnvironmentConfig({ entries, isDev }: NormalizeRsbuildEnvironmentProps): EnvironmentConfig | undefined {
+  const webEntry = Object.values(entries)
     .filter(Boolean)
     .reduce((res, cur) => Object.assign(res, cur), {});
 
@@ -26,7 +23,7 @@ function getWebEnvironmentConfig({
     },
     output: {
       target: 'web',
-      injectStyles: isDev && Object.keys(manifestEntries.content || {}).length > 0, // needed for content entry
+      injectStyles: isDev && Object.keys(entries.content || {}).length > 0, // needed for content entry
       distPath: {
         js: '',
         css: '',
@@ -40,8 +37,8 @@ function getWebEnvironmentConfig({
 }
 
 export const normalizeRsbuildEnvironments = (options: NormalizeRsbuildEnvironmentProps) => {
-  const { manifestEntries } = options;
-  const { background, ...webEntries } = manifestEntries;
+  const { entries } = options;
+  const { background, ...webEntries } = entries;
 
   const environments: {
     [key in EnviromentKey]?: EnvironmentConfig;
@@ -66,7 +63,7 @@ export const normalizeRsbuildEnvironments = (options: NormalizeRsbuildEnvironmen
 
   const webEnv = getWebEnvironmentConfig({
     ...options,
-    manifestEntries: webEntries,
+    entries: webEntries,
   });
   if (webEnv) {
     environments.web = webEnv;

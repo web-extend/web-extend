@@ -4,11 +4,6 @@ import { resolve } from 'node:path';
 import type { FilenameConfig, RsbuildEntry, Rspack } from '@rsbuild/core';
 import type { ManifestEntryInput } from '@web-extend/manifest/types';
 
-
-export function isDevMode(mode: string | undefined) {
-  return mode === 'development';
-}
-
 export function transformManifestEntry(entry: ManifestEntryInput | undefined) {
   if (!entry) return;
   const res: RsbuildEntry = {};
