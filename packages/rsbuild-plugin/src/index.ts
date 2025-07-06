@@ -4,10 +4,10 @@ import type { RsbuildConfig, RsbuildPlugin, WatchFiles } from '@rsbuild/core';
 import { ManifestManager, matchDeclarativeEntry } from '@web-extend/manifest';
 import { getEntryFileVariants, isDevMode } from '@web-extend/manifest/common';
 import type {
-  WebExtendEntries,
   ManifestEntryOutput,
   WebExtendCommonConfig,
   WebExtendContext,
+  WebExtendEntries,
   WebExtendEntryKey,
   WebExtensionManifest,
 } from '@web-extend/manifest/types';
@@ -75,7 +75,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       await manifestManager.normalize({
         mode: config.mode,
         target: options.target,
-        srcDir: options.srcDir,
+        entriesDir: options.entriesDir || options.srcDir,
         outDir: options.outDir,
         publicDir: options.publicDir,
         buildDirTemplate: options.buildDirTemplate,
@@ -94,12 +94,12 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       });
 
       const extraConfig: RsbuildConfig = {
+        environments,
         source: {
           define: {
             'import.meta.env.WEB_EXTEND_TARGET': JSON.stringify(manifestManager.context.target),
           },
         },
-        environments,
         dev: {
           writeToDisk: true,
           client: {

@@ -203,7 +203,6 @@ export interface WebExtendContext {
   target: ExtensionTarget;
   mode: string;
   rootPath: string;
-  srcDir: string;
   outDir: string;
   publicDir: string;
   entriesDir: WebExtendEntriesDir;

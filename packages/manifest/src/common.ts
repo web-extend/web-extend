@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { basename, extname, isAbsolute, join, relative, resolve, sep } from 'node:path';
-import type { ExtensionTarget, WebExtendEntryDescription, WebExtensionManifest } from './types.js';
+import type { ExtensionTarget, WebExtendEntryDescription, WebExtendEntriesDir, WebExtensionManifest } from './types.js';
 
 const scriptExts = ['.ts', '.js', '.tsx', '.jsx', '.mts', '.cts', '.mjs', '.cjs'];
 const styleExts = ['.css', '.scss', '.sass', '.less', '.styl', '.stylus'];
@@ -15,9 +15,9 @@ function isStyleFile(file: string) {
   return styleExts.some((ext) => file.endsWith(ext));
 }
 
-export function getEntryName(file: string, rootPath: string, srcDir: string) {
+export function getEntryName(file: string, rootPath: string, entriesDir: string) {
   const filePath = isAbsolute(file) ? file : resolve(rootPath, file);
-  const srcPath = isAbsolute(srcDir) ? srcDir : resolve(rootPath, srcDir);
+  const srcPath = isAbsolute(entriesDir) ? entriesDir : resolve(rootPath, entriesDir);
   const relativeFilePath = filePath.startsWith(srcPath)
     ? relative(srcPath, filePath)
     : filePath.startsWith(rootPath)
@@ -111,11 +111,6 @@ export function setTargetEnv(target: string) {
   process.env.WEB_EXTEND_TARGET = target;
 }
 
-export function resolveSrcDir(rootPath: string, srcDir?: string) {
-  if (srcDir) return srcDir;
-  return existsSync(resolve(rootPath, './src')) ? './src' : './';
-}
-
 interface ResolveOutDirProps {
   outDir?: string | undefined;
   target?: ExtensionTarget;
@@ -151,4 +146,32 @@ export async function readManifestFile(distPath: string) {
   }
   const manifest = JSON.parse(await readFile(manifestFile, 'utf-8')) as WebExtensionManifest;
   return manifest;
+}
+
+export function normalizeEntriesDir(rootPath: string, entriesDir?: Partial<WebExtendEntriesDir> | string) {
+  const entriesDirOption = typeof entriesDir === 'string' ? { root: entriesDir } : entriesDir || {};
+  const defaultRoot = existsSync(resolve(rootPath, './src')) ? './src' : './';
+
+  const res: WebExtendEntriesDir = {
+    root: defaultRoot,
+    background: 'background',
+    content: 'content',
+    contents: 'contents',
+    popup: 'popup',
+    options: 'options',
+    sidepanel: 'sidepanel',
+    devtools: 'devtools',
+    panel: 'panel',
+    panels: 'panels',
+    sandbox: 'sandbox',
+    sandboxes: 'sandboxes',
+    newtab: 'newtab',
+    history: 'history',
+    bookmarks: 'bookmarks',
+    scripting: 'scripting',
+    pages: 'pages',
+    icons: 'assets',
+    ...entriesDirOption,
+  };
+  return res;
 }

@@ -13,12 +13,13 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
 };
 
 const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, files, context }) => {
-  const { srcDir, rootPath, target } = context;
-  const srcPath = resolve(rootPath, srcDir);
+  const { rootPath, entriesDir, target } = context;
   const pages = manifest.sandbox?.pages;
   if (pages?.length || target.includes('firefox')) return;
 
-  const entryFile = files.filter((file) => matchDeclarativeEntry(file, context)).map((file) => resolve(srcPath, file));
+  const entryFile = files
+    .filter((file) => matchDeclarativeEntry(file, context))
+    .map((file) => resolve(rootPath, entriesDir.root, file));
   if (entryFile.length) {
     manifest.sandbox = {
       ...(manifest.sandbox || {}),

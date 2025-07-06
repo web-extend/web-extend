@@ -1,16 +1,15 @@
-import { resolveOutDir, resolveSrcDir, resolveTarget, setTargetEnv } from './common.js';
-import type { WebExtendContext, WebExtendEntriesDir } from './types.js';
+import { normalizeEntriesDir, resolveOutDir, resolveTarget, setTargetEnv } from './common.js';
+import type { WebExtendCommonConfig, WebExtendContext } from './types.js';
 
-export const normalizeContext = (
-  options: Partial<WebExtendContext> & { buildDirTemplate?: string },
-): WebExtendContext => {
+export type NormalizeContextOptions = Partial<Pick<WebExtendContext, 'rootPath' | 'mode' | 'runtime'>> &
+  WebExtendCommonConfig;
+
+export const normalizeContext = (options: NormalizeContextOptions): WebExtendContext => {
   const rootPath = options.rootPath || process.cwd();
   const mode = options.mode || process.env.NODE_ENV || 'none';
 
   const target = resolveTarget(options.target);
   setTargetEnv(target);
-
-  const srcDir = resolveSrcDir(rootPath, options.srcDir);
 
   const outDir = resolveOutDir({
     outDir: options.outDir,
@@ -21,38 +20,15 @@ export const normalizeContext = (
 
   const publicDir = options.publicDir || 'public';
 
-  const entriesDir: WebExtendEntriesDir = {
-    root: srcDir,
-    background: 'background',
-    content: 'content',
-    contents: 'contents',
-    popup: 'popup',
-    options: 'options',
-    sidepanel: 'sidepanel',
-    devtools: 'devtools',
-    panel: 'panel',
-    panels: 'panels',
-    sandbox: 'sandbox',
-    sandboxes: 'sandboxes',
-    newtab: 'newtab',
-    history: 'history',
-    bookmarks: 'bookmarks',
-    scripting: 'scripting',
-    pages: 'pages',
-    icons: 'assets',
-    ...(options.entriesDir || {}),
-  };
+  const entriesDir = normalizeEntriesDir(rootPath, options.entriesDir);
 
   return {
     rootPath,
     mode,
     target,
-    srcDir,
     outDir,
     publicDir,
     entriesDir,
     runtime: options?.runtime,
   };
 };
-
-export default normalizeContext;

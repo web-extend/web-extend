@@ -2,7 +2,7 @@ import { existsSync } from 'node:fs';
 import { cp, mkdir, readdir, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { isDevMode, readPackageJson } from './common.js';
-import { normalizeContext } from './context.js';
+import { normalizeContext, type NormalizeContextOptions } from './context.js';
 import { entryProcessors } from './entries/index.js';
 import { polyfillManifest } from './polyfill.js';
 import type {
@@ -87,12 +87,7 @@ export class ManifestManager {
   private normalizedManifest = {} as WebExtensionManifest;
   private entries: WebExtendEntries | undefined;
 
-  async normalize(
-    options: Partial<WebExtendContext> & {
-      manifest?: WebExtensionManifest | ((props: { target: ExtensionTarget; mode: string }) => WebExtensionManifest);
-      buildDirTemplate?: string;
-    },
-  ) {
+  async normalize(options: NormalizeContextOptions) {
     this.context = normalizeContext(options);
 
     const { target, mode } = this.context;
