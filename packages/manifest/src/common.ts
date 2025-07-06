@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { basename, extname, isAbsolute, join, relative, resolve, sep } from 'node:path';
-import type { ExtensionTarget, WebExtendEntriesDir, WebExtendEntryDescription, WebExtensionManifest } from './types.js';
+import type { ExtensionTarget, WebExtendEntriesDir, WebExtendEntryDescription, ExtensionManifest } from './types.js';
 
 const scriptExts = ['.ts', '.js', '.tsx', '.jsx', '.mts', '.cts', '.mjs', '.cjs'];
 const styleExts = ['.css', '.scss', '.sass', '.less', '.styl', '.stylus'];
@@ -144,7 +144,7 @@ export async function readManifestFile(distPath: string) {
   if (!existsSync(manifestFile)) {
     throw new Error(`Cannot find manifest.json in ${distPath}`);
   }
-  const manifest = JSON.parse(await readFile(manifestFile, 'utf-8')) as WebExtensionManifest;
+  const manifest = JSON.parse(await readFile(manifestFile, 'utf-8')) as ExtensionManifest;
   return manifest;
 }
 

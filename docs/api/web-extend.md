@@ -166,7 +166,7 @@ Options:
 
 Customize `manifest` configuration which defaults to `{}`. WebExtend will merge the `manifest` option and the fields parsed from entry files (the previous is prior), and generate `manifest.json` automatically.
 
-- Type: `WebExtensionManifest`
+- Type: `ExtensionManifest`
 - Default: `{}`
 
 #### target

@@ -18,16 +18,16 @@ import type {
   NormalizeManifestProps,
   WebExtendContext,
   WebExtendEntries,
-  WebExtensionManifest,
+  ExtensionManifest,
 } from './types.js';
 
-async function normalizeManifest({ manifest = {} as WebExtensionManifest, context }: NormalizeManifestProps) {
+async function normalizeManifest({ manifest = {} as ExtensionManifest, context }: NormalizeManifestProps) {
   const { rootPath, target, mode, entriesDir } = context;
   const defaultManifest = await initManifest(rootPath, target);
   const finalManifest = {
     ...defaultManifest,
     ...manifest,
-  } as WebExtensionManifest;
+  } as ExtensionManifest;
 
   const requiredFields = ['name', 'version'];
   const invalidFields = requiredFields.filter((field) => !(field in finalManifest));
@@ -67,7 +67,7 @@ async function normalizeManifest({ manifest = {} as WebExtensionManifest, contex
 }
 
 async function initManifest(rootPath: string, target?: ExtensionTarget) {
-  const manifest: Partial<WebExtensionManifest> = {
+  const manifest: Partial<ExtensionManifest> = {
     manifest_version: target?.includes('2') ? 2 : 3,
   };
 
@@ -119,8 +119,8 @@ export const normalizeContext = (options: NormalizeContextOptions): WebExtendCon
 
 export class ManifestManager {
   public context = {} as WebExtendContext;
-  private manifest = {} as WebExtensionManifest;
-  private normalizedManifest = {} as WebExtensionManifest;
+  private manifest = {} as ExtensionManifest;
+  private normalizedManifest = {} as ExtensionManifest;
   private entries: WebExtendEntries | undefined;
 
   async normalize(options: NormalizeContextOptions) {

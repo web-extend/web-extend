@@ -1,5 +1,5 @@
 import { basename, resolve } from 'node:path';
-import type { ManifestEntryProcessor, WebExtensionManifest } from '../types.js';
+import type { ManifestEntryProcessor, ExtensionManifest } from '../types.js';
 
 const key = 'icons';
 
@@ -24,7 +24,7 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
   const { rootPath, entriesDir } = context;
   const srcPath = resolve(rootPath, entriesDir.root);
 
-  const declarativeIcons: WebExtensionManifest['icons'] = {};
+  const declarativeIcons: ExtensionManifest['icons'] = {};
   for (const file of files) {
     const size = matchDeclarativeEntry(file, context)?.size || null;
     if (size) {
@@ -57,7 +57,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest, context }) =
   const pointer = action || browser_action;
   const files = new Set<string>();
 
-  function helper(icons?: WebExtensionManifest['icons']) {
+  function helper(icons?: ExtensionManifest['icons']) {
     if (!icons) return;
     for (const size in icons) {
       const file = icons[size];
@@ -95,7 +95,7 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, output, co
 
   const { rootPath } = context;
 
-  function helper(icons: WebExtensionManifest['icons']) {
+  function helper(icons: ExtensionManifest['icons']) {
     if (!icons) return;
     for (const size in icons) {
       const file = icons[size];

@@ -9,7 +9,7 @@ import type {
   WebExtendContext,
   WebExtendEntries,
   WebExtendEntryKey,
-  WebExtensionManifest,
+  ExtensionManifest,
 } from '@web-extend/manifest/types';
 import { ContentRuntimePlugin, hotUpdateGlobal } from './content.js';
 import { normalizeRsbuildEnvironments } from './environments.js';
@@ -84,7 +84,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
           background: resolve(selfRootPath, 'static/background-runtime.js'),
           contentBridge: resolve(selfRootPath, 'static/content-bridge.js'),
         },
-        manifest: options.manifest as WebExtensionManifest,
+        manifest: options.manifest as ExtensionManifest,
       });
 
       webExtendEntries = await manifestManager.readEntries();

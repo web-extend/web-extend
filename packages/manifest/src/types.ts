@@ -19,7 +19,7 @@ export type WebExtendEntryKey =
   | 'scripting'
   | 'pages';
 
-export interface WebExtensionManifest {
+export interface ExtensionManifest {
   action?: ManifestAction;
   browser_action?: ManifestAction;
   background?: {
@@ -138,7 +138,7 @@ export interface ManifestEntryProcessor {
 }
 
 interface ReadManifestEntryItemProps {
-  manifest: WebExtensionManifest;
+  manifest: ExtensionManifest;
   context: WebExtendContext;
 }
 
@@ -148,19 +148,19 @@ export interface WebExtendRuntime {
 }
 
 export interface NormalizeManifestProps {
-  manifest?: WebExtensionManifest;
+  manifest?: ExtensionManifest;
   context: WebExtendContext;
 }
 
 export interface NormalizeMainfestEntryProps {
-  manifest: WebExtensionManifest;
+  manifest: ExtensionManifest;
   files: string[];
   context: WebExtendContext;
 }
 
 export interface WriteMainfestEntriesProps {
-  normalizedManifest: WebExtensionManifest;
-  manifest: WebExtensionManifest;
+  normalizedManifest: ExtensionManifest;
+  manifest: ExtensionManifest;
   rootPath: string;
   entry: ManifestEntryOutput;
 }
@@ -174,7 +174,7 @@ export interface WriteMainfestEntryItemProps extends Omit<WriteMainfestEntriesPr
 
 export interface WriteManifestFileProps {
   distPath: string;
-  manifest: WebExtensionManifest;
+  manifest: ExtensionManifest;
   mode: string | undefined;
   runtime?: WebExtendRuntime;
 }
@@ -211,7 +211,7 @@ export interface WebExtendContext {
 }
 
 export interface WebExtendCommonConfig {
-  manifest?: WebExtensionManifest | ((props: { target: ExtensionTarget; mode: string }) => WebExtensionManifest);
+  manifest?: ExtensionManifest | ((props: { target: ExtensionTarget; mode: string }) => ExtensionManifest);
   target?: ExtensionTarget;
   srcDir?: string;
   outDir?: string;
