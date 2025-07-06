@@ -1,14 +1,21 @@
 import { existsSync } from 'node:fs';
 import { cp, mkdir, readdir, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
-import { isDevMode, readPackageJson } from './common.js';
-import { type NormalizeContextOptions, normalizeContext } from './context.js';
+import {
+  isDevMode,
+  normalizeEntriesDir,
+  readPackageJson,
+  resolveOutDir,
+  resolveTarget,
+  setTargetEnv,
+} from './common.js';
 import { entryProcessors } from './entries/index.js';
 import { polyfillManifest } from './polyfill.js';
 import type {
   ExtensionTarget,
   ManifestEntryOutput,
   NormalizeManifestProps,
+  NormalizeContextOptions,
   WebExtendContext,
   WebExtendEntries,
   WebExtensionManifest,
@@ -80,6 +87,35 @@ async function initManifest(rootPath: string, target?: ExtensionTarget) {
 
   return manifest;
 }
+
+export const normalizeContext = (options: NormalizeContextOptions): WebExtendContext => {
+  const rootPath = options.rootPath || process.cwd();
+  const mode = options.mode || process.env.NODE_ENV || 'none';
+
+  const target = resolveTarget(options.target);
+  setTargetEnv(target);
+
+  const outDir = resolveOutDir({
+    outDir: options.outDir,
+    target,
+    mode,
+    buildDirTemplate: options.buildDirTemplate,
+  });
+
+  const publicDir = options.publicDir || 'public';
+
+  const entriesDir = normalizeEntriesDir(rootPath, options.entriesDir);
+
+  return {
+    rootPath,
+    mode,
+    target,
+    outDir,
+    publicDir,
+    entriesDir,
+    runtime: options?.runtime,
+  };
+};
 
 export class ManifestManager {
   public context = {} as WebExtendContext;

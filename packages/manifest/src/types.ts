@@ -218,3 +218,6 @@ export interface WebExtendCommonConfig {
   publicDir?: string;
   entriesDir?: Partial<WebExtendEntriesDir> | string;
 }
+
+export type NormalizeContextOptions = Partial<Pick<WebExtendContext, 'rootPath' | 'mode' | 'runtime'>> &
+  WebExtendCommonConfig;

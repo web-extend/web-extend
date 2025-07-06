@@ -73,18 +73,13 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       const selfRootPath = __dirname;
 
       await manifestManager.normalize({
+        ...options,
         mode: config.mode,
-        target: options.target,
-        entriesDir: options.entriesDir || options.srcDir,
-        outDir: options.outDir,
-        publicDir: options.publicDir,
-        buildDirTemplate: options.buildDirTemplate,
         rootPath,
         runtime: {
           background: resolve(selfRootPath, 'static/background-runtime.js'),
           contentBridge: resolve(selfRootPath, 'static/content-bridge.js'),
         },
-        manifest: options.manifest as WebExtensionManifest,
       });
 
       webExtendEntries = await manifestManager.readEntries();
