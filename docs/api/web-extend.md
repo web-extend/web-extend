@@ -4,9 +4,9 @@ outline: [2, 3]
 
 # web-extend
 
-[`web-extend`](https://www.npmjs.com/package/web-extend) is a useful tool set for creating a project, and generating entry files, etc.
+[`web-extend`](https://www.npmjs.com/package/web-extend) is a comprehensive toolkit for creating, developing, and building browser extensions. It provides a streamlined workflow with powerful CLI commands and flexible configuration options.
 
-## CLI
+## Commands
 
 Usage:
 
@@ -146,7 +146,7 @@ Options:
   -h, --help                 display help for command
 ```
 
-## Functions
+## Configuration
 
 ### defineConfig
 
@@ -154,13 +154,13 @@ Options:
 
 Options:
 
-- `manifest`
-- `target`
-- `entriesDir`
-- `outDir`
-- `publicDir`
-- `rsbuild`
-- `webExt`
+- [`manifest`](#manifest)
+- [`target`](#target)
+- [`entriesDir`](#entriesDir)
+- [`outDir`](#outDir)
+- [`publicDir`](#publicDir)
+- [`rsbuild`](#rsbuild)
+- [`webExt`](#webExt)
 
 #### manifest
 
@@ -298,8 +298,6 @@ export default defineWebExtConfig({
   },
 });
 ```
-
-Source: [runner.ts](https://github.com/web-extend/web-extend/blob/main/packages/core/src/runner.ts#L130).
 
 ## Types
 

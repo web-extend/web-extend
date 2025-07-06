@@ -73,7 +73,7 @@ The following table describes the main files and directories at the root of your
 | `web-ext.config.js`      | Configuration file for web-ext                                   |
 | `tsconfig.json`          | TypeScript configuration (if using TypeScript)                   |
 
-## Source Directory
+## Entries Directory
 
 The `src/` directory contains your extension's source code, organized by feature/entry point. Here's the standard structure:
 
