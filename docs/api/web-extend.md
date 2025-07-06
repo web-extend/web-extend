@@ -1,5 +1,5 @@
 ---
-outline: deep
+outline: [2, 3]
 ---
 
 # web-extend
@@ -154,19 +154,38 @@ Options:
 
 Options:
 
+- `manifest`
+- `target`
+- `entriesDir`
+- `outDir`
+- `publicDir`
+- `rsbuild`
+- `webExt`
+
 #### manifest
 
 Customize `manifest` configuration which defaults to `{}`. WebExtend will merge the `manifest` option and the fields parsed from entry files (the previous is prior), and generate `manifest.json` automatically.
 
+- Type: `WebExtensionManifest`
+- Default: `{}`
+
 #### target
 
-Customize browser target which suppports the following targets. -`chrome-mv3` (default)
+Customize browser target which suppports the following targets.
 
-- `firefox-mv2` (recommended for Firefox)
-- `firefox-mv3` (experimental, doesn't work in dev mode)
-- `safari-mv3`
-- `edge-mv3`
-- `opera-mv3`
+- Type:
+
+```ts
+type WebExtendTarget =
+  | "chrome-mv3"
+  | "firefox-mv2"
+  | "firefox-mv3"
+  | "safari-mv3"
+  | "edge-mv3"
+  | "opera-mv3";
+```
+
+- Default: `"chrome-mv3"`
 
 #### entriesDir
 
@@ -175,26 +194,28 @@ Customize entries directory which defaults to the `./src` directory, falling bac
 - Type:
 
 ```ts
-type WebExtendEntriesDir = {
-  root?: string;
-  background?: string;
-  content?: string;
-  contents?: string;
-  popup?: string;
-  options?: string;
-  sidepanel?: string;
-  devtools?: string;
-  panel?: string;
-  panels?: string;
-  sandbox?: string;
-  sandboxes?: string;
-  newtab?: string;
-  history?: string;
-  bookmarks?: string;
-  scripting?: string;
-  pages?: string;
-  icons?: string;
-};
+type WebExtendEntriesDir =
+  | string
+  | {
+      root?: string;
+      background?: string;
+      content?: string;
+      contents?: string;
+      popup?: string;
+      options?: string;
+      sidepanel?: string;
+      devtools?: string;
+      panel?: string;
+      panels?: string;
+      sandbox?: string;
+      sandboxes?: string;
+      newtab?: string;
+      history?: string;
+      bookmarks?: string;
+      scripting?: string;
+      pages?: string;
+      icons?: string;
+    };
 ```
 
 - Default:
@@ -226,19 +247,27 @@ const defaultEntriesDir = {
 
 Customize dist path which defaults to the `dist` directory.
 
+- Type: `string`
+- Default: `"dist"`
+
 #### publicDir
 
 Customize public path which defaults to the `public` directory.
 
+- Type: `string`
+- Default: `"public"`
+
 #### rsbuild
 
-Customize Rsbuild configuration.
+- Type: `RsbuildConfig`
+- Default: `{}`
 
 See [Rsbuild Configuration](https://rsbuild.rs/config/) for more details.
 
 #### webExt
 
-Customize web-ext configuration.
+- Type: `WebExtConfig`
+- Default: `{}`
 
 See [web-ext run](https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#web-ext-run) for a full list of configurations.
 

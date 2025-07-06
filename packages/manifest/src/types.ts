@@ -59,6 +59,7 @@ export interface WebExtensionManifest {
   web_accessible_resources?: ManifestWebAccessibleResourcesC2ItemType[] | string[];
   [key: string]: unknown; // allow other custom fields
 }
+
 export interface ManifestChromeUrlOverrides {
   newtab?: string;
   history?: string;
