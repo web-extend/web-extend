@@ -12,13 +12,13 @@ import {
 import { entryProcessors } from './entries/index.js';
 import { polyfillManifest } from './polyfill.js';
 import type {
+  ExtensionManifest,
   ExtensionTarget,
   ManifestEntryOutput,
   NormalizeContextOptions,
   NormalizeManifestProps,
   WebExtendContext,
   WebExtendEntries,
-  ExtensionManifest,
 } from './types.js';
 
 async function normalizeManifest({ manifest = {} as ExtensionManifest, context }: NormalizeManifestProps) {

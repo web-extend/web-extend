@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { basename, extname, isAbsolute, join, relative, resolve, sep } from 'node:path';
-import type { ExtensionTarget, WebExtendEntriesDir, WebExtendEntryDescription, ExtensionManifest } from './types.js';
+import type { ExtensionManifest, ExtensionTarget, WebExtendEntriesDir, WebExtendEntryDescription } from './types.js';
 
 const scriptExts = ['.ts', '.js', '.tsx', '.jsx', '.mts', '.cts', '.mjs', '.cjs'];
 const styleExts = ['.css', '.scss', '.sass', '.less', '.styl', '.stylus'];

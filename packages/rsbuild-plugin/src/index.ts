@@ -4,12 +4,12 @@ import type { RsbuildConfig, RsbuildPlugin, WatchFiles } from '@rsbuild/core';
 import { ManifestManager, matchDeclarativeEntry } from '@web-extend/manifest';
 import { getEntryFileVariants, isDevMode } from '@web-extend/manifest/common';
 import type {
+  ExtensionManifest,
   ManifestEntryOutput,
   WebExtendCommonConfig,
   WebExtendContext,
   WebExtendEntries,
   WebExtendEntryKey,
-  ExtensionManifest,
 } from '@web-extend/manifest/types';
 import { ContentRuntimePlugin, hotUpdateGlobal } from './content.js';
 import { normalizeRsbuildEnvironments } from './environments.js';
