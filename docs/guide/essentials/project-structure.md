@@ -156,7 +156,7 @@ See [environment variables](../essentials/environment-variables.md) for more det
 
 ### web-extend.config.js
 
-WebExtend allows customization of various aspects of your project through the `web-extend.config.(ts|js|mjs)` file. 
+WebExtend allows customization of various aspects of your project through the `web-extend.config.(ts|js|mjs)` file.
 
 For example:
 
@@ -164,7 +164,7 @@ For example:
 import { defineConfig } from "web-extend";
 
 export default defineConfig({
-  srcDir: "src", // Source directory (default: "src")
+  entriesDir: "./src", // Entries directory (default: "src")
   outDir: ".output", // Output directory (default: "dist")
   manifest: {}, // Custom manifest overrides (default: {})
   target: "firefox-mv2", // Browser target (default: "chrome-mv3")

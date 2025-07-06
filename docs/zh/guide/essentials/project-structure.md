@@ -165,7 +165,7 @@ WebExtend 允许你通过 `web-extend.config.(ts|js|mjs)` 文件来自定义项�
 import { defineConfig } from "web-extend";
 
 export default defineConfig({
-  srcDir: "src", // Source directory (default: "src")
+  entriesDir: "./src", // Entries directory (default: "src")
   outDir: ".output", // Output directory (default: "dist")
   manifest: {}, // Custom manifest overrides (default: {})
   target: "firefox-mv2", // Browser target (default: "chrome-mv3")
