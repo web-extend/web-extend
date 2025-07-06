@@ -17,7 +17,7 @@ import { getWebEnvironmentConfig } from './web.js';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const normalizeRsbuildEnvironments = (options: NormalizeRsbuildEnvironmentProps) => {
-  const { manifestEntries, selfRootPath } = options;
+  const { manifestEntries } = options;
   const { background, ...webEntries } = manifestEntries;
 
   const environments: {
@@ -49,18 +49,8 @@ const normalizeRsbuildEnvironments = (options: NormalizeRsbuildEnvironmentProps)
     environments.web = webEnv;
   }
 
-  // void the empty entry error
-  if (Object.keys(manifestEntries).length === 0) {
-    environments.web = {
-      source: {
-        entry: {
-          _empty: {
-            import: resolve(selfRootPath, './static/empty-entry.js'),
-            html: false,
-          },
-        },
-      },
-    };
+  if (!environments.background && !environments.web) {
+    throw new Error('No entry found, please add at least one entry.');
   }
 
   return environments;
@@ -138,7 +128,6 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       const environments = normalizeRsbuildEnvironments({
         manifestEntries,
         config,
-        selfRootPath,
         context: api.context,
         manifestContext: manifestManager.context,
       });
@@ -278,7 +267,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         const assetName = name.replace(/\.js$/, '');
         const entryType = manifestEntryInput[assetName]?.entryType;
 
-        if (entryType === 'image' || entryType === 'style' || assetName.includes('_empty')) {
+        if (entryType === 'image' || entryType === 'style') {
           // Remove assets that are not needed in the final build
           compilation.deleteAsset(name);
         }

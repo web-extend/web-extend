@@ -5,7 +5,6 @@ export type EnviromentKey = 'web' | 'background';
 
 export type NormalizeRsbuildEnvironmentProps = {
   config: RsbuildConfig;
-  selfRootPath: string;
   manifestEntries: ManifestEntries;
   context: RsbuildContext;
   manifestContext: WebExtendContext;
