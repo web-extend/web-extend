@@ -174,7 +174,6 @@ Options:
 import { defineConfig } from 'web-extend';
 
 export default defineConfig({
-  srcDir: "src",
   outDir: "dist",
   manifest: {...},
   target: "firefox-mv2",
