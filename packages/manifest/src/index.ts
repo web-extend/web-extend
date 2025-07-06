@@ -7,10 +7,10 @@ import { entryProcessors } from './entries/index.js';
 import { polyfillManifest } from './polyfill.js';
 import type {
   ExtensionTarget,
-  WebExtendEntries,
   ManifestEntryOutput,
   NormalizeManifestProps,
   WebExtendContext,
+  WebExtendEntries,
   WebExtensionManifest,
 } from './types.js';
 

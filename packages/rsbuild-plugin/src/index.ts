@@ -141,7 +141,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
     api.onBeforeStartDevServer(() => {
       api.transform({ test: /\.(js|ts)$/, environments: ['web'] }, ({ resourcePath, code, environment }) => {
         const liveReload = environment.config.dev.liveReload;
-        if (liveReload && resourcePath.endsWith('hmr.js')) {
+        if (webExtendEntries?.content && liveReload && resourcePath.endsWith('hmr.js')) {
           const reloadExtensionCode = `
             const bridgeEl = document.getElementById('web-extend-content-bridge');
             if (bridgeEl) {
@@ -157,7 +157,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
           return newCode;
         }
 
-        if (resourcePath.includes('scripting/')) {
+        if (webExtendEntries?.scripting && resourcePath.includes('scripting/')) {
           const newCode = `${code} \n
             if(module.hot) {
               module.hot.invalidate();
@@ -228,8 +228,8 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       }
     });
 
-    api.processAssets({ stage: 'optimize' }, async ({ assets, compilation, environment }) => {
-      if (environment.name !== 'web' || !webExtendEntries) return;
+    api.processAssets({ stage: 'optimize', environments: ['web'] }, async ({ assets, compilation }) => {
+      if (!webExtendEntries) return;
       const manifestEntryInput = Object.values(webExtendEntries).reduce((acc, entry) => {
         for (const key in entry) {
           acc[key] = entry[key];

@@ -13,7 +13,7 @@
     "docs:preview": "cd docs && pnpm preview"
   },
   "simple-git-hooks": {
-    "pre-commit": "npm run lint:write"
+    "pre-commit": "pnpm lint:write"
   },
   "repository": {
     "type": "git",
