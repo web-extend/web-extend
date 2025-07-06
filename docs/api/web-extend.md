@@ -234,9 +234,13 @@ Customize public path which defaults to the `public` directory.
 
 Customize Rsbuild configuration.
 
+See [Rsbuild Configuration](https://rsbuild.rs/config/) for more details.
+
 #### webExt
 
 Customize web-ext configuration.
+
+See [web-ext run](https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#web-ext-run) for a full list of configurations.
 
 Usage:
 
