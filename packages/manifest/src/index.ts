@@ -14,8 +14,8 @@ import { polyfillManifest } from './polyfill.js';
 import type {
   ExtensionTarget,
   ManifestEntryOutput,
-  NormalizeManifestProps,
   NormalizeContextOptions,
+  NormalizeManifestProps,
   WebExtendContext,
   WebExtendEntries,
   WebExtensionManifest,
