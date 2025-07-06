@@ -5,7 +5,7 @@ import { normalizeEntriesDir } from '@web-extend/manifest/common';
 import type { WebExtendEntriesDir } from '@web-extend/manifest/types';
 import { loadWebExtendConfig } from './config.js';
 import { entrypointItems } from './constant.js';
-import { checkEntrypoints, copyEntryFiles, getTemplatePath, resolveEntryTemplate } from './init.js';
+import { normalizeEntrypoints, copyEntryFiles, getTemplatePath, resolveEntryTemplate } from './init.js';
 
 export interface GenerateOptions {
   entries: string[];
@@ -69,15 +69,18 @@ async function generateEntryFiles({
   entriesDir,
   entries,
 }: GenerateOptions & { entriesDir: WebExtendEntriesDir }) {
-  const entrypoints = await checkEntrypoints(entries || []);
+  const entrypoints = await normalizeEntrypoints(entries || [], entriesDir);
   if (!entrypoints.length) {
     throw Error('Please select an entrypoint at least.');
   }
 
   const finalTemplate = await resolveEntryTemplate(template);
   const templatePath = getTemplatePath(finalTemplate);
-  const destPath = resolve(root, entriesDir.root);
-  await copyEntryFiles(resolve(templatePath, 'src'), destPath, entrypoints);
+  await copyEntryFiles({
+    sourcePath: resolve(templatePath, 'src'),
+    destPath: resolve(root, entriesDir.root),
+    entrypoints,
+  });
 }
 
 export async function generate(options: GenerateOptions) {
