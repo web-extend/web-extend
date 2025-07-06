@@ -19,7 +19,7 @@ hero:
 
 features:
   - icon: 📝
-    title: Declarative Entry Points
+    title: File-based Entry Points
     details: Automatically parses entry points based on the file system, reducing manifest.json configuration burden
     link: /guide/essentials/entrypoints
   - icon: ⚡️

@@ -8,12 +8,12 @@ outline: [2, 3]
 Entry points are the core building blocks of a browser extension. They define different components like background, popup, or content scripts that make up your extension. WebExtend makes it easy to manage these entry points through a file-based convention system.
 :::
 
-## Declarative Entry Points
+## File-based Entry Points
 
 WebExtend supports file-conventional entry points, meaning it parses entry points based on the file system and generates the corresponding manifest fields. So you no longer need to define these entry points manually in `manifest.json`.
 
-::: tip Why Declarative Entry Points?
-Declarative entry points reduce boilerplate code and make your extension more maintainable. Instead of managing complex manifest configurations, you can focus on writing the actual extension code.
+::: tip Why File-based Entry Points?
+File-based entry points reduce boilerplate code and make your extension more maintainable. Instead of managing complex manifest configurations, you can focus on writing the actual extension code.
 :::
 
 In WebExtend, all entry points are located in the source directory. Every entry point can be a folder or a file.
@@ -48,7 +48,7 @@ src/
 Make sure to follow the exact file naming conventions. For example, `background.ts` will be recognized, but `my-background.ts` won't be.
 :::
 
-## Entry Types
+## Entry Point Types
 
 ### Background
 

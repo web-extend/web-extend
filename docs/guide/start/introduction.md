@@ -32,7 +32,7 @@ WebExtend solves these issues with a thoughtful, developer-first approach.
 
 ## Main Features {#main-features}
 
-### Declarative Entry Points {#declarative-entrypoints}
+### File-based Entry Points {#file-based-entrypoints}
 
 WebExtend uses a file-system based approach for managing extension entrypoints. Simply create files in the conventional directories, and WebExtend automatically configures your `manifest.json`. This reduces configuration overhead and makes your project structure more intuitive.
 
