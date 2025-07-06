@@ -2,10 +2,10 @@ import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { checkbox } from '@inquirer/prompts';
 import { normalizeEntriesDir } from '@web-extend/manifest/common';
+import type { WebExtendEntriesDir } from '@web-extend/manifest/types';
 import { loadWebExtendConfig } from './config.js';
 import { entrypointItems } from './constant.js';
 import { checkEntrypoints, copyEntryFiles, getTemplatePath, resolveEntryTemplate } from './init.js';
-import type { WebExtendEntriesDir } from '@web-extend/manifest/types';
 
 export interface GenerateOptions {
   entries: string[];

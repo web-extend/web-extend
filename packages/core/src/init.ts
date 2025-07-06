@@ -1,6 +1,6 @@
 import { existsSync } from 'node:fs';
 import { copyFile, cp, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
-import { basename, dirname, relative, resolve } from 'node:path';
+import { basename, dirname, relative, resolve, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { checkbox, input, select } from '@inquirer/prompts';
 import chalk from 'chalk';
@@ -243,7 +243,7 @@ export async function copyEntryFiles(source: string, dest: string, entrypoints?:
       continue;
     }
 
-    const destName = sourceFile.isFile() ? sourceFile.name : name;
+    const destName = sourceFile.isFile() ? `${name}${extname(sourceFile.name)}` : name;
     await cp(resolve(source, sourceFile.name), resolve(dest, destName), { recursive: true });
   }
 }

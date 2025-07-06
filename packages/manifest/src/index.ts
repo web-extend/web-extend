@@ -2,7 +2,7 @@ import { existsSync } from 'node:fs';
 import { cp, mkdir, readdir, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { isDevMode, readPackageJson } from './common.js';
-import { normalizeContext, type NormalizeContextOptions } from './context.js';
+import { type NormalizeContextOptions, normalizeContext } from './context.js';
 import { entryProcessors } from './entries/index.js';
 import { polyfillManifest } from './polyfill.js';
 import type {
