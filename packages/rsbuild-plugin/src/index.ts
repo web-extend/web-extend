@@ -1,60 +1,23 @@
 import { dirname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import type { EnvironmentConfig, RsbuildConfig, RsbuildPlugin, WatchFiles } from '@rsbuild/core';
+import type { RsbuildConfig, RsbuildPlugin, WatchFiles } from '@rsbuild/core';
 import { ManifestManager, matchDeclarativeEntry } from '@web-extend/manifest';
-import { getEntryFileVariants } from '@web-extend/manifest/common';
+import { getEntryFileVariants, isDevMode } from '@web-extend/manifest/common';
 import type {
   ManifestEntries,
   ManifestEntryOutput,
+  WebExtendCommonConfig,
   WebExtendContext,
   WebExtendEntryKey,
   WebExtensionManifest,
 } from '@web-extend/manifest/types';
-import { clearOutdatedHotUpdateFiles, getJsDistPath, getRsbuildEntryFiles, transformManifestEntry } from './helper.js';
-import type { EnviromentKey, NormalizeRsbuildEnvironmentProps, PluginWebExtendOptions } from './types.js';
-import { getWebEnvironmentConfig } from './web.js';
+import { clearOutdatedHotUpdateFiles, getRsbuildEntryFiles } from './helper.js';
+import { normalizeRsbuildEnvironments } from './environments.js';
+import { ContentRuntimePlugin, hotUpdateGlobal } from './content.js';
+
+export type PluginWebExtendOptions = WebExtendCommonConfig;
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-
-const normalizeRsbuildEnvironments = (options: NormalizeRsbuildEnvironmentProps) => {
-  const { manifestEntries } = options;
-  const { background, ...webEntries } = manifestEntries;
-
-  const environments: {
-    [key in EnviromentKey]?: EnvironmentConfig;
-  } = {};
-
-  if (background) {
-    environments.background = {
-      source: {
-        entry: transformManifestEntry(background),
-      },
-      output: {
-        target: 'web-worker',
-        distPath: {
-          js: '',
-        },
-        filename: {
-          js: getJsDistPath(background),
-        },
-      },
-    };
-  }
-
-  const webEnv = getWebEnvironmentConfig({
-    ...options,
-    manifestEntries: webEntries,
-  });
-  if (webEnv) {
-    environments.web = webEnv;
-  }
-
-  if (!environments.background && !environments.web) {
-    throw new Error('No entry found, please add at least one entry.');
-  }
-
-  return environments;
-};
 
 const getDevWatchFiles = (context: WebExtendContext, entries?: ManifestEntries): WatchFiles[] => {
   if (!entries) return [];
@@ -127,9 +90,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       manifestEntries = await manifestManager.readEntries();
       const environments = normalizeRsbuildEnvironments({
         manifestEntries,
-        config,
-        context: api.context,
-        manifestContext: manifestManager.context,
+        isDev: isDevMode(manifestManager.context.mode),
       });
 
       const extraConfig: RsbuildConfig = {
@@ -210,46 +171,61 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
     });
 
     api.modifyBundlerChain(async (chain, { target, environment, isDev, CHAIN_ID, rspack }) => {
+      if (!isDev) return;
       const config = environment.config;
+
+      // process content entry
+      const contentEntry = manifestEntries?.content;
+      if (contentEntry) {
+        chain.output.set('hotUpdateGlobal', hotUpdateGlobal);
+        chain.plugin('ContentRuntimePlugin').use(ContentRuntimePlugin, [
+          {
+            getPort: () => config.server.port,
+            target: manifestManager.context.target,
+            mode: manifestManager.context.mode,
+            entry: config.source.entry || {},
+          },
+        ]);
+      }
+
+      // process scripting entry
+      const scriptingEntry = manifestEntries?.scripting;
       const emitCss = config.output.emitCss ?? target === 'web';
-
-      if (!emitCss || !isDev || !config.output.injectStyles) return;
-
-      const scriptStyleImports = Object.values(manifestEntries?.scripting || {})
+      const scriptStyleImports = Object.values(scriptingEntry || {})
         .filter((entry) => entry.entryType === 'style')
         .flatMap((entry) => entry.input);
-      if (!scriptStyleImports.length) return;
+      if (scriptingEntry && emitCss && config.output.injectStyles && scriptStyleImports.length) {
+        const cssRule = chain.module.rule(CHAIN_ID.RULE.CSS);
+        const extractRule = cssRule.oneOf('css-extract-styles').resource((value) => scriptStyleImports.includes(value));
+        const injectRule = cssRule.oneOf('css-inject-styles');
+        const originalUses = cssRule.uses.entries();
 
-      const cssRule = chain.module.rule(CHAIN_ID.RULE.CSS);
-      const extractRule = cssRule.oneOf('css-extract-styles').resource((value) => scriptStyleImports.includes(value));
-      const injectRule = cssRule.oneOf('css-inject-styles');
-      const originalUses = cssRule.uses.entries();
+        Object.keys(originalUses).forEach((key) => {
+          const use = originalUses[key];
+          if (key === CHAIN_ID.USE.STYLE) {
+            extractRule.use(CHAIN_ID.USE.MINI_CSS_EXTRACT).loader(rspack.CssExtractRspackPlugin.loader);
+          } else {
+            extractRule
+              .use(key)
+              .loader(use.get('loader'))
+              .options(use.get('options') || {});
+          }
 
-      Object.keys(originalUses).forEach((key) => {
-        const use = originalUses[key];
-        if (key === CHAIN_ID.USE.STYLE) {
-          extractRule.use(CHAIN_ID.USE.MINI_CSS_EXTRACT).loader(rspack.CssExtractRspackPlugin.loader);
-        } else {
-          extractRule
+          injectRule
             .use(key)
             .loader(use.get('loader'))
             .options(use.get('options') || {});
-        }
+        });
 
-        injectRule
-          .use(key)
-          .loader(use.get('loader'))
-          .options(use.get('options') || {});
-      });
+        const extractPluginOptions = config.tools.cssExtract.pluginOptions;
+        chain.plugin(CHAIN_ID.PLUGIN.MINI_CSS_EXTRACT).use(rspack.CssExtractRspackPlugin, [
+          {
+            ...extractPluginOptions,
+          },
+        ]);
 
-      const extractPluginOptions = config.tools.cssExtract.pluginOptions;
-      chain.plugin(CHAIN_ID.PLUGIN.MINI_CSS_EXTRACT).use(rspack.CssExtractRspackPlugin, [
-        {
-          ...extractPluginOptions,
-        },
-      ]);
-
-      cssRule.uses.clear();
+        cssRule.uses.clear();
+      }
     });
 
     api.processAssets({ stage: 'optimize' }, async ({ assets, compilation, environment }) => {

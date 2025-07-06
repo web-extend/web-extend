@@ -1,5 +1,6 @@
 import type { RsbuildEntry, Rspack } from '@rsbuild/core';
-import { hotUpdateGlobal } from './helper.js';
+
+export const hotUpdateGlobal = 'webpackHotUpdateWebExtend';
 
 type RspackContentRuntimePluginOptions = {
   getPort: () => number | undefined;
