@@ -39,6 +39,35 @@ Options:
   -h, --help             display help for command
 ```
 
+Available templates:
+
+- `vanilla`
+- `react`
+- `vue`
+- `preact`
+- `svelte`
+- `solid`
+
+Available entrypoints:
+
+- `background`
+- `content`
+- `contents/{name}`
+- `popup`
+- `options`
+- `sidepanel`
+- `devtools`
+- `panel`
+- `panels/{name}`
+- `sandbox`
+- `sandboxes/{name}`
+- `newtab`
+- `history`
+- `bookmarks`
+- `scripting`
+- `pages/{name}`
+- `icons`
+
 ### web-extend generate
 
 The `generate` command is used to generate entry files.
@@ -58,6 +87,10 @@ Options:
   --size <size...>       specify sizes of output icons
   -h, --help             display help for command
 ```
+
+Available templates: The same as the `init` command.
+
+Available entrypoints: The same as the `init` command.
 
 ### web-extend dev
 
@@ -146,11 +179,11 @@ Options:
   -h, --help                 display help for command
 ```
 
-## Configuration
+## Functions
 
 ### defineConfig
 
-`defineConfig` function help you to customize WebExtend's configuration options.
+`defineConfig` function helps you to customize WebExtend's configuration options.
 
 Options:
 

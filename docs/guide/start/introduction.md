@@ -54,7 +54,6 @@ Experience a development environment that just works:
 
 - 🔥 True HMR for all components including content scripts
 - 🚀 Automatic browser opening and extension running
-- ⚡️ Instant feedback loop for rapid development
 - 🛠️ Scaffold support with project templates and component generators
 
 ### Multi-Browser Support {#multi-browser-support}
@@ -91,7 +90,6 @@ See [using libraries](../essentials/using-libraries.md) for integration guides.
 Built on [Rsbuild](https://rsbuild.rs/), WebExtend delivers exceptional performance:
 
 - ⚡️ Blazing fast dev server startup
-- 📦 Efficient bundling with automatic code splitting
 - 🔄 Quick rebuild times with intelligent caching
 - 📊 Bundle size optimization
 

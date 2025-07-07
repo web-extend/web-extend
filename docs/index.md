@@ -40,5 +40,5 @@ features:
   - icon: 🚀
     title: Lightning Fast Performance
     details: Powered by Rsbuild for extremely fast development and building
-    link: https://rsbuild.rs/index
+    link: /guide/start/introduction#lightning-fast-performance
 ---
