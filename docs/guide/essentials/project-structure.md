@@ -19,7 +19,7 @@ my-web-extension/
 │   │   ├── icon-16.png
 │   │   ├── icon-32.png
 │   │   └── icon-128.png
-│   ├── background/        # Background script
+│   ├── background        # Background script
 │   │   └── index.js
 │   ├── content/           # Content script
 │   │   └── index.js
@@ -142,7 +142,7 @@ Loading priority (highest to lowest):
 
 Example configuration:
 
-```env
+```
 # .env
 API_ENDPOINT=https://api.example.com
 DEBUG=false

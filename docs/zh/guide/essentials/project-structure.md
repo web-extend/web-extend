@@ -143,7 +143,7 @@ WebExtend 使用灵活的环境配置系统：
 
 配置示例
 
-```env
+```
 # .env
 API_ENDPOINT=https://api.example.com
 DEBUG=false
