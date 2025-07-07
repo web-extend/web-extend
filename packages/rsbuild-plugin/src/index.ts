@@ -182,7 +182,6 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
           {
             getPort: () => config.server.port,
             target: manifestManager.context.target,
-            mode: manifestManager.context.mode,
             entry: config.source.entry || {},
           },
         ]);

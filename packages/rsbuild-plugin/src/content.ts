@@ -6,7 +6,6 @@ type RspackContentRuntimePluginOptions = {
   getPort: () => number | undefined;
   target: string;
   entry: RsbuildEntry;
-  mode: string;
 };
 
 class ContentRuntimePlugin implements Rspack.RspackPluginInstance {

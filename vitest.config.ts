@@ -8,6 +8,7 @@ export default defineConfig({
         ...coverageConfigDefaults.exclude,
         '**/dist/**',
         '**/static/**',
+        '**/bin/**',
         '**/rslib.config.ts',
         'packages/core/templates/**',
         'docs/**',

@@ -197,14 +197,12 @@ Options:
 
 #### manifest
 
-Customize `manifest` configuration which defaults to `{}`. WebExtend will merge the `manifest` option and the fields parsed from entry files (the previous is prior), and generate `manifest.json` automatically.
-
 - Type: `ExtensionManifest`
 - Default: `{}`
 
-#### target
+Customize `manifest` configuration which defaults to `{}`. WebExtend will merge the `manifest` option and the fields parsed from entry files (the previous is prior), and generate `manifest.json` automatically.
 
-Customize browser target which suppports the following targets.
+#### target
 
 - Type:
 
@@ -220,9 +218,9 @@ type WebExtendTarget =
 
 - Default: `"chrome-mv3"`
 
-#### entriesDir
+Customize browser target which suppports the following targets.
 
-Customize entries directory which defaults to the `./src` directory, falling back to the project root path if `./src` doesn't exists. You can also specify the entries directory for each entry type.
+#### entriesDir
 
 - Type:
 
@@ -276,19 +274,21 @@ const defaultEntriesDir = {
 };
 ```
 
-#### outDir
+Customize entries directory which defaults to the `./src` directory, falling back to the project root path if `./src` doesn't exists. You can also specify the entries directory for each entry type.
 
-Customize dist path which defaults to the `dist` directory.
+#### outDir
 
 - Type: `string`
 - Default: `"dist"`
 
-#### publicDir
+Customize dist path.
 
-Customize public path which defaults to the `public` directory.
+#### publicDir
 
 - Type: `string`
 - Default: `"public"`
+
+Customize public path.
 
 #### rsbuild
 
@@ -336,9 +336,7 @@ export default defineWebExtConfig({
 
 ### ContentScriptConfig
 
-`ContentScriptConfig` is a TypeScript type that helps you define content script's config.
-
-Type:
+- Type:
 
 ```ts
 export interface ContentScriptConfig {
@@ -353,6 +351,8 @@ export interface ContentScriptConfig {
   world?: "ISOLATED" | "MAIN";
 }
 ```
+
+`ContentScriptConfig` is a TypeScript type that helps you define content script's config.
 
 Usage:
 
