@@ -88,7 +88,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       });
 
       const { target, outDir, publicDir, mode } = manifestManager.context;
-      
+
       webExtendEntries = await manifestManager.readEntries();
       const environments = normalizeRsbuildEnvironments({
         entries: webExtendEntries,
