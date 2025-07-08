@@ -213,6 +213,9 @@ export interface WebExtendContext {
 export interface WebExtendCommonConfig {
   manifest?: ExtensionManifest | ((props: { target: ExtensionTarget; mode: string }) => ExtensionManifest);
   target?: ExtensionTarget;
+  /**
+   * @deprecated Use `entriesDir` instead.
+   */
   srcDir?: string;
   outDir?: string;
   buildDirTemplate?: string;
