@@ -87,17 +87,19 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         manifest: options.manifest as ExtensionManifest,
       });
 
+      const { target, outDir, publicDir, mode } = manifestManager.context;
+      
       webExtendEntries = await manifestManager.readEntries();
       const environments = normalizeRsbuildEnvironments({
         entries: webExtendEntries,
-        isDev: isDevMode(manifestManager.context.mode),
+        isDev: isDevMode(mode),
       });
 
       const extraConfig: RsbuildConfig = {
         environments,
         source: {
           define: {
-            'import.meta.env.WEB_EXTEND_TARGET': JSON.stringify(manifestManager.context.target),
+            'import.meta.env.WEB_EXTEND_TARGET': JSON.stringify(target),
           },
         },
         dev: {
@@ -115,12 +117,12 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
             origin: '*',
           },
           publicDir: {
-            name: manifestManager.context.publicDir,
+            name: publicDir,
           },
         },
         output: {
           distPath: {
-            root: manifestManager.context.outDir,
+            root: outDir,
           },
         },
         tools: {
