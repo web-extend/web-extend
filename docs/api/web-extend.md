@@ -200,7 +200,7 @@ Options:
 - Type: `ExtensionManifest`
 - Default: `{}`
 
-Customize `manifest` configuration which defaults to `{}`. WebExtend will merge the `manifest` option and the fields parsed from entry files (the previous is prior), and generate `manifest.json` automatically.
+Customize `manifest` configuration. WebExtend will merge the `manifest` option and the fields parsed from entry files (the previous takes precedence). The merged configuration will be used to generate `manifest.json` automatically.
 
 #### target
 
@@ -218,7 +218,7 @@ type WebExtendTarget =
 
 - Default: `"chrome-mv3"`
 
-Customize browser target which suppports the following targets.
+Customize browser target.
 
 #### entriesDir
 

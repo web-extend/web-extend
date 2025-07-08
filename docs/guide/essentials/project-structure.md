@@ -19,7 +19,7 @@ my-web-extension/
 │   │   ├── icon-16.png
 │   │   ├── icon-32.png
 │   │   └── icon-128.png
-│   ├── background        # Background script
+│   ├── background/        # Background script
 │   │   └── index.js
 │   ├── content/           # Content script
 │   │   └── index.js
@@ -75,7 +75,7 @@ The following table describes the main files and directories at the root of your
 
 ## Entries Directory
 
-The `src/` directory contains your extension's source code, organized by feature/entry point. Here's the standard structure:
+Entries directory is used to organize entry files.
 
 | Name                       | Description                                               |
 | -------------------------- | --------------------------------------------------------- |
