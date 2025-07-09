@@ -1,12 +1,11 @@
+import { existsSync } from 'node:fs';
+import { readdir } from 'node:fs/promises';
 import { basename, resolve } from 'node:path';
 import type { ExtensionManifest, ManifestEntryProcessor } from '../types.js';
 
 const key = 'icons';
 
-const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file, context) => {
-  const { entriesDir } = context;
-  if (!file.startsWith(entriesDir.icons)) return null;
-
+const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file) => {
   const ext = '.png';
   const match = file.match(/icon-?(\d+)\.png$/);
   const size = match ? Number(match[1]) : null;
@@ -20,15 +19,19 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
   return null;
 };
 
-const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, files, context }) => {
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context }) => {
   const { rootPath, entriesDir } = context;
-  const srcPath = resolve(rootPath, entriesDir.root);
 
+  const iconsPath = resolve(rootPath, entriesDir.root, entriesDir.icons);
+  if (!existsSync(iconsPath)) return;
+
+  const files = await readdir(iconsPath);
   const declarativeIcons: ExtensionManifest['icons'] = {};
   for (const file of files) {
-    const size = matchDeclarativeEntry(file, context)?.size || null;
+    const filePath = resolve(iconsPath, file);
+    const size = matchDeclarativeEntry(filePath, context)?.size || null;
     if (size) {
-      declarativeIcons[size] = resolve(srcPath, file);
+      declarativeIcons[size] = filePath;
     }
   }
   if (!Object.keys(declarativeIcons).length) return;
