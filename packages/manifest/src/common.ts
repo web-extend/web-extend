@@ -1,6 +1,6 @@
 import { existsSync } from 'node:fs';
-import { readFile } from 'node:fs/promises';
-import { basename, extname, isAbsolute, join, relative, resolve, sep } from 'node:path';
+import { readFile, readdir } from 'node:fs/promises';
+import { basename, dirname, extname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import type { ExtensionManifest, ExtensionTarget, WebExtendEntriesDir, WebExtendEntryDescription } from './types.js';
 
 const scriptExts = ['.ts', '.js', '.tsx', '.jsx', '.mts', '.cts', '.mjs', '.cjs'];
@@ -38,6 +38,22 @@ export function getEntryFileVariants(name: string, ext: string) {
 export const matchSingleDeclarativeEntryFile = (key: string, file: string) => {
   const res = getEntryFileVariants(key, '.js').includes(file);
   return res ? { name: key, ext: extname(file) } : null;
+};
+
+export const matchSingleDeclarativeEntryFileV2 = (entryDir: string) => {
+  const name = basename(entryDir);
+  const dirPath = dirname(entryDir);
+  const variants = getEntryFileVariants(name, '.js');
+  let res = null;
+  for (const variant of variants) {
+    const filePath = resolve(dirPath, variant);
+    if (existsSync(filePath)) {
+      res = { name, ext: extname(filePath), path: filePath };
+      break;
+    }
+  }
+
+  return res;
 };
 
 export const matchMultipleDeclarativeEntryFile = (
