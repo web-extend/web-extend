@@ -56,6 +56,24 @@ export const getSingleDeclarativeEntryFile = (entryDir: string) => {
   return res;
 };
 
+export const getMultipleDeclarativeEntryFile = async (entryDir: string) => {
+  if (!existsSync(entryDir)) return null;
+
+  // match [key]/*.[ext] or [key]/*/index.[ext]
+  const files = await readdir(entryDir);
+  const res: { name: string; ext: string; path: string }[] = [];
+  for (const file of files) {
+    const base = basename(file, extname(file));
+    const subEntryDir = resolve(entryDir, base);
+    const item = getSingleDeclarativeEntryFile(subEntryDir);
+    if (item) {
+      res.push(item);
+    }
+  }
+
+  return res;
+};
+
 export const matchMultipleDeclarativeEntryFile = (
   key: string,
   file: string,

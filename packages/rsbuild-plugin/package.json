@@ -2,11 +2,7 @@
   "name": "@web-extend/rsbuild-plugin",
   "version": "0.0.1",
   "description": "An Rsbuild plugin for developing and building web extensions.",
-  "keywords": [
-    "web extensions",
-    "browser extensions",
-    "rsbuild plugin"
-  ],
+  "keywords": ["web extensions", "browser extensions", "rsbuild plugin"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/web-extend/web-extend.git"
@@ -22,9 +18,7 @@
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "build": "rslib build",
     "dev": "rslib build --watch",

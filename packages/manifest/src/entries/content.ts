@@ -3,6 +3,7 @@ import { copyFile, mkdir, readFile } from 'node:fs/promises';
 import { basename, posix, resolve } from 'node:path';
 import {
   getEntryName,
+  getMultipleDeclarativeEntryFile,
   isDevMode,
   matchMultipleDeclarativeEntryFile,
   matchSingleDeclarativeEntryFile,
@@ -27,6 +28,9 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
 
 const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, files, context }) => {
   const { rootPath, entriesDir } = context;
+
+  const entryDir = resolve(rootPath, entriesDir.root, entriesDir.contents);
+  const entry = await getMultipleDeclarativeEntryFile(entryDir);
 
   if (!manifest.content_scripts?.length) {
     const entryFile = files
