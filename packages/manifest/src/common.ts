@@ -40,7 +40,7 @@ export const matchSingleDeclarativeEntryFile = (key: string, file: string) => {
   return res ? { name: key, ext: extname(file) } : null;
 };
 
-export const matchSingleDeclarativeEntryFileV2 = (entryDir: string) => {
+export const getSingleDeclarativeEntryFile = (entryDir: string) => {
   const name = basename(entryDir);
   const dirPath = dirname(entryDir);
   const variants = getEntryFileVariants(name, '.js');

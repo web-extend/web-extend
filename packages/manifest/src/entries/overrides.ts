@@ -1,5 +1,5 @@
 import { resolve } from 'node:path';
-import { matchSingleDeclarativeEntryFile } from '../common.js';
+import { matchSingleDeclarativeEntryFile, getSingleDeclarativeEntryFile } from '../common.js';
 import type {
   ManifestChromeUrlOverrides,
   ManifestEntryInput,
@@ -15,19 +15,18 @@ const overrideProcessors = overrides.map((key) => {
     return matchSingleDeclarativeEntryFile(entriesDir[key], file);
   };
 
-  const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context, files }) => {
+  const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context }) => {
     const { rootPath, entriesDir } = context;
     const { chrome_url_overrides = {} } = manifest;
     if (Object.keys(chrome_url_overrides).length) return;
 
-    const entryFile = files
-      .filter((file) => matchDeclarativeEntry(file, context))
-      .map((file) => resolve(rootPath, entriesDir.root, file))[0];
+    const entryDir = resolve(rootPath, entriesDir.root, entriesDir[key]);
+    const entry = getSingleDeclarativeEntryFile(entryDir);
 
-    if (entryFile) {
+    if (entry) {
       manifest.chrome_url_overrides = {
         ...(manifest.chrome_url_overrides || {}),
-        [key]: entryFile,
+        [key]: entry.path,
       };
     }
   };
