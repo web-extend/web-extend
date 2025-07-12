@@ -1,6 +1,6 @@
 import { existsSync } from 'node:fs';
 import { copyFile, mkdir, readFile } from 'node:fs/promises';
-import { basename, dirname, posix, relative, resolve } from 'node:path';
+import { basename, posix, resolve } from 'node:path';
 import {
   getEntryName,
   getMultipleDeclarativeEntryFile,
@@ -20,23 +20,10 @@ import type {
 const key = 'content';
 
 const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (filePath, context) => {
-  const { rootPath, entriesDir } = context;
-  const singleEntryDir = resolve(rootPath, entriesDir.root, entriesDir.content);
-  const multipleEntryDir = resolve(rootPath, entriesDir.root, entriesDir.contents);
-
-  if (filePath.startsWith(singleEntryDir)) {
-    const entryName = basename(singleEntryDir);
-    const file = relative(dirname(singleEntryDir), filePath);
-    return matchSingleDeclarativeEntryFile(entryName, file);
-  }
-
-  if (filePath.startsWith(multipleEntryDir)) {
-    const entryName = basename(multipleEntryDir);
-    const file = relative(dirname(multipleEntryDir), filePath);
-    return matchMultipleDeclarativeEntryFile(entryName, file);
-  }
-
-  return null;
+  return (
+    matchSingleDeclarativeEntryFile('content', filePath, context) ||
+    matchMultipleDeclarativeEntryFile('contents', filePath, context)
+  );
 };
 
 const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context }) => {

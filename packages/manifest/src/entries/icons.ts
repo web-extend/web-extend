@@ -1,17 +1,22 @@
 import { existsSync } from 'node:fs';
 import { readdir } from 'node:fs/promises';
-import { basename, resolve } from 'node:path';
+import { basename, relative, resolve } from 'node:path';
 import type { ExtensionManifest, ManifestEntryProcessor } from '../types.js';
 
 const key = 'icons';
 
-const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file) => {
+const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (filePath, context) => {
+  const { rootPath, entriesDir } = context;
+  const entryDir = resolve(rootPath, entriesDir.root, entriesDir.icons);
+  if (!filePath.startsWith(entryDir)) return null;
+
+  const file = relative(entryDir, filePath);
   const ext = '.png';
   const match = file.match(/icon-?(\d+)\.png$/);
   const size = match ? Number(match[1]) : null;
   if (size) {
     return {
-      name: basename(file, ext),
+      name: basename(filePath, ext),
       ext,
       size,
     };

@@ -9,11 +9,10 @@ import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
 
 const key = 'panel';
 
-const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file, context) => {
-  const { entriesDir } = context;
+const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (filePath, context) => {
   return (
-    matchSingleDeclarativeEntryFile(entriesDir.panel, file) ||
-    matchMultipleDeclarativeEntryFile(entriesDir.panels, file)
+    matchSingleDeclarativeEntryFile('panel', filePath, context) ||
+    matchMultipleDeclarativeEntryFile('panels', filePath, context)
   );
 };
 

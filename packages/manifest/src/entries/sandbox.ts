@@ -10,11 +10,10 @@ import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
 
 const key = 'sandbox';
 
-const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file, context) => {
-  const { entriesDir } = context;
+const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (filePath, context) => {
   return (
-    matchSingleDeclarativeEntryFile(entriesDir.sandbox, file) ||
-    matchMultipleDeclarativeEntryFile(entriesDir.sandboxes, file)
+    matchSingleDeclarativeEntryFile(key, filePath, context) ||
+    matchMultipleDeclarativeEntryFile('sandboxes', filePath, context)
   );
 };
 

@@ -1,20 +1,11 @@
-import { basename, dirname, relative, resolve } from 'node:path';
+import { resolve } from 'node:path';
 import { getSingleDeclarativeEntryFile, isDevMode, matchSingleDeclarativeEntryFile } from '../common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
 
 const key = 'background';
 
 const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (filePath, context) => {
-  const { rootPath, entriesDir } = context;
-  const entryDir = resolve(rootPath, entriesDir.root, entriesDir.background);
-
-  if (filePath.startsWith(entryDir)) {
-    const entryName = basename(entryDir);
-    const file = relative(dirname(entryDir), filePath);
-    return matchSingleDeclarativeEntryFile(entryName, file);
-  }
-
-  return null;
+  return matchSingleDeclarativeEntryFile(key, filePath, context);
 };
 
 const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context }) => {

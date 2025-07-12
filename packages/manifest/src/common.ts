@@ -1,7 +1,14 @@
 import { existsSync } from 'node:fs';
 import { readFile, readdir } from 'node:fs/promises';
 import { basename, dirname, extname, isAbsolute, join, relative, resolve, sep } from 'node:path';
-import type { ExtensionManifest, ExtensionTarget, WebExtendEntriesDir, WebExtendEntryDescription } from './types.js';
+import type {
+  ExtensionManifest,
+  ExtensionTarget,
+  WebExtendContext,
+  WebExtendEntriesDir,
+  WebExtendEntryDescription,
+  WebExtendEntryKey,
+} from './types.js';
 
 const scriptExts = ['.ts', '.js', '.tsx', '.jsx', '.mts', '.cts', '.mjs', '.cjs'];
 const styleExts = ['.css', '.scss', '.sass', '.less', '.styl', '.stylus'];
@@ -38,27 +45,46 @@ export function getEntryFileVariants(name: string, ext: string) {
   return [`${name}${ext}`];
 }
 
-export const matchSingleDeclarativeEntryFile = (key: string, file: string) => {
-  const res = getEntryFileVariants(key, '.js').includes(file);
-  return res ? { name: key, ext: extname(file) } : null;
+export const matchSingleDeclarativeEntryFile = (
+  key: WebExtendEntryKey,
+  filePath: string,
+  context: WebExtendContext,
+) => {
+  const { rootPath, entriesDir } = context;
+  const entryDir = resolve(rootPath, entriesDir.root, entriesDir[key]);
+  if (filePath.startsWith(entryDir)) {
+    const entryName = basename(entryDir);
+    const file = relative(dirname(entryDir), filePath);
+    const res = getEntryFileVariants(entryName, '.js').includes(file);
+    return res ? { name: key, ext: extname(filePath) } : null;
+  }
+  return null;
 };
 
 export const matchMultipleDeclarativeEntryFile = (
-  key: string,
-  file: string,
+  key: WebExtendEntryKey,
+  filePath: string,
+  context: WebExtendContext,
   entryType?: WebExtendEntryDescription['entryType'][],
 ) => {
-  const isScript = isScriptFile(file);
-  const allowable = isScript || (entryType?.includes('style') && isStyleFile(file));
+  const isScript = isScriptFile(filePath);
+  const allowable = isScript || (entryType?.includes('style') && isStyleFile(filePath));
   if (!allowable) return null;
 
-  const ext = extname(file);
+  const { rootPath, entriesDir } = context;
+  const entryDir = resolve(rootPath, entriesDir.root, entriesDir[key]);
+  if (!filePath.startsWith(entryDir)) return null;
+
+  const ext = extname(filePath);
+  const entryName = basename(entryDir);
+  const file = relative(dirname(entryDir), filePath);
   // match [key]/*.[ext] or [key]/*/index.[ext]
+
   let name = '';
   const slices = file.split(sep);
-  if (slices[0] === key) {
+  if (slices[0] === entryName) {
     if (slices.length === 2) {
-      name = `${key}/${basename(slices[1], ext)}`;
+      name = `${entryName}/${basename(slices[1], ext)}`;
     } else if (slices.length === 3 && slices[2] === `index${ext}`) {
       name = `${key}/${slices[1]}`;
     }

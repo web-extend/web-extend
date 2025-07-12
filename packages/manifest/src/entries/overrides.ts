@@ -10,9 +10,8 @@ import type {
 const overrides: WebExtendEntryKey[] = ['newtab', 'history', 'bookmarks'];
 
 const overrideProcessors = overrides.map((key) => {
-  const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file, context) => {
-    const { entriesDir } = context;
-    return matchSingleDeclarativeEntryFile(entriesDir[key], file);
+  const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (filePath, context) => {
+    return matchSingleDeclarativeEntryFile(key, filePath, context);
   };
 
   const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context }) => {
