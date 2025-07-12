@@ -25,7 +25,6 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
 
     api.modifyRsbuildConfig(async (config, { mergeRsbuildConfig }) => {
       const rootPath = api.context.rootPath;
-      const selfRootPath = __dirname;
 
       await manifestManager.normalize({
         target: options.target,
@@ -36,8 +35,8 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         rootPath,
         mode: config.mode,
         runtime: {
-          background: resolve(selfRootPath, 'static/background-runtime.js'),
-          contentBridge: resolve(selfRootPath, 'static/content-bridge.js'),
+          background: resolve(__dirname, 'static/background-runtime.js'),
+          contentBridge: resolve(__dirname, 'static/content-bridge.js'),
         },
         manifest: options.manifest as ExtensionManifest,
       });
@@ -203,18 +202,13 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
 
     api.processAssets({ stage: 'optimize', environments: ['web'] }, async ({ assets, compilation }) => {
       if (!webExtendEntries) return;
-      const manifestEntryInput = Object.values(webExtendEntries).reduce((acc, entry) => {
-        for (const key in entry) {
-          acc[key] = entry[key];
-        }
-        return acc;
-      }, {});
+      const manifestEntryInput = Object.values(webExtendEntries).flat();
 
       for (const name in assets) {
         if (!name.endsWith('.js')) continue;
 
         const assetName = name.replace(/\.js$/, '');
-        const entryType = manifestEntryInput[assetName]?.entryType;
+        const entryType = manifestEntryInput.find((item) => item.name === assetName)?.type;
 
         if (entryType === 'image' || entryType === 'style') {
           // Remove assets that are not needed in the final build

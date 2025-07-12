@@ -1,6 +1,6 @@
 import { existsSync } from 'node:fs';
 import { readFile, readdir } from 'node:fs/promises';
-import { basename, dirname, extname, isAbsolute, join, relative, resolve, sep } from 'node:path';
+import { basename, dirname, extname, join, relative, resolve, sep } from 'node:path';
 import type {
   ExtensionManifest,
   ExtensionTarget,
@@ -22,9 +22,13 @@ function isStyleFile(file: string) {
   return styleExts.some((ext) => file.endsWith(ext));
 }
 
+const isAllowableEntryFile = (file: string, entryTypes: WebExtendEntryDescription['entryType'][]) => {
+  return (entryTypes.includes('script') && isScriptFile(file)) || (entryTypes.includes('style') && isStyleFile(file));
+};
+
 export function getEntryName(file: string, rootPath: string, entriesDir: string) {
-  const filePath = isAbsolute(file) ? file : resolve(rootPath, file);
-  const srcPath = isAbsolute(entriesDir) ? entriesDir : resolve(rootPath, entriesDir);
+  const filePath = resolve(rootPath, file);
+  const srcPath = resolve(rootPath, entriesDir);
   const relativeFilePath = filePath.startsWith(srcPath)
     ? relative(srcPath, filePath)
     : filePath.startsWith(rootPath)
@@ -34,16 +38,6 @@ export function getEntryName(file: string, rootPath: string, entriesDir: string)
   const name = relativeFilePath.replace(ext, '').replace(/[\\/]index$/, '');
   return name.split(sep).join('/');
 }
-
-const isAllowableEntryFile = (file: string, entryTypes: WebExtendEntryDescription['entryType'][]) => {
-  if (entryTypes.includes('script') && isScriptFile(file)) {
-    return true;
-  }
-  if (entryTypes.includes('style') && isStyleFile(file)) {
-    return true;
-  }
-  return false;
-};
 
 export const matchSingleDeclarativeEntryFile = (
   filePath: string,

@@ -1,5 +1,5 @@
 import { getSingleDeclarativeEntryFile, matchSingleDeclarativeEntryFile } from '../common.js';
-import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
+import type { ManifestEntryProcessor } from '../types.js';
 
 const key = 'devtools';
 
@@ -21,14 +21,11 @@ const readEntry: ManifestEntryProcessor['readEntry'] = async ({ manifest }) => {
   const { devtools_page } = manifest || {};
   if (!devtools_page) return null;
 
-  const entry: ManifestEntryInput = {
-    devtools: {
-      input: [devtools_page],
-      entryType: 'html',
-    },
+  return {
+    name: key,
+    input: [devtools_page],
+    type: 'html',
   };
-
-  return entry;
 };
 
 const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, name }) => {

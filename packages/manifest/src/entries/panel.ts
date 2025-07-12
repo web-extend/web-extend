@@ -4,7 +4,7 @@ import {
   matchMultipleDeclarativeEntryFile,
   matchSingleDeclarativeEntryFile,
 } from '../common.js';
-import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
+import type { ManifestEntryProcessor, WebExtendInput } from '../types.js';
 
 const key = 'panel';
 
@@ -19,20 +19,21 @@ const readEntry: ManifestEntryProcessor['readEntry'] = async ({ manifest, contex
   const { devtools_page } = manifest || {};
   if (!devtools_page) return null;
 
-  const entry: ManifestEntryInput = {};
+  const entry: WebExtendInput[] = [];
 
   const singleEntry = await getSingleDeclarativeEntryFile('panel', context);
   const multipleEntry = await getMultipleDeclarativeEntryFile('panels', context);
   const result = [singleEntry[0], ...multipleEntry].filter(Boolean);
 
   for (const item of result) {
-    entry[item.name] = {
+    entry.push({
+      name: item.name,
       input: [item.path],
-      entryType: 'html',
-    };
+      type: 'html',
+    });
   }
 
-  return Object.keys(entry).length ? entry : null;
+  return entry.length ? entry : null;
 };
 
 const panelProcessor: ManifestEntryProcessor = {

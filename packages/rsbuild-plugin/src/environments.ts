@@ -10,9 +10,7 @@ type NormalizeRsbuildEnvironmentProps = {
 };
 
 function getWebEnvironmentConfig({ entries, isDev }: NormalizeRsbuildEnvironmentProps): EnvironmentConfig | undefined {
-  const webEntry = Object.values(entries)
-    .filter(Boolean)
-    .reduce((res, cur) => Object.assign(res, cur), {});
+  const webEntry = Object.values(entries).flat();
 
   const entry = transformManifestEntry(webEntry);
   if (!entry) return;

@@ -85,10 +85,9 @@ const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest, context }) =
 
   return files.size
     ? {
-        [key]: {
-          input: Array.from(files),
-          entryType: 'image',
-        },
+        name: key,
+        input: Array.from(files),
+        type: 'image',
       }
     : null;
 };

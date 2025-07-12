@@ -1,5 +1,5 @@
 import { getSingleDeclarativeEntryFile, matchSingleDeclarativeEntryFile } from '../common.js';
-import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
+import type { ManifestEntryProcessor } from '../types.js';
 
 const key = 'sidepanel';
 
@@ -26,13 +26,11 @@ const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest }) => {
   const input = side_panel?.default_path || sidebar_action?.default_panel;
   if (!input) return null;
 
-  const entry: ManifestEntryInput = {
-    sidepanel: {
-      input: [input],
-      entryType: 'html',
-    },
+  return {
+    name: key,
+    input: [input],
+    type: 'html',
   };
-  return entry;
 };
 
 const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, name }) => {

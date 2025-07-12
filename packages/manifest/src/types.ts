@@ -120,7 +120,17 @@ export interface WebExtendEntryDescription {
   entryType: ManifestEntryType; // default is 'html'
 }
 
-export type ManifestEntryInput = Record<string, Omit<WebExtendEntryDescription, 'output'>>;
+export type WebExtendInput = {
+  name: string;
+  input: string[];
+  output?: string;
+  type: ManifestEntryType;
+};
+
+export type WebExtendEntries = {
+  [key in WebExtendEntryKey]?: WebExtendInput | WebExtendInput[];
+};
+
 export type ManifestEntryOutput = Record<string, Pick<WebExtendEntryDescription, 'input' | 'output'>>;
 
 export type MaybePromise<T = unknown> = T | Promise<T>;
@@ -132,7 +142,7 @@ export interface ManifestEntryProcessor {
     context: WebExtendContext,
   ) => null | { name: string; ext: string; size?: number };
   normalizeEntry?: (props: NormalizeMainfestEntryProps) => MaybePromise<void>;
-  readEntry?: (props: ReadManifestEntryItemProps) => MaybePromise<ManifestEntryInput | null>;
+  readEntry?: (props: ReadManifestEntryItemProps) => MaybePromise<WebExtendInput | WebExtendInput[] | null>;
   writeEntry?: (props: WriteMainfestEntryItemProps) => MaybePromise<void>;
   onAfterBuild?: (props: WriteManifestFileProps) => MaybePromise<void>;
 }
@@ -178,10 +188,6 @@ export interface WriteManifestFileProps {
   runtime?: WebExtendRuntime;
 }
 
-export type WebExtendEntries = {
-  [key in WebExtendEntryKey]?: ManifestEntryInput;
-};
-
 type IconPath = Record<string, string> | string;
 
 interface ManifestSidebarActionType {
@@ -224,3 +230,28 @@ export interface WebExtendCommonConfig {
 
 export type NormalizeContextOptions = Partial<Pick<WebExtendContext, 'rootPath' | 'mode' | 'runtime'>> &
   WebExtendCommonConfig;
+
+// {
+//   popup: {
+//     entry: 'src/popup/main.tsx',
+//     html: 'src/popup/index.html',
+//     output: 'popup.html'
+//   },
+//   background: {
+//     entry: 'src/background/index.ts'
+//   },
+//   contentScripts: [
+//     {
+//       matches: ['<all_urls>'],
+//       js: ['src/content-scripts/fill-form.ts'],
+//       css: ['src/content-scripts/fill-form.css']
+//     }
+//   ],
+//   scripting: [
+//     {
+//       name: 'highlight',
+//       js: 'src/scripting/highlight.ts',
+//       css: 'src/scripting/highlight.css'
+//     }
+//   ]
+// }

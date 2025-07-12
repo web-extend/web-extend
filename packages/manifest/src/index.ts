@@ -137,7 +137,7 @@ export class ManifestManager {
 
   async readEntries() {
     const manifest = this.normalizedManifest;
-    const res = {} as WebExtendEntries;
+    const res: WebExtendEntries = {};
     if (!this.context) return res;
     for (const processor of entryProcessors) {
       if (!processor.readEntry) continue;
@@ -157,8 +157,12 @@ export class ManifestManager {
     if (!this.entries || !this.context) return;
     for (const entryName in result) {
       for (const processor of entryProcessors) {
-        const entry = this.entries[processor.key] || {};
-        if (entryName in entry && processor.writeEntry) {
+        const entry = this.entries[processor.key];
+        if (!processor.writeEntry || !entry) continue;
+        const entries = Array.isArray(entry) ? entry : [entry];
+        const item = entries.find((item) => item.name === entryName);
+        
+        if (item) {
           await processor.writeEntry({
             normalizedManifest: this.normalizedManifest,
             manifest: this.manifest,

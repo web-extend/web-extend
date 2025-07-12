@@ -1,5 +1,5 @@
 import { getSingleDeclarativeEntryFile, matchSingleDeclarativeEntryFile } from '../common.js';
-import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
+import type { ManifestEntryProcessor } from '../types.js';
 
 const key = 'options';
 
@@ -26,13 +26,11 @@ const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest }) => {
   const input = options_ui?.page || options_page;
   if (!input) return null;
 
-  const entry: ManifestEntryInput = {
-    options: {
-      input: [input],
-      entryType: 'html',
-    },
+  return {
+    name: key,
+    input: [input],
+    type: 'html',
   };
-  return entry;
 };
 
 const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, name }) => {

@@ -10,12 +10,7 @@ import {
   matchSingleDeclarativeEntryFile,
 } from '../common.js';
 import { parseExportObject } from '../parser/export.js';
-import type {
-  ContentScriptConfig,
-  ManifestContentScript,
-  ManifestEntryInput,
-  ManifestEntryProcessor,
-} from '../types.js';
+import type { ContentScriptConfig, ManifestContentScript, ManifestEntryProcessor, WebExtendInput } from '../types.js';
 
 const key = 'content';
 
@@ -56,17 +51,18 @@ const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest, context }) =
   const { content_scripts } = manifest || {};
   if (!content_scripts?.length) return null;
 
-  const entry: ManifestEntryInput = {};
+  const entry: WebExtendInput[] = [];
   content_scripts.forEach((contentScript) => {
     const info = getContentScriptInfo(contentScript, context.rootPath, context.entriesDir.root);
     if (!info) return;
     const { name, input } = info;
-    entry[name] = {
+    entry.push({
+      name,
       input,
-      entryType: 'script',
-    };
+      type: 'script',
+    });
   });
-  return entry;
+  return entry.length ? entry : null;
 };
 
 const writeEntry: ManifestEntryProcessor['writeEntry'] = async ({

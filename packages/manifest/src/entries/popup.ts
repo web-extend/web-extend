@@ -1,5 +1,5 @@
 import { getSingleDeclarativeEntryFile, matchSingleDeclarativeEntryFile } from '../common.js';
-import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
+import type { ManifestEntryProcessor } from '../types.js';
 
 const key = 'popup';
 
@@ -28,13 +28,11 @@ const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest }) => {
   const input = pointer?.default_popup;
   if (!input) return null;
 
-  const entry: ManifestEntryInput = {
-    popup: {
-      input: [input],
-      entryType: 'html',
-    },
+  return {
+    name: key,
+    input: [input],
+    type: 'html',
   };
-  return entry;
 };
 
 const writeEntry: ManifestEntryProcessor['writeEntry'] = async ({ manifest, name }) => {

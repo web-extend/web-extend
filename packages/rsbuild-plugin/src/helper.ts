@@ -2,22 +2,24 @@ import { existsSync } from 'node:fs';
 import { readdir, unlink } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import type { FilenameConfig, RsbuildEntry, Rspack } from '@rsbuild/core';
-import type { ManifestEntryInput } from '@web-extend/manifest/types';
+import type { WebExtendInput } from '@web-extend/manifest/types';
 
-export function transformManifestEntry(entry: ManifestEntryInput | undefined) {
+export function transformManifestEntry(entry: WebExtendInput | WebExtendInput[] | undefined) {
   if (!entry) return;
+  const entries = Array.isArray(entry) ? entry : [entry];
+
   const res: RsbuildEntry = {};
-  for (const key in entry) {
-    const { input, entryType = 'html' } = entry[key];
+  for (const item of entries) {
+    const { name, input, type } = item;
     let imports = input;
 
-    if (key.startsWith('icons')) {
+    if (name === 'icons') {
       imports = input.map((file) => `${file}?url`);
     }
 
-    res[key] = {
+    res[name] = {
       import: imports,
-      html: entryType === 'html',
+      html: type === 'html',
     };
   }
   return Object.keys(res).length ? res : undefined;
@@ -77,10 +79,12 @@ const isProd = process.env.NODE_ENV === 'production';
 const jsDistPath = 'static/js';
 const cssDistPath = 'static/css';
 
-export const getJsDistPath = (manifestEntry: ManifestEntryInput): FilenameConfig['js'] => {
+export const getJsDistPath = (manifestEntry: WebExtendInput | WebExtendInput[]): FilenameConfig['js'] => {
+  const entries = Array.isArray(manifestEntry) ? manifestEntry : [manifestEntry];
   return (pathData) => {
     const chunkName = pathData.chunk?.name;
-    if (chunkName && manifestEntry[chunkName] && manifestEntry[chunkName].entryType !== 'html') {
+    const entry = entries.find((item) => item.name === chunkName);
+    if (chunkName && entry && entry.type !== 'html') {
       return '[name].js';
     }
     const name = isProd ? '[name].[contenthash:8].js' : '[name].js';
@@ -88,10 +92,12 @@ export const getJsDistPath = (manifestEntry: ManifestEntryInput): FilenameConfig
   };
 };
 
-export const getCssDistPath = (manifestEntry: ManifestEntryInput): FilenameConfig['css'] => {
+export const getCssDistPath = (manifestEntry: WebExtendInput | WebExtendInput[]): FilenameConfig['css'] => {
+  const entries = Array.isArray(manifestEntry) ? manifestEntry : [manifestEntry];
   return (pathData) => {
     const chunkName = pathData.chunk?.name;
-    if (chunkName && manifestEntry[chunkName]?.entryType === 'style') {
+    const entry = entries.find((item) => item.name === chunkName);
+    if (chunkName && entry && entry.type === 'style') {
       return '[name].css';
     }
     const name = isProd ? '[name].[contenthash:8].css' : '[name].css';

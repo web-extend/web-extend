@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { getMultipleDeclarativeEntryFile, matchMultipleDeclarativeEntryFile } from '../common.js';
-import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
+import type { ManifestEntryProcessor, WebExtendInput } from '../types.js';
 
 const key = 'scripting';
 
@@ -27,18 +27,19 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
 };
 
 const readEntry: ManifestEntryProcessor['readEntry'] = async ({ context }) => {
-  const entry: ManifestEntryInput = {};
+  const entry: WebExtendInput[] = [];
 
   const result = await getMultipleDeclarativeEntryFile(key, context, ['script', 'style']);
 
   for (const item of result) {
-    entry[item.name] = {
+    entry.push({
+      name: item.name,
       input: [item.path],
-      entryType: item.path.endsWith('css') ? 'style' : 'script',
-    };
+      type: item.path.endsWith('css') ? 'style' : 'script',
+    });
   }
 
-  return Object.keys(entry).length ? entry : null;
+  return entry.length ? entry : null;
 };
 
 const processor: ManifestEntryProcessor = {

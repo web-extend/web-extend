@@ -1,5 +1,5 @@
 import { getSingleDeclarativeEntryFile, isDevMode, matchSingleDeclarativeEntryFile } from '../common.js';
-import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
+import type { ManifestEntryProcessor } from '../types.js';
 
 const key = 'background';
 
@@ -50,13 +50,11 @@ const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest }) => {
 
   if (!input.length) return null;
 
-  const entry: ManifestEntryInput = {
-    background: {
-      input,
-      entryType: 'script',
-    },
+  return {
+    name: key,
+    input,
+    type: 'script',
   };
-  return entry;
 };
 
 const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, output }) => {
