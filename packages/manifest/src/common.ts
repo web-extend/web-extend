@@ -49,26 +49,9 @@ export const matchSingleDeclarativeEntryFile = (
   key: WebExtendEntryKey,
   filePath: string,
   context: WebExtendContext,
+  entryType: WebExtendEntryDescription['entryType'][] = ['script'],
 ) => {
-  const { rootPath, entriesDir } = context;
-  const entryDir = resolve(rootPath, entriesDir.root, entriesDir[key]);
-  if (filePath.startsWith(entryDir)) {
-    const entryName = basename(entryDir);
-    const file = relative(dirname(entryDir), filePath);
-    const res = getEntryFileVariants(entryName, '.js').includes(file);
-    return res ? { name: key, ext: extname(filePath) } : null;
-  }
-  return null;
-};
-
-export const matchMultipleDeclarativeEntryFile = (
-  key: WebExtendEntryKey,
-  filePath: string,
-  context: WebExtendContext,
-  entryType?: WebExtendEntryDescription['entryType'][],
-) => {
-  const isScript = isScriptFile(filePath);
-  const allowable = isScript || (entryType?.includes('style') && isStyleFile(filePath));
+  const allowable = isScriptFile(filePath) || (entryType?.includes('style') && isStyleFile(filePath));
   if (!allowable) return null;
 
   const { rootPath, entriesDir } = context;
@@ -77,22 +60,45 @@ export const matchMultipleDeclarativeEntryFile = (
 
   const ext = extname(filePath);
   const entryName = basename(entryDir);
-  const file = relative(dirname(entryDir), filePath);
-  // match [key]/*.[ext] or [key]/*/index.[ext]
 
-  let name = '';
+  // [entryName][ext] or [entryName]/index[ext]
+  const file = relative(dirname(entryDir), filePath);
   const slices = file.split(sep);
-  if (slices[0] === entryName) {
-    if (slices.length === 2) {
-      name = `${entryName}/${basename(slices[1], ext)}`;
-    } else if (slices.length === 3 && slices[2] === `index${ext}`) {
-      name = `${key}/${slices[1]}`;
-    }
+  if (slices.length > 1 && slices[slices.length - 1] === `index${ext}`) {
+    slices.pop();
   }
 
-  return name
+  return slices.length === 1 && slices[0] === entryName ? { name: entryName, ext } : null;
+};
+
+export const matchMultipleDeclarativeEntryFile = (
+  key: WebExtendEntryKey,
+  filePath: string,
+  context: WebExtendContext,
+  entryType?: WebExtendEntryDescription['entryType'][],
+) => {
+  const allowable = isScriptFile(filePath) || (entryType?.includes('style') && isStyleFile(filePath));
+  if (!allowable) return null;
+
+  const { rootPath, entriesDir } = context;
+  const entryDir = resolve(rootPath, entriesDir.root, entriesDir[key]);
+  if (!filePath.startsWith(entryDir)) return null;
+
+  const ext = extname(filePath);
+  const entryName = basename(entryDir);
+
+  // [entryName]/*[ext] or [entryName]/*/index[ext]
+  const file = relative(dirname(entryDir), filePath);
+  const slices = file.split(sep);
+  if (slices.length === 2) {
+    slices[1] = basename(slices[1], ext);
+  } else if (slices.length > 2 && slices[slices.length - 1] === `index${ext}`) {
+    slices.pop();
+  }
+
+  return slices.length === 2 && slices[0] === entryName
     ? {
-        name,
+        name: `${entryName}/${slices[1]}`,
         ext,
       }
     : null;
