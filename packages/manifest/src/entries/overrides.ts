@@ -1,5 +1,5 @@
 import { resolve } from 'node:path';
-import { getSingleDeclarativeEntryFile, matchSingleDeclarativeEntryFile } from '../common.js';
+import { matchSingleDeclarativeEntryFile, matchSingleDeclarativeEntryFileV2 } from '../common.js';
 import type {
   ManifestChromeUrlOverrides,
   ManifestEntryInput,
@@ -20,13 +20,11 @@ const overrideProcessors = overrides.map((key) => {
     const { chrome_url_overrides = {} } = manifest;
     if (Object.keys(chrome_url_overrides).length) return;
 
-    const entryDir = resolve(rootPath, entriesDir.root, entriesDir[key]);
-    const entry = getSingleDeclarativeEntryFile(entryDir);
-
-    if (entry) {
+    const result = await matchSingleDeclarativeEntryFileV2(resolve(rootPath, entriesDir.root, entriesDir[key]));
+    if (result[0]) {
       manifest.chrome_url_overrides = {
         ...(manifest.chrome_url_overrides || {}),
-        [key]: entry.path,
+        [key]: result[0].path,
       };
     }
   };

@@ -1,5 +1,5 @@
 import { resolve } from 'node:path';
-import { getSingleDeclarativeEntryFile, matchSingleDeclarativeEntryFile } from '../common.js';
+import { matchSingleDeclarativeEntryFile, matchSingleDeclarativeEntryFileV2 } from '../common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
 
 const key = 'sidepanel';
@@ -9,18 +9,17 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
   return matchSingleDeclarativeEntryFile(entriesDir.sidepanel, file);
 };
 
-const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context, files }) => {
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context }) => {
   const { rootPath, entriesDir } = context;
   const { side_panel, sidebar_action } = manifest;
   if (side_panel?.default_path || sidebar_action?.default_panel) {
     return;
   }
 
-  const entryDir = resolve(rootPath, entriesDir.root, entriesDir.sidepanel);
-  const entry = getSingleDeclarativeEntryFile(entryDir);
-  if (entry) {
+  const result = await matchSingleDeclarativeEntryFileV2(resolve(rootPath, entriesDir.root, entriesDir.sidepanel));
+  if (result[0]) {
     manifest.side_panel = {
-      default_path: entry.path,
+      default_path: result[0].path,
     };
   }
 };

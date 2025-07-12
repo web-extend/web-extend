@@ -1,5 +1,5 @@
 import { resolve } from 'node:path';
-import { getSingleDeclarativeEntryFile, matchSingleDeclarativeEntryFile } from '../common.js';
+import { matchSingleDeclarativeEntryFile, matchSingleDeclarativeEntryFileV2 } from '../common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
 
 const key = 'options';
@@ -14,14 +14,12 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
   const { options_ui, options_page } = manifest;
   if (options_ui?.page || options_page) return;
 
-  const entryDir = resolve(rootPath, entriesDir.root, entriesDir.options);
-  const entry = getSingleDeclarativeEntryFile(entryDir);
-
-  if (entry) {
+  const result = await matchSingleDeclarativeEntryFileV2(resolve(rootPath, entriesDir.root, entriesDir.options));
+  if (result[0]) {
     manifest.options_ui = {
       open_in_tab: true,
       ...(options_ui || {}),
-      page: entry.path,
+      page: result[0].path,
     };
   }
 };

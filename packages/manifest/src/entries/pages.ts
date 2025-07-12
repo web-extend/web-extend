@@ -1,7 +1,5 @@
-import { existsSync } from 'node:fs';
-import { readdir } from 'node:fs/promises';
-import { join, resolve } from 'node:path';
-import { getEntryName, matchMultipleDeclarativeEntryFile } from '../common.js';
+import { resolve } from 'node:path';
+import { matchMultipleDeclarativeEntryFile, matchMultipleDeclarativeEntryFileV2 } from '../common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
 
 const key = 'pages';
@@ -13,26 +11,14 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
 
 const readEntry: ManifestEntryProcessor['readEntry'] = async ({ context }) => {
   const entry: ManifestEntryInput = {};
-
   const { rootPath, entriesDir } = context;
-  const srcPath = resolve(rootPath, entriesDir.root);
-  const pagesPath = resolve(srcPath, key);
-
-  if (!existsSync(pagesPath)) {
-    return null;
-  }
-
-  const files = await readdir(pagesPath, { recursive: true });
-  const pages = files
-    .map((file) => join(key, file))
-    .filter((file) => matchDeclarativeEntry(file, context))
-    .map((file) => resolve(srcPath, file));
+  const entryDir = resolve(rootPath, entriesDir.root, entriesDir.pages);
+  const pages = await matchMultipleDeclarativeEntryFileV2(entryDir);
 
   for (const file of pages) {
-    const name = getEntryName(file, rootPath, entriesDir.root);
-    if (name) {
-      entry[name] = {
-        input: [file],
+    if (file.name) {
+      entry[file.name] = {
+        input: [file.path],
         entryType: 'html',
       };
     }

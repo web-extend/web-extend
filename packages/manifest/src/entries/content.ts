@@ -3,10 +3,11 @@ import { copyFile, mkdir, readFile } from 'node:fs/promises';
 import { basename, posix, resolve } from 'node:path';
 import {
   getEntryName,
-  getMultipleDeclarativeEntryFile,
   isDevMode,
   matchMultipleDeclarativeEntryFile,
+  matchMultipleDeclarativeEntryFileV2,
   matchSingleDeclarativeEntryFile,
+  matchSingleDeclarativeEntryFileV2,
 } from '../common.js';
 import { parseExportObject } from '../parser/export.js';
 import type {
@@ -26,23 +27,21 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
   );
 };
 
-const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, files, context }) => {
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context }) => {
   const { rootPath, entriesDir } = context;
 
-  const entryDir = resolve(rootPath, entriesDir.root, entriesDir.contents);
-  const entry = await getMultipleDeclarativeEntryFile(entryDir);
-
   if (!manifest.content_scripts?.length) {
-    const entryFile = files
-      .filter((file) => matchDeclarativeEntry(file, context))
-      .map((file) => resolve(rootPath, entriesDir.root, file));
-
-    if (entryFile.length) {
+    const singleEntry = await matchSingleDeclarativeEntryFileV2(resolve(rootPath, entriesDir.root, entriesDir.content));
+    const multipleEntry = await matchMultipleDeclarativeEntryFileV2(
+      resolve(rootPath, entriesDir.root, entriesDir.contents),
+    );
+    const result = [singleEntry[0], ...multipleEntry].filter(Boolean);
+    if (result.length) {
       manifest.content_scripts ??= [];
-      for (const filePath of entryFile) {
+      for (const item of result) {
         manifest.content_scripts.push({
           matches: [], // get from entry in writeContentEntry
-          js: [filePath],
+          js: [item.path],
         });
       }
     }

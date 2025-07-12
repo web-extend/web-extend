@@ -29,10 +29,13 @@ export function getEntryName(file: string, rootPath: string, entriesDir: string)
 }
 
 export function getEntryFileVariants(name: string, ext: string) {
-  if (!isScriptFile(`${name}${ext}`)) {
-    return [`${name}${ext}`];
+  if (isScriptFile(`${name}${ext}`)) {
+    return scriptExts.flatMap((item) => [`${name}${item}`, `${name}${sep}index${item}`]);
   }
-  return scriptExts.flatMap((item) => [`${name}${item}`, `${name}${sep}index${item}`]);
+  if (isStyleFile(`${name}${ext}`)) {
+    return styleExts.flatMap((item) => [`${name}${item}`]);
+  }
+  return [`${name}${ext}`];
 }
 
 export const matchSingleDeclarativeEntryFile = (key: string, file: string) => {
@@ -40,38 +43,88 @@ export const matchSingleDeclarativeEntryFile = (key: string, file: string) => {
   return res ? { name: key, ext: extname(file) } : null;
 };
 
-export const getSingleDeclarativeEntryFile = (entryDir: string) => {
-  const name = basename(entryDir);
-  const dirPath = dirname(entryDir);
-  const variants = getEntryFileVariants(name, '.js');
-  let res = null;
-  for (const variant of variants) {
-    const filePath = resolve(dirPath, variant);
-    if (existsSync(filePath)) {
-      res = { name, ext: extname(filePath), path: filePath };
-      break;
-    }
+const isAllowableEntryFile = (file: string, entryTypes: WebExtendEntryDescription['entryType'][]) => {
+  if (entryTypes.includes('script') && isScriptFile(file)) {
+    return true;
   }
-
-  return res;
+  if (entryTypes.includes('style') && isStyleFile(file)) {
+    return true;
+  }
+  return false;
 };
 
-export const getMultipleDeclarativeEntryFile = async (entryDir: string) => {
-  if (!existsSync(entryDir)) return null;
+export const matchSingleDeclarativeEntryFileV2 = async (
+  entryDir: string,
+  entryTypes: WebExtendEntryDescription['entryType'][] = ['script'],
+) => {
+  const entryName = basename(entryDir);
+  const dirPath = dirname(entryDir);
+  if (!existsSync(dirPath)) return [];
 
-  // match [key]/*.[ext] or [key]/*/index.[ext]
-  const files = await readdir(entryDir);
-  const res: { name: string; ext: string; path: string }[] = [];
+  const possibleFiles: { name: string; ext: string; path: string }[] = [];
+  const files = await readdir(dirPath, { withFileTypes: true });
   for (const file of files) {
-    const base = basename(file, extname(file));
-    const subEntryDir = resolve(entryDir, base);
-    const item = getSingleDeclarativeEntryFile(subEntryDir);
-    if (item) {
-      res.push(item);
+    const ext = extname(file.name);
+    const name = basename(file.name, ext);
+    if (name !== entryName) continue;
+
+    if (file.isFile() && isAllowableEntryFile(file.name, entryTypes)) {
+      possibleFiles.push({ name, ext, path: resolve(dirPath, file.name) });
+    }
+
+    if (file.isDirectory()) {
+      const subFiles = await readdir(resolve(dirPath, file.name), { withFileTypes: true });
+      for (const subFile of subFiles) {
+        const subExt = extname(subFile.name);
+        const subName = basename(subFile.name, subExt);
+        if (subFile.isFile() && subName === 'index' && isAllowableEntryFile(subFile.name, entryTypes)) {
+          possibleFiles.push({
+            name,
+            ext: subExt,
+            path: resolve(dirPath, file.name, subFile.name),
+          });
+        }
+      }
     }
   }
 
-  return res;
+  return possibleFiles;
+};
+
+export const matchMultipleDeclarativeEntryFileV2 = async (
+  entryDir: string,
+  entryTypes: WebExtendEntryDescription['entryType'][] = ['script'],
+) => {
+  if (!existsSync(entryDir)) return [];
+
+  const entryName = basename(entryDir);
+  const possibleFiles: { name: string; ext: string; path: string }[] = [];
+
+  const files = await readdir(entryDir, { withFileTypes: true });
+  for (const file of files) {
+    const ext = extname(file.name);
+    const name = basename(file.name, ext);
+    if (file.isFile() && isAllowableEntryFile(file.name, entryTypes)) {
+      possibleFiles.push({ name: `${entryName}/${name}`, ext, path: resolve(entryDir, file.name) });
+    }
+
+    if (file.isDirectory()) {
+      const subFiles = await readdir(resolve(entryDir, file.name), { withFileTypes: true });
+      for (const subFile of subFiles) {
+        const subExt = extname(subFile.name);
+        const subName = basename(subFile.name, subExt);
+        if (subFile.isFile() && subName === 'index' && isAllowableEntryFile(subFile.name, entryTypes)) {
+          possibleFiles.push({
+            name: `${entryName}/${name}`,
+            ext: subExt,
+            path: resolve(entryDir, file.name, subFile.name),
+          });
+        }
+      }
+    }
+  }
+
+  return possibleFiles;
 };
 
 export const matchMultipleDeclarativeEntryFile = (

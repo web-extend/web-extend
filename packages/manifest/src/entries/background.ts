@@ -1,5 +1,5 @@
 import { resolve } from 'node:path';
-import { getSingleDeclarativeEntryFile, isDevMode, matchSingleDeclarativeEntryFile } from '../common.js';
+import { isDevMode, matchSingleDeclarativeEntryFile, matchSingleDeclarativeEntryFileV2 } from '../common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
 
 const key = 'background';
@@ -19,10 +19,9 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
   } else if (background?.scripts) {
     scripts.push(...background.scripts);
   } else {
-    const entryDir = resolve(rootPath, entriesDir.root, entriesDir.background);
-    const entry = getSingleDeclarativeEntryFile(entryDir);
-    if (entry) {
-      scripts.push(entry.path);
+    const result = await matchSingleDeclarativeEntryFileV2(resolve(rootPath, entriesDir.root, entriesDir.background));
+    if (result[0]) {
+      scripts.push(result[0].path);
     }
   }
   if (isDevMode(mode) && runtime?.background) {
