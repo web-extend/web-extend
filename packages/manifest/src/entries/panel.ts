@@ -1,4 +1,3 @@
-import { resolve } from 'node:path';
 import {
   getMultipleDeclarativeEntryFile,
   getSingleDeclarativeEntryFile,
@@ -21,10 +20,9 @@ const readEntry: ManifestEntryProcessor['readEntry'] = async ({ manifest, contex
   if (!devtools_page) return null;
 
   const entry: ManifestEntryInput = {};
-  const { rootPath, entriesDir } = context;
 
-  const singleEntry = await getSingleDeclarativeEntryFile(resolve(rootPath, entriesDir.root, entriesDir.panel));
-  const multipleEntry = await getMultipleDeclarativeEntryFile(resolve(rootPath, entriesDir.root, entriesDir.panels));
+  const singleEntry = await getSingleDeclarativeEntryFile('panel', context);
+  const multipleEntry = await getMultipleDeclarativeEntryFile('panels', context);
   const result = [singleEntry[0], ...multipleEntry].filter(Boolean);
 
   for (const item of result) {

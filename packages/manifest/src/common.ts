@@ -118,9 +118,12 @@ export const isAllowableEntryFile = (
 };
 
 export const getSingleDeclarativeEntryFile = async (
-  entryDir: string,
+  key: WebExtendEntryKey,
+  context: WebExtendContext,
   entryTypes: WebExtendEntryDescription['entryType'][] = ['script'],
 ) => {
+  const { rootPath, entriesDir } = context;
+  const entryDir = resolve(rootPath, entriesDir.root, entriesDir[key]);
   const entryName = basename(entryDir);
   const dirPath = dirname(entryDir);
   if (!existsSync(dirPath)) return [];
@@ -156,9 +159,12 @@ export const getSingleDeclarativeEntryFile = async (
 };
 
 export const getMultipleDeclarativeEntryFile = async (
-  entryDir: string,
+  key: WebExtendEntryKey,
+  context: WebExtendContext,
   entryTypes: WebExtendEntryDescription['entryType'][] = ['script'],
 ) => {
+  const { rootPath, entriesDir } = context;
+  const entryDir = resolve(rootPath, entriesDir.root, entriesDir[key]);
   if (!existsSync(entryDir)) return [];
 
   const entryName = basename(entryDir);

@@ -1,4 +1,3 @@
-import { resolve } from 'node:path';
 import { getSingleDeclarativeEntryFile, matchSingleDeclarativeEntryFile } from '../common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
 
@@ -9,13 +8,12 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
 };
 
 const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context }) => {
-  const { rootPath, entriesDir } = context;
   const { side_panel, sidebar_action } = manifest;
   if (side_panel?.default_path || sidebar_action?.default_panel) {
     return;
   }
 
-  const result = await getSingleDeclarativeEntryFile(resolve(rootPath, entriesDir.root, entriesDir.sidepanel));
+  const result = await getSingleDeclarativeEntryFile(key, context);
   if (result[0]) {
     manifest.side_panel = {
       default_path: result[0].path,

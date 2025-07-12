@@ -1,4 +1,3 @@
-import { resolve } from 'node:path';
 import {
   getEntryName,
   getMultipleDeclarativeEntryFile,
@@ -18,12 +17,12 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
 };
 
 const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context }) => {
-  const { rootPath, entriesDir, target } = context;
+  const { target } = context;
   const pages = manifest.sandbox?.pages;
   if (pages?.length || target.includes('firefox')) return;
 
-  const singleEntry = await getSingleDeclarativeEntryFile(resolve(rootPath, entriesDir.root, entriesDir.sandbox));
-  const multipleEntry = await getMultipleDeclarativeEntryFile(resolve(rootPath, entriesDir.root, entriesDir.sandboxes));
+  const singleEntry = await getSingleDeclarativeEntryFile(key, context);
+  const multipleEntry = await getMultipleDeclarativeEntryFile('sandboxes', context);
   const result = [singleEntry[0], ...multipleEntry].filter(Boolean);
 
   if (result.length) {

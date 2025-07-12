@@ -1,4 +1,3 @@
-import { resolve } from 'node:path';
 import { getSingleDeclarativeEntryFile, matchSingleDeclarativeEntryFile } from '../common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
 
@@ -9,11 +8,10 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
 };
 
 const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context }) => {
-  const { rootPath, entriesDir } = context;
   const { options_ui, options_page } = manifest;
   if (options_ui?.page || options_page) return;
 
-  const result = await getSingleDeclarativeEntryFile(resolve(rootPath, entriesDir.root, entriesDir.options));
+  const result = await getSingleDeclarativeEntryFile(key, context);
   if (result[0]) {
     manifest.options_ui = {
       open_in_tab: true,

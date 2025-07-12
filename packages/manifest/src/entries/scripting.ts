@@ -29,11 +29,7 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
 const readEntry: ManifestEntryProcessor['readEntry'] = async ({ context }) => {
   const entry: ManifestEntryInput = {};
 
-  const { rootPath, entriesDir } = context;
-  const result = await getMultipleDeclarativeEntryFile(resolve(rootPath, entriesDir.root, entriesDir.scripting), [
-    'script',
-    'style',
-  ]);
+  const result = await getMultipleDeclarativeEntryFile(key, context, ['script', 'style']);
 
   for (const item of result) {
     entry[item.name] = {

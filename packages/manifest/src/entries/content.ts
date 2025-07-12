@@ -27,13 +27,9 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
 };
 
 const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context }) => {
-  const { rootPath, entriesDir } = context;
-
   if (!manifest.content_scripts?.length) {
-    const singleEntry = await getSingleDeclarativeEntryFile(resolve(rootPath, entriesDir.root, entriesDir.content));
-    const multipleEntry = await getMultipleDeclarativeEntryFile(
-      resolve(rootPath, entriesDir.root, entriesDir.contents),
-    );
+    const singleEntry = await getSingleDeclarativeEntryFile('content', context);
+    const multipleEntry = await getMultipleDeclarativeEntryFile('contents', context);
     const result = [singleEntry[0], ...multipleEntry].filter(Boolean);
     for (const item of result) {
       manifest.content_scripts ??= [];

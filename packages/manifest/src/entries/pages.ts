@@ -1,4 +1,3 @@
-import { resolve } from 'node:path';
 import { getMultipleDeclarativeEntryFile, matchMultipleDeclarativeEntryFile } from '../common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
 
@@ -11,8 +10,7 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
 const readEntry: ManifestEntryProcessor['readEntry'] = async ({ context }) => {
   const entry: ManifestEntryInput = {};
 
-  const { rootPath, entriesDir } = context;
-  const result = await getMultipleDeclarativeEntryFile(resolve(rootPath, entriesDir.root, entriesDir.pages));
+  const result = await getMultipleDeclarativeEntryFile(key, context);
 
   for (const item of result) {
     entry[item.name] = {

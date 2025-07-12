@@ -1,4 +1,3 @@
-import { resolve } from 'node:path';
 import { getSingleDeclarativeEntryFile, isDevMode, matchSingleDeclarativeEntryFile } from '../common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
 
@@ -9,7 +8,7 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
 };
 
 const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context }) => {
-  const { rootPath, mode, target, runtime, entriesDir } = context;
+  const { mode, target, runtime } = context;
   const { background } = manifest;
   const scripts: string[] = [];
 
@@ -18,7 +17,7 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
   } else if (background?.scripts) {
     scripts.push(...background.scripts);
   } else {
-    const result = await getSingleDeclarativeEntryFile(resolve(rootPath, entriesDir.root, entriesDir.background));
+    const result = await getSingleDeclarativeEntryFile(key, context);
     if (result[0]) {
       scripts.push(result[0].path);
     }
