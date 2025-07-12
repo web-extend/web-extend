@@ -1,5 +1,5 @@
 import { resolve } from 'node:path';
-import { matchSingleDeclarativeEntryFile, matchSingleDeclarativeEntryFileV2 } from '../common.js';
+import { matchSingleDeclarativeEntryFile, getSingleDeclarativeEntryFile } from '../common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
 
 const key = 'devtools';
@@ -14,7 +14,7 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
   const { devtools_page } = manifest;
   if (devtools_page) return;
 
-  const result = await matchSingleDeclarativeEntryFileV2(resolve(rootPath, entriesDir.root, entriesDir.devtools));
+  const result = await getSingleDeclarativeEntryFile(resolve(rootPath, entriesDir.root, entriesDir.devtools));
   if (result[0]) {
     manifest.devtools_page = result[0].path;
   }

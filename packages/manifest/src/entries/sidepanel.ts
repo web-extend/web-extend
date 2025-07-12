@@ -1,5 +1,5 @@
 import { resolve } from 'node:path';
-import { matchSingleDeclarativeEntryFile, matchSingleDeclarativeEntryFileV2 } from '../common.js';
+import { matchSingleDeclarativeEntryFile, getSingleDeclarativeEntryFile } from '../common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
 
 const key = 'sidepanel';
@@ -16,7 +16,7 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
     return;
   }
 
-  const result = await matchSingleDeclarativeEntryFileV2(resolve(rootPath, entriesDir.root, entriesDir.sidepanel));
+  const result = await getSingleDeclarativeEntryFile(resolve(rootPath, entriesDir.root, entriesDir.sidepanel));
   if (result[0]) {
     manifest.side_panel = {
       default_path: result[0].path,

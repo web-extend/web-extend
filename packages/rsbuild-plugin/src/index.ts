@@ -1,4 +1,4 @@
-import { dirname, relative, resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { RsbuildConfig, RsbuildPlugin, WatchFiles } from '@rsbuild/core';
 import { ManifestManager, matchDeclarativeEntry } from '@web-extend/manifest';
@@ -41,11 +41,10 @@ const getDevWatchFiles = (context: WebExtendContext, entries?: WebExtendEntries)
         cwd: rootPath,
         ignored: (file, stats) => {
           if (file.startsWith(entriesDirRootPath)) {
-            const relativePath = relative(entriesDirRootPath, file);
             if (stats?.isFile()) {
               if (stats.size === 0) return true;
 
-              const entry = matchDeclarativeEntry(relativePath, context);
+              const entry = matchDeclarativeEntry(file, context);
               if (!entry) return true;
 
               const existsEntry = getEntryFileVariants(entry.name, entry.ext)

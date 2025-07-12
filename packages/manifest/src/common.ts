@@ -43,7 +43,39 @@ export const matchSingleDeclarativeEntryFile = (key: string, file: string) => {
   return res ? { name: key, ext: extname(file) } : null;
 };
 
-const isAllowableEntryFile = (file: string, entryTypes: WebExtendEntryDescription['entryType'][]) => {
+export const matchMultipleDeclarativeEntryFile = (
+  key: string,
+  file: string,
+  entryType?: WebExtendEntryDescription['entryType'][],
+) => {
+  const isScript = isScriptFile(file);
+  const allowable = isScript || (entryType?.includes('style') && isStyleFile(file));
+  if (!allowable) return null;
+
+  const ext = extname(file);
+  // match [key]/*.[ext] or [key]/*/index.[ext]
+  let name = '';
+  const slices = file.split(sep);
+  if (slices[0] === key) {
+    if (slices.length === 2) {
+      name = `${key}/${basename(slices[1], ext)}`;
+    } else if (slices.length === 3 && slices[2] === `index${ext}`) {
+      name = `${key}/${slices[1]}`;
+    }
+  }
+
+  return name
+    ? {
+        name,
+        ext,
+      }
+    : null;
+};
+
+export const isAllowableEntryFile = (
+  file: string,
+  entryTypes: WebExtendEntryDescription['entryType'][] = ['script'],
+) => {
   if (entryTypes.includes('script') && isScriptFile(file)) {
     return true;
   }
@@ -53,7 +85,7 @@ const isAllowableEntryFile = (file: string, entryTypes: WebExtendEntryDescriptio
   return false;
 };
 
-export const matchSingleDeclarativeEntryFileV2 = async (
+export const getSingleDeclarativeEntryFile = async (
   entryDir: string,
   entryTypes: WebExtendEntryDescription['entryType'][] = ['script'],
 ) => {
@@ -91,7 +123,7 @@ export const matchSingleDeclarativeEntryFileV2 = async (
   return possibleFiles;
 };
 
-export const matchMultipleDeclarativeEntryFileV2 = async (
+export const getMultipleDeclarativeEntryFile = async (
   entryDir: string,
   entryTypes: WebExtendEntryDescription['entryType'][] = ['script'],
 ) => {
@@ -125,35 +157,6 @@ export const matchMultipleDeclarativeEntryFileV2 = async (
   }
 
   return possibleFiles;
-};
-
-export const matchMultipleDeclarativeEntryFile = (
-  key: string,
-  file: string,
-  entryType?: WebExtendEntryDescription['entryType'][],
-) => {
-  const isScript = isScriptFile(file);
-  const allowable = isScript || (entryType?.includes('style') && isStyleFile(file));
-  if (!allowable) return null;
-
-  const ext = extname(file);
-  // match [key]/*.[ext] or [key]/*/index.[ext]
-  let name = '';
-  const slices = file.split(sep);
-  if (slices[0] === key) {
-    if (slices.length === 2) {
-      name = `${key}/${basename(slices[1], ext)}`;
-    } else if (slices.length === 3 && slices[2] === `index${ext}`) {
-      name = `${key}/${slices[1]}`;
-    }
-  }
-
-  return name
-    ? {
-        name,
-        ext,
-      }
-    : null;
 };
 
 export async function readPackageJson(rootPath: string) {

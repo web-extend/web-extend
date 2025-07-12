@@ -1,5 +1,5 @@
 import { resolve } from 'node:path';
-import { matchMultipleDeclarativeEntryFile, matchMultipleDeclarativeEntryFileV2 } from '../common.js';
+import { matchMultipleDeclarativeEntryFile, getMultipleDeclarativeEntryFile } from '../common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
 
 const key = 'pages';
@@ -13,7 +13,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = async ({ context }) => {
   const entry: ManifestEntryInput = {};
 
   const { rootPath, entriesDir } = context;
-  const result = await matchMultipleDeclarativeEntryFileV2(resolve(rootPath, entriesDir.root, entriesDir.pages));
+  const result = await getMultipleDeclarativeEntryFile(resolve(rootPath, entriesDir.root, entriesDir.pages));
 
   for (const item of result) {
     entry[item.name] = {

@@ -1,13 +1,13 @@
 import { existsSync } from 'node:fs';
 import { copyFile, mkdir, readFile } from 'node:fs/promises';
-import { basename, posix, resolve } from 'node:path';
+import { basename, dirname, posix, relative, resolve } from 'node:path';
 import {
   getEntryName,
   isDevMode,
-  matchMultipleDeclarativeEntryFile,
-  matchMultipleDeclarativeEntryFileV2,
   matchSingleDeclarativeEntryFile,
-  matchSingleDeclarativeEntryFileV2,
+  getMultipleDeclarativeEntryFile,
+  getSingleDeclarativeEntryFile,
+  matchMultipleDeclarativeEntryFile,
 } from '../common.js';
 import { parseExportObject } from '../parser/export.js';
 import type {
@@ -19,20 +19,32 @@ import type {
 
 const key = 'content';
 
-const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file, context) => {
-  const { entriesDir } = context;
-  return (
-    matchSingleDeclarativeEntryFile(entriesDir.content, file) ||
-    matchMultipleDeclarativeEntryFile(entriesDir.contents, file)
-  );
+const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (filePath, context) => {
+  const { rootPath, entriesDir } = context;
+  const singleEntryDir = resolve(rootPath, entriesDir.root, entriesDir.content);
+  const multipleEntryDir = resolve(rootPath, entriesDir.root, entriesDir.contents);
+
+  if (filePath.startsWith(singleEntryDir)) {
+    const entryName = basename(singleEntryDir);
+    const file = relative(dirname(singleEntryDir), filePath);
+    return matchSingleDeclarativeEntryFile(entryName, file);
+  }
+
+  if (filePath.startsWith(multipleEntryDir)) {
+    const entryName = basename(multipleEntryDir);
+    const file = relative(dirname(multipleEntryDir), filePath);
+    return matchMultipleDeclarativeEntryFile(entryName, file);
+  }
+
+  return null;
 };
 
 const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context }) => {
   const { rootPath, entriesDir } = context;
 
   if (!manifest.content_scripts?.length) {
-    const singleEntry = await matchSingleDeclarativeEntryFileV2(resolve(rootPath, entriesDir.root, entriesDir.content));
-    const multipleEntry = await matchMultipleDeclarativeEntryFileV2(
+    const singleEntry = await getSingleDeclarativeEntryFile(resolve(rootPath, entriesDir.root, entriesDir.content));
+    const multipleEntry = await getMultipleDeclarativeEntryFile(
       resolve(rootPath, entriesDir.root, entriesDir.contents),
     );
     const result = [singleEntry[0], ...multipleEntry].filter(Boolean);
