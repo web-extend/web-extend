@@ -36,14 +36,12 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
       resolve(rootPath, entriesDir.root, entriesDir.contents),
     );
     const result = [singleEntry[0], ...multipleEntry].filter(Boolean);
-    if (result.length) {
+    for (const item of result) {
       manifest.content_scripts ??= [];
-      for (const item of result) {
-        manifest.content_scripts.push({
-          matches: [], // get from entry in writeContentEntry
-          js: [item.path],
-        });
-      }
+      manifest.content_scripts.push({
+        matches: [], // get from entry in writeContentEntry
+        js: [item.path],
+      });
     }
   }
 };

@@ -1,6 +1,10 @@
-import { readdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import { getEntryName, matchMultipleDeclarativeEntryFile, matchSingleDeclarativeEntryFile } from '../common.js';
+import {
+  matchMultipleDeclarativeEntryFile,
+  matchSingleDeclarativeEntryFile,
+  matchSingleDeclarativeEntryFileV2,
+  matchMultipleDeclarativeEntryFileV2,
+} from '../common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
 
 const key = 'panel';
@@ -18,20 +22,19 @@ const readEntry: ManifestEntryProcessor['readEntry'] = async ({ manifest, contex
   if (!devtools_page) return null;
 
   const entry: ManifestEntryInput = {};
-
   const { rootPath, entriesDir } = context;
-  const srcPath = resolve(rootPath, entriesDir.root);
-  const files = await readdir(srcPath, { recursive: true });
-  const panels = files.filter((file) => matchDeclarativeEntry(file, context)).map((file) => resolve(srcPath, file));
 
-  for (const file of panels) {
-    const name = getEntryName(file, rootPath, entriesDir.root);
-    if (name) {
-      entry[name] = {
-        input: [file],
-        entryType: 'html',
-      };
-    }
+  const singleEntry = await matchSingleDeclarativeEntryFileV2(resolve(rootPath, entriesDir.root, entriesDir.panel));
+  const multipleEntry = await matchMultipleDeclarativeEntryFileV2(
+    resolve(rootPath, entriesDir.root, entriesDir.panels),
+  );
+  const result = [singleEntry[0], ...multipleEntry].filter(Boolean);
+
+  for (const item of result) {
+    entry[item.name] = {
+      input: [item.path],
+      entryType: 'html',
+    };
   }
 
   return Object.keys(entry).length ? entry : null;

@@ -154,7 +154,6 @@ export interface NormalizeManifestProps {
 
 export interface NormalizeMainfestEntryProps {
   manifest: ExtensionManifest;
-  files: string[];
   context: WebExtendContext;
 }
 

@@ -11,17 +11,15 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
 
 const readEntry: ManifestEntryProcessor['readEntry'] = async ({ context }) => {
   const entry: ManifestEntryInput = {};
-  const { rootPath, entriesDir } = context;
-  const entryDir = resolve(rootPath, entriesDir.root, entriesDir.pages);
-  const pages = await matchMultipleDeclarativeEntryFileV2(entryDir);
 
-  for (const file of pages) {
-    if (file.name) {
-      entry[file.name] = {
-        input: [file.path],
-        entryType: 'html',
-      };
-    }
+  const { rootPath, entriesDir } = context;
+  const result = await matchMultipleDeclarativeEntryFileV2(resolve(rootPath, entriesDir.root, entriesDir.pages));
+
+  for (const item of result) {
+    entry[item.name] = {
+      input: [item.path],
+      entryType: 'html',
+    };
   }
 
   return Object.keys(entry).length ? entry : null;

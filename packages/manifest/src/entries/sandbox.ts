@@ -1,5 +1,11 @@
 import { resolve } from 'node:path';
-import { getEntryName, matchMultipleDeclarativeEntryFile, matchSingleDeclarativeEntryFile } from '../common.js';
+import {
+  getEntryName,
+  matchMultipleDeclarativeEntryFile,
+  matchMultipleDeclarativeEntryFileV2,
+  matchSingleDeclarativeEntryFile,
+  matchSingleDeclarativeEntryFileV2,
+} from '../common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
 
 const key = 'sandbox';
@@ -12,18 +18,21 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
   );
 };
 
-const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, files, context }) => {
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context }) => {
   const { rootPath, entriesDir, target } = context;
   const pages = manifest.sandbox?.pages;
   if (pages?.length || target.includes('firefox')) return;
 
-  const entryFile = files
-    .filter((file) => matchDeclarativeEntry(file, context))
-    .map((file) => resolve(rootPath, entriesDir.root, file));
-  if (entryFile.length) {
+  const singleEntry = await matchSingleDeclarativeEntryFileV2(resolve(rootPath, entriesDir.root, entriesDir.sandbox));
+  const multipleEntry = await matchMultipleDeclarativeEntryFileV2(
+    resolve(rootPath, entriesDir.root, entriesDir.sandboxes),
+  );
+  const result = [singleEntry[0], ...multipleEntry].filter(Boolean);
+
+  if (result.length) {
     manifest.sandbox = {
       ...(manifest.sandbox || {}),
-      pages: entryFile,
+      pages: result.map((item) => item.path),
     };
   }
 };

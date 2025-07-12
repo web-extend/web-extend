@@ -1,5 +1,5 @@
 import { existsSync } from 'node:fs';
-import { cp, mkdir, readdir, writeFile } from 'node:fs/promises';
+import { cp, mkdir, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import {
   isDevMode,
@@ -49,12 +49,10 @@ async function normalizeManifest({ manifest = {} as ExtensionManifest, context }
   }
 
   try {
-    const files = await readdir(resolve(rootPath, entriesDir.root), { recursive: true });
     for (const processor of entryProcessors) {
       if (!processor.normalizeEntry) continue;
       await processor.normalizeEntry({
         manifest: finalManifest,
-        files,
         context,
       });
     }
