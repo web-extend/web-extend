@@ -21,8 +21,8 @@ const key = 'content';
 
 const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (filePath, context) => {
   return (
-    matchSingleDeclarativeEntryFile('content', filePath, context) ||
-    matchMultipleDeclarativeEntryFile('contents', filePath, context)
+    matchSingleDeclarativeEntryFile(filePath, 'content', context) ||
+    matchMultipleDeclarativeEntryFile(filePath, 'contents', context)
   );
 };
 

@@ -10,8 +10,8 @@ const key = 'panel';
 
 const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (filePath, context) => {
   return (
-    matchSingleDeclarativeEntryFile('panel', filePath, context) ||
-    matchMultipleDeclarativeEntryFile('panels', filePath, context)
+    matchSingleDeclarativeEntryFile(filePath, 'panel', context) ||
+    matchMultipleDeclarativeEntryFile(filePath, 'panels', context)
   );
 };
 

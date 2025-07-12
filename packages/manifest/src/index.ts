@@ -5,7 +5,7 @@ import {
   isDevMode,
   normalizeEntriesDir,
   readPackageJson,
-  resolveOutDir,
+  normalizeOutDir,
   resolveTarget,
   setTargetEnv,
 } from './common.js';
@@ -93,7 +93,7 @@ export const normalizeContext = (options: NormalizeContextOptions): WebExtendCon
   const target = resolveTarget(options.target);
   setTargetEnv(target);
 
-  const outDir = resolveOutDir({
+  const outDir = normalizeOutDir({
     outDir: options.outDir,
     target,
     mode,

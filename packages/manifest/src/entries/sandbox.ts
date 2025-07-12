@@ -11,8 +11,8 @@ const key = 'sandbox';
 
 const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (filePath, context) => {
   return (
-    matchSingleDeclarativeEntryFile(key, filePath, context) ||
-    matchMultipleDeclarativeEntryFile('sandboxes', filePath, context)
+    matchSingleDeclarativeEntryFile(filePath, key, context) ||
+    matchMultipleDeclarativeEntryFile(filePath, 'sandboxes', context)
   );
 };
 

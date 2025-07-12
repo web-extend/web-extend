@@ -46,8 +46,8 @@ export function getEntryFileVariants(name: string, ext: string) {
 }
 
 export const matchSingleDeclarativeEntryFile = (
-  key: WebExtendEntryKey,
   filePath: string,
+  key: WebExtendEntryKey,
   context: WebExtendContext,
   entryType: WebExtendEntryDescription['entryType'][] = ['script'],
 ) => {
@@ -72,8 +72,8 @@ export const matchSingleDeclarativeEntryFile = (
 };
 
 export const matchMultipleDeclarativeEntryFile = (
-  key: WebExtendEntryKey,
   filePath: string,
+  key: WebExtendEntryKey,
   context: WebExtendContext,
   entryType?: WebExtendEntryDescription['entryType'][],
 ) => {
@@ -246,7 +246,7 @@ interface ResolveOutDirProps {
   buildDirTemplate?: string | undefined;
 }
 
-export function resolveOutDir({
+export function normalizeOutDir({
   outDir,
   target = defaultExtensionTarget,
   mode,

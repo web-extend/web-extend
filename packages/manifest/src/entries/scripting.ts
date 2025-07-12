@@ -6,7 +6,7 @@ import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
 const key = 'scripting';
 
 const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (filePath, context) => {
-  return matchMultipleDeclarativeEntryFile(key, filePath, context, ['script', 'style']);
+  return matchMultipleDeclarativeEntryFile(filePath, key, context, ['script', 'style']);
 };
 
 const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context }) => {

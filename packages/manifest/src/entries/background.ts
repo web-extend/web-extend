@@ -4,7 +4,7 @@ import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
 const key = 'background';
 
 const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (filePath, context) => {
-  return matchSingleDeclarativeEntryFile(key, filePath, context);
+  return matchSingleDeclarativeEntryFile(filePath, key, context);
 };
 
 const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context }) => {
