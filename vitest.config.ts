@@ -1,7 +1,18 @@
-import { defineConfig } from 'vitest/config';
+import { coverageConfigDefaults, defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
-    workspace: ['packages/*'],
+    projects: ['packages/*'],
+    coverage: {
+      exclude: [
+        ...coverageConfigDefaults.exclude,
+        '**/dist/**',
+        '**/static/**',
+        '**/bin/**',
+        '**/rslib.config.ts',
+        'packages/core/templates/**',
+        'docs/**',
+      ],
+    },
   },
 });

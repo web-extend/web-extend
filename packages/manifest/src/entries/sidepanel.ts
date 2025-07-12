@@ -1,23 +1,22 @@
-import { resolve } from 'node:path';
-import { matchSingleDeclarativeEntryFile } from './common.js';
-import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
+import { getSingleDeclarativeEntryFile, matchSingleDeclarativeEntryFile } from '../common.js';
+import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
 
 const key = 'sidepanel';
 
-const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file) =>
-  matchSingleDeclarativeEntryFile(key, file);
+const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (filePath, context) => {
+  return matchSingleDeclarativeEntryFile(filePath, key, context);
+};
 
-const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context, files }) => {
-  const { rootPath, srcDir } = context;
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context }) => {
   const { side_panel, sidebar_action } = manifest;
   if (side_panel?.default_path || sidebar_action?.default_panel) {
     return;
   }
 
-  const entryFile = files.filter(matchDeclarativeEntry).map((file) => resolve(rootPath, srcDir, file))[0];
-  if (entryFile) {
+  const result = await getSingleDeclarativeEntryFile(key, context);
+  if (result[0]) {
     manifest.side_panel = {
-      default_path: entryFile,
+      default_path: result[0].path,
     };
   }
 };

@@ -1,52 +1,33 @@
 import { existsSync } from 'node:fs';
-import { cp, mkdir, readdir, writeFile } from 'node:fs/promises';
+import { cp, mkdir, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
-import backgroundProcessor from './background.js';
-import { isDevMode, readPackageJson, resolveOutDir, resolveSrcDir, resolveTarget, setTargetEnv } from './common.js';
-import contentProcessor from './content.js';
-import devtoolsProcessor from './devtools.js';
-import iconsProcessor from './icons.js';
-import optionsProcessor from './options.js';
-import overrideProcessors from './overrides.js';
-import pagesProcessor from './pages.js';
-import panelProcessor from './panel.js';
+import {
+  isDevMode,
+  normalizeEntriesDir,
+  normalizeOutDir,
+  readPackageJson,
+  resolveTarget,
+  setTargetEnv,
+} from './common.js';
+import { entryProcessors } from './entries/index.js';
 import { polyfillManifest } from './polyfill.js';
-import popupProcessor from './popup.js';
-import sandboxProcessor from './sandbox.js';
-import scriptingProcessor from './scripting.js';
-import sidepanelProcessor from './sidepanel.js';
 import type {
+  ExtensionManifest,
   ExtensionTarget,
-  ManifestContext,
-  ManifestEntries,
   ManifestEntryOutput,
-  ManifestEntryProcessor,
+  NormalizeContextOptions,
   NormalizeManifestProps,
-  WebExtensionManifest,
+  WebExtendContext,
+  WebExtendEntries,
 } from './types.js';
 
-const entryProcessors: ManifestEntryProcessor[] = [
-  backgroundProcessor,
-  contentProcessor,
-  popupProcessor,
-  optionsProcessor,
-  sidepanelProcessor,
-  devtoolsProcessor,
-  panelProcessor,
-  sandboxProcessor,
-  iconsProcessor,
-  scriptingProcessor,
-  pagesProcessor,
-  ...overrideProcessors,
-];
-
-async function normalizeManifest({ manifest = {} as WebExtensionManifest, context }: NormalizeManifestProps) {
-  const { rootPath, target, mode, srcDir } = context;
+async function normalizeManifest({ manifest = {} as ExtensionManifest, context }: NormalizeManifestProps) {
+  const { rootPath, target, mode, entriesDir } = context;
   const defaultManifest = await initManifest(rootPath, target);
   const finalManifest = {
     ...defaultManifest,
     ...manifest,
-  } as WebExtensionManifest;
+  } as ExtensionManifest;
 
   const requiredFields = ['name', 'version'];
   const invalidFields = requiredFields.filter((field) => !(field in finalManifest));
@@ -68,13 +49,10 @@ async function normalizeManifest({ manifest = {} as WebExtensionManifest, contex
   }
 
   try {
-    const srcPath = resolve(rootPath, srcDir);
-    const files = await readdir(srcPath, { recursive: true });
     for (const processor of entryProcessors) {
       if (!processor.normalizeEntry) continue;
       await processor.normalizeEntry({
         manifest: finalManifest,
-        files,
         context,
       });
     }
@@ -87,7 +65,7 @@ async function normalizeManifest({ manifest = {} as WebExtensionManifest, contex
 }
 
 async function initManifest(rootPath: string, target?: ExtensionTarget) {
-  const manifest: Partial<WebExtensionManifest> = {
+  const manifest: Partial<ExtensionManifest> = {
     manifest_version: target?.includes('2') ? 2 : 3,
   };
 
@@ -108,42 +86,45 @@ async function initManifest(rootPath: string, target?: ExtensionTarget) {
   return manifest;
 }
 
+export const normalizeContext = (options: NormalizeContextOptions): WebExtendContext => {
+  const rootPath = options.rootPath || process.cwd();
+  const mode = options.mode || process.env.NODE_ENV || 'none';
+
+  const target = resolveTarget(options.target);
+  setTargetEnv(target);
+
+  const outDir = normalizeOutDir({
+    outDir: options.outDir,
+    target,
+    mode,
+    buildDirTemplate: options.buildDirTemplate,
+  });
+
+  const publicDir = options.publicDir || 'public';
+
+  const entriesDir = normalizeEntriesDir(rootPath, options.entriesDir);
+
+  return {
+    rootPath,
+    mode,
+    target,
+    outDir,
+    publicDir,
+    entriesDir,
+    runtime: options?.runtime,
+  };
+};
+
 export class ManifestManager {
-  public context = {} as ManifestContext;
-  private manifest = {} as WebExtensionManifest;
-  private normalizedManifest = {} as WebExtensionManifest;
-  private entries: ManifestEntries | undefined;
+  public context = {} as WebExtendContext;
+  private manifest = {} as ExtensionManifest;
+  private normalizedManifest = {} as ExtensionManifest;
+  private entries: WebExtendEntries | undefined;
 
-  async normalize(
-    options: Partial<ManifestContext> & {
-      manifest?: WebExtensionManifest | ((props: { target: ExtensionTarget; mode: string }) => WebExtensionManifest);
-      buildDirTemplate?: string;
-    },
-  ) {
-    const mode = options.mode || process.env.NODE_ENV || 'none';
-    const target = resolveTarget(options.target);
-    setTargetEnv(target);
+  async normalize(options: NormalizeContextOptions) {
+    this.context = normalizeContext(options);
 
-    const rootPath = options.rootPath || process.cwd();
-    const srcDir = resolveSrcDir(rootPath, options.srcDir);
-    const outDir = resolveOutDir({
-      outDir: options.outDir,
-      target,
-      mode,
-      buildDirTemplate: options.buildDirTemplate,
-    });
-    const publicDir = options.publicDir || 'public';
-
-    this.context = {
-      mode,
-      target,
-      rootPath,
-      srcDir,
-      outDir,
-      publicDir,
-      runtime: options?.runtime,
-    };
-
+    const { target, mode } = this.context;
     const optionManifest =
       typeof options.manifest === 'function' ? options.manifest({ target, mode }) : options.manifest;
 
@@ -156,7 +137,8 @@ export class ManifestManager {
 
   async readEntries() {
     const manifest = this.normalizedManifest;
-    const res = {} as ManifestEntries;
+    const res = {} as WebExtendEntries;
+    if (!this.context) return res;
     for (const processor of entryProcessors) {
       if (!processor.readEntry) continue;
       const entry = await processor.readEntry({
@@ -172,7 +154,7 @@ export class ManifestManager {
   }
 
   async writeEntries(result: ManifestEntryOutput) {
-    if (!this.entries) return;
+    if (!this.entries || !this.context) return;
     for (const entryName in result) {
       for (const processor of entryProcessors) {
         const entry = this.entries[processor.key] || {};
@@ -192,6 +174,7 @@ export class ManifestManager {
   }
 
   async writeManifestFile() {
+    if (!this.context) return;
     const { rootPath, outDir, mode, runtime } = this.context;
     const distPath = resolve(rootPath, outDir);
     const manifest = this.manifest;
@@ -211,6 +194,7 @@ export class ManifestManager {
   }
 
   async copyPublicFiles() {
+    if (!this.context) return;
     const { rootPath, outDir, publicDir } = this.context;
     const publicPath = resolve(rootPath, publicDir);
     const distPath = resolve(rootPath, outDir);
@@ -218,10 +202,11 @@ export class ManifestManager {
     await cp(publicPath, distPath, { recursive: true, dereference: true });
   }
 
-  static matchDeclarativeEntry(file: string) {
+  matchDeclarativeEntry(file: string) {
+    if (!this.context) return;
     for (const processor of entryProcessors) {
       if (!processor.matchDeclarativeEntry) continue;
-      const item = processor.matchDeclarativeEntry(file);
+      const item = processor.matchDeclarativeEntry(file, this.context);
       if (item) return item;
     }
     return null;

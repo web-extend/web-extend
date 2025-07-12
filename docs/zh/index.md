@@ -40,5 +40,5 @@ features:
   - icon: 🚀
     title: 极速性能
     details: 基于 Rsbuild 实现极速开发和构建
-    link: https://rsbuild.rs/index
+    link: /zh/guide/start/introduction#lightning-fast-performance
 ---

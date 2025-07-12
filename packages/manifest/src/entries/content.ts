@@ -3,43 +3,49 @@ import { copyFile, mkdir, readFile } from 'node:fs/promises';
 import { basename, posix, resolve } from 'node:path';
 import {
   getEntryName,
+  getMultipleDeclarativeEntryFile,
+  getSingleDeclarativeEntryFile,
   isDevMode,
   matchMultipleDeclarativeEntryFile,
   matchSingleDeclarativeEntryFile,
-} from './common.js';
-import { parseExportObject } from './parser/export.js';
-import type { ContentScriptConfig, Manifest, ManifestEntryInput, ManifestEntryProcessor } from './types.js';
+} from '../common.js';
+import { parseExportObject } from '../parser/export.js';
+import type {
+  ContentScriptConfig,
+  ManifestContentScript,
+  ManifestEntryInput,
+  ManifestEntryProcessor,
+} from '../types.js';
 
 const key = 'content';
 
-const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file) =>
-  matchSingleDeclarativeEntryFile(key, file) || matchMultipleDeclarativeEntryFile('contents', file, ['script']);
+const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (filePath, context) => {
+  return (
+    matchSingleDeclarativeEntryFile(filePath, 'content', context) ||
+    matchMultipleDeclarativeEntryFile(filePath, 'contents', context)
+  );
+};
 
-const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, files, context }) => {
-  const { rootPath, srcDir } = context;
-
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context }) => {
   if (!manifest.content_scripts?.length) {
-    const entryFile = files
-      .filter((file) => matchDeclarativeEntry(file))
-      .map((file) => resolve(rootPath, srcDir, file));
-
-    if (entryFile.length) {
+    const singleEntry = await getSingleDeclarativeEntryFile('content', context);
+    const multipleEntry = await getMultipleDeclarativeEntryFile('contents', context);
+    const result = [singleEntry[0], ...multipleEntry].filter(Boolean);
+    for (const item of result) {
       manifest.content_scripts ??= [];
-      for (const filePath of entryFile) {
-        manifest.content_scripts.push({
-          matches: [], // get from entry in writeContentEntry
-          js: [filePath],
-        });
-      }
+      manifest.content_scripts.push({
+        matches: [], // get from entry in writeContentEntry
+        js: [item.path],
+      });
     }
   }
 };
 
-function getContentScriptInfo(contentScript: Manifest.ContentScript, rootPath: string, srcDir: string) {
+function getContentScriptInfo(contentScript: ManifestContentScript, rootPath: string, entriesDir: string) {
   const { js = [], css = [] } = contentScript;
   const input = [...js, ...css];
   if (!input[0]) return null;
-  const name = getEntryName(input[0], rootPath, resolve(rootPath, srcDir));
+  const name = getEntryName(input[0], rootPath, resolve(rootPath, entriesDir));
   return {
     input,
     name,
@@ -52,7 +58,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest, context }) =
 
   const entry: ManifestEntryInput = {};
   content_scripts.forEach((contentScript) => {
-    const info = getContentScriptInfo(contentScript, context.rootPath, context.srcDir);
+    const info = getContentScriptInfo(contentScript, context.rootPath, context.entriesDir.root);
     if (!info) return;
     const { name, input } = info;
     entry[name] = {
@@ -74,8 +80,9 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = async ({
   const { content_scripts } = manifest;
   if (!content_scripts?.length || !output?.length) return;
 
+  const { rootPath, entriesDir } = context;
   const index = (normalizedManifest.content_scripts || []).findIndex((contentScript) => {
-    return getContentScriptInfo(contentScript, context.rootPath, context.srcDir)?.name === name;
+    return getContentScriptInfo(contentScript, rootPath, entriesDir.root)?.name === name;
   });
   if (index === -1) return;
 
@@ -85,7 +92,7 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = async ({
   content_scripts[index] = JSON.parse(JSON.stringify(normalizedContentScript));
 
   const entryMain = input?.[0];
-  const entryManinPath = resolve(context.rootPath, entryMain || '');
+  const entryManinPath = resolve(rootPath, entryMain || '');
   if (entryMain && existsSync(entryManinPath)) {
     const code = await readFile(entryManinPath, 'utf-8');
     const config = parseExportObject<ContentScriptConfig>(code, 'config') || {

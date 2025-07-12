@@ -73,9 +73,9 @@ my-web-extension/
 | `web-ext.config.js`      | web-ext 配置文件                                                                            |
 | `tsconfig.json`          | TypeScript 配置文件                                                                         |
 
-## 源码目录 {#source-folder}
+## 入口目录 {#entry-folder}
 
-项目的源码目录用于组织入口、组件、库等目录或文件。
+项目的入口目录用于组织入口文件。
 
 | 名称                     | 描述                                                      |
 | ------------------------ | --------------------------------------------------------- |
@@ -143,7 +143,7 @@ WebExtend 使用灵活的环境配置系统：
 
 配置示例
 
-```env
+```
 # .env
 API_ENDPOINT=https://api.example.com
 DEBUG=false
@@ -165,7 +165,7 @@ WebExtend 允许你通过 `web-extend.config.(ts|js|mjs)` 文件来自定义项�
 import { defineConfig } from "web-extend";
 
 export default defineConfig({
-  srcDir: "src", // Source directory (default: "src")
+  entriesDir: "./src", // Entries directory (default: "src")
   outDir: ".output", // Output directory (default: "dist")
   manifest: {}, // Custom manifest overrides (default: {})
   target: "firefox-mv2", // Browser target (default: "chrome-mv3")

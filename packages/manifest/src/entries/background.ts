@@ -1,14 +1,14 @@
-import { resolve } from 'node:path';
-import { isDevMode, matchSingleDeclarativeEntryFile } from './common.js';
-import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
+import { getSingleDeclarativeEntryFile, isDevMode, matchSingleDeclarativeEntryFile } from '../common.js';
+import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
 
 const key = 'background';
 
-const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file) =>
-  matchSingleDeclarativeEntryFile(key, file);
+const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (filePath, context) => {
+  return matchSingleDeclarativeEntryFile(filePath, key, context);
+};
 
-const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, files, context }) => {
-  const { rootPath, srcDir, mode, target, runtime } = context;
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context }) => {
+  const { mode, target, runtime } = context;
   const { background } = manifest;
   const scripts: string[] = [];
 
@@ -17,11 +17,9 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
   } else if (background?.scripts) {
     scripts.push(...background.scripts);
   } else {
-    const entryFile = files
-      .filter((file) => matchDeclarativeEntry(file))
-      .map((file) => resolve(rootPath, srcDir, file))[0];
-    if (entryFile) {
-      scripts.push(entryFile);
+    const result = await getSingleDeclarativeEntryFile(key, context);
+    if (result[0]) {
+      scripts.push(result[0].path);
     }
   }
   if (isDevMode(mode) && runtime?.background) {

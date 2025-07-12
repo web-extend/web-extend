@@ -1,27 +1,24 @@
-// import { existsSync } from 'node:fs';
-// import { readFile } from 'node:fs/promises';
-import { resolve } from 'node:path';
-import { matchSingleDeclarativeEntryFile } from './common.js';
-import type { ManifestEntryInput, ManifestEntryProcessor } from './types.js';
+import { getSingleDeclarativeEntryFile, matchSingleDeclarativeEntryFile } from '../common.js';
+import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
 
 const key = 'popup';
 
-const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (file) =>
-  matchSingleDeclarativeEntryFile(key, file);
+const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (filePath, context) => {
+  return matchSingleDeclarativeEntryFile(filePath, key, context);
+};
 
-const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context, files }) => {
-  const { rootPath, srcDir } = context;
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context }) => {
   const { action, browser_action } = manifest;
   let pointer = action || browser_action;
 
   if (pointer?.default_popup) return;
 
-  const entryFile = files.filter(matchDeclarativeEntry).map((file) => resolve(rootPath, srcDir, file))[0];
-  if (entryFile) {
+  const result = await getSingleDeclarativeEntryFile(key, context);
+  if (result[0]) {
     if (!pointer) {
       pointer = manifest.action = {};
     }
-    pointer.default_popup ??= entryFile;
+    pointer.default_popup ??= result[0].path;
   }
 };
 

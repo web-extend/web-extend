@@ -1,12 +1,8 @@
 import { existsSync } from 'node:fs';
 import { readdir, unlink } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import type { FilenameConfig, RsbuildConfig, RsbuildEntry, Rspack } from '@rsbuild/core';
+import type { FilenameConfig, RsbuildEntry, Rspack } from '@rsbuild/core';
 import type { ManifestEntryInput } from '@web-extend/manifest/types';
-
-export function isDevMode(mode: string | undefined) {
-  return mode === 'development';
-}
 
 export function transformManifestEntry(entry: ManifestEntryInput | undefined) {
   if (!entry) return;
@@ -36,19 +32,6 @@ export function getRsbuildEntryFiles(entries: RsbuildEntry, key: string) {
     res.push(...entry);
   } else {
     res.push(...[entry.import].flat());
-  }
-  return res;
-}
-
-export function getAllRsbuildEntryFiles(environments: RsbuildConfig['environments']) {
-  const res: string[] = [];
-  if (!environments) return [];
-  for (const key in environments) {
-    const entry = environments[key]?.source?.entry;
-    if (!entry) continue;
-    for (const entryName in entry) {
-      res.push(...getRsbuildEntryFiles(entry, entryName));
-    }
   }
   return res;
 }
