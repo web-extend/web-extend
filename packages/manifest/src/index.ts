@@ -4,8 +4,8 @@ import { join, resolve } from 'node:path';
 import {
   isDevMode,
   normalizeEntriesDir,
-  readPackageJson,
   normalizeOutDir,
+  readPackageJson,
   resolveTarget,
   setTargetEnv,
 } from './common.js';
