@@ -1,15 +1,13 @@
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import type { RsbuildConfig, RsbuildPlugin, WatchFiles } from '@rsbuild/core';
-import { ManifestManager, matchDeclarativeEntry } from '@web-extend/manifest';
-import { getEntryFileVariants, isDevMode } from '@web-extend/manifest/common';
+import type { RsbuildConfig, RsbuildPlugin } from '@rsbuild/core';
+import { ManifestManager } from '@web-extend/manifest';
+import { isDevMode } from '@web-extend/manifest/common';
 import type {
   ExtensionManifest,
   ManifestEntryOutput,
   WebExtendCommonConfig,
-  WebExtendContext,
   WebExtendEntries,
-  WebExtendEntryKey,
 } from '@web-extend/manifest/types';
 import { ContentRuntimePlugin, hotUpdateGlobal } from './content.js';
 import { normalizeRsbuildEnvironments } from './environments.js';
@@ -18,48 +16,6 @@ import { clearOutdatedHotUpdateFiles, getRsbuildEntryFiles } from './helper.js';
 export type PluginWebExtendOptions = WebExtendCommonConfig;
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-
-const getDevWatchFiles = (context: WebExtendContext, entries?: WebExtendEntries): WatchFiles[] => {
-  if (!entries) return [];
-  const { rootPath, entriesDir } = context;
-  const entriesDirRootPath = resolve(rootPath, entriesDir.root);
-
-  const entryPaths: string[] = [];
-  for (const key in entries) {
-    const entry = entries[key as WebExtendEntryKey];
-    if (entry) {
-      const input = Object.values(entry).flatMap((item) => item.input);
-      entryPaths.push(...input);
-    }
-  }
-
-  return [
-    {
-      type: 'reload-server',
-      paths: [entriesDir.root],
-      options: {
-        cwd: rootPath,
-        ignored: (file, stats) => {
-          if (file.startsWith(entriesDirRootPath)) {
-            if (stats?.isFile()) {
-              if (stats.size === 0) return true;
-
-              const entry = matchDeclarativeEntry(file, context);
-              if (!entry) return true;
-
-              const existsEntry = getEntryFileVariants(entry.name, entry.ext)
-                .map((file) => resolve(entriesDirRootPath, file))
-                .some((file) => entryPaths.includes(file));
-              if (existsEntry) return true;
-            }
-            return false;
-          }
-          return true;
-        },
-      },
-    },
-  ];
-};
 
 export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPlugin => ({
   name: 'plugin-web-extend',
@@ -86,7 +42,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         manifest: options.manifest as ExtensionManifest,
       });
 
-      const { target, outDir, publicDir, mode } = manifestManager.context;
+      const { target, outDir, publicDir, mode, entriesDir } = manifestManager.context;
 
       webExtendEntries = await manifestManager.readEntries();
       const environments = normalizeRsbuildEnvironments({
@@ -94,6 +50,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         isDev: isDevMode(mode),
       });
 
+      const entryNames = Object.values(webExtendEntries).flatMap((entry) => Object.keys(entry));
       const extraConfig: RsbuildConfig = {
         environments,
         source: {
@@ -108,7 +65,23 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
             port: '<port>',
             protocol: 'ws',
           },
-          watchFiles: getDevWatchFiles(manifestManager.context, webExtendEntries),
+          watchFiles: [
+            {
+              type: 'reload-server',
+              paths: [entriesDir.root],
+              options: {
+                cwd: rootPath,
+                ignored: (file, stats) => {
+                  if (stats?.isFile()) {
+                    if (stats.size === 0) return true;
+                    const entry = manifestManager.matchDeclarativeEntry(file);
+                    if (!entry || entryNames.includes(entry.name)) return true;
+                  }
+                  return false;
+                },
+              },
+            },
+          ],
         },
         server: {
           printUrls: false,

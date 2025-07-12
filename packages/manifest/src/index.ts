@@ -201,13 +201,14 @@ export class ManifestManager {
     if (!existsSync(publicPath) || !existsSync(distPath)) return;
     await cp(publicPath, distPath, { recursive: true, dereference: true });
   }
-}
 
-export function matchDeclarativeEntry(file: string, context: WebExtendContext) {
-  for (const processor of entryProcessors) {
-    if (!processor.matchDeclarativeEntry) continue;
-    const item = processor.matchDeclarativeEntry(file, context);
-    if (item) return item;
+  matchDeclarativeEntry(file: string) {
+    if (!this.context) return;
+    for (const processor of entryProcessors) {
+      if (!processor.matchDeclarativeEntry) continue;
+      const item = processor.matchDeclarativeEntry(file, this.context);
+      if (item) return item;
+    }
+    return null;
   }
-  return null;
 }

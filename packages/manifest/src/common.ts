@@ -35,15 +35,15 @@ export function getEntryName(file: string, rootPath: string, entriesDir: string)
   return name.split(sep).join('/');
 }
 
-export function getEntryFileVariants(name: string, ext: string) {
-  if (isScriptFile(`${name}${ext}`)) {
-    return scriptExts.flatMap((item) => [`${name}${item}`, `${name}${sep}index${item}`]);
+const isAllowableEntryFile = (file: string, entryTypes: WebExtendEntryDescription['entryType'][]) => {
+  if (entryTypes.includes('script') && isScriptFile(file)) {
+    return true;
   }
-  if (isStyleFile(`${name}${ext}`)) {
-    return styleExts.flatMap((item) => [`${name}${item}`]);
+  if (entryTypes.includes('style') && isStyleFile(file)) {
+    return true;
   }
-  return [`${name}${ext}`];
-}
+  return false;
+};
 
 export const matchSingleDeclarativeEntryFile = (
   filePath: string,
@@ -51,8 +51,7 @@ export const matchSingleDeclarativeEntryFile = (
   context: WebExtendContext,
   entryType: WebExtendEntryDescription['entryType'][] = ['script'],
 ) => {
-  const allowable = isScriptFile(filePath) || (entryType?.includes('style') && isStyleFile(filePath));
-  if (!allowable) return null;
+  if (!isAllowableEntryFile(filePath, entryType)) return null;
 
   const { rootPath, entriesDir } = context;
   const entryDir = resolve(rootPath, entriesDir.root, entriesDir[key]);
@@ -75,10 +74,9 @@ export const matchMultipleDeclarativeEntryFile = (
   filePath: string,
   key: WebExtendEntryKey,
   context: WebExtendContext,
-  entryType?: WebExtendEntryDescription['entryType'][],
+  entryType: WebExtendEntryDescription['entryType'][] = ['script'],
 ) => {
-  const allowable = isScriptFile(filePath) || (entryType?.includes('style') && isStyleFile(filePath));
-  if (!allowable) return null;
+  if (!isAllowableEntryFile(filePath, entryType)) return null;
 
   const { rootPath, entriesDir } = context;
   const entryDir = resolve(rootPath, entriesDir.root, entriesDir[key]);
@@ -102,19 +100,6 @@ export const matchMultipleDeclarativeEntryFile = (
         ext,
       }
     : null;
-};
-
-export const isAllowableEntryFile = (
-  file: string,
-  entryTypes: WebExtendEntryDescription['entryType'][] = ['script'],
-) => {
-  if (entryTypes.includes('script') && isScriptFile(file)) {
-    return true;
-  }
-  if (entryTypes.includes('style') && isStyleFile(file)) {
-    return true;
-  }
-  return false;
 };
 
 export const getSingleDeclarativeEntryFile = async (
