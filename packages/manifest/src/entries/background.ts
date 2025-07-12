@@ -1,5 +1,5 @@
 import { basename, dirname, relative, resolve } from 'node:path';
-import { isDevMode, getSingleDeclarativeEntryFile, matchSingleDeclarativeEntryFile } from '../common.js';
+import { getSingleDeclarativeEntryFile, isDevMode, matchSingleDeclarativeEntryFile } from '../common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
 
 const key = 'background';

@@ -1,5 +1,5 @@
 import { resolve } from 'node:path';
-import { matchSingleDeclarativeEntryFile, getSingleDeclarativeEntryFile } from '../common.js';
+import { getSingleDeclarativeEntryFile, matchSingleDeclarativeEntryFile } from '../common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
 
 const key = 'popup';

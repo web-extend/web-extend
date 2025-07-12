@@ -1,9 +1,9 @@
 import { resolve } from 'node:path';
 import {
-  matchMultipleDeclarativeEntryFile,
   getMultipleDeclarativeEntryFile,
-  matchSingleDeclarativeEntryFile,
   getSingleDeclarativeEntryFile,
+  matchMultipleDeclarativeEntryFile,
+  matchSingleDeclarativeEntryFile,
 } from '../common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
 
@@ -25,9 +25,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = async ({ manifest, contex
   const { rootPath, entriesDir } = context;
 
   const singleEntry = await getSingleDeclarativeEntryFile(resolve(rootPath, entriesDir.root, entriesDir.panel));
-  const multipleEntry = await getMultipleDeclarativeEntryFile(
-    resolve(rootPath, entriesDir.root, entriesDir.panels),
-  );
+  const multipleEntry = await getMultipleDeclarativeEntryFile(resolve(rootPath, entriesDir.root, entriesDir.panels));
   const result = [singleEntry[0], ...multipleEntry].filter(Boolean);
 
   for (const item of result) {

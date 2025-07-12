@@ -3,11 +3,11 @@ import { copyFile, mkdir, readFile } from 'node:fs/promises';
 import { basename, dirname, posix, relative, resolve } from 'node:path';
 import {
   getEntryName,
-  isDevMode,
-  matchSingleDeclarativeEntryFile,
   getMultipleDeclarativeEntryFile,
   getSingleDeclarativeEntryFile,
+  isDevMode,
   matchMultipleDeclarativeEntryFile,
+  matchSingleDeclarativeEntryFile,
 } from '../common.js';
 import { parseExportObject } from '../parser/export.js';
 import type {

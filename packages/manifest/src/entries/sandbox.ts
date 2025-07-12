@@ -1,10 +1,10 @@
 import { resolve } from 'node:path';
 import {
   getEntryName,
-  matchMultipleDeclarativeEntryFile,
   getMultipleDeclarativeEntryFile,
-  matchSingleDeclarativeEntryFile,
   getSingleDeclarativeEntryFile,
+  matchMultipleDeclarativeEntryFile,
+  matchSingleDeclarativeEntryFile,
 } from '../common.js';
 import type { ManifestEntryInput, ManifestEntryProcessor } from '../types.js';
 
@@ -24,9 +24,7 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
   if (pages?.length || target.includes('firefox')) return;
 
   const singleEntry = await getSingleDeclarativeEntryFile(resolve(rootPath, entriesDir.root, entriesDir.sandbox));
-  const multipleEntry = await getMultipleDeclarativeEntryFile(
-    resolve(rootPath, entriesDir.root, entriesDir.sandboxes),
-  );
+  const multipleEntry = await getMultipleDeclarativeEntryFile(resolve(rootPath, entriesDir.root, entriesDir.sandboxes));
   const result = [singleEntry[0], ...multipleEntry].filter(Boolean);
 
   if (result.length) {
