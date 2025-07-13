@@ -115,23 +115,20 @@ interface ManifestSidePanel {
 export type ManifestEntryType = 'script' | 'style' | 'html' | 'image';
 
 export interface WebExtendEntryDescription {
-  input: string[];
-  output: string[];
-  entryType: ManifestEntryType; // default is 'html'
-}
-
-export type WebExtendInput = {
   name: string;
   input: string[];
-  output?: string;
-  type: ManifestEntryType;
-};
+  output: string[];
+  type: ManifestEntryType; // default is 'html'
+  html?: string;
+}
+
+export type WebExtendEntryInput = Pick<WebExtendEntryDescription, 'name' | 'input' | 'type'>;
+
+export type WebExtendEntryOutput = Pick<WebExtendEntryDescription, 'name' | 'input' | 'output'>;
 
 export type WebExtendEntries = {
-  [key in WebExtendEntryKey]?: WebExtendInput | WebExtendInput[];
+  [key in WebExtendEntryKey]?: WebExtendEntryInput | WebExtendEntryInput[];
 };
-
-export type ManifestEntryOutput = Record<string, Pick<WebExtendEntryDescription, 'input' | 'output'>>;
 
 export type MaybePromise<T = unknown> = T | Promise<T>;
 
@@ -142,7 +139,7 @@ export interface ManifestEntryProcessor {
     context: WebExtendContext,
   ) => null | { name: string; ext: string; size?: number };
   normalizeEntry?: (props: NormalizeMainfestEntryProps) => MaybePromise<void>;
-  readEntry?: (props: ReadManifestEntryItemProps) => MaybePromise<WebExtendInput | WebExtendInput[] | null>;
+  readEntry?: (props: ReadManifestEntryItemProps) => MaybePromise<WebExtendEntryInput | WebExtendEntryInput[] | null>;
   writeEntry?: (props: WriteMainfestEntryItemProps) => MaybePromise<void>;
   onAfterBuild?: (props: WriteManifestFileProps) => MaybePromise<void>;
 }
@@ -167,14 +164,10 @@ export interface NormalizeMainfestEntryProps {
   context: WebExtendContext;
 }
 
-export interface WriteMainfestEntriesProps {
+export interface WriteMainfestEntryItemProps {
   normalizedManifest: ExtensionManifest;
   manifest: ExtensionManifest;
   rootPath: string;
-  entry: ManifestEntryOutput;
-}
-
-export interface WriteMainfestEntryItemProps extends Omit<WriteMainfestEntriesProps, 'entry'> {
   context: WebExtendContext;
   name: string;
   input?: WebExtendEntryDescription['input'];
@@ -230,28 +223,3 @@ export interface WebExtendCommonConfig {
 
 export type NormalizeContextOptions = Partial<Pick<WebExtendContext, 'rootPath' | 'mode' | 'runtime'>> &
   WebExtendCommonConfig;
-
-// {
-//   popup: {
-//     entry: 'src/popup/main.tsx',
-//     html: 'src/popup/index.html',
-//     output: 'popup.html'
-//   },
-//   background: {
-//     entry: 'src/background/index.ts'
-//   },
-//   contentScripts: [
-//     {
-//       matches: ['<all_urls>'],
-//       js: ['src/content-scripts/fill-form.ts'],
-//       css: ['src/content-scripts/fill-form.css']
-//     }
-//   ],
-//   scripting: [
-//     {
-//       name: 'highlight',
-//       js: 'src/scripting/highlight.ts',
-//       css: 'src/scripting/highlight.css'
-//     }
-//   ]
-// }

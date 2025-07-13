@@ -22,7 +22,7 @@ function isStyleFile(file: string) {
   return styleExts.some((ext) => file.endsWith(ext));
 }
 
-const isAllowableEntryFile = (file: string, entryTypes: WebExtendEntryDescription['entryType'][]) => {
+const isAllowableEntryFile = (file: string, entryTypes: WebExtendEntryDescription['type'][]) => {
   return (entryTypes.includes('script') && isScriptFile(file)) || (entryTypes.includes('style') && isStyleFile(file));
 };
 
@@ -43,7 +43,7 @@ export const matchSingleDeclarativeEntryFile = (
   filePath: string,
   key: WebExtendEntryKey,
   context: WebExtendContext,
-  entryType: WebExtendEntryDescription['entryType'][] = ['script'],
+  entryType: WebExtendEntryDescription['type'][] = ['script'],
 ) => {
   if (!isAllowableEntryFile(filePath, entryType)) return null;
 
@@ -68,7 +68,7 @@ export const matchMultipleDeclarativeEntryFile = (
   filePath: string,
   key: WebExtendEntryKey,
   context: WebExtendContext,
-  entryType: WebExtendEntryDescription['entryType'][] = ['script'],
+  entryType: WebExtendEntryDescription['type'][] = ['script'],
 ) => {
   if (!isAllowableEntryFile(filePath, entryType)) return null;
 
@@ -99,7 +99,7 @@ export const matchMultipleDeclarativeEntryFile = (
 export const getSingleDeclarativeEntryFile = async (
   key: WebExtendEntryKey,
   context: WebExtendContext,
-  entryTypes: WebExtendEntryDescription['entryType'][] = ['script'],
+  entryTypes: WebExtendEntryDescription['type'][] = ['script'],
 ) => {
   const { rootPath, entriesDir } = context;
   const entryDir = resolve(rootPath, entriesDir.root, entriesDir[key]);
@@ -140,7 +140,7 @@ export const getSingleDeclarativeEntryFile = async (
 export const getMultipleDeclarativeEntryFile = async (
   key: WebExtendEntryKey,
   context: WebExtendContext,
-  entryTypes: WebExtendEntryDescription['entryType'][] = ['script'],
+  entryTypes: WebExtendEntryDescription['type'][] = ['script'],
 ) => {
   const { rootPath, entriesDir } = context;
   const entryDir = resolve(rootPath, entriesDir.root, entriesDir[key]);

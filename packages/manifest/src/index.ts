@@ -14,11 +14,12 @@ import { polyfillManifest } from './polyfill.js';
 import type {
   ExtensionManifest,
   ExtensionTarget,
-  ManifestEntryOutput,
+  WebExtendEntryKey,
   NormalizeContextOptions,
   NormalizeManifestProps,
   WebExtendContext,
   WebExtendEntries,
+  WebExtendEntryOutput,
 } from './types.js';
 
 async function normalizeManifest({ manifest = {} as ExtensionManifest, context }: NormalizeManifestProps) {
@@ -153,26 +154,30 @@ export class ManifestManager {
     return res;
   }
 
-  async writeEntries(result: ManifestEntryOutput) {
+  async writeEntries(result: WebExtendEntryOutput[]) {
     if (!this.entries || !this.context) return;
-    for (const entryName in result) {
-      for (const processor of entryProcessors) {
-        const entry = this.entries[processor.key];
-        if (!processor.writeEntry || !entry) continue;
-        const entries = Array.isArray(entry) ? entry : [entry];
-        const item = entries.find((item) => item.name === entryName);
-        
-        if (item) {
-          await processor.writeEntry({
-            normalizedManifest: this.normalizedManifest,
-            manifest: this.manifest,
-            rootPath: this.context.rootPath,
-            name: entryName,
-            input: result[entryName].input,
-            output: result[entryName].output,
-            context: this.context,
-          });
-        }
+    const entries = this.entries;
+
+    for (const item of result) {
+      const { name, input, output } = item;
+      const entryKey = Object.keys(entries).find((key) => {
+        const entry = entries[key as WebExtendEntryKey];
+        if (!entry) return false;
+        const entryNames = Array.isArray(entry) ? entry.map((item) => item.name) : [entry.name];
+        return entryNames.includes(name);
+      }) as WebExtendEntryKey | undefined;
+      const processor = entryProcessors.find((item) => item.key === entryKey);
+
+      if (entryKey && processor?.writeEntry) {
+        await processor.writeEntry({
+          normalizedManifest: this.normalizedManifest,
+          manifest: this.manifest,
+          rootPath: this.context.rootPath,
+          name,
+          input,
+          output,
+          context: this.context,
+        });
       }
     }
   }

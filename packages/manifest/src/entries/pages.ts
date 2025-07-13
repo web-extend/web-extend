@@ -1,5 +1,5 @@
 import { getMultipleDeclarativeEntryFile, matchMultipleDeclarativeEntryFile } from '../common.js';
-import type { ManifestEntryProcessor, WebExtendInput } from '../types.js';
+import type { ManifestEntryProcessor, WebExtendEntryInput } from '../types.js';
 
 const key = 'pages';
 
@@ -8,7 +8,7 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
 };
 
 const readEntry: ManifestEntryProcessor['readEntry'] = async ({ context }) => {
-  const entry: WebExtendInput[] = [];
+  const entry: WebExtendEntryInput[] = [];
 
   const result = await getMultipleDeclarativeEntryFile(key, context);
   for (const item of result) {

@@ -2,9 +2,9 @@ import { existsSync } from 'node:fs';
 import { readdir, unlink } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import type { FilenameConfig, RsbuildEntry, Rspack } from '@rsbuild/core';
-import type { WebExtendInput } from '@web-extend/manifest/types';
+import type { WebExtendEntryInput } from '@web-extend/manifest/types';
 
-export function transformManifestEntry(entry: WebExtendInput | WebExtendInput[] | undefined) {
+export function transformManifestEntry(entry: WebExtendEntryInput | WebExtendEntryInput[] | undefined) {
   if (!entry) return;
   const entries = Array.isArray(entry) ? entry : [entry];
 
@@ -79,7 +79,7 @@ const isProd = process.env.NODE_ENV === 'production';
 const jsDistPath = 'static/js';
 const cssDistPath = 'static/css';
 
-export const getJsDistPath = (manifestEntry: WebExtendInput | WebExtendInput[]): FilenameConfig['js'] => {
+export const getJsDistPath = (manifestEntry: WebExtendEntryInput | WebExtendEntryInput[]): FilenameConfig['js'] => {
   const entries = Array.isArray(manifestEntry) ? manifestEntry : [manifestEntry];
   return (pathData) => {
     const chunkName = pathData.chunk?.name;
@@ -92,7 +92,7 @@ export const getJsDistPath = (manifestEntry: WebExtendInput | WebExtendInput[]):
   };
 };
 
-export const getCssDistPath = (manifestEntry: WebExtendInput | WebExtendInput[]): FilenameConfig['css'] => {
+export const getCssDistPath = (manifestEntry: WebExtendEntryInput | WebExtendEntryInput[]): FilenameConfig['css'] => {
   const entries = Array.isArray(manifestEntry) ? manifestEntry : [manifestEntry];
   return (pathData) => {
     const chunkName = pathData.chunk?.name;

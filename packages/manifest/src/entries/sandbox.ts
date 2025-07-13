@@ -5,7 +5,7 @@ import {
   matchMultipleDeclarativeEntryFile,
   matchSingleDeclarativeEntryFile,
 } from '../common.js';
-import type { ManifestEntryProcessor, WebExtendInput } from '../types.js';
+import type { ManifestEntryProcessor, WebExtendEntryInput } from '../types.js';
 
 const key = 'sandbox';
 
@@ -39,7 +39,7 @@ const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest, context }) =
 
   const { rootPath, entriesDir } = context;
 
-  const entry: WebExtendInput[] = [];
+  const entry: WebExtendEntryInput[] = [];
   pages.forEach((page) => {
     const name = getEntryName(page, rootPath, entriesDir.root);
     entry.push({

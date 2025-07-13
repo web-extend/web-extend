@@ -5,9 +5,9 @@ import { ManifestManager } from '@web-extend/manifest';
 import { isDevMode } from '@web-extend/manifest/common';
 import type {
   ExtensionManifest,
-  ManifestEntryOutput,
   WebExtendCommonConfig,
   WebExtendEntries,
+  WebExtendEntryOutput
 } from '@web-extend/manifest/types';
 import { ContentRuntimePlugin, hotUpdateGlobal } from './content.js';
 import { normalizeRsbuildEnvironments } from './environments.js';
@@ -222,7 +222,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       const entrypoints = stats?.toJson().entrypoints;
       if (!entrypoints) return;
 
-      const manifestEntry: ManifestEntryOutput = {};
+      const manifestEntry: WebExtendEntryOutput[] = [];
       for (const [entryName, entrypoint] of Object.entries(entrypoints)) {
         const input = getRsbuildEntryFiles(environment.entry, entryName);
 
@@ -231,10 +231,11 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
           .map((item) => item.name)
           .filter((item) => !item.includes('.hot-update.'));
 
-        manifestEntry[entryName] = {
+        manifestEntry.push({
+          name: entryName,
           input,
           output,
-        };
+        });
       }
 
       await manifestManager.writeEntries(manifestEntry);
