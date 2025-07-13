@@ -147,8 +147,7 @@ export class ManifestManager {
       const { name, output } = item;
       const entryKey = Object.keys(entries).find((key) => {
         const entry = entries[key as WebExtendEntryKey];
-        if (!entry) return false;
-        const entryNames = Array.isArray(entry) ? entry.map((item) => item.name) : [entry.name];
+        const entryNames = entry ? [entry].flat().map((item) => item.name) : [];
         return entryNames.includes(name);
       }) as WebExtendEntryKey | undefined;
       const processor = entryProcessors.find((item) => item.key === entryKey);

@@ -66,8 +66,7 @@ const isProd = process.env.NODE_ENV === 'production';
 const jsDistPath = 'static/js';
 const cssDistPath = 'static/css';
 
-export const getJsDistPath = (manifestEntry: WebExtendEntryInput | WebExtendEntryInput[]): FilenameConfig['js'] => {
-  const entries = Array.isArray(manifestEntry) ? manifestEntry : [manifestEntry];
+export const getJsDistPath = (entries: WebExtendEntryInput[]): FilenameConfig['js'] => {
   return (pathData) => {
     const chunkName = pathData.chunk?.name;
     const entry = entries.find((item) => item.name === chunkName);
@@ -79,8 +78,7 @@ export const getJsDistPath = (manifestEntry: WebExtendEntryInput | WebExtendEntr
   };
 };
 
-export const getCssDistPath = (manifestEntry: WebExtendEntryInput | WebExtendEntryInput[]): FilenameConfig['css'] => {
-  const entries = Array.isArray(manifestEntry) ? manifestEntry : [manifestEntry];
+export const getCssDistPath = (entries: WebExtendEntryInput[]): FilenameConfig['css'] => {
   return (pathData) => {
     const chunkName = pathData.chunk?.name;
     const entry = entries.find((item) => item.name === chunkName);

@@ -222,7 +222,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       }
     });
 
-    api.onAfterEnvironmentCompile(async ({ stats, environment }) => {
+    api.onAfterEnvironmentCompile(async ({ stats }) => {
       // @see https://rspack.dev/api/javascript-api/stats-json
       const entrypoints = stats?.toJson().entrypoints;
       if (!entrypoints) return;

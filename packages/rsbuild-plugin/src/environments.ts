@@ -11,7 +11,6 @@ type NormalizeRsbuildEnvironmentProps = {
 
 function getWebEnvironmentConfig({ entries, isDev }: NormalizeRsbuildEnvironmentProps): EnvironmentConfig | undefined {
   const webEntry = Object.values(entries).flat();
-
   const entry = transformManifestEntry(webEntry);
   if (!entry) return;
 
@@ -53,7 +52,7 @@ export const normalizeRsbuildEnvironments = (options: NormalizeRsbuildEnvironmen
           js: '',
         },
         filename: {
-          js: getJsDistPath(background),
+          js: getJsDistPath([background].flat()),
         },
       },
     };
