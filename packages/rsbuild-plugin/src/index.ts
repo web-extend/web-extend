@@ -161,11 +161,13 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       }
 
       // process scripting entry
-      const scriptingEntry = webExtendEntries?.scripting;
+      const scriptingEntry = webExtendEntries?.scripting || [];
       const emitCss = config.output.emitCss ?? target === 'web';
-      const scriptStyleImports = Object.values(scriptingEntry || {})
-        .filter((entry) => entry.entryType === 'style')
+      const scriptStyleImports = [scriptingEntry]
+        .flat()
+        .filter((entry) => entry.type === 'style')
         .flatMap((entry) => entry.input);
+
       if (scriptingEntry && emitCss && config.output.injectStyles && scriptStyleImports.length) {
         const cssRule = chain.module.rule(CHAIN_ID.RULE.CSS);
         const extractRule = cssRule.oneOf('css-extract-styles').resource((value) => scriptStyleImports.includes(value));
