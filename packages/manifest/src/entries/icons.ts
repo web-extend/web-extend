@@ -24,44 +24,43 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
   return null;
 };
 
-const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context }) => {
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context, entries }) => {
   const { rootPath, entriesDir } = context;
 
   const iconsPath = resolve(rootPath, entriesDir.root, entriesDir.icons);
-  if (!existsSync(iconsPath)) return;
+  if (existsSync(iconsPath)) {
+    const files = await readdir(iconsPath);
+    const declarativeIcons: ExtensionManifest['icons'] = {};
+    for (const file of files) {
+      const filePath = resolve(iconsPath, file);
+      const size = matchDeclarativeEntry(filePath, context)?.size || null;
+      if (size) {
+        declarativeIcons[size] = filePath;
+      }
+    }
 
-  const files = await readdir(iconsPath);
-  const declarativeIcons: ExtensionManifest['icons'] = {};
-  for (const file of files) {
-    const filePath = resolve(iconsPath, file);
-    const size = matchDeclarativeEntry(filePath, context)?.size || null;
-    if (size) {
-      declarativeIcons[size] = filePath;
+    if (Object.keys(declarativeIcons).length) {
+      if (!manifest.icons) {
+        manifest.icons = {
+          ...declarativeIcons,
+        };
+      }
+
+      const { action, browser_action } = manifest;
+      let pointer = action || browser_action;
+      if (!pointer?.default_icon) {
+        if (!pointer) {
+          pointer = manifest.action = {};
+        }
+        pointer.default_icon = {
+          ...declarativeIcons,
+        };
+      }
     }
   }
-  if (!Object.keys(declarativeIcons).length) return;
 
-  if (!manifest.icons) {
-    manifest.icons = {
-      ...declarativeIcons,
-    };
-  }
-
-  const { action, browser_action } = manifest;
-  let pointer = action || browser_action;
-  if (!pointer?.default_icon) {
-    if (!pointer) {
-      pointer = manifest.action = {};
-    }
-    pointer.default_icon = {
-      ...declarativeIcons,
-    };
-  }
-};
-
-const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest, context }) => {
   const { icons, action, browser_action } = manifest || {};
-  const { rootPath } = context;
+  // const { rootPath } = context;
   const pointer = action || browser_action;
   const files = new Set<string>();
 
@@ -83,13 +82,13 @@ const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest, context }) =
     helper(pointer?.default_icon);
   }
 
-  return files.size
-    ? {
-        name: key,
-        input: Array.from(files),
-        type: 'image',
-      }
-    : null;
+  if (files.size) {
+    entries[key] = {
+      name: key,
+      input: Array.from(files),
+      type: 'image',
+    };
+  }
 };
 
 const getIconOutputName = (input: string, output: string[]) => {
@@ -135,7 +134,7 @@ const iconsProcessor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntry,
   normalizeEntry,
-  readEntry,
+  // readEntry,
   writeEntry,
 };
 

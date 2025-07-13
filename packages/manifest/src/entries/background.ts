@@ -7,54 +7,35 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
   return matchSingleDeclarativeEntryFile(filePath, key, context);
 };
 
-const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context }) => {
-  const { mode, target, runtime } = context;
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context, entries }) => {
+  const { mode, runtime } = context;
   const { background } = manifest;
-  const scripts: string[] = [];
 
+  const input: string[] = [];
   if (background?.service_worker) {
-    scripts.push(background.service_worker);
+    input.push(background.service_worker);
   } else if (background?.scripts) {
-    scripts.push(...background.scripts);
+    input.push(...background.scripts);
   } else {
     const result = await getSingleDeclarativeEntryFile(key, context);
     if (result[0]) {
-      scripts.push(result[0].path);
+      input.push(result[0].path);
     }
   }
   if (isDevMode(mode) && runtime?.background) {
-    scripts.push(runtime.background);
+    input.push(runtime.background);
   }
 
-  if (!scripts.length) return;
+  if (input.length) {
+    entries[key] = {
+      name: key,
+      input,
+      type: 'script',
+    };
 
-  manifest.background ??= {};
-  // Firefox only supports background.scripts
-  if (target.includes('firefox')) {
-    manifest.background.scripts = scripts;
-  } else {
-    manifest.background.service_worker = scripts.join(',');
+    manifest.background ??= {};
+    manifest.background.service_worker = input.join(',');
   }
-};
-
-const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest }) => {
-  const { background } = manifest || {};
-  if (!background) return null;
-
-  let input: string[] = [];
-  if (background.service_worker) {
-    input = background.service_worker.split(',');
-  } else if (background.scripts) {
-    input = background.scripts || [];
-  }
-
-  if (!input.length) return null;
-
-  return {
-    name: key,
-    input,
-    type: 'script',
-  };
 };
 
 const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, output }) => {
@@ -73,7 +54,6 @@ const backgroundProcessor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntry,
   normalizeEntry,
-  readEntry,
   writeEntry,
 };
 

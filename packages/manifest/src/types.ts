@@ -139,14 +139,8 @@ export interface ManifestEntryProcessor {
     context: WebExtendContext,
   ) => null | { name: string; ext: string; size?: number };
   normalizeEntry?: (props: NormalizeMainfestEntryProps) => MaybePromise<void>;
-  readEntry?: (props: ReadManifestEntryItemProps) => MaybePromise<WebExtendEntryInput | WebExtendEntryInput[] | null>;
   writeEntry?: (props: WriteMainfestEntryItemProps) => MaybePromise<void>;
   onAfterBuild?: (props: WriteManifestFileProps) => MaybePromise<void>;
-}
-
-interface ReadManifestEntryItemProps {
-  manifest: ExtensionManifest;
-  context: WebExtendContext;
 }
 
 export interface WebExtendRuntime {

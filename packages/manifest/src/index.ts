@@ -140,17 +140,6 @@ export class ManifestManager {
   }
 
   async readEntries() {
-    const manifest = this.normalizedManifest;
-    for (const processor of entryProcessors) {
-      if (!processor.readEntry) continue;
-      const entry = await processor.readEntry({
-        manifest,
-        context: this.context,
-      });
-      if (entry) {
-        this.entries[processor.key] = entry;
-      }
-    }
     return this.entries;
   }
 

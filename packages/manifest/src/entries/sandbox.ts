@@ -16,39 +16,40 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
   );
 };
 
-const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context }) => {
-  const { target } = context;
-  const pages = manifest.sandbox?.pages;
-  if (pages?.length || target.includes('firefox')) return;
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context, entries }) => {
+  const { target, rootPath, entriesDir } = context;
+  let input = manifest.sandbox?.pages || [];
+  if (target.includes('firefox')) return;
 
-  const singleEntry = await getSingleDeclarativeEntryFile(key, context);
-  const multipleEntry = await getMultipleDeclarativeEntryFile('sandboxes', context);
-  const result = [singleEntry[0], ...multipleEntry].filter(Boolean);
+  if (!input.length) {
+    const singleEntry = await getSingleDeclarativeEntryFile(key, context);
+    const multipleEntry = await getMultipleDeclarativeEntryFile('sandboxes', context);
+    const result = [singleEntry[0], ...multipleEntry].filter(Boolean);
 
-  if (result.length) {
-    manifest.sandbox = {
-      ...(manifest.sandbox || {}),
-      pages: result.map((item) => item.path),
-    };
+    if (result.length) {
+      input = result.map((item) => item.path);
+      manifest.sandbox = {
+        ...(manifest.sandbox || {}),
+        pages: input,
+      };
+    }
   }
-};
 
-const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest, context }) => {
-  const pages = manifest?.sandbox?.pages || [];
-  if (!pages.length) return null;
-
-  const { rootPath, entriesDir } = context;
-
-  const entry: WebExtendEntryInput[] = [];
-  pages.forEach((page) => {
-    const name = getEntryName(page, rootPath, entriesDir.root);
-    entry.push({
-      name,
-      input: [page],
-      type: 'html',
+  if (input.length) {
+    const entry: WebExtendEntryInput[] = [];
+    input.forEach((page) => {
+      const name = getEntryName(page, rootPath, entriesDir.root);
+      entry.push({
+        name,
+        input: [page],
+        type: 'html',
+      });
     });
-  });
-  return entry.length ? entry : null;
+
+    if (entry.length) {
+      entries[key] = entry;
+    }
+  }
 };
 
 const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, name, entries }) => {
@@ -65,7 +66,6 @@ const sandboxProcessor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntry,
   normalizeEntry,
-  readEntry,
   writeEntry,
 };
 

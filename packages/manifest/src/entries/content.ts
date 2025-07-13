@@ -26,7 +26,7 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
   );
 };
 
-const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context }) => {
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context, entries }) => {
   if (!manifest.content_scripts?.length) {
     const singleEntry = await getSingleDeclarativeEntryFile('content', context);
     const multipleEntry = await getMultipleDeclarativeEntryFile('contents', context);
@@ -37,6 +37,25 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
         matches: [], // get from entry in writeContentEntry
         js: [item.path],
       });
+    }
+  }
+
+  const { content_scripts } = manifest || {};
+  if (content_scripts?.length) {
+    const entry: WebExtendEntryInput[] = [];
+    content_scripts.forEach((contentScript) => {
+      const info = getContentScriptInfo(contentScript, context.rootPath, context.entriesDir.root);
+      if (!info) return;
+      const { name, input } = info;
+      entry.push({
+        name,
+        input,
+        type: 'script',
+      });
+    });
+
+    if (entry.length) {
+      entries[key] = entry;
     }
   }
 };
@@ -51,24 +70,6 @@ function getContentScriptInfo(contentScript: ManifestContentScript, rootPath: st
     name,
   };
 }
-
-const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest, context }) => {
-  const { content_scripts } = manifest || {};
-  if (!content_scripts?.length) return null;
-
-  const entry: WebExtendEntryInput[] = [];
-  content_scripts.forEach((contentScript) => {
-    const info = getContentScriptInfo(contentScript, context.rootPath, context.entriesDir.root);
-    if (!info) return;
-    const { name, input } = info;
-    entry.push({
-      name,
-      input,
-      type: 'script',
-    });
-  });
-  return entry.length ? entry : null;
-};
 
 const writeEntry: ManifestEntryProcessor['writeEntry'] = async ({
   normalizedManifest,
@@ -171,7 +172,6 @@ const contentProcessor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntry,
   normalizeEntry,
-  readEntry,
   writeEntry,
   onAfterBuild,
 };
