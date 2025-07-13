@@ -75,9 +75,9 @@ export const normalizeContext = (options: NormalizeContextOptions): WebExtendCon
 
 export class ManifestManager {
   public context = {} as WebExtendContext;
+  public entries: WebExtendEntries = {};
   private manifest = {} as ExtensionManifest;
   private normalizedManifest = {} as ExtensionManifest;
-  private entries: WebExtendEntries = {};
 
   async normalize(options: NormalizeContextOptions) {
     this.context = normalizeContext(options);
@@ -137,10 +137,6 @@ export class ManifestManager {
     this.manifest = finalManifest;
     this.normalizedManifest = JSON.parse(JSON.stringify(finalManifest));
     this.entries = entries;
-  }
-
-  async readEntries() {
-    return this.entries;
   }
 
   async writeEntries(result: WebExtendEntryOutput[]) {
