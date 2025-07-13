@@ -11,7 +11,7 @@ import type {
 } from '@web-extend/manifest/types';
 import { ContentRuntimePlugin, hotUpdateGlobal } from './content.js';
 import { normalizeRsbuildEnvironments } from './environments.js';
-import { clearOutdatedHotUpdateFiles, getRsbuildEntryFiles } from './helper.js';
+import { clearOutdatedHotUpdateFiles } from './helper.js';
 
 export type PluginWebExtendOptions = WebExtendCommonConfig;
 
@@ -224,8 +224,6 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
 
       const manifestEntry: WebExtendEntryOutput[] = [];
       for (const [entryName, entrypoint] of Object.entries(entrypoints)) {
-        const input = getRsbuildEntryFiles(environment.entry, entryName);
-
         const { assets = [], auxiliaryAssets = [] } = entrypoint;
         const output = [...assets, ...auxiliaryAssets]
           .map((item) => item.name)
@@ -233,7 +231,6 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
 
         manifestEntry.push({
           name: entryName,
-          input,
           output,
         });
       }

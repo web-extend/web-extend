@@ -159,7 +159,7 @@ export class ManifestManager {
     const entries = this.entries;
 
     for (const item of result) {
-      const { name, input, output } = item;
+      const { name, output } = item;
       const entryKey = Object.keys(entries).find((key) => {
         const entry = entries[key as WebExtendEntryKey];
         if (!entry) return false;
@@ -174,9 +174,9 @@ export class ManifestManager {
           manifest: this.manifest,
           rootPath: this.context.rootPath,
           name,
-          input,
           output,
           context: this.context,
+          entries,
         });
       }
     }

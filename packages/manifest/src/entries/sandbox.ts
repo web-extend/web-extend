@@ -51,17 +51,14 @@ const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest, context }) =
   return entry.length ? entry : null;
 };
 
-const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, name, normalizedManifest, context }) => {
+const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, name, entries }) => {
   const pages = manifest?.sandbox?.pages || [];
-  const normalizedPages = normalizedManifest.sandbox?.pages || [];
-  if (!pages.length || !normalizedPages.length) return;
+  const entry = (entries[key] as WebExtendEntryInput[]) || [];
+  const index = entry.findIndex((item) => item.name === name);
 
-  const { rootPath, entriesDir } = context;
-  normalizedPages.forEach((page, index) => {
-    if (getEntryName(page, rootPath, entriesDir.root) === name) {
-      pages[index] = `${name}.html`;
-    }
-  });
+  if (index !== -1) {
+    pages[index] = `${name}.html`;
+  }
 };
 
 const sandboxProcessor: ManifestEntryProcessor = {

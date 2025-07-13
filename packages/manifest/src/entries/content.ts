@@ -74,25 +74,24 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = async ({
   normalizedManifest,
   manifest,
   name,
-  input,
   output,
   context,
+  entries,
 }) => {
   const { content_scripts } = manifest;
   if (!content_scripts?.length || !output?.length) return;
 
-  const { rootPath, entriesDir } = context;
-  const index = (normalizedManifest.content_scripts || []).findIndex((contentScript) => {
-    return getContentScriptInfo(contentScript, rootPath, entriesDir.root)?.name === name;
-  });
+  const entry = (entries[key] as WebExtendEntryInput[]) || [];
+  const index = entry.findIndex((item) => item.name === name);
   if (index === -1) return;
 
+  const { rootPath } = context;
   const normalizedContentScript = normalizedManifest.content_scripts?.[index];
 
   if (!content_scripts[index] || !normalizedContentScript) return;
   content_scripts[index] = JSON.parse(JSON.stringify(normalizedContentScript));
 
-  const entryMain = input?.[0];
+  const entryMain = entry[index].input?.[0];
   const entryManinPath = resolve(rootPath, entryMain || '');
   if (entryMain && existsSync(entryManinPath)) {
     const code = await readFile(entryManinPath, 'utf-8');

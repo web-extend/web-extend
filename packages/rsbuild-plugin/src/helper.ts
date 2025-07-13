@@ -25,19 +25,6 @@ export function transformManifestEntry(entry: WebExtendEntryInput | WebExtendEnt
   return Object.keys(res).length ? res : undefined;
 }
 
-export function getRsbuildEntryFiles(entries: RsbuildEntry, key: string) {
-  const entry = entries[key];
-  const res: string[] = [];
-  if (typeof entry === 'string') {
-    res.push(entry);
-  } else if (Array.isArray(entry)) {
-    res.push(...entry);
-  } else {
-    res.push(...[entry.import].flat());
-  }
-  return res;
-}
-
 function getHotUpdateAssets(statsList: Rspack.Stats[]) {
   const entrypointsList = statsList.map((item) => item?.toJson().entrypoints).filter((item) => !!item);
   const res: string[] = [];

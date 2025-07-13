@@ -124,7 +124,7 @@ export interface WebExtendEntryDescription {
 
 export type WebExtendEntryInput = Pick<WebExtendEntryDescription, 'name' | 'input' | 'type'>;
 
-export type WebExtendEntryOutput = Pick<WebExtendEntryDescription, 'name' | 'input' | 'output'>;
+export type WebExtendEntryOutput = Pick<WebExtendEntryDescription, 'name' | 'output'>;
 
 export type WebExtendEntries = {
   [key in WebExtendEntryKey]?: WebExtendEntryInput | WebExtendEntryInput[];
@@ -170,7 +170,7 @@ export interface WriteMainfestEntryItemProps {
   rootPath: string;
   context: WebExtendContext;
   name: string;
-  input?: WebExtendEntryDescription['input'];
+  entries: WebExtendEntries;
   output?: WebExtendEntryDescription['output'];
 }
 
