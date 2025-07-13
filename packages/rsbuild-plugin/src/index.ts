@@ -115,8 +115,10 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
 
     api.onBeforeStartDevServer(() => {
       api.transform({ test: /\.(js|ts)$/, environments: ['web'] }, ({ resourcePath, code, environment }) => {
+        // Reload the extension before reload content_scripts
+        const contentEntry = webExtendEntries?.contents;
         const liveReload = environment.config.dev.liveReload;
-        if (webExtendEntries?.contents && liveReload && resourcePath.endsWith('hmr.js')) {
+        if (contentEntry && liveReload && resourcePath.endsWith('hmr.js')) {
           const reloadExtensionCode = `
             const bridgeEl = document.getElementById('web-extend-content-bridge');
             if (bridgeEl) {
@@ -132,7 +134,13 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
           return newCode;
         }
 
-        if (webExtendEntries?.scripting && resourcePath.includes('scripting/')) {
+        // Disable hot reload for scripting entry
+        const scriptingEntry = webExtendEntries?.scripting || [];
+        const isScriptingInput = [scriptingEntry]
+          .flat()
+          .flatMap((item) => item.input)
+          .includes(resourcePath);
+        if (isScriptingInput) {
           const newCode = `${code} \n
             if(module.hot) {
               module.hot.invalidate();
@@ -149,7 +157,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       if (!isDev) return;
       const config = environment.config;
 
-      // process content entry
+      // Process content entry
       const contentEntry = webExtendEntries?.contents;
       if (contentEntry) {
         chain.output.set('hotUpdateGlobal', hotUpdateGlobal);
@@ -163,7 +171,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         ]);
       }
 
-      // process scripting entry
+      // Process scripting entry
       const scriptingEntry = webExtendEntries?.scripting || [];
       const emitCss = config.output.emitCss ?? target === 'web';
       const scriptStyleImports = [scriptingEntry]
