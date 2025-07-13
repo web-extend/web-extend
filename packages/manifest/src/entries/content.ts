@@ -2,7 +2,6 @@ import { existsSync } from 'node:fs';
 import { copyFile, mkdir, readFile } from 'node:fs/promises';
 import { basename, posix, resolve } from 'node:path';
 import {
-  getEntryName,
   getMultipleDeclarativeEntryFile,
   getSingleDeclarativeEntryFile,
   isDevMode,
@@ -12,12 +11,12 @@ import {
 import { parseExportObject } from '../parser/export.js';
 import type {
   ContentScriptConfig,
-  ManifestContentScript,
+  DeclarativeEntryFileResult,
   ManifestEntryProcessor,
   WebExtendEntryInput,
 } from '../types.js';
 
-const key = 'content';
+const key = 'contents';
 
 const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (filePath, context) => {
   return (
@@ -27,11 +26,12 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
 };
 
 const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context, entries }) => {
+  let declarativeResult: DeclarativeEntryFileResult[] | null = null;
   if (!manifest.content_scripts?.length) {
     const singleEntry = await getSingleDeclarativeEntryFile('content', context);
     const multipleEntry = await getMultipleDeclarativeEntryFile('contents', context);
-    const result = [singleEntry[0], ...multipleEntry].filter(Boolean);
-    for (const item of result) {
+    declarativeResult = [singleEntry[0], ...multipleEntry].filter(Boolean);
+    for (const item of declarativeResult) {
       manifest.content_scripts ??= [];
       manifest.content_scripts.push({
         matches: [], // get from entry in writeContentEntry
@@ -43,13 +43,12 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
   const { content_scripts } = manifest || {};
   if (content_scripts?.length) {
     const entry: WebExtendEntryInput[] = [];
-    content_scripts.forEach((contentScript) => {
-      const info = getContentScriptInfo(contentScript, context.rootPath, context.entriesDir.root);
-      if (!info) return;
-      const { name, input } = info;
+    content_scripts.forEach((contentScript, index) => {
+      const { js = [], css = [] } = contentScript;
+      const name = declarativeResult ? declarativeResult[index].name : `${key}/${index}`;
       entry.push({
         name,
-        input,
+        input: [...js, ...css],
         type: 'script',
       });
     });
@@ -59,17 +58,6 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
     }
   }
 };
-
-function getContentScriptInfo(contentScript: ManifestContentScript, rootPath: string, entriesDir: string) {
-  const { js = [], css = [] } = contentScript;
-  const input = [...js, ...css];
-  if (!input[0]) return null;
-  const name = getEntryName(input[0], rootPath, resolve(rootPath, entriesDir));
-  return {
-    input,
-    name,
-  };
-}
 
 const writeEntry: ManifestEntryProcessor['writeEntry'] = async ({
   normalizedManifest,

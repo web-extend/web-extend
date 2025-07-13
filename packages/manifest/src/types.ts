@@ -3,15 +3,12 @@ export type ExtensionTarget = 'chrome-mv3' | 'firefox-mv2' | 'firefox-mv3' | 'sa
 export type WebExtendEntryKey =
   | 'icons'
   | 'background'
-  | 'content'
   | 'contents'
   | 'popup'
   | 'options'
   | 'sidepanel'
   | 'devtools'
-  | 'panel'
   | 'panels'
-  | 'sandbox'
   | 'sandboxes'
   | 'newtab'
   | 'history'
@@ -191,7 +188,9 @@ export type ManifestWebAccessibleResourcesC2ItemType = {
   matches?: string[];
 };
 
-export type WebExtendEntriesDir = Record<'root' | WebExtendEntryKey, string>;
+export type WebExtendEntryDirKey = WebExtendEntryKey | 'root' | 'content' | 'sandbox' | 'panel';
+
+export type WebExtendEntriesDir = Record<WebExtendEntryDirKey, string>;
 
 export interface WebExtendContext {
   target: ExtensionTarget;
@@ -218,3 +217,9 @@ export interface WebExtendCommonConfig {
 
 export type NormalizeContextOptions = Partial<Pick<WebExtendContext, 'rootPath' | 'mode' | 'runtime'>> &
   WebExtendCommonConfig;
+
+export type DeclarativeEntryFileResult = {
+  name: string;
+  ext: string;
+  path: string;
+};

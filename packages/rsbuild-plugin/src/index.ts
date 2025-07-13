@@ -114,7 +114,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
     api.onBeforeStartDevServer(() => {
       api.transform({ test: /\.(js|ts)$/, environments: ['web'] }, ({ resourcePath, code, environment }) => {
         const liveReload = environment.config.dev.liveReload;
-        if (webExtendEntries?.content && liveReload && resourcePath.endsWith('hmr.js')) {
+        if (webExtendEntries?.contents && liveReload && resourcePath.endsWith('hmr.js')) {
           const reloadExtensionCode = `
             const bridgeEl = document.getElementById('web-extend-content-bridge');
             if (bridgeEl) {
@@ -148,7 +148,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       const config = environment.config;
 
       // process content entry
-      const contentEntry = webExtendEntries?.content;
+      const contentEntry = webExtendEntries?.contents;
       if (contentEntry) {
         chain.output.set('hotUpdateGlobal', hotUpdateGlobal);
         chain.plugin('ContentRuntimePlugin').use(ContentRuntimePlugin, [

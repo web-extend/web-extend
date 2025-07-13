@@ -1,33 +1,32 @@
 import {
-  getEntryName,
   getMultipleDeclarativeEntryFile,
   getSingleDeclarativeEntryFile,
   matchMultipleDeclarativeEntryFile,
   matchSingleDeclarativeEntryFile,
 } from '../common.js';
-import type { ManifestEntryProcessor, WebExtendEntryInput } from '../types.js';
+import type { DeclarativeEntryFileResult, ManifestEntryProcessor, WebExtendEntryInput } from '../types.js';
 
-const key = 'sandbox';
+const key = 'sandboxes';
 
 const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (filePath, context) => {
   return (
-    matchSingleDeclarativeEntryFile(filePath, key, context) ||
+    matchSingleDeclarativeEntryFile(filePath, 'sandbox', context) ||
     matchMultipleDeclarativeEntryFile(filePath, 'sandboxes', context)
   );
 };
 
 const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context, entries }) => {
-  const { target, rootPath, entriesDir } = context;
-  let input = manifest.sandbox?.pages || [];
+  const { target } = context;
   if (target.includes('firefox')) return;
 
+  let input = manifest.sandbox?.pages || [];
+  let declarativeResult: DeclarativeEntryFileResult[] | null = null;
   if (!input.length) {
-    const singleEntry = await getSingleDeclarativeEntryFile(key, context);
+    const singleEntry = await getSingleDeclarativeEntryFile('sandbox', context);
     const multipleEntry = await getMultipleDeclarativeEntryFile('sandboxes', context);
-    const result = [singleEntry[0], ...multipleEntry].filter(Boolean);
-
-    if (result.length) {
-      input = result.map((item) => item.path);
+    declarativeResult = [singleEntry[0], ...multipleEntry].filter(Boolean);
+    if (declarativeResult.length) {
+      input = declarativeResult.map((item) => item.path);
       manifest.sandbox = {
         ...(manifest.sandbox || {}),
         pages: input,
@@ -37,8 +36,8 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
 
   if (input.length) {
     const entry: WebExtendEntryInput[] = [];
-    input.forEach((page) => {
-      const name = getEntryName(page, rootPath, entriesDir.root);
+    input.forEach((page, index) => {
+      const name = declarativeResult ? declarativeResult[index].name : `${key}/${index}`;
       entry.push({
         name,
         input: [page],

@@ -6,7 +6,7 @@ import {
 } from '../common.js';
 import type { ManifestEntryProcessor, WebExtendEntryInput } from '../types.js';
 
-const key = 'panel';
+const key = 'panels';
 
 const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (filePath, context) => {
   return (

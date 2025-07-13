@@ -2,12 +2,13 @@ import { existsSync } from 'node:fs';
 import { readFile, readdir } from 'node:fs/promises';
 import { basename, dirname, extname, join, relative, resolve, sep } from 'node:path';
 import type {
+  DeclarativeEntryFileResult,
   ExtensionManifest,
   ExtensionTarget,
   WebExtendContext,
   WebExtendEntriesDir,
   WebExtendEntryDescription,
-  WebExtendEntryKey,
+  WebExtendEntryDirKey,
 } from './types.js';
 
 const scriptExts = ['.ts', '.js', '.tsx', '.jsx', '.mts', '.cts', '.mjs', '.cjs'];
@@ -26,22 +27,9 @@ const isAllowableEntryFile = (file: string, entryTypes: WebExtendEntryDescriptio
   return (entryTypes.includes('script') && isScriptFile(file)) || (entryTypes.includes('style') && isStyleFile(file));
 };
 
-export function getEntryName(file: string, rootPath: string, entriesDir: string) {
-  const filePath = resolve(rootPath, file);
-  const srcPath = resolve(rootPath, entriesDir);
-  const relativeFilePath = filePath.startsWith(srcPath)
-    ? relative(srcPath, filePath)
-    : filePath.startsWith(rootPath)
-      ? relative(rootPath, filePath)
-      : basename(filePath);
-  const ext = extname(relativeFilePath);
-  const name = relativeFilePath.replace(ext, '').replace(/[\\/]index$/, '');
-  return name.split(sep).join('/');
-}
-
 export const matchSingleDeclarativeEntryFile = (
   filePath: string,
-  key: WebExtendEntryKey,
+  key: WebExtendEntryDirKey,
   context: WebExtendContext,
   entryType: WebExtendEntryDescription['type'][] = ['script'],
 ) => {
@@ -66,7 +54,7 @@ export const matchSingleDeclarativeEntryFile = (
 
 export const matchMultipleDeclarativeEntryFile = (
   filePath: string,
-  key: WebExtendEntryKey,
+  key: WebExtendEntryDirKey,
   context: WebExtendContext,
   entryType: WebExtendEntryDescription['type'][] = ['script'],
 ) => {
@@ -97,7 +85,7 @@ export const matchMultipleDeclarativeEntryFile = (
 };
 
 export const getSingleDeclarativeEntryFile = async (
-  key: WebExtendEntryKey,
+  key: WebExtendEntryDirKey,
   context: WebExtendContext,
   entryTypes: WebExtendEntryDescription['type'][] = ['script'],
 ) => {
@@ -107,7 +95,7 @@ export const getSingleDeclarativeEntryFile = async (
   const dirPath = dirname(entryDir);
   if (!existsSync(dirPath)) return [];
 
-  const possibleFiles: { name: string; ext: string; path: string }[] = [];
+  const possibleFiles: DeclarativeEntryFileResult[] = [];
   const files = await readdir(dirPath, { withFileTypes: true });
   for (const file of files) {
     const ext = extname(file.name);
@@ -138,7 +126,7 @@ export const getSingleDeclarativeEntryFile = async (
 };
 
 export const getMultipleDeclarativeEntryFile = async (
-  key: WebExtendEntryKey,
+  key: WebExtendEntryDirKey,
   context: WebExtendContext,
   entryTypes: WebExtendEntryDescription['type'][] = ['script'],
 ) => {
@@ -147,7 +135,7 @@ export const getMultipleDeclarativeEntryFile = async (
   if (!existsSync(entryDir)) return [];
 
   const entryName = basename(entryDir);
-  const possibleFiles: { name: string; ext: string; path: string }[] = [];
+  const possibleFiles: DeclarativeEntryFileResult[] = [];
 
   const files = await readdir(entryDir, { withFileTypes: true });
   for (const file of files) {

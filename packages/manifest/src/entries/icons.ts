@@ -60,7 +60,6 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
   }
 
   const { icons, action, browser_action } = manifest || {};
-  // const { rootPath } = context;
   const pointer = action || browser_action;
   const files = new Set<string>();
 
@@ -134,7 +133,6 @@ const iconsProcessor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntry,
   normalizeEntry,
-  // readEntry,
   writeEntry,
 };
 

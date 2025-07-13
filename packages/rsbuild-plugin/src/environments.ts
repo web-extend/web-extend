@@ -21,7 +21,7 @@ function getWebEnvironmentConfig({ entries, isDev }: NormalizeRsbuildEnvironment
     },
     output: {
       target: 'web',
-      injectStyles: isDev && Object.keys(entries.content || {}).length > 0, // needed for content entry
+      injectStyles: isDev && Object.keys(entries.contents || {}).length > 0, // needed for content entry
       distPath: {
         js: '',
         css: '',
