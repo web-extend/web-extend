@@ -14,11 +14,11 @@ import { polyfillManifest } from './polyfill.js';
 import type {
   ExtensionManifest,
   ExtensionTarget,
-  WebExtendEntryKey,
   NormalizeContextOptions,
   NormalizeManifestProps,
   WebExtendContext,
   WebExtendEntries,
+  WebExtendEntryKey,
   WebExtendEntryOutput,
 } from './types.js';
 

@@ -10,7 +10,12 @@ import {
   matchSingleDeclarativeEntryFile,
 } from '../common.js';
 import { parseExportObject } from '../parser/export.js';
-import type { ContentScriptConfig, ManifestContentScript, ManifestEntryProcessor, WebExtendEntryInput } from '../types.js';
+import type {
+  ContentScriptConfig,
+  ManifestContentScript,
+  ManifestEntryProcessor,
+  WebExtendEntryInput,
+} from '../types.js';
 
 const key = 'content';
 

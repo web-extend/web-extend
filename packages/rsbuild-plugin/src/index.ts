@@ -7,7 +7,7 @@ import type {
   ExtensionManifest,
   WebExtendCommonConfig,
   WebExtendEntries,
-  WebExtendEntryOutput
+  WebExtendEntryOutput,
 } from '@web-extend/manifest/types';
 import { ContentRuntimePlugin, hotUpdateGlobal } from './content.js';
 import { normalizeRsbuildEnvironments } from './environments.js';
