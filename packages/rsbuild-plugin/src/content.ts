@@ -1,11 +1,11 @@
-import type { RsbuildEntry, Rspack } from '@rsbuild/core';
+import type { Rspack } from '@rsbuild/core';
 
 export const hotUpdateGlobal = 'webpackHotUpdateWebExtend';
 
 type RspackContentRuntimePluginOptions = {
   getPort: () => number | undefined;
   target: string;
-  entry: RsbuildEntry;
+  contentEntryNames: string[];
 };
 
 class ContentRuntimePlugin implements Rspack.RspackPluginInstance {
@@ -20,8 +20,9 @@ class ContentRuntimePlugin implements Rspack.RspackPluginInstance {
     compiler.hooks.compilation.tap(this.name, (compilation) => {
       const { RuntimeGlobals, Compilation } = compiler.webpack;
       compilation.hooks.runtimeModule.tap(this.name, (module, chunk) => {
+        const { contentEntryNames = [] } = this.#options || {};
         const entryName = chunk.getEntryOptions()?.name;
-        if (!entryName || !isContentEntry(entryName)) return;
+        if (!entryName || !contentEntryNames.includes(entryName)) return;
 
         const { target = '' } = this.#options || {};
         if (module.name === 'load_script' && module.source) {
@@ -47,18 +48,16 @@ class ContentRuntimePlugin implements Rspack.RspackPluginInstance {
           stage: Compilation.PROCESS_ASSETS_STAGE_ADDITIONS,
         },
         (assets) => {
-          const { entry } = this.#options || {};
-          if (!entry) return;
-
-          const entries = Object.keys(entry);
+          const { contentEntryNames = [] } = this.#options || {};
           const { RawSource } = compiler.webpack.sources;
 
           for (const name in assets) {
-            const asset = assets[name];
-            const entryName = entries.find((item) => name.includes(item));
-            if (name.endsWith('.js') && entryName && isContentEntry(entryName) && asset) {
-              const oldContent = asset.source() as string;
-              const newContent = oldContent.replaceAll(hotUpdateGlobal, `${hotUpdateGlobal}_${entryName}`);
+            if (!name.endsWith('.js')) continue;
+
+            const assetName = name.split('.')[0];
+            if (contentEntryNames.includes(assetName)) {
+              const oldContent = assets[name].source() as string;
+              const newContent = oldContent.replaceAll(hotUpdateGlobal, `${hotUpdateGlobal}_${assetName}`);
               const source = new RawSource(newContent);
               compilation.updateAsset(name, source);
             }
@@ -67,10 +66,6 @@ class ContentRuntimePlugin implements Rspack.RspackPluginInstance {
       );
     });
   }
-}
-
-function isContentEntry(entryName: string) {
-  return entryName.startsWith('content');
 }
 
 function patchloadScriptCode(loadScriptName: string, loadScriptCode: string, target: string) {
