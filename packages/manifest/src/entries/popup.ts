@@ -7,32 +7,29 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
   return matchSingleDeclarativeEntryFile(filePath, key, context);
 };
 
-const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context }) => {
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context, entries }) => {
   const { action, browser_action } = manifest;
   let pointer = action || browser_action;
+  let input = pointer?.default_popup;
 
-  if (pointer?.default_popup) return;
-
-  const result = await getSingleDeclarativeEntryFile(key, context);
-  if (result[0]) {
-    if (!pointer) {
-      pointer = manifest.action = {};
+  if (!input) {
+    const result = await getSingleDeclarativeEntryFile(key, context);
+    if (result[0]) {
+      input = result[0].path;
+      if (!pointer) {
+        pointer = manifest.action = {};
+      }
+      pointer.default_popup = input;
     }
-    pointer.default_popup ??= result[0].path;
   }
-};
 
-const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest }) => {
-  const { action, browser_action } = manifest || {};
-  const pointer = action || browser_action;
-  const input = pointer?.default_popup;
-  if (!input) return null;
-
-  return {
-    name: key,
-    input: [input],
-    type: 'html',
-  };
+  if (input) {
+    entries[key] = {
+      name: key,
+      input: [input],
+      type: 'html',
+    };
+  }
 };
 
 const writeEntry: ManifestEntryProcessor['writeEntry'] = async ({ manifest, name }) => {
@@ -58,7 +55,6 @@ const popupProcessor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntry,
   normalizeEntry,
-  readEntry,
   writeEntry,
 };
 

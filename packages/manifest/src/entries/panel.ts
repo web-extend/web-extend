@@ -15,9 +15,9 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
   );
 };
 
-const readEntry: ManifestEntryProcessor['readEntry'] = async ({ manifest, context }) => {
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context, entries }) => {
   const { devtools_page } = manifest || {};
-  if (!devtools_page) return null;
+  if (!devtools_page) return;
 
   const entry: WebExtendEntryInput[] = [];
 
@@ -33,13 +33,15 @@ const readEntry: ManifestEntryProcessor['readEntry'] = async ({ manifest, contex
     });
   }
 
-  return entry.length ? entry : null;
+  if (entry.length) {
+    entries[key] = entry;
+  }
 };
 
 const panelProcessor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntry,
-  readEntry,
+  normalizeEntry,
 };
 
 export default panelProcessor;

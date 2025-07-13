@@ -8,30 +8,28 @@ const overrideProcessors = overrides.map((key) => {
     return matchSingleDeclarativeEntryFile(filePath, key, context);
   };
 
-  const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context }) => {
+  const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context, entries }) => {
     const { chrome_url_overrides = {} } = manifest;
-    if (Object.keys(chrome_url_overrides).length) return;
+    let input = chrome_url_overrides[key as keyof ManifestChromeUrlOverrides];
 
-    const result = await getSingleDeclarativeEntryFile(key, context);
-    if (result[0]) {
-      manifest.chrome_url_overrides = {
-        ...(manifest.chrome_url_overrides || {}),
-        [key]: result[0].path,
+    if (!input) {
+      const result = await getSingleDeclarativeEntryFile(key, context);
+      if (result[0]) {
+        input = result[0].path;
+        manifest.chrome_url_overrides = {
+          ...chrome_url_overrides,
+          [key]: input,
+        };
+      }
+    }
+
+    if (input) {
+      entries[key] = {
+        name: key,
+        input: [input],
+        type: 'html',
       };
     }
-  };
-
-  const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest }) => {
-    const { chrome_url_overrides } = manifest || {};
-    if (!chrome_url_overrides) return null;
-
-    const input = chrome_url_overrides[key as keyof ManifestChromeUrlOverrides];
-    if (!input) return null;
-    return {
-      name: key,
-      input: [input],
-      type: 'html',
-    };
   };
 
   const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, name }) => {
@@ -48,7 +46,6 @@ const overrideProcessors = overrides.map((key) => {
     key,
     matchDeclarativeEntry,
     normalizeEntry,
-    readEntry,
     writeEntry,
   } as ManifestEntryProcessor;
 });

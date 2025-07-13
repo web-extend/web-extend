@@ -7,30 +7,29 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
   return matchSingleDeclarativeEntryFile(filePath, key, context);
 };
 
-const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context }) => {
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context, entries }) => {
   const { options_ui, options_page } = manifest;
-  if (options_ui?.page || options_page) return;
+  let input = options_ui?.page || options_page;
 
-  const result = await getSingleDeclarativeEntryFile(key, context);
-  if (result[0]) {
-    manifest.options_ui = {
-      open_in_tab: true,
-      ...(options_ui || {}),
-      page: result[0].path,
+  if (!input) {
+    const result = await getSingleDeclarativeEntryFile(key, context);
+    if (result[0]) {
+      input = result[0].path;
+      manifest.options_ui = {
+        open_in_tab: true,
+        ...(options_ui || {}),
+        page: input,
+      };
+    }
+  }
+
+  if (input) {
+    entries[key] = {
+      name: key,
+      input: [input],
+      type: 'html',
     };
   }
-};
-
-const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest }) => {
-  const { options_ui, options_page } = manifest || {};
-  const input = options_ui?.page || options_page;
-  if (!input) return null;
-
-  return {
-    name: key,
-    input: [input],
-    type: 'html',
-  };
 };
 
 const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, name }) => {
@@ -47,7 +46,6 @@ const optionsProcessor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntry,
   normalizeEntry,
-  readEntry,
   writeEntry,
 };
 

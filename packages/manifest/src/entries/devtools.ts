@@ -7,25 +7,25 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
   return matchSingleDeclarativeEntryFile(filePath, key, context);
 };
 
-const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context }) => {
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context, entries }) => {
   const { devtools_page } = manifest;
-  if (devtools_page) return;
+  let input = devtools_page;
 
-  const result = await getSingleDeclarativeEntryFile(key, context);
-  if (result[0]) {
-    manifest.devtools_page = result[0].path;
+  if (!input) {
+    const result = await getSingleDeclarativeEntryFile(key, context);
+    if (result[0]) {
+      input = result[0].path;
+      manifest.devtools_page = input;
+    }
   }
-};
 
-const readEntry: ManifestEntryProcessor['readEntry'] = async ({ manifest }) => {
-  const { devtools_page } = manifest || {};
-  if (!devtools_page) return null;
-
-  return {
-    name: key,
-    input: [devtools_page],
-    type: 'html',
-  };
+  if (input) {
+    entries[key] = {
+      name: key,
+      input: [input],
+      type: 'html',
+    };
+  }
 };
 
 const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, name }) => {
@@ -36,7 +36,6 @@ const devtoolsProcessor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntry,
   normalizeEntry,
-  readEntry,
   writeEntry,
 };
 

@@ -7,7 +7,7 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
   return matchMultipleDeclarativeEntryFile(filePath, key, context);
 };
 
-const readEntry: ManifestEntryProcessor['readEntry'] = async ({ context }) => {
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ context, entries }) => {
   const entry: WebExtendEntryInput[] = [];
 
   const result = await getMultipleDeclarativeEntryFile(key, context);
@@ -19,13 +19,15 @@ const readEntry: ManifestEntryProcessor['readEntry'] = async ({ context }) => {
     });
   }
 
-  return entry.length ? entry : null;
+  if (entry.length) {
+    entries[key] = entry;
+  }
 };
 
 const processor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntry,
-  readEntry,
+  normalizeEntry,
 };
 
 export default processor;

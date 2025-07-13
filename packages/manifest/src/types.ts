@@ -162,6 +162,7 @@ export interface NormalizeManifestProps {
 export interface NormalizeMainfestEntryProps {
   manifest: ExtensionManifest;
   context: WebExtendContext;
+  entries: WebExtendEntries;
 }
 
 export interface WriteMainfestEntryItemProps {

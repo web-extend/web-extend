@@ -7,30 +7,27 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
   return matchSingleDeclarativeEntryFile(filePath, key, context);
 };
 
-const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context }) => {
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context, entries }) => {
   const { side_panel, sidebar_action } = manifest;
-  if (side_panel?.default_path || sidebar_action?.default_panel) {
-    return;
+  let input = side_panel?.default_path || sidebar_action?.default_panel;
+
+  if (!input) {
+    const result = await getSingleDeclarativeEntryFile(key, context);
+    if (result[0]) {
+      input = result[0].path;
+      manifest.side_panel = {
+        default_path: input,
+      };
+    }
   }
 
-  const result = await getSingleDeclarativeEntryFile(key, context);
-  if (result[0]) {
-    manifest.side_panel = {
-      default_path: result[0].path,
+  if (input) {
+    entries[key] = {
+      name: key,
+      input: [input],
+      type: 'html',
     };
   }
-};
-
-const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest }) => {
-  const { side_panel, sidebar_action } = manifest || {};
-  const input = side_panel?.default_path || sidebar_action?.default_panel;
-  if (!input) return null;
-
-  return {
-    name: key,
-    input: [input],
-    type: 'html',
-  };
 };
 
 const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, name }) => {
@@ -48,7 +45,6 @@ const sidepanelProcessor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntry,
   normalizeEntry,
-  readEntry,
   writeEntry,
 };
 

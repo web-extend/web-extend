@@ -77,7 +77,7 @@ export class ManifestManager {
   public context = {} as WebExtendContext;
   private manifest = {} as ExtensionManifest;
   private normalizedManifest = {} as ExtensionManifest;
-  private entries: WebExtendEntries | undefined;
+  private entries: WebExtendEntries = {};
 
   async normalize(options: NormalizeContextOptions) {
     this.context = normalizeContext(options);
@@ -98,6 +98,7 @@ export class ManifestManager {
       ...defaultManifest,
       ...manifest,
     } as ExtensionManifest;
+    const entries: WebExtendEntries = {};
 
     const requiredFields = ['name', 'version'];
     const invalidFields = requiredFields.filter((field) => !(field in finalManifest));
@@ -124,6 +125,7 @@ export class ManifestManager {
         await processor.normalizeEntry({
           manifest: finalManifest,
           context: this.context,
+          entries,
         });
       }
     } catch (err) {
@@ -134,12 +136,11 @@ export class ManifestManager {
 
     this.manifest = finalManifest;
     this.normalizedManifest = JSON.parse(JSON.stringify(finalManifest));
+    this.entries = entries;
   }
 
   async readEntries() {
     const manifest = this.normalizedManifest;
-    const res: WebExtendEntries = {};
-    if (!this.context) return res;
     for (const processor of entryProcessors) {
       if (!processor.readEntry) continue;
       const entry = await processor.readEntry({
@@ -147,11 +148,10 @@ export class ManifestManager {
         context: this.context,
       });
       if (entry) {
-        res[processor.key] = entry;
+        this.entries[processor.key] = entry;
       }
     }
-    this.entries = res;
-    return res;
+    return this.entries;
   }
 
   async writeEntries(result: WebExtendEntryOutput[]) {
