@@ -42,9 +42,10 @@ export const normalizeRsbuildEnvironments = (options: NormalizeRsbuildEnvironmen
   } = {};
 
   if (background) {
+    const backgroundEntry = [background].flat();
     environments.background = {
       source: {
-        entry: transformManifestEntry(background),
+        entry: transformManifestEntry(backgroundEntry),
       },
       output: {
         target: 'web-worker',
@@ -52,7 +53,7 @@ export const normalizeRsbuildEnvironments = (options: NormalizeRsbuildEnvironmen
           js: '',
         },
         filename: {
-          js: getJsDistPath([background].flat()),
+          js: getJsDistPath(backgroundEntry),
         },
       },
     };

@@ -53,8 +53,8 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
 
 const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, name, entries }) => {
   const pages = manifest?.sandbox?.pages || [];
-  const entry = (entries[key] as WebExtendEntryInput[]) || [];
-  const index = entry.findIndex((item) => item.name === name);
+  const entry = entries[key] || [];
+  const index = [entry].flat().findIndex((item) => item.name === name);
 
   if (index !== -1) {
     pages[index] = `${name}.html`;

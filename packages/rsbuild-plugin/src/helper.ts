@@ -4,15 +4,11 @@ import { resolve } from 'node:path';
 import type { FilenameConfig, RsbuildEntry, Rspack } from '@rsbuild/core';
 import type { WebExtendEntryInput } from '@web-extend/manifest/types';
 
-export function transformManifestEntry(entry: WebExtendEntryInput | WebExtendEntryInput[] | undefined) {
-  if (!entry) return;
-  const entries = Array.isArray(entry) ? entry : [entry];
-
+export function transformManifestEntry(entries: WebExtendEntryInput[]) {
   const res: RsbuildEntry = {};
   for (const item of entries) {
     const { name, input, type } = item;
     let imports = input;
-
     if (name === 'icons') {
       imports = input.map((file) => `${file}?url`);
     }
