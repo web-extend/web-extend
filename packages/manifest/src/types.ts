@@ -156,7 +156,7 @@ export interface WebExtendRuntime {
 
 export interface NormalizeManifestProps {
   manifest?: ExtensionManifest;
-  context: WebExtendContext;
+  context?: WebExtendContext;
 }
 
 export interface NormalizeMainfestEntryProps {

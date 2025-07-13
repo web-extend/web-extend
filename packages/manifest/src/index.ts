@@ -22,49 +22,6 @@ import type {
   WebExtendEntryOutput,
 } from './types.js';
 
-async function normalizeManifest({ manifest = {} as ExtensionManifest, context }: NormalizeManifestProps) {
-  const { rootPath, target, mode, entriesDir } = context;
-  const defaultManifest = await initManifest(rootPath, target);
-  const finalManifest = {
-    ...defaultManifest,
-    ...manifest,
-  } as ExtensionManifest;
-
-  const requiredFields = ['name', 'version'];
-  const invalidFields = requiredFields.filter((field) => !(field in finalManifest));
-  if (invalidFields.length) {
-    throw new Error(`Required fields missing or invalid in manifest: ${invalidFields.join(', ')}`);
-  }
-
-  if (isDevMode(mode)) {
-    finalManifest.commands = {
-      'web-extend:reload-extension': {
-        suggested_key: {
-          default: 'Alt+R',
-          mac: 'Alt+R',
-        },
-        description: 'Reload the extension.',
-      },
-      ...(finalManifest.commands || {}),
-    };
-  }
-
-  try {
-    for (const processor of entryProcessors) {
-      if (!processor.normalizeEntry) continue;
-      await processor.normalizeEntry({
-        manifest: finalManifest,
-        context,
-      });
-    }
-  } catch (err) {
-    console.error(err);
-  }
-
-  polyfillManifest({ manifest: finalManifest, context });
-  return finalManifest;
-}
-
 async function initManifest(rootPath: string, target?: ExtensionTarget) {
   const manifest: Partial<ExtensionManifest> = {
     manifest_version: target?.includes('2') ? 2 : 3,
@@ -129,11 +86,54 @@ export class ManifestManager {
     const optionManifest =
       typeof options.manifest === 'function' ? options.manifest({ target, mode }) : options.manifest;
 
-    this.manifest = await normalizeManifest({
+    await this.normalizeEntries({
       manifest: optionManifest,
-      context: this.context,
     });
-    this.normalizedManifest = JSON.parse(JSON.stringify(this.manifest));
+  }
+
+  async normalizeEntries({ manifest = {} as ExtensionManifest }: NormalizeManifestProps) {
+    const { rootPath, target, mode } = this.context;
+    const defaultManifest = await initManifest(rootPath, target);
+    const finalManifest = {
+      ...defaultManifest,
+      ...manifest,
+    } as ExtensionManifest;
+
+    const requiredFields = ['name', 'version'];
+    const invalidFields = requiredFields.filter((field) => !(field in finalManifest));
+    if (invalidFields.length) {
+      throw new Error(`Required fields missing or invalid in manifest: ${invalidFields.join(', ')}`);
+    }
+
+    if (isDevMode(mode)) {
+      finalManifest.commands = {
+        'web-extend:reload-extension': {
+          suggested_key: {
+            default: 'Alt+R',
+            mac: 'Alt+R',
+          },
+          description: 'Reload the extension.',
+        },
+        ...(finalManifest.commands || {}),
+      };
+    }
+
+    try {
+      for (const processor of entryProcessors) {
+        if (!processor.normalizeEntry) continue;
+        await processor.normalizeEntry({
+          manifest: finalManifest,
+          context: this.context,
+        });
+      }
+    } catch (err) {
+      console.error(err);
+    }
+
+    polyfillManifest({ manifest: finalManifest, context: this.context });
+
+    this.manifest = finalManifest;
+    this.normalizedManifest = JSON.parse(JSON.stringify(finalManifest));
   }
 
   async readEntries() {
