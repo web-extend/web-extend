@@ -77,7 +77,6 @@ export class ManifestManager {
   public context = {} as WebExtendContext;
   public entries: WebExtendEntries = {};
   private manifest = {} as ExtensionManifest;
-  private normalizedManifest = {} as ExtensionManifest;
 
   async normalize(options: NormalizeContextOptions) {
     this.context = normalizeContext(options);
@@ -135,7 +134,6 @@ export class ManifestManager {
     polyfillManifest({ manifest: finalManifest, context: this.context });
 
     this.manifest = finalManifest;
-    this.normalizedManifest = JSON.parse(JSON.stringify(finalManifest));
     this.entries = entries;
   }
 
@@ -154,7 +152,6 @@ export class ManifestManager {
 
       if (entryKey && processor?.writeEntry) {
         await processor.writeEntry({
-          normalizedManifest: this.normalizedManifest,
           manifest: this.manifest,
           rootPath: this.context.rootPath,
           name,

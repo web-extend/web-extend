@@ -7,8 +7,8 @@ import type {
   ExtensionTarget,
   WebExtendContext,
   WebExtendEntriesDir,
-  WebExtendEntryType,
   WebExtendEntryDirKey,
+  WebExtendEntryType,
 } from './types.js';
 
 const scriptExts = ['.ts', '.js', '.tsx', '.jsx', '.mts', '.cts', '.mjs', '.cjs'];

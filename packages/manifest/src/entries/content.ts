@@ -13,7 +13,8 @@ import type {
   ContentScriptConfig,
   DeclarativeEntryFileResult,
   ManifestEntryProcessor,
-  WebExtendEntryInput,
+  WebExtendContentEntryInput,
+  ManifestContentScript,
 } from '../types.js';
 
 const key = 'contents';
@@ -34,15 +35,14 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
     for (const item of declarativeResult) {
       manifest.content_scripts ??= [];
       manifest.content_scripts.push({
-        matches: [], // get from entry in writeContentEntry
         js: [item.path],
-      });
+      } as ManifestContentScript);
     }
   }
 
   const { content_scripts } = manifest || {};
   if (content_scripts?.length) {
-    const entry: WebExtendEntryInput[] = [];
+    const entry: WebExtendContentEntryInput[] = [];
     content_scripts.forEach((contentScript, index) => {
       const { js = [], css = [] } = contentScript;
       const name = declarativeResult ? declarativeResult[index].name : `${key}/${index}`;
@@ -50,6 +50,7 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
         name,
         input: [...js, ...css],
         type: 'script',
+        config: contentScript,
       });
     });
 
@@ -59,26 +60,21 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
   }
 };
 
-const writeEntry: ManifestEntryProcessor['writeEntry'] = async ({
-  normalizedManifest,
-  manifest,
-  name,
-  output,
-  context,
-  entries,
-}) => {
+const writeEntry: ManifestEntryProcessor['writeEntry'] = async ({ manifest, name, output, context, entries }) => {
   const { content_scripts } = manifest;
   if (!content_scripts?.length || !output?.length) return;
 
   const entry = entries[key] || [];
   const index = entry.findIndex((item) => item.name === name);
-  if (index === -1) return;
+  if (index === -1 || !content_scripts[index]) return;
 
   const { rootPath } = context;
-  const normalizedContentScript = normalizedManifest.content_scripts?.[index];
-
-  if (!content_scripts[index] || !normalizedContentScript) return;
-  content_scripts[index] = JSON.parse(JSON.stringify(normalizedContentScript));
+  const entryConfig = entry[index].config || ({} as ManifestContentScript);
+  content_scripts[index] = {
+    ...entryConfig,
+    js: [],
+    css: [],
+  };
 
   const entryMain = entry[index].input?.[0];
   const entryManinPath = resolve(rootPath, entryMain || '');
@@ -88,8 +84,8 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = async ({
       matches: ['<all_urls>'],
     };
     content_scripts[index] = {
+      ...config, // avoid override original config
       ...content_scripts[index],
-      ...config,
     };
   }
 

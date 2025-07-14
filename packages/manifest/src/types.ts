@@ -12,6 +12,10 @@ export interface WebExtendEntryDescription {
 
 export type WebExtendEntryInput = Pick<WebExtendEntryDescription, 'name' | 'input' | 'type'>;
 
+export type WebExtendContentEntryInput = WebExtendEntryInput & {
+  config?: ContentScriptConfig;
+};
+
 export type WebExtendEntryOutput = Pick<WebExtendEntryDescription, 'name' | 'output'>;
 
 export interface WebExtendEntries {
@@ -24,7 +28,7 @@ export interface WebExtendEntries {
   newtab?: WebExtendEntryInput;
   history?: WebExtendEntryInput;
   bookmarks?: WebExtendEntryInput;
-  contents?: WebExtendEntryInput[];
+  contents?: WebExtendContentEntryInput[];
   sandboxes?: WebExtendEntryInput[];
   panels?: WebExtendEntryInput[];
   pages?: WebExtendEntryInput[];
@@ -156,7 +160,6 @@ export interface NormalizeMainfestEntryProps {
 }
 
 export interface WriteMainfestEntryItemProps {
-  normalizedManifest: ExtensionManifest;
   manifest: ExtensionManifest;
   rootPath: string;
   context: WebExtendContext;
