@@ -33,10 +33,7 @@ const overrideProcessors = overrides.map((key) => {
   };
 
   const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, name }) => {
-    const { chrome_url_overrides } = manifest;
-    if (!chrome_url_overrides) return;
-
-    const key = name as keyof ManifestChromeUrlOverrides;
+    const { chrome_url_overrides = {} } = manifest;
     if (chrome_url_overrides[key]) {
       chrome_url_overrides[key] = `${name}.html`;
     }

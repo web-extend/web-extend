@@ -28,7 +28,9 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
 };
 
 const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, name }) => {
-  manifest.devtools_page = `${name}.html`;
+  if (manifest.devtools_page) {
+    manifest.devtools_page = `${name}.html`;
+  }
 };
 
 const devtoolsProcessor: ManifestEntryProcessor = {

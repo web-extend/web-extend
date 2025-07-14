@@ -7,23 +7,23 @@ import type {
   ExtensionTarget,
   WebExtendContext,
   WebExtendEntriesDir,
-  WebExtendEntryDescription,
+  WebExtendEntryType,
   WebExtendEntryDirKey,
 } from './types.js';
 
 const scriptExts = ['.ts', '.js', '.tsx', '.jsx', '.mts', '.cts', '.mjs', '.cjs'];
 const styleExts = ['.css', '.scss', '.sass', '.less', '.styl', '.stylus'];
 
-function isScriptFile(file: string) {
+export function isScriptFile(file: string) {
   if (file.endsWith('.d.ts')) return false;
   return scriptExts.some((ext) => file.endsWith(ext));
 }
 
-function isStyleFile(file: string) {
+export function isStyleFile(file: string) {
   return styleExts.some((ext) => file.endsWith(ext));
 }
 
-const isAllowableEntryFile = (file: string, entryTypes: WebExtendEntryDescription['type'][]) => {
+const isAllowableEntryFile = (file: string, entryTypes: WebExtendEntryType[]) => {
   return (entryTypes.includes('script') && isScriptFile(file)) || (entryTypes.includes('style') && isStyleFile(file));
 };
 
@@ -31,7 +31,7 @@ export const matchSingleDeclarativeEntryFile = (
   filePath: string,
   key: WebExtendEntryDirKey,
   context: WebExtendContext,
-  entryType: WebExtendEntryDescription['type'][] = ['script'],
+  entryType: WebExtendEntryType[] = ['script'],
 ) => {
   if (!isAllowableEntryFile(filePath, entryType)) return null;
 
@@ -56,7 +56,7 @@ export const matchMultipleDeclarativeEntryFile = (
   filePath: string,
   key: WebExtendEntryDirKey,
   context: WebExtendContext,
-  entryType: WebExtendEntryDescription['type'][] = ['script'],
+  entryType: WebExtendEntryType[] = ['script'],
 ) => {
   if (!isAllowableEntryFile(filePath, entryType)) return null;
 
@@ -87,7 +87,7 @@ export const matchMultipleDeclarativeEntryFile = (
 export const getSingleDeclarativeEntryFile = async (
   key: WebExtendEntryDirKey,
   context: WebExtendContext,
-  entryTypes: WebExtendEntryDescription['type'][] = ['script'],
+  entryTypes: WebExtendEntryType[] = ['script'],
 ) => {
   const { rootPath, entriesDir } = context;
   const entryDir = resolve(rootPath, entriesDir.root, entriesDir[key]);
@@ -128,7 +128,7 @@ export const getSingleDeclarativeEntryFile = async (
 export const getMultipleDeclarativeEntryFile = async (
   key: WebExtendEntryDirKey,
   context: WebExtendContext,
-  entryTypes: WebExtendEntryDescription['type'][] = ['script'],
+  entryTypes: WebExtendEntryType[] = ['script'],
 ) => {
   const { rootPath, entriesDir } = context;
   const entryDir = resolve(rootPath, entriesDir.root, entriesDir[key]);

@@ -1,5 +1,5 @@
 import type { EnvironmentConfig } from '@rsbuild/core';
-import type { WebExtendEntries } from '@web-extend/manifest/types';
+import type { WebExtendEntries, WebExtendEntryInput } from '@web-extend/manifest/types';
 import { getCssDistPath, getJsDistPath, transformManifestEntry } from './helper.js';
 
 type EnviromentKey = 'web' | 'background';
@@ -10,7 +10,7 @@ type NormalizeRsbuildEnvironmentProps = {
 };
 
 function getWebEnvironmentConfig({ entries, isDev }: NormalizeRsbuildEnvironmentProps): EnvironmentConfig | undefined {
-  const webEntry = Object.values(entries).flat();
+  const webEntry: WebExtendEntryInput[] = Object.values(entries).flat();
   const entry = transformManifestEntry(webEntry);
   if (!entry) return;
 
@@ -20,7 +20,7 @@ function getWebEnvironmentConfig({ entries, isDev }: NormalizeRsbuildEnvironment
     },
     output: {
       target: 'web',
-      injectStyles: isDev && Object.keys(entries.contents || {}).length > 0, // needed for content entry
+      injectStyles: isDev && !!entries.contents,
       distPath: {
         js: '',
         css: '',

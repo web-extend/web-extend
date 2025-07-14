@@ -1,20 +1,37 @@
 export type ExtensionTarget = 'chrome-mv3' | 'firefox-mv2' | 'firefox-mv3' | 'safari-mv3' | 'edge-mv3' | 'opera-mv3';
 
-export type WebExtendEntryKey =
-  | 'icons'
-  | 'background'
-  | 'contents'
-  | 'popup'
-  | 'options'
-  | 'sidepanel'
-  | 'devtools'
-  | 'panels'
-  | 'sandboxes'
-  | 'newtab'
-  | 'history'
-  | 'bookmarks'
-  | 'scripting'
-  | 'pages';
+export type WebExtendEntryType = 'script' | 'style' | 'html' | 'image';
+
+export interface WebExtendEntryDescription {
+  name: string;
+  input: string[];
+  output: string[];
+  type: WebExtendEntryType;
+  html?: string;
+}
+
+export type WebExtendEntryInput = Pick<WebExtendEntryDescription, 'name' | 'input' | 'type'>;
+
+export type WebExtendEntryOutput = Pick<WebExtendEntryDescription, 'name' | 'output'>;
+
+export interface WebExtendEntries {
+  icons?: WebExtendEntryInput;
+  background?: WebExtendEntryInput;
+  popup?: WebExtendEntryInput;
+  options?: WebExtendEntryInput;
+  sidepanel?: WebExtendEntryInput;
+  devtools?: WebExtendEntryInput;
+  newtab?: WebExtendEntryInput;
+  history?: WebExtendEntryInput;
+  bookmarks?: WebExtendEntryInput;
+  contents?: WebExtendEntryInput[];
+  sandboxes?: WebExtendEntryInput[];
+  panels?: WebExtendEntryInput[];
+  pages?: WebExtendEntryInput[];
+  scripting?: WebExtendEntryInput[];
+}
+
+export type WebExtendEntryKey = keyof WebExtendEntries;
 
 export interface ExtensionManifest {
   action?: ManifestAction;
@@ -107,37 +124,6 @@ interface ManifestCommandItem {
 
 interface ManifestSidePanel {
   default_path?: string;
-}
-
-export type ManifestEntryType = 'script' | 'style' | 'html' | 'image';
-
-export interface WebExtendEntryDescription {
-  name: string;
-  input: string[];
-  output: string[];
-  type: ManifestEntryType; // default is 'html'
-  html?: string;
-}
-
-export type WebExtendEntryInput = Pick<WebExtendEntryDescription, 'name' | 'input' | 'type'>;
-
-export type WebExtendEntryOutput = Pick<WebExtendEntryDescription, 'name' | 'output'>;
-
-export interface WebExtendEntries {
-  icons?: WebExtendEntryInput;
-  background?: WebExtendEntryInput;
-  popup?: WebExtendEntryInput;
-  options?: WebExtendEntryInput;
-  sidepanel?: WebExtendEntryInput;
-  devtools?: WebExtendEntryInput;
-  newtab?: WebExtendEntryInput;
-  history?: WebExtendEntryInput;
-  bookmarks?: WebExtendEntryInput;
-  contents?: WebExtendEntryInput[];
-  sandboxes?: WebExtendEntryInput[];
-  panels?: WebExtendEntryInput[];
-  pages?: WebExtendEntryInput[];
-  scripting?: WebExtendEntryInput[];
 }
 
 export type MaybePromise<T = unknown> = T | Promise<T>;

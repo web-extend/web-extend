@@ -1,4 +1,4 @@
-import { getMultipleDeclarativeEntryFile, matchMultipleDeclarativeEntryFile } from '../common.js';
+import { getMultipleDeclarativeEntryFile, isStyleFile, matchMultipleDeclarativeEntryFile } from '../common.js';
 import type { ManifestEntryProcessor, WebExtendEntryInput } from '../types.js';
 
 const key = 'scripting';
@@ -15,7 +15,7 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
     entry.push({
       name: item.name,
       input: [item.path],
-      type: item.path.endsWith('css') ? 'style' : 'script',
+      type: isStyleFile(item.path) ? 'style' : 'script',
     });
   }
 
