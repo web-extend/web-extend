@@ -237,7 +237,7 @@ To custom other config in the project, please refer to:
 
 WebExtend uses the file system to parse entry files and generates the corresponding fields for `manifest.json`. So you don't need to define them explicitly any more. The main changes are as follows.
 
-- Generate icons: run `npx web-extend g icons --template ./extension/assets/icon-512.png` to generate icon files under the `src/assets` directory.
+- Generate icons: run `npx we g icons --template ./extension/assets/icon-512.png` to generate icon files under the `src/assets` directory.
 - Change popup, options and sidepanel: remove `index.html` and rename `main.ts` to `index.ts` respectively.
 - Change content: rename the `contentScripts` directory to `content`.
 - Change background: rename `main.ts` to `index.ts`, and remove `import.meta.hot` related content in code.
