@@ -8,8 +8,7 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
 };
 
 const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context, entries }) => {
-  const { devtools_page } = manifest;
-  let input = devtools_page;
+  let input = manifest.devtools_page;
 
   if (!input) {
     const result = await getSingleDeclarativeEntryFile(key, context);

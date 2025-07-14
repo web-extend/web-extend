@@ -123,9 +123,22 @@ export type WebExtendEntryInput = Pick<WebExtendEntryDescription, 'name' | 'inpu
 
 export type WebExtendEntryOutput = Pick<WebExtendEntryDescription, 'name' | 'output'>;
 
-export type WebExtendEntries = {
-  [key in WebExtendEntryKey]?: WebExtendEntryInput | WebExtendEntryInput[];
-};
+export interface WebExtendEntries {
+  icons?: WebExtendEntryInput;
+  background?: WebExtendEntryInput;
+  popup?: WebExtendEntryInput;
+  options?: WebExtendEntryInput;
+  sidepanel?: WebExtendEntryInput;
+  devtools?: WebExtendEntryInput;
+  newtab?: WebExtendEntryInput;
+  history?: WebExtendEntryInput;
+  bookmarks?: WebExtendEntryInput;
+  contents?: WebExtendEntryInput[];
+  sandboxes?: WebExtendEntryInput[];
+  panels?: WebExtendEntryInput[];
+  pages?: WebExtendEntryInput[];
+  scripting?: WebExtendEntryInput[];
+}
 
 export type MaybePromise<T = unknown> = T | Promise<T>;
 

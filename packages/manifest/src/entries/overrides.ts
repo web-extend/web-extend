@@ -1,7 +1,7 @@
 import { getSingleDeclarativeEntryFile, matchSingleDeclarativeEntryFile } from '../common.js';
-import type { ManifestChromeUrlOverrides, ManifestEntryProcessor, WebExtendEntryKey } from '../types.js';
+import type { ManifestChromeUrlOverrides, ManifestEntryProcessor } from '../types.js';
 
-const overrides: WebExtendEntryKey[] = ['newtab', 'history', 'bookmarks'];
+const overrides = ['newtab', 'history', 'bookmarks'] as const;
 
 const overrideProcessors = overrides.map((key) => {
   const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (filePath, context) => {

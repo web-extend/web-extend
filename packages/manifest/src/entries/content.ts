@@ -70,7 +70,7 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = async ({
   const { content_scripts } = manifest;
   if (!content_scripts?.length || !output?.length) return;
 
-  const entry = (entries[key] as WebExtendEntryInput[]) || [];
+  const entry = entries[key] || [];
   const index = entry.findIndex((item) => item.name === name);
   if (index === -1) return;
 
