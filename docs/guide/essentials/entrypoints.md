@@ -390,7 +390,7 @@ Pages are HTML documents that are not listed in `manifest.json`, but can be acce
 Generate the entry automatically:
 
 ```shell
-npx we g pages/welcome pages/panel
+npx we g pages/welcome
 ```
 
 ### Popup

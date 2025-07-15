@@ -362,7 +362,7 @@ Pages 是未在 `manifest.json` 中列出的 HTML 文档，但可以通过扩展
 自动生成入口：
 
 ```shell
-npx we g pages/welcome pages/panel
+npx we g pages/welcome
 ```
 
 ### Popup
