@@ -3,7 +3,7 @@ import type { Rspack } from '@rsbuild/core';
 export const hotUpdateGlobal = 'webpackHotUpdateWebExtend';
 
 type RspackContentRuntimePluginOptions = {
-  serverUrl?: () => string | string;
+  serverUrl?: string;
   target?: string;
   contentEntryNames?: string[];
 };
@@ -31,13 +31,10 @@ class ContentRuntimePlugin implements Rspack.RspackPluginInstance {
           return;
         }
 
-        if (module.name === 'jsonp_chunk_loading' && module.source) {
-          const url = typeof serverUrl === 'function' ? serverUrl() : serverUrl;
+        if (serverUrl && module.name === 'jsonp_chunk_loading' && module.source) {
           const originSource = module.source.source.toString('utf-8');
-          if (url) {
-            const newSource = originSource.replaceAll(RuntimeGlobals.publicPath, `"${url}/"`);
-            module.source.source = Buffer.from(newSource, 'utf-8');
-          }
+          const newSource = originSource.replaceAll(RuntimeGlobals.publicPath, `"${serverUrl}/"`);
+          module.source.source = Buffer.from(newSource, 'utf-8');
         }
       });
 
@@ -53,7 +50,7 @@ class ContentRuntimePlugin implements Rspack.RspackPluginInstance {
 
           for (const name in assets) {
             if (!name.endsWith('.js')) continue;
-            const entryName = contentEntryNames.find((item) => name.includes(item));
+            const entryName = contentEntryNames.find((item) => name.startsWith(item));
             if (entryName) {
               const oldContent = assets[name].source() as string;
               const newContent = oldContent.replaceAll(hotUpdateGlobal, `${hotUpdateGlobal}_${entryName}`);

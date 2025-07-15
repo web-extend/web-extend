@@ -136,10 +136,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
 
         // Disable hot reload for scripting entry
         const scriptingEntry = webExtendEntries?.scripting || [];
-        const isScriptingInput = [scriptingEntry]
-          .flat()
-          .flatMap((item) => item.input)
-          .includes(resourcePath);
+        const isScriptingInput = scriptingEntry.flatMap((item) => item.input).includes(resourcePath);
         if (isScriptingInput) {
           const newCode = `${code} \n
             if(module.hot) {
@@ -163,7 +160,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         chain.output.set('hotUpdateGlobal', hotUpdateGlobal);
         chain.plugin('ContentRuntimePlugin').use(ContentRuntimePlugin, [
           {
-            serverUrl: () => `http://localhost:${config.server.port}`,
+            serverUrl: `http://localhost:${config.dev.client.port}`,
             target: manifestManager.context.target,
             contentEntryNames: contentEntry.map((item) => item.name),
           },
