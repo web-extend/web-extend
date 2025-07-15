@@ -262,21 +262,21 @@ npx we g devtools
 使用示例:
 
 ```ts [src/devtools.ts]
-// Create a panel when DevTools are opened
-chrome.devtools.panels.create(
-  "My Panel", // Panel display name
-  "icon-16.png", // Panel icon
-  "pages/panel.html", // Panel page
-  (panel) => {
-    // Panel created callback
-    panel.onShown.addListener((window) => {
-      console.log("Panel shown");
-    });
-    panel.onHidden.addListener(() => {
-      console.log("Panel hidden");
-    });
-  }
-);
+chrome.devtools.panels.create("My Panel", "", "panel.html");
+```
+
+#### 添加面板 {#adding-panels}
+
+Devtools 页面可以由单个面板或多个面板组成。
+
+自动生成面板入口：
+
+```shell
+# create a single panel
+npx we g panel
+
+# create multiple panels
+npx we g panels/panel1,panels/panel2
 ```
 
 参考 [with-devtools](https://github.com/web-extend/examples/tree/main/with-devtools)。

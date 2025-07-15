@@ -280,21 +280,21 @@ npx we g devtools
 For example:
 
 ```ts [src/devtools.ts]
-// Create a panel when DevTools are opened
-chrome.devtools.panels.create(
-  "My Panel", // Panel display name
-  "icon-16.png", // Panel icon
-  "pages/panel.html", // Panel page
-  (panel) => {
-    // Panel created callback
-    panel.onShown.addListener((window) => {
-      console.log("Panel shown");
-    });
-    panel.onHidden.addListener(() => {
-      console.log("Panel hidden");
-    });
-  }
-);
+chrome.devtools.panels.create("My Panel", "", "panel.html");
+```
+
+#### Adding panels
+
+The devtools page is composed of a single panel or multiple panels.
+
+Generate the panel entry automatically:
+
+```shell
+# create a single panel
+npx we g panel
+
+# create multiple panels
+npx we g panels/panel1,panels/panel2
 ```
 
 See [with-devtools](https://github.com/web-extend/examples/tree/main/with-devtools).
