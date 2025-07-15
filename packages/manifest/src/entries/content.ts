@@ -14,7 +14,7 @@ import type {
   DeclarativeEntryFileResult,
   ManifestContentScript,
   ManifestEntryProcessor,
-  WebExtendContentEntryInput,
+  WebExtendContentEntryDescription,
 } from '../types.js';
 
 const key = 'contents';
@@ -42,7 +42,7 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
 
   const { content_scripts } = manifest || {};
   if (content_scripts?.length) {
-    const entry: WebExtendContentEntryInput[] = [];
+    const entry: WebExtendContentEntryDescription[] = [];
     content_scripts.forEach((contentScript, index) => {
       const { js = [], css = [] } = contentScript;
       const name = declarativeResult ? declarativeResult[index].name : `${key}/${index}`;

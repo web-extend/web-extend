@@ -4,7 +4,7 @@ import {
   matchMultipleDeclarativeEntryFile,
   matchSingleDeclarativeEntryFile,
 } from '../common.js';
-import type { DeclarativeEntryFileResult, ManifestEntryProcessor, WebExtendEntryInput } from '../types.js';
+import type { DeclarativeEntryFileResult, ManifestEntryProcessor, WebExtendEntryDescription } from '../types.js';
 
 const key = 'sandboxes';
 
@@ -35,7 +35,7 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
   }
 
   if (input.length) {
-    const entry: WebExtendEntryInput[] = [];
+    const entry: WebExtendEntryDescription[] = [];
     input.forEach((page, index) => {
       const name = declarativeResult ? declarativeResult[index].name : `${key}/${index}`;
       entry.push({

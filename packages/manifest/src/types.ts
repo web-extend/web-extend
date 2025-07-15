@@ -2,37 +2,37 @@ export type ExtensionTarget = 'chrome-mv3' | 'firefox-mv2' | 'firefox-mv3' | 'sa
 
 export type WebExtendEntryType = 'script' | 'style' | 'html' | 'image';
 
-interface WebExtendEntryDescription {
+export interface WebExtendEntryDescription {
   name: string;
   import: string | string[];
-  output: string[];
   type: WebExtendEntryType;
   html?: string;
 }
 
-export type WebExtendEntryInput = Pick<WebExtendEntryDescription, 'name' | 'import' | 'type'>;
-
-export type WebExtendContentEntryInput = WebExtendEntryInput & {
+export type WebExtendContentEntryDescription = WebExtendEntryDescription & {
   config?: ContentScriptConfig;
 };
 
-export type WebExtendEntryOutput = Pick<WebExtendEntryDescription, 'name' | 'output'>;
+export type WebExtendEntryOutput = {
+  name: string;
+  output: string[];
+};
 
 export interface WebExtendEntries {
-  icons?: WebExtendEntryInput;
-  background?: WebExtendEntryInput;
-  popup?: WebExtendEntryInput;
-  options?: WebExtendEntryInput;
-  sidepanel?: WebExtendEntryInput;
-  devtools?: WebExtendEntryInput;
-  newtab?: WebExtendEntryInput;
-  history?: WebExtendEntryInput;
-  bookmarks?: WebExtendEntryInput;
-  contents?: WebExtendContentEntryInput[];
-  sandboxes?: WebExtendEntryInput[];
-  panels?: WebExtendEntryInput[];
-  pages?: WebExtendEntryInput[];
-  scripting?: WebExtendEntryInput[];
+  icons?: WebExtendEntryDescription;
+  background?: WebExtendEntryDescription;
+  popup?: WebExtendEntryDescription;
+  options?: WebExtendEntryDescription;
+  sidepanel?: WebExtendEntryDescription;
+  devtools?: WebExtendEntryDescription;
+  newtab?: WebExtendEntryDescription;
+  history?: WebExtendEntryDescription;
+  bookmarks?: WebExtendEntryDescription;
+  contents?: WebExtendContentEntryDescription[];
+  sandboxes?: WebExtendEntryDescription[];
+  panels?: WebExtendEntryDescription[];
+  pages?: WebExtendEntryDescription[];
+  scripting?: WebExtendEntryDescription[];
 }
 
 export type WebExtendEntryKey = keyof WebExtendEntries;
@@ -165,7 +165,7 @@ export interface WriteMainfestEntryItemProps {
   context: WebExtendContext;
   name: string;
   entries: WebExtendEntries;
-  output?: WebExtendEntryDescription['output'];
+  output?: WebExtendEntryOutput['output'];
 }
 
 export interface WriteManifestFileProps {
