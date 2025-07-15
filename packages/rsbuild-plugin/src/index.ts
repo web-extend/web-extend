@@ -161,12 +161,11 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       const contentEntry = webExtendEntries?.contents;
       if (contentEntry) {
         chain.output.set('hotUpdateGlobal', hotUpdateGlobal);
-        const contentEntryNames = [contentEntry].flat().map((item) => item.name);
         chain.plugin('ContentRuntimePlugin').use(ContentRuntimePlugin, [
           {
             getPort: () => config.server.port,
             target: manifestManager.context.target,
-            contentEntryNames,
+            contentEntryNames: contentEntry.map((item) => item.name),
           },
         ]);
       }
@@ -174,8 +173,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       // Process scripting entry
       const scriptingEntry = webExtendEntries?.scripting || [];
       const emitCss = config.output.emitCss ?? target === 'web';
-      const scriptStyleImports = [scriptingEntry]
-        .flat()
+      const scriptStyleImports = scriptingEntry
         .filter((entry) => entry.type === 'style')
         .flatMap((entry) => entry.input);
 

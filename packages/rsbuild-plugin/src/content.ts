@@ -3,16 +3,16 @@ import type { Rspack } from '@rsbuild/core';
 export const hotUpdateGlobal = 'webpackHotUpdateWebExtend';
 
 type RspackContentRuntimePluginOptions = {
-  getPort: () => number | undefined;
-  target: string;
-  contentEntryNames: string[];
+  getPort?: () => number | undefined;
+  target?: string;
+  contentEntryNames?: string[];
 };
 
 class ContentRuntimePlugin implements Rspack.RspackPluginInstance {
   name = 'ContentRuntimePlugin';
-  #options: RspackContentRuntimePluginOptions | undefined;
+  #options: RspackContentRuntimePluginOptions;
 
-  constructor(options: RspackContentRuntimePluginOptions) {
+  constructor(options: RspackContentRuntimePluginOptions = {}) {
     this.#options = options;
   }
 
@@ -20,11 +20,10 @@ class ContentRuntimePlugin implements Rspack.RspackPluginInstance {
     compiler.hooks.compilation.tap(this.name, (compilation) => {
       const { RuntimeGlobals, Compilation } = compiler.webpack;
       compilation.hooks.runtimeModule.tap(this.name, (module, chunk) => {
-        const { contentEntryNames = [] } = this.#options || {};
+        const { contentEntryNames = [], target = '', getPort } = this.#options;
         const entryName = chunk.getEntryOptions()?.name;
         if (!entryName || !contentEntryNames.includes(entryName)) return;
 
-        const { target = '' } = this.#options || {};
         if (module.name === 'load_script' && module.source) {
           const originSource = module.source.source.toString('utf-8');
           const newSource = patchloadScriptCode(RuntimeGlobals.loadScript, originSource, target);
@@ -33,7 +32,7 @@ class ContentRuntimePlugin implements Rspack.RspackPluginInstance {
         }
 
         if (module.name === 'jsonp_chunk_loading' && module.source) {
-          const port = this.#options?.getPort();
+          const port = getPort?.();
           const originSource = module.source.source.toString('utf-8');
           if (port) {
             const newSource = originSource.replaceAll(RuntimeGlobals.publicPath, `"http://localhost:${port}/"`);
@@ -48,16 +47,16 @@ class ContentRuntimePlugin implements Rspack.RspackPluginInstance {
           stage: Compilation.PROCESS_ASSETS_STAGE_ADDITIONS,
         },
         (assets) => {
-          const { contentEntryNames = [] } = this.#options || {};
           const { RawSource } = compiler.webpack.sources;
+          const contentEntryNames = this.#options.contentEntryNames || [];
+          contentEntryNames.sort((a, b) => b.length - a.length);
 
           for (const name in assets) {
             if (!name.endsWith('.js')) continue;
-
-            const assetName = name.split('.')[0];
-            if (contentEntryNames.includes(assetName)) {
+            const entryName = contentEntryNames.find((item) => name.includes(item));
+            if (entryName) {
               const oldContent = assets[name].source() as string;
-              const newContent = oldContent.replaceAll(hotUpdateGlobal, `${hotUpdateGlobal}_${assetName}`);
+              const newContent = oldContent.replaceAll(hotUpdateGlobal, `${hotUpdateGlobal}_${entryName}`);
               const source = new RawSource(newContent);
               compilation.updateAsset(name, source);
             }

@@ -12,9 +12,9 @@ import { parseExportObject } from '../parser/export.js';
 import type {
   ContentScriptConfig,
   DeclarativeEntryFileResult,
+  ManifestContentScript,
   ManifestEntryProcessor,
   WebExtendContentEntryInput,
-  ManifestContentScript,
 } from '../types.js';
 
 const key = 'contents';
