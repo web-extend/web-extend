@@ -2,9 +2,9 @@ import { existsSync } from 'node:fs';
 import { readdir, unlink } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import type { FilenameConfig, RsbuildEntry, Rspack } from '@rsbuild/core';
-import type { WebExtendEntryDescription } from '@web-extend/manifest/types';
+import type { WebExtendEntryInput } from '@web-extend/manifest/types';
 
-export function transformManifestEntry(entries: WebExtendEntryDescription[]) {
+export function transformManifestEntry(entries: WebExtendEntryInput[]) {
   const res: RsbuildEntry = {};
   for (const item of entries) {
     const { name, type } = item;
@@ -62,7 +62,7 @@ const isProd = process.env.NODE_ENV === 'production';
 const jsDistPath = 'static/js';
 const cssDistPath = 'static/css';
 
-export const getJsDistPath = (entries: WebExtendEntryDescription[]): FilenameConfig['js'] => {
+export const getJsDistPath = (entries: WebExtendEntryInput[]): FilenameConfig['js'] => {
   return (pathData) => {
     const chunkName = pathData.chunk?.name;
     const entry = entries.find((item) => item.name === chunkName);
@@ -74,7 +74,7 @@ export const getJsDistPath = (entries: WebExtendEntryDescription[]): FilenameCon
   };
 };
 
-export const getCssDistPath = (entries: WebExtendEntryDescription[]): FilenameConfig['css'] => {
+export const getCssDistPath = (entries: WebExtendEntryInput[]): FilenameConfig['css'] => {
   return (pathData) => {
     const chunkName = pathData.chunk?.name;
     const entry = entries.find((item) => item.name === chunkName);

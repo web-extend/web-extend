@@ -5,12 +5,15 @@ export type WebExtendEntryType = 'script' | 'style' | 'html' | 'image';
 export interface WebExtendEntryDescription {
   name: string;
   import: string | string[];
-  type: WebExtendEntryType;
   html?: string;
 }
 
-export type WebExtendContentEntryDescription = WebExtendEntryDescription & {
+export interface WebExtendContentEntryDescription extends WebExtendEntryDescription {
   config?: ContentScriptConfig;
+}
+
+export type WebExtendEntryInput<T = WebExtendEntryDescription> = T & {
+  type: WebExtendEntryType;
 };
 
 export type WebExtendEntryOutput = {
@@ -19,20 +22,20 @@ export type WebExtendEntryOutput = {
 };
 
 export interface WebExtendEntries {
-  icons?: WebExtendEntryDescription;
-  background?: WebExtendEntryDescription;
-  popup?: WebExtendEntryDescription;
-  options?: WebExtendEntryDescription;
-  sidepanel?: WebExtendEntryDescription;
-  devtools?: WebExtendEntryDescription;
-  newtab?: WebExtendEntryDescription;
-  history?: WebExtendEntryDescription;
-  bookmarks?: WebExtendEntryDescription;
-  contents?: WebExtendContentEntryDescription[];
-  sandboxes?: WebExtendEntryDescription[];
-  panels?: WebExtendEntryDescription[];
-  pages?: WebExtendEntryDescription[];
-  scripting?: WebExtendEntryDescription[];
+  icons?: WebExtendEntryInput;
+  background?: WebExtendEntryInput;
+  popup?: WebExtendEntryInput;
+  options?: WebExtendEntryInput;
+  sidepanel?: WebExtendEntryInput;
+  devtools?: WebExtendEntryInput;
+  newtab?: WebExtendEntryInput;
+  history?: WebExtendEntryInput;
+  bookmarks?: WebExtendEntryInput;
+  contents?: WebExtendEntryInput<WebExtendContentEntryDescription>[];
+  sandboxes?: WebExtendEntryInput[];
+  panels?: WebExtendEntryInput[];
+  pages?: WebExtendEntryInput[];
+  scripting?: WebExtendEntryInput[];
 }
 
 export type WebExtendEntryKey = keyof WebExtendEntries;

@@ -7,6 +7,7 @@ import type {
   ExtensionManifest,
   WebExtendCommonConfig,
   WebExtendEntries,
+  WebExtendEntryInput,
   WebExtendEntryOutput,
 } from '@web-extend/manifest/types';
 import { ContentRuntimePlugin, hotUpdateGlobal } from './content.js';
@@ -210,7 +211,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
 
     api.processAssets({ stage: 'optimize', environments: ['web'] }, async ({ assets, compilation }) => {
       if (!webExtendEntries) return;
-      const manifestEntryInput = Object.values(webExtendEntries).flat();
+      const manifestEntryInput: WebExtendEntryInput[] = Object.values(webExtendEntries).flat();
 
       for (const name in assets) {
         if (!name.endsWith('.js')) continue;
