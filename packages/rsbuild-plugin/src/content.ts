@@ -3,7 +3,7 @@ import type { Rspack } from '@rsbuild/core';
 export const hotUpdateGlobal = 'webpackHotUpdateWebExtend';
 
 type RspackContentRuntimePluginOptions = {
-  getPort?: () => number | undefined;
+  serverUrl?: () => string | string;
   target?: string;
   contentEntryNames?: string[];
 };
@@ -20,7 +20,7 @@ class ContentRuntimePlugin implements Rspack.RspackPluginInstance {
     compiler.hooks.compilation.tap(this.name, (compilation) => {
       const { RuntimeGlobals, Compilation } = compiler.webpack;
       compilation.hooks.runtimeModule.tap(this.name, (module, chunk) => {
-        const { contentEntryNames = [], target = '', getPort } = this.#options;
+        const { contentEntryNames = [], target = '', serverUrl } = this.#options;
         const entryName = chunk.getEntryOptions()?.name;
         if (!entryName || !contentEntryNames.includes(entryName)) return;
 
@@ -32,10 +32,10 @@ class ContentRuntimePlugin implements Rspack.RspackPluginInstance {
         }
 
         if (module.name === 'jsonp_chunk_loading' && module.source) {
-          const port = getPort?.();
+          const url = typeof serverUrl === 'function' ? serverUrl() : serverUrl;
           const originSource = module.source.source.toString('utf-8');
-          if (port) {
-            const newSource = originSource.replaceAll(RuntimeGlobals.publicPath, `"http://localhost:${port}/"`);
+          if (url) {
+            const newSource = originSource.replaceAll(RuntimeGlobals.publicPath, `"${url}/"`);
             module.source.source = Buffer.from(newSource, 'utf-8');
           }
         }

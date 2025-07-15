@@ -62,7 +62,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         dev: {
           writeToDisk: true,
           client: {
-            host: '127.0.0.1:<port>',
+            host: '127.0.0.1',
             port: '<port>',
             protocol: 'ws',
           },
@@ -154,7 +154,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
     });
 
     api.modifyBundlerChain(async (chain, { target, environment, isDev, CHAIN_ID, rspack }) => {
-      if (!isDev) return;
+      if (!isDev || environment.name !== 'web') return;
       const config = environment.config;
 
       // Process content entry
@@ -163,7 +163,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         chain.output.set('hotUpdateGlobal', hotUpdateGlobal);
         chain.plugin('ContentRuntimePlugin').use(ContentRuntimePlugin, [
           {
-            getPort: () => config.server.port,
+            serverUrl: () => `http://localhost:${config.server.port}`,
             target: manifestManager.context.target,
             contentEntryNames: contentEntry.map((item) => item.name),
           },
