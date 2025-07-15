@@ -26,7 +26,7 @@ const overrideProcessors = overrides.map((key) => {
     if (input) {
       entries[key] = {
         name: key,
-        input: [input],
+        import: [input],
         type: 'html',
       };
     }

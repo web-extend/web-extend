@@ -24,7 +24,7 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
   if (input) {
     entries[key] = {
       name: key,
-      input: [input],
+      import: [input],
       type: 'html',
     };
   }

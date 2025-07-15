@@ -84,7 +84,7 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
   if (files.size) {
     entries[key] = {
       name: key,
-      input: Array.from(files),
+      import: Array.from(files),
       type: 'image',
     };
   }

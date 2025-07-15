@@ -136,7 +136,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
 
         // Disable hot reload for scripting entry
         const scriptingEntry = webExtendEntries?.scripting || [];
-        const isScriptingInput = scriptingEntry.flatMap((item) => item.input).includes(resourcePath);
+        const isScriptingInput = scriptingEntry.flatMap((item) => item.import).includes(resourcePath);
         if (isScriptingInput) {
           const newCode = `${code} \n
             if(module.hot) {
@@ -172,7 +172,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       const emitCss = config.output.emitCss ?? target === 'web';
       const scriptStyleImports = scriptingEntry
         .filter((entry) => entry.type === 'style')
-        .flatMap((entry) => entry.input);
+        .flatMap((entry) => entry.import);
 
       if (scriptingEntry && emitCss && config.output.injectStyles && scriptStyleImports.length) {
         const cssRule = chain.module.rule(CHAIN_ID.RULE.CSS);

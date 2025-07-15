@@ -29,7 +29,7 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
   if (input.length) {
     entries[key] = {
       name: key,
-      input,
+      import: input,
       type: 'script',
     };
 

@@ -7,10 +7,10 @@ import type { WebExtendEntryInput } from '@web-extend/manifest/types';
 export function transformManifestEntry(entries: WebExtendEntryInput[]) {
   const res: RsbuildEntry = {};
   for (const item of entries) {
-    const { name, input, type } = item;
-    let imports = input;
+    const { name, type } = item;
+    let imports = [item.import].flat();
     if (name === 'icons') {
-      imports = input.map((file) => `${file}?url`);
+      imports = imports.map((file) => `${file}?url`);
     }
 
     res[name] = {

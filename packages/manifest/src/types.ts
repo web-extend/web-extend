@@ -2,15 +2,15 @@ export type ExtensionTarget = 'chrome-mv3' | 'firefox-mv2' | 'firefox-mv3' | 'sa
 
 export type WebExtendEntryType = 'script' | 'style' | 'html' | 'image';
 
-export interface WebExtendEntryDescription {
+interface WebExtendEntryDescription {
   name: string;
-  input: string[];
+  import: string | string[];
   output: string[];
   type: WebExtendEntryType;
   html?: string;
 }
 
-export type WebExtendEntryInput = Pick<WebExtendEntryDescription, 'name' | 'input' | 'type'>;
+export type WebExtendEntryInput = Pick<WebExtendEntryDescription, 'name' | 'import' | 'type'>;
 
 export type WebExtendContentEntryInput = WebExtendEntryInput & {
   config?: ContentScriptConfig;

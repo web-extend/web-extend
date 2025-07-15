@@ -40,7 +40,7 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
       const name = declarativeResult ? declarativeResult[index].name : `${key}/${index}`;
       entry.push({
         name,
-        input: [page],
+        import: [page],
         type: 'html',
       });
     });

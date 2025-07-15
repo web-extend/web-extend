@@ -14,7 +14,7 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ contex
   for (const item of result) {
     entry.push({
       name: item.name,
-      input: [item.path],
+      import: [item.path],
       type: 'html',
     });
   }

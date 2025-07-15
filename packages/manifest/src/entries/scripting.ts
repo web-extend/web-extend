@@ -14,7 +14,7 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
   for (const item of result) {
     entry.push({
       name: item.name,
-      input: [item.path],
+      import: [item.path],
       type: isStyleFile(item.path) ? 'style' : 'script',
     });
   }

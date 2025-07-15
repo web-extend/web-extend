@@ -48,7 +48,7 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
       const name = declarativeResult ? declarativeResult[index].name : `${key}/${index}`;
       entry.push({
         name,
-        input: [...js, ...css],
+        import: [...js, ...css],
         type: 'script',
         config: contentScript,
       });
@@ -76,7 +76,7 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = async ({ manifest, name
     css: [],
   };
 
-  const entryMain = entry[index].input?.[0];
+  const entryMain = entry[index].import?.[0];
   const entryManinPath = resolve(rootPath, entryMain || '');
   if (entryMain && existsSync(entryManinPath)) {
     const code = await readFile(entryManinPath, 'utf-8');
