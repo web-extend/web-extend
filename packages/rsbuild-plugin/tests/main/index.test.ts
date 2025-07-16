@@ -99,6 +99,14 @@ describe('test build for chrome', () => {
     expect(validateDistFile(distPath, side_panel?.default_path || '', '.html')).toBeTruthy();
     expect(permissions).toContain('sidePanel');
 
+    // scripting
+    expect(validateDistFile(distPath, 'scripting/injected-script.js', '.js')).toBeTruthy();
+    expect(validateDistFile(distPath, 'scripting/injected-style.css', '.css')).toBeTruthy();
+
+    // pages
+    expect(validateDistFile(distPath, 'pages/page1.html', '.html')).toBeTruthy();
+    expect(validateDistFile(distPath, 'pages/page2.html', '.html')).toBeTruthy();
+
     // public
     const publicPath = resolve(__dirname, 'public');
     const files = await readdir(publicPath, { recursive: true });

@@ -1,8 +1,10 @@
 import { existsSync } from 'node:fs';
 import { copyFile, cp, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
-import { basename, dirname, relative, resolve } from 'node:path';
+import { basename, dirname, extname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { checkbox, input, select } from '@inquirer/prompts';
+import { normalizeEntriesDir } from '@web-extend/manifest/common';
+import type { WebExtendEntriesDir } from '@web-extend/manifest/types';
 import chalk from 'chalk';
 import { type EntrypointItem, entryTemplates, entrypointItems, frameworks, tools } from './constant.js';
 
@@ -116,8 +118,13 @@ export async function createProject(options: InitialOptions) {
   }
   await copyTemplate(templatePath, destPath, options);
 
-  const entrypoints = await checkEntrypoints(options.entries || []);
-  await copyEntryFiles(resolve(templatePath, 'src'), resolve(destPath, 'src'), entrypoints);
+  const entriesDir = normalizeEntriesDir(destPath, {});
+  const entrypoints = await normalizeEntrypoints(options.entries || [], entriesDir);
+  await copyEntryFiles({
+    sourcePath: resolve(templatePath, 'src'),
+    destPath: resolve(destPath, entriesDir.root),
+    entrypoints,
+  });
 
   await modifyPackageJson(destPath, options);
 }
@@ -203,7 +210,7 @@ async function modifyPackageJson(root: string, options: InitialOptions) {
   await writeFile(pkgPath, JSON.stringify(newContent, null, 2), 'utf-8');
 }
 
-export async function checkEntrypoints(entries: string[]) {
+export async function normalizeEntrypoints(entries: string[], entriesDir: WebExtendEntriesDir) {
   const res: EntrypointItem[] = [];
   for (const entry of entries) {
     const item = entrypointItems.find(
@@ -219,22 +226,36 @@ export async function checkEntrypoints(entries: string[]) {
       const name = await input({ message: 'What is the name of page?', required: true });
       entryName = `${item.multiplePrefix}/${name}`;
     }
+
+    // map entryName to entriesDir
+    if (entryName in entriesDir) {
+      const value = entriesDir[entryName as keyof WebExtendEntriesDir];
+      entryName = value;
+    } else if (item.multiplePrefix && item.multiplePrefix in entriesDir) {
+      const key = entriesDir[item.multiplePrefix as keyof WebExtendEntriesDir];
+      entryName = entryName.replace(item.multiplePrefix, key);
+    }
+
     res.push({ ...item, name: entryName });
   }
   return res;
 }
 
-export async function copyEntryFiles(source: string, dest: string, entrypoints?: EntrypointItem[]) {
+export async function copyEntryFiles({
+  sourcePath,
+  destPath,
+  entrypoints,
+}: { sourcePath: string; destPath: string; entrypoints?: EntrypointItem[] }) {
   if (!entrypoints?.length) return;
 
-  if (!existsSync(source)) {
+  if (!existsSync(sourcePath)) {
     throw new Error("Source directory doesn't exist");
   }
-  if (!existsSync(dest)) {
-    await mkdir(dest);
+  if (!existsSync(destPath)) {
+    await mkdir(destPath);
   }
 
-  const files = await readdir(source, { withFileTypes: true });
+  const files = await readdir(sourcePath, { withFileTypes: true });
   for (const item of entrypoints) {
     const { name, template } = item;
     const sourceFile = files.find((item) => item.name.startsWith(template));
@@ -243,8 +264,8 @@ export async function copyEntryFiles(source: string, dest: string, entrypoints?:
       continue;
     }
 
-    const destName = sourceFile.isFile() ? sourceFile.name : name;
-    await cp(resolve(source, sourceFile.name), resolve(dest, destName), { recursive: true });
+    const destName = sourceFile.isFile() ? `${name}${extname(sourceFile.name)}` : name;
+    await cp(resolve(sourcePath, sourceFile.name), resolve(destPath, destName), { recursive: true });
   }
 }
 

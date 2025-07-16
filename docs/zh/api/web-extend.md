@@ -1,12 +1,12 @@
 ---
-outline: deep
+outline: [2, 3]
 ---
 
 # web-extend
 
-[`web-extend`](https://www.npmjs.com/package/web-extend) 是一个趁手的工具集，用于创建项目、生成入口、运行和构建扩展等。
+[`web-extend`](https://www.npmjs.com/package/web-extend) 是一个功能强大的工具集，用于创建、开发和构建浏览器扩展。它提供了一个流线型的工作流程，强大的 CLI 命令和灵活的配置选项。
 
-## 命令行接口
+## 命令
 
 使用：
 
@@ -39,6 +39,35 @@ Options:
   -h, --help             display help for command
 ```
 
+可用模板：
+
+- `vanilla`
+- `react`
+- `vue`
+- `preact`
+- `svelte`
+- `solid`
+
+可用入口：
+
+- `background`
+- `content`
+- `contents/{name}`
+- `popup`
+- `options`
+- `sidepanel`
+- `devtools`
+- `panel`
+- `panels/{name}`
+- `sandbox`
+- `sandboxes/{name}`
+- `newtab`
+- `history`
+- `bookmarks`
+- `scripting`
+- `pages/{name}`
+- `icons`
+
 ### web-extend generate
 
 `generate` 命令用于生成入口文件。
@@ -58,6 +87,10 @@ Options:
   --size <size...>       specify sizes of output icons
   -h, --help             display help for command
 ```
+
+可用模板：同 `init` 命令。
+
+可用入口：同 `init` 命令。
 
 ### web-extend dev
 
@@ -154,19 +187,71 @@ Options:
 
 选项：
 
-- **manifest**：`manifest` 配置，默认为 `{}`。WebExtend 会合并 `manifest` 选项和入口文件信息（前者有更高的优先级），在构建时自动生成 `manifest.json`。
-- **target**：目标浏览器，支持以下选项：
-  - `chrome-mv3` (默认)
-  - `firefox-mv2` (对于 Firefox，推荐使用 MV2 版本)
-  - `firefox-mv3` (实验性支持，不能用于 dev 环境中)
-  - `safari-mv3`
-  - `edge-mv3`
-  - `opera-mv3`
-- **srcDir**：源码目录，默认为项目跟路径下的 `./src` 目录，如果 `./src` 目录不存在，则默认为项目根目录。
-- **outDir**：设置构建产物目录，默认为 `dist`。
-- **publicDir**: 设置公共目录，默认为 `dist`。
-- **webExt**: web-ext 配置。
-- **rsbuild**: Rsbuild 配置。
+- [`manifest`](#manifest)
+- [`target`](#target)
+- [`entriesDir`](#entriesDir)
+- [`outDir`](#outDir)
+- [`publicDir`](#publicDir)
+- [`rsbuild`](#rsbuild)
+- [`webExt`](#webExt)
+
+#### manifest
+
+- 类型: `ExtensionManifest`
+- 默认值: `{}`
+
+`manifest` 配置。WebExtend 会合并 `manifest` 选项和入口文件信息（前者有更高的优先级），在构建时自动生成 `manifest.json`。
+
+#### target
+
+- 类型:
+
+```ts
+type WebExtendTarget =
+  | "chrome-mv3"
+  | "firefox-mv2"
+  | "firefox-mv3"
+  | "safari-mv3"
+  | "edge-mv3"
+  | "opera-mv3";
+```
+
+- 默认值: `"chrome-mv3"`
+
+#### entriesDir
+
+- 类型: `string`
+- 默认值: `"./src"`
+
+自定义入口目录，默认为项目根路径下的 `./src` 目录，如果 `./src` 目录不存在，则默认为项目根目录。
+
+#### outDir
+
+- 类型: `string`
+- 默认值: `dist`
+
+设置构建产物目录。
+
+#### publicDir
+
+- 类型: `string`
+- 默认值: `public`
+
+设置公共目录。
+
+#### rsbuild
+
+- 类型: `RsbuildConfig`
+- 默认值: `{}`
+
+参考 [Rsbuild Configuration](https://rsbuild.rs/config/) 了解更多配置项。
+
+#### webExt
+
+- 类型: `WebExtConfig`
+- 默认值: `{}`
+
+参考 [web-ext run](https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#web-ext-run) 了解更多配置项。
 
 使用：
 
@@ -174,7 +259,7 @@ Options:
 import { defineConfig } from 'web-extend';
 
 export default defineConfig({
-  srcDir: "src",
+  entriesDir: "./src",
   outDir: "dist",
   manifest: {...},
   target: "firefox-mv2",
@@ -187,8 +272,6 @@ export default defineConfig({
 
 使用：
 
-::: code-group
-
 ```js [web-ext.config.js]
 import { defineWebExtConfig } from "web-extend";
 
@@ -199,17 +282,11 @@ export default defineWebExtConfig({
 });
 ```
 
-:::
-
-源码： [runner.ts](https://github.com/web-extend/web-extend/blob/main/packages/core/src/runner.ts#L130).
-
 ## 类型
 
 ### ContentScriptConfig
 
-`ContentScriptConfig` 是一个 TypeScript 类型，用于定义 content script 的配置信息。
-
-类型：
+- 类型：
 
 ```ts
 export interface ContentScriptConfig {
@@ -224,6 +301,8 @@ export interface ContentScriptConfig {
   world?: "ISOLATED" | "MAIN";
 }
 ```
+
+`ContentScriptConfig` 是一个 TypeScript 类型，用于定义 content script 的配置信息。
 
 使用：
 

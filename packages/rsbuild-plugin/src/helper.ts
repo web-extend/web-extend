@@ -1,56 +1,24 @@
 import { existsSync } from 'node:fs';
 import { readdir, unlink } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import type { FilenameConfig, RsbuildConfig, RsbuildEntry, Rspack } from '@rsbuild/core';
-import type { ManifestEntryInput } from '@web-extend/manifest/types';
+import type { FilenameConfig, RsbuildEntry, Rspack } from '@rsbuild/core';
+import type { WebExtendEntryInput } from '@web-extend/manifest/types';
 
-export function isDevMode(mode: string | undefined) {
-  return mode === 'development';
-}
-
-export function transformManifestEntry(entry: ManifestEntryInput | undefined) {
-  if (!entry) return;
+export function transformManifestEntry(entries: WebExtendEntryInput[]) {
   const res: RsbuildEntry = {};
-  for (const key in entry) {
-    const { input, entryType = 'html' } = entry[key];
-    let imports = input;
-
-    if (key.startsWith('icons')) {
-      imports = input.map((file) => `${file}?url`);
+  for (const item of entries) {
+    const { name, type = 'html' } = item;
+    let imports = [item.import].flat();
+    if (name === 'icons') {
+      imports = imports.map((file) => `${file}?url`);
     }
 
-    res[key] = {
+    res[name] = {
       import: imports,
-      html: entryType === 'html',
+      html: type === 'html',
     };
   }
   return Object.keys(res).length ? res : undefined;
-}
-
-export function getRsbuildEntryFiles(entries: RsbuildEntry, key: string) {
-  const entry = entries[key];
-  const res: string[] = [];
-  if (typeof entry === 'string') {
-    res.push(entry);
-  } else if (Array.isArray(entry)) {
-    res.push(...entry);
-  } else {
-    res.push(...[entry.import].flat());
-  }
-  return res;
-}
-
-export function getAllRsbuildEntryFiles(environments: RsbuildConfig['environments']) {
-  const res: string[] = [];
-  if (!environments) return [];
-  for (const key in environments) {
-    const entry = environments[key]?.source?.entry;
-    if (!entry) continue;
-    for (const entryName in entry) {
-      res.push(...getRsbuildEntryFiles(entry, entryName));
-    }
-  }
-  return res;
 }
 
 function getHotUpdateAssets(statsList: Rspack.Stats[]) {
@@ -94,10 +62,11 @@ const isProd = process.env.NODE_ENV === 'production';
 const jsDistPath = 'static/js';
 const cssDistPath = 'static/css';
 
-export const getJsDistPath = (manifestEntry: ManifestEntryInput): FilenameConfig['js'] => {
+export const getJsDistPath = (entries: WebExtendEntryInput[]): FilenameConfig['js'] => {
   return (pathData) => {
     const chunkName = pathData.chunk?.name;
-    if (chunkName && manifestEntry[chunkName] && manifestEntry[chunkName].entryType !== 'html') {
+    const entry = entries.find((item) => item.name === chunkName);
+    if (chunkName && entry && entry.type !== 'html') {
       return '[name].js';
     }
     const name = isProd ? '[name].[contenthash:8].js' : '[name].js';
@@ -105,10 +74,11 @@ export const getJsDistPath = (manifestEntry: ManifestEntryInput): FilenameConfig
   };
 };
 
-export const getCssDistPath = (manifestEntry: ManifestEntryInput): FilenameConfig['css'] => {
+export const getCssDistPath = (entries: WebExtendEntryInput[]): FilenameConfig['css'] => {
   return (pathData) => {
     const chunkName = pathData.chunk?.name;
-    if (chunkName && manifestEntry[chunkName]?.entryType === 'style') {
+    const entry = entries.find((item) => item.name === chunkName);
+    if (chunkName && entry && entry.type === 'style') {
       return '[name].css';
     }
     const name = isProd ? '[name].[contenthash:8].css' : '[name].css';

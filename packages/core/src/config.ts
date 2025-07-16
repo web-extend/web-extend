@@ -2,11 +2,11 @@ import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import type { RsbuildConfig } from '@rsbuild/core';
-import type { PluginWebExtendOptions } from '@web-extend/rsbuild-plugin';
+import type { WebExtendCommonConfig } from '@web-extend/manifest/types';
 import type { Jiti } from 'jiti';
 import type { WebExtConfig } from './runner.js';
 
-export interface WebExtendConfig extends PluginWebExtendOptions {
+export interface WebExtendConfig extends WebExtendCommonConfig {
   cacheDir?: string;
   rsbuild?: RsbuildConfig;
   webExt?: WebExtConfig;

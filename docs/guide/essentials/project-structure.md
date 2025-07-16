@@ -73,9 +73,9 @@ The following table describes the main files and directories at the root of your
 | `web-ext.config.js`      | Configuration file for web-ext                                   |
 | `tsconfig.json`          | TypeScript configuration (if using TypeScript)                   |
 
-## Source Directory
+## Entries Directory
 
-The `src/` directory contains your extension's source code, organized by feature/entry point. Here's the standard structure:
+Entries directory is used to organize entry files.
 
 | Name                       | Description                                               |
 | -------------------------- | --------------------------------------------------------- |
@@ -142,7 +142,7 @@ Loading priority (highest to lowest):
 
 Example configuration:
 
-```env
+```
 # .env
 API_ENDPOINT=https://api.example.com
 DEBUG=false
@@ -156,7 +156,7 @@ See [environment variables](../essentials/environment-variables.md) for more det
 
 ### web-extend.config.js
 
-WebExtend allows customization of various aspects of your project through the `web-extend.config.(ts|js|mjs)` file. 
+WebExtend allows customization of various aspects of your project through the `web-extend.config.(ts|js|mjs)` file.
 
 For example:
 
@@ -164,7 +164,7 @@ For example:
 import { defineConfig } from "web-extend";
 
 export default defineConfig({
-  srcDir: "src", // Source directory (default: "src")
+  entriesDir: "./src", // Entries directory (default: "src")
   outDir: ".output", // Output directory (default: "dist")
   manifest: {}, // Custom manifest overrides (default: {})
   target: "firefox-mv2", // Browser target (default: "chrome-mv3")

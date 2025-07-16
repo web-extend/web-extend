@@ -1,1 +1,1 @@
-chrome.devtools.panels.create('My Panel', '', 'pages/panel.html');
+chrome.devtools.panels.create('My Panel', '', 'panel.html');

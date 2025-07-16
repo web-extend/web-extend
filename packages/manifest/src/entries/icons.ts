@@ -1,15 +1,22 @@
-import { basename, resolve } from 'node:path';
-import type { ManifestEntryProcessor, WebExtensionManifest } from './types.js';
+import { existsSync } from 'node:fs';
+import { readdir } from 'node:fs/promises';
+import { basename, relative, resolve } from 'node:path';
+import type { ExtensionManifest, ManifestEntryProcessor } from '../types.js';
 
 const key = 'icons';
 
-const matchDeclarativeEntry = (file: string) => {
+const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (filePath, context) => {
+  const { rootPath, entriesDir } = context;
+  const entryDir = resolve(rootPath, entriesDir.root, entriesDir.icons);
+  if (!filePath.startsWith(entryDir)) return null;
+
+  const file = relative(entryDir, filePath);
   const ext = '.png';
-  const match = file.match(/^assets[\\/]icon-?(\d+)\.png$/);
+  const match = file.match(/icon-?(\d+)\.png$/);
   const size = match ? Number(match[1]) : null;
   if (size) {
     return {
-      name: basename(file, ext),
+      name: basename(filePath, ext),
       ext,
       size,
     };
@@ -17,44 +24,46 @@ const matchDeclarativeEntry = (file: string) => {
   return null;
 };
 
-const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, files, context }) => {
-  const { rootPath, srcDir } = context;
-  const srcPath = resolve(rootPath, srcDir);
+const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context, entries }) => {
+  const { rootPath, entriesDir } = context;
 
-  const declarativeIcons: WebExtensionManifest['icons'] = {};
-  for (const file of files) {
-    const size = matchDeclarativeEntry(file)?.size || null;
-    if (size) {
-      declarativeIcons[size] = resolve(srcPath, file);
+  const iconsPath = resolve(rootPath, entriesDir.root, entriesDir.icons);
+  if (existsSync(iconsPath)) {
+    const files = await readdir(iconsPath);
+    const declarativeIcons: ExtensionManifest['icons'] = {};
+    for (const file of files) {
+      const filePath = resolve(iconsPath, file);
+      const size = matchDeclarativeEntry(filePath, context)?.size || null;
+      if (size) {
+        declarativeIcons[size] = filePath;
+      }
+    }
+
+    if (Object.keys(declarativeIcons).length) {
+      if (!manifest.icons) {
+        manifest.icons = {
+          ...declarativeIcons,
+        };
+      }
+
+      const { action, browser_action } = manifest;
+      let pointer = action || browser_action;
+      if (!pointer?.default_icon) {
+        if (!pointer) {
+          pointer = manifest.action = {};
+        }
+        pointer.default_icon = {
+          ...declarativeIcons,
+        };
+      }
     }
   }
-  if (!Object.keys(declarativeIcons).length) return;
 
-  if (!manifest.icons) {
-    manifest.icons = {
-      ...declarativeIcons,
-    };
-  }
-
-  const { action, browser_action } = manifest;
-  let pointer = action || browser_action;
-  if (!pointer?.default_icon) {
-    if (!pointer) {
-      pointer = manifest.action = {};
-    }
-    pointer.default_icon = {
-      ...declarativeIcons,
-    };
-  }
-};
-
-const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest, context }) => {
   const { icons, action, browser_action } = manifest || {};
-  const { rootPath } = context;
   const pointer = action || browser_action;
   const files = new Set<string>();
 
-  function helper(icons?: WebExtensionManifest['icons']) {
+  function helper(icons?: ExtensionManifest['icons']) {
     if (!icons) return;
     for (const size in icons) {
       const file = icons[size];
@@ -72,14 +81,13 @@ const readEntry: ManifestEntryProcessor['readEntry'] = ({ manifest, context }) =
     helper(pointer?.default_icon);
   }
 
-  return files.size
-    ? {
-        [key]: {
-          input: Array.from(files),
-          entryType: 'image',
-        },
-      }
-    : null;
+  if (files.size) {
+    entries[key] = {
+      name: key,
+      import: Array.from(files),
+      type: 'image',
+    };
+  }
 };
 
 const getIconOutputName = (input: string, output: string[]) => {
@@ -92,7 +100,7 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, output, co
 
   const { rootPath } = context;
 
-  function helper(icons: WebExtensionManifest['icons']) {
+  function helper(icons: ExtensionManifest['icons']) {
     if (!icons) return;
     for (const size in icons) {
       const file = icons[size];
@@ -125,7 +133,6 @@ const iconsProcessor: ManifestEntryProcessor = {
   key,
   matchDeclarativeEntry,
   normalizeEntry,
-  readEntry,
   writeEntry,
 };
 

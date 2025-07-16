@@ -16,11 +16,6 @@ interface CacheResult {
 const defaultCacheDir = join('node_modules', '.web-extend');
 const resultFile = 'results.json';
 
-async function initCacheDir(root: string, cacheDir: string) {
-  const dirPath = resolve(root, cacheDir);
-  await mkdir(dirPath);
-}
-
 async function readResultFromCache(root: string, cacheDir: string) {
   try {
     const cachePath = resolve(root, cacheDir, resultFile);
@@ -39,8 +34,10 @@ export async function cacheBuildResult({
   cacheDir = defaultCacheDir,
 }: { root: string; data: CacheBuildInfo; cacheDir?: string }) {
   const resultPath = resolve(root, cacheDir, resultFile);
-  if (!existsSync(dirname(resultPath))) {
-    initCacheDir(root, cacheDir);
+
+  const cacheDirPath = dirname(resultPath);
+  if (!existsSync(cacheDirPath)) {
+    await mkdir(cacheDirPath, { recursive: true });
   }
 
   let result = await readResultFromCache(root, cacheDir);

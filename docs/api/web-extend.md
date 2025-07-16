@@ -1,12 +1,12 @@
 ---
-outline: deep
+outline: [2, 3]
 ---
 
 # web-extend
 
-[`web-extend`](https://www.npmjs.com/package/web-extend) is a useful tool set for creating a project, and generating entry files, etc.
+[`web-extend`](https://www.npmjs.com/package/web-extend) is a comprehensive toolkit for creating, developing, and building browser extensions. It provides a streamlined workflow with powerful CLI commands and flexible configuration options.
 
-## CLI
+## Commands
 
 Usage:
 
@@ -39,6 +39,35 @@ Options:
   -h, --help             display help for command
 ```
 
+Available templates:
+
+- `vanilla`
+- `react`
+- `vue`
+- `preact`
+- `svelte`
+- `solid`
+
+Available entrypoints:
+
+- `background`
+- `content`
+- `contents/{name}`
+- `popup`
+- `options`
+- `sidepanel`
+- `devtools`
+- `panel`
+- `panels/{name}`
+- `sandbox`
+- `sandboxes/{name}`
+- `newtab`
+- `history`
+- `bookmarks`
+- `scripting`
+- `pages/{name}`
+- `icons`
+
 ### web-extend generate
 
 The `generate` command is used to generate entry files.
@@ -58,6 +87,10 @@ Options:
   --size <size...>       specify sizes of output icons
   -h, --help             display help for command
 ```
+
+Available templates: The same as the `init` command.
+
+Available entrypoints: The same as the `init` command.
 
 ### web-extend dev
 
@@ -150,22 +183,77 @@ Options:
 
 ### defineConfig
 
-`defineConfig` function help you to customize WebExtend's configuration options.
+`defineConfig` function helps you to customize WebExtend's configuration options.
 
 Options:
 
-- **manifest**: Customize `manifest` configuration which defaults to `{}`. WebExtend will merge the `manifest` option and the fields parsed from entry files (the previous is prior), and generate `manifest.json` automatically.
-- **target**: Customize browser target which suppports the following targets. -`chrome-mv3` (default)
-  - `firefox-mv2` (recommended for Firefox)
-  - `firefox-mv3` (experimental, doesn't work in dev mode)
-  - `safari-mv3`
-  - `edge-mv3`
-  - `opera-mv3`
-- **srcDir**: Customize source directory which defaults to the `./src` directory, falling back to the project root path if `./src` doesn't exists.
-- **outDir**: Customize dist path which defaults to the `dist` directory.
-- **publicDir**: Customize public path which defaults to the `public` directory.
-- **webExt**: web-ext configuration.
-- **rsbuild**: Rsbuild configuration.
+- [`manifest`](#manifest)
+- [`target`](#target)
+- [`entriesDir`](#entriesDir)
+- [`outDir`](#outDir)
+- [`publicDir`](#publicDir)
+- [`rsbuild`](#rsbuild)
+- [`webExt`](#webExt)
+
+#### manifest
+
+- Type: `ExtensionManifest`
+- Default: `{}`
+
+Customize `manifest` configuration. WebExtend will merge the `manifest` option and the fields parsed from entry files (the previous takes precedence). The merged configuration will be used to generate `manifest.json` automatically.
+
+#### target
+
+- Type:
+
+```ts
+type WebExtendTarget =
+  | "chrome-mv3"
+  | "firefox-mv2"
+  | "firefox-mv3"
+  | "safari-mv3"
+  | "edge-mv3"
+  | "opera-mv3";
+```
+
+- Default: `"chrome-mv3"`
+
+Customize browser target.
+
+#### entriesDir
+
+- Type: `string`
+- Default: `"./src"`
+
+Customize entries directory which defaults to the `./src` directory, falling back to the project root path if `./src` doesn't exists.
+
+#### outDir
+
+- Type: `string`
+- Default: `"dist"`
+
+Customize dist path.
+
+#### publicDir
+
+- Type: `string`
+- Default: `"public"`
+
+Customize public path.
+
+#### rsbuild
+
+- Type: `RsbuildConfig`
+- Default: `{}`
+
+See [Rsbuild Configuration](https://rsbuild.rs/config/) for more details.
+
+#### webExt
+
+- Type: `WebExtConfig`
+- Default: `{}`
+
+See [web-ext run](https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#web-ext-run) for a full list of configurations.
 
 Usage:
 
@@ -173,7 +261,7 @@ Usage:
 import { defineConfig } from 'web-extend';
 
 export default defineConfig({
-  srcDir: "src",
+  entriesDir: "./src",
   outDir: "dist",
   manifest: {...},
   target: "firefox-mv2",
@@ -196,15 +284,11 @@ export default defineWebExtConfig({
 });
 ```
 
-Source: [runner.ts](https://github.com/web-extend/web-extend/blob/main/packages/core/src/runner.ts#L130).
-
 ## Types
 
 ### ContentScriptConfig
 
-`ContentScriptConfig` is a TypeScript type that helps you define content script's config.
-
-Type:
+- Type:
 
 ```ts
 export interface ContentScriptConfig {
@@ -219,6 +303,8 @@ export interface ContentScriptConfig {
   world?: "ISOLATED" | "MAIN";
 }
 ```
+
+`ContentScriptConfig` is a TypeScript type that helps you define content script's config.
 
 Usage:
 

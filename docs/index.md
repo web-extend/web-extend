@@ -19,7 +19,7 @@ hero:
 
 features:
   - icon: 📝
-    title: Declarative Entry Points
+    title: File-based Entry Points
     details: Automatically parses entry points based on the file system, reducing manifest.json configuration burden
     link: /guide/essentials/entrypoints
   - icon: ⚡️
@@ -40,5 +40,5 @@ features:
   - icon: 🚀
     title: Lightning Fast Performance
     details: Powered by Rsbuild for extremely fast development and building
-    link: https://rsbuild.rs/index
+    link: /guide/start/introduction#lightning-fast-performance
 ---

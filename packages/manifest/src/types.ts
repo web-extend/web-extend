@@ -1,16 +1,81 @@
-import type { Manifest } from 'webextension-polyfill';
-
 export type ExtensionTarget = 'chrome-mv3' | 'firefox-mv2' | 'firefox-mv3' | 'safari-mv3' | 'edge-mv3' | 'opera-mv3';
 
-export type { Manifest };
+export type WebExtendEntryType = 'script' | 'style' | 'html' | 'image';
 
-export interface WebExtensionManifest extends Manifest.WebExtensionManifest {
-  sandbox?: ManifestSandbox;
-  side_panel?: ManifestSidePanel;
-  chrome_url_overrides?: ManifestChromeUrlOverrides;
+export interface WebExtendEntryInput {
+  name: string;
+  import: string | string[];
+  html?: string;
+  type?: WebExtendEntryType; // default is html
+  config?: ContentScriptConfig; // only for content entry
 }
 
-interface ManifestChromeUrlOverrides {
+export type WebExtendEntryOutput = {
+  name: string;
+  output: string[];
+};
+
+export interface WebExtendEntries {
+  icons?: WebExtendEntryInput;
+  background?: WebExtendEntryInput;
+  popup?: WebExtendEntryInput;
+  options?: WebExtendEntryInput;
+  sidepanel?: WebExtendEntryInput;
+  devtools?: WebExtendEntryInput;
+  newtab?: WebExtendEntryInput;
+  history?: WebExtendEntryInput;
+  bookmarks?: WebExtendEntryInput;
+  contents?: WebExtendEntryInput[];
+  sandboxes?: WebExtendEntryInput[];
+  panels?: WebExtendEntryInput[];
+  pages?: WebExtendEntryInput[];
+  scripting?: WebExtendEntryInput[];
+}
+
+export type WebExtendEntryKey = keyof WebExtendEntries;
+
+export interface ExtensionManifest {
+  action?: ManifestAction;
+  browser_action?: ManifestAction;
+  background?: {
+    scripts?: string[];
+    service_worker?: string;
+    type?: 'module';
+  };
+  chrome_url_overrides?: ManifestChromeUrlOverrides;
+  commands?: Record<string, ManifestCommandItem>;
+  content_scripts?: ManifestContentScript[];
+  content_security_policy?:
+    | {
+        extension_pages?: string;
+        sandbox?: string;
+      }
+    | string;
+  description?: string;
+  default_locale?: string;
+  devtools_page?: string;
+  homepage_url?: string;
+  host_permissions?: string[];
+  icons?: ManifestIcons;
+  manifest_version?: number;
+  minimum_chrome_version?: string;
+  name?: string;
+  options_page?: string;
+  options_ui?: {
+    page?: string;
+    open_in_tab?: boolean;
+  };
+  permissions?: string[];
+  sandbox?: ManifestSandbox;
+  side_panel?: ManifestSidePanel;
+  sidebar_action?: ManifestSidebarActionType;
+  version?: string;
+  version_name?: string;
+  web_accessible_resources?: ManifestWebAccessibleResourcesC2ItemType[] | string[];
+  [key: string]: unknown; // allow other custom fields
+}
+
+export interface ManifestChromeUrlOverrides {
   newtab?: string;
   history?: string;
   bookmarks?: string;
@@ -26,7 +91,7 @@ interface ManifestAction {
   default_popup?: string;
 }
 
-interface ManifestContentScript {
+export interface ManifestContentScript {
   matches: string[];
   exclude_matches?: string[];
   js?: string[];
@@ -62,135 +127,98 @@ interface ManifestSidePanel {
   default_path?: string;
 }
 
-export type ManifestEntryKey =
-  | 'icons'
-  | 'background'
-  | 'content'
-  | 'popup'
-  | 'options'
-  | 'sidepanel'
-  | 'devtools'
-  | 'panel'
-  | 'sandbox'
-  | 'newtab'
-  | 'history'
-  | 'bookmarks'
-  | 'scripting'
-  | 'pages';
-
-export interface ManifestEntryItem {
-  input: string[];
-  output: string[];
-  entryType: 'script' | 'style' | 'html' | 'image'; // default is 'html'
-}
-
-export type ManifestEntryInput = Record<string, Omit<ManifestEntryItem, 'output'>>;
-export type ManifestEntryOutput = Record<string, Pick<ManifestEntryItem, 'input' | 'output'>>;
-
 export type MaybePromise<T = unknown> = T | Promise<T>;
 
 export interface ManifestEntryProcessor {
-  key: ManifestEntryKey;
-  matchDeclarativeEntry?: (file: string) => null | { name: string; ext: string };
+  key: WebExtendEntryKey;
+  matchDeclarativeEntry: (
+    file: string,
+    context: WebExtendContext,
+  ) => null | { name: string; ext: string; size?: number };
   normalizeEntry?: (props: NormalizeMainfestEntryProps) => MaybePromise<void>;
-  readEntry?: (props: ReadManifestEntryItemProps) => MaybePromise<ManifestEntryInput | null>;
   writeEntry?: (props: WriteMainfestEntryItemProps) => MaybePromise<void>;
   onAfterBuild?: (props: WriteManifestFileProps) => MaybePromise<void>;
 }
 
-interface ReadManifestEntryItemProps {
-  manifest: WebExtensionManifest;
-  context: ManifestContext;
-}
-
-export interface ManifestContext {
-  target: ExtensionTarget;
-  mode: string;
-  rootPath: string;
-  srcDir: string;
-  outDir: string;
-  publicDir: string;
-  runtime?: ManifestRuntime;
-}
-
-export interface ManifestRuntime {
+export interface WebExtendRuntime {
   background?: string;
   contentBridge?: string;
 }
 
 export interface NormalizeManifestProps {
-  manifest?: WebExtensionManifest;
-  context: ManifestContext;
+  manifest?: ExtensionManifest;
+  context?: WebExtendContext;
 }
 
 export interface NormalizeMainfestEntryProps {
-  manifest: WebExtensionManifest;
-  files: string[];
-  context: ManifestContext;
+  manifest: ExtensionManifest;
+  context: WebExtendContext;
+  entries: WebExtendEntries;
 }
 
-export interface WriteMainfestEntriesProps {
-  normalizedManifest: WebExtensionManifest;
-  manifest: WebExtensionManifest;
+export interface WriteMainfestEntryItemProps {
+  manifest: ExtensionManifest;
   rootPath: string;
-  entry: ManifestEntryOutput;
-}
-
-export interface WriteMainfestEntryItemProps extends Omit<WriteMainfestEntriesProps, 'entry'> {
-  context: ManifestContext;
+  context: WebExtendContext;
   name: string;
-  input?: ManifestEntryItem['input'];
-  output?: ManifestEntryItem['output'];
+  entries: WebExtendEntries;
+  output?: WebExtendEntryOutput['output'];
 }
 
 export interface WriteManifestFileProps {
   distPath: string;
-  manifest: WebExtensionManifest;
+  manifest: ExtensionManifest;
   mode: string | undefined;
-  runtime?: ManifestRuntime;
+  runtime?: WebExtendRuntime;
 }
 
-export type ManifestEntries = {
-  [key in ManifestEntryKey]?: ManifestEntryInput;
+type IconPath = Record<string, string> | string;
+
+interface ManifestSidebarActionType {
+  default_title?: string;
+  default_icon?: IconPath;
+  browser_style?: boolean;
+  default_panel: string;
+  open_at_install?: boolean;
+}
+
+export type ManifestWebAccessibleResourcesC2ItemType = {
+  resources: string[];
+  matches?: string[];
 };
 
-export interface CustomManifest {
-  action?: ManifestAction;
-  background?: {
-    service_worker?: string;
-    type?: 'module';
-  };
-  chrome_url_overrides?: ManifestChromeUrlOverrides;
-  commands?: Record<string, ManifestCommandItem>;
-  content_scripts?: ManifestContentScript[];
-  content_security_policy?: {
-    extension_pages?: string;
-    sandbox?: string;
-  };
-  description?: string;
-  default_locale?: string;
-  devtools_page?: string;
-  homepage_url?: string;
-  host_permissions?: string[];
-  icons?: ManifestIcons;
-  manifest_version?: number;
-  minimum_chrome_version?: string;
-  name?: string;
-  options_page?: string;
-  options_ui?: {
-    page?: string;
-    open_in_tab?: boolean;
-  };
-  permissions?: string[];
-  sandbox?: ManifestSandbox;
-  side_panel?: ManifestSidePanel;
-  version?: string;
-  version_name?: string;
-  web_accessible_resources?:
-    | {
-        resources: string[];
-        matches?: string[];
-      }
-    | string[];
-  [key: string]: unknown; // allow other custom fields
+export type WebExtendEntryDirKey = WebExtendEntryKey | 'root' | 'content' | 'sandbox' | 'panel';
+
+export type WebExtendEntriesDir = Record<WebExtendEntryDirKey, string>;
+
+export interface WebExtendContext {
+  target: ExtensionTarget;
+  mode: string;
+  rootPath: string;
+  outDir: string;
+  publicDir: string;
+  entriesDir: WebExtendEntriesDir;
+  runtime?: WebExtendRuntime;
 }
+
+export interface WebExtendCommonConfig {
+  manifest?: ExtensionManifest | ((props: { target: ExtensionTarget; mode: string }) => ExtensionManifest);
+  target?: ExtensionTarget;
+  /**
+   * @deprecated Use `entriesDir` instead.
+   */
+  srcDir?: string;
+  outDir?: string;
+  buildDirTemplate?: string;
+  publicDir?: string;
+  entriesDir?: string;
+}
+
+export type NormalizeContextOptions = Partial<Pick<WebExtendContext, 'rootPath' | 'mode' | 'runtime'>> &
+  WebExtendCommonConfig;
+
+export type DeclarativeEntryFileResult = {
+  name: string;
+  ext: string;
+  path: string;
+};

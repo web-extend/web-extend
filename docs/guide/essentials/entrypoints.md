@@ -8,12 +8,12 @@ outline: [2, 3]
 Entry points are the core building blocks of a browser extension. They define different components like background, popup, or content scripts that make up your extension. WebExtend makes it easy to manage these entry points through a file-based convention system.
 :::
 
-## Declarative Entry Points
+## File-based Entry Points
 
 WebExtend supports file-conventional entry points, meaning it parses entry points based on the file system and generates the corresponding manifest fields. So you no longer need to define these entry points manually in `manifest.json`.
 
-::: tip Why Declarative Entry Points?
-Declarative entry points reduce boilerplate code and make your extension more maintainable. Instead of managing complex manifest configurations, you can focus on writing the actual extension code.
+::: tip Why File-based Entry Points?
+File-based entry points reduce boilerplate code and make your extension more maintainable. Instead of managing complex manifest configurations, you can focus on writing the actual extension code.
 :::
 
 In WebExtend, all entry points are located in the source directory. Every entry point can be a folder or a file.
@@ -64,7 +64,7 @@ The background script runs in the extension's background context. The background
 Generate the entry automatically:
 
 ```shell
-npx web-extend g background
+npx we g background
 ```
 
 Example usage:
@@ -91,7 +91,7 @@ The bookmarks entry will be reflected to the `chrome_url_overrides.bookmarks` fi
 Generate the entry automatically.
 
 ```shell
-npx web-extend g bookmarks
+npx we g bookmarks
 ```
 
 ### Content Scripts
@@ -124,10 +124,10 @@ Generate the entry automatically:
 
 ```shell
 # for a single content script
-npx web-extend g content
+npx we g content
 
 # for multiple content scripts
-npx web-extend g contents/site-one contents/site-two
+npx we g contents/site-one contents/site-two
 ```
 
 #### Adding CSS
@@ -274,27 +274,27 @@ The devtools entry will be reflected to the `devtools_page` field in `manifest.j
 Generate the entry automatically:
 
 ```shell
-npx web-extend g devtools
+npx we g devtools
 ```
 
 For example:
 
 ```ts [src/devtools.ts]
-// Create a panel when DevTools are opened
-chrome.devtools.panels.create(
-  "My Panel", // Panel display name
-  "icon-16.png", // Panel icon
-  "pages/panel.html", // Panel page
-  (panel) => {
-    // Panel created callback
-    panel.onShown.addListener((window) => {
-      console.log("Panel shown");
-    });
-    panel.onHidden.addListener(() => {
-      console.log("Panel hidden");
-    });
-  }
-);
+chrome.devtools.panels.create("My Panel", "", "panel.html");
+```
+
+#### Adding panels
+
+The devtools page is composed of a single panel or multiple panels.
+
+Generate the panel entry automatically:
+
+```shell
+# create a single panel
+npx we g panel
+
+# create multiple panels
+npx we g panels/panel1,panels/panel2
 ```
 
 See [with-devtools](https://github.com/web-extend/examples/tree/main/with-devtools).
@@ -313,7 +313,7 @@ The history entry will be reflected to the `chrome_url_overrides.history` field 
 Generate the entry automatically:
 
 ```shell
-npx web-extend g history
+npx we g history
 ```
 
 ### Icons
@@ -334,10 +334,10 @@ Alternatively, you can use WebExtend's generator to automatically create icons i
 
 ```shell
 # generate icons in default sizes
-npx web-extend g icons
+npx we g icons
 
 # generate icons in custom sizes
-npx web-extend g icons --size 16 32 48 128
+npx we g icons --size 16 32 48 128
 ```
 
 See [with-icons](https://github.com/web-extend/examples/tree/main/with-icons).
@@ -356,7 +356,7 @@ The new tab page replaces the browser's default new tab page. The new tab entry 
 Generate the entry automatically:
 
 ```shell
-npx web-extend g newtab
+npx we g newtab
 ```
 
 ### Options
@@ -373,7 +373,7 @@ The options page provides a way for users to customize your extension. The optio
 Generate the entry automatically:
 
 ```shell
-npx web-extend g options
+npx we g options
 ```
 
 See [with-options](https://github.com/web-extend/examples/tree/main/with-options).
@@ -390,7 +390,7 @@ Pages are HTML documents that are not listed in `manifest.json`, but can be acce
 Generate the entry automatically:
 
 ```shell
-npx web-extend g pages/welcome pages/panel
+npx we g pages/welcome
 ```
 
 ### Popup
@@ -407,7 +407,7 @@ The popup is a temporary UI that appears when users click your extension's icon.
 Generate the entry automatically:
 
 ```shell
-npx web-extend g popup
+npx we g popup
 ```
 
 Here's a basic popup setup using React:
@@ -448,10 +448,10 @@ Generate the entry automatically.
 
 ```shell
 # create a single entry
-npx web-extend g sandbox
+npx we g sandbox
 
 # create multiple entries
-npx web-extend g sandboxes/sandbox1 sandboxes/sandbox2
+npx we g sandboxes/sandbox1 sandboxes/sandbox2
 
 ```
 
@@ -535,7 +535,7 @@ Chrome calls it "Side Panel" while Firefox calls it "Sidebar". There are some AP
 Generate the entry automatically:
 
 ```shell
-npx web-extend g sidepanel
+npx we g sidepanel
 ```
 
 See [with-sidepanel](https://github.com/web-extend/examples/tree/main/with-sidepanel).

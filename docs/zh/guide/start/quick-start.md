@@ -140,7 +140,7 @@ if (root) {
 或者，使用 CLI 生成入口点：
 
 ```shell
-npx web-extend g popup
+npx we g popup
 ```
 
 ## 开发工作流 {#development-workflow}
