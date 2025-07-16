@@ -237,7 +237,7 @@ export default defineConfig({
 
 WebExtend 会根据文件系统自动解析入口文件，因此无需在 `manifest.json` 中显示声明。核心改动如下：
 
-- 生成 icons：运行 `npx we g icons --template ./extension/assets/icon-512.png` 命令在 `src/assets` 目录下生成需要的 icon 文件。
+- 生成 icons：运行 `npx web-extend g icons --template ./extension/assets/icon-512.png` 命令在 `src/assets` 目录下生成需要的 icon 文件。
 - 更改 popup、options、sidepanel：分别在对应的目录中移除 `index.html`，将 `main.ts` 重命名为 `index.ts`。
 - 更改 content：将 `contentScripts` 目录重命名为 `content`。
 - 更改 background: 该目录中的 `main.ts` 重命名为 `index.ts`，删除代码中的 `import.meta.hot` 相关内容。

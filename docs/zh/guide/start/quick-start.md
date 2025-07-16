@@ -6,9 +6,7 @@ outline: deep
 
 ## 环境准备 {#environment-preparation}
 
-在开始之前，请确保你已安装以下必备条件：
-
-- [Node.js >= 16](https://nodejs.org/en/download)（推荐使用 LTS 版本）
+在开始之前，请确保你已安装：[Node.js >= 18](https://nodejs.org/en/download)（推荐使用 LTS 版本）。
 
 ## 自动安装 {#automatic-installation}
 
@@ -140,7 +138,7 @@ if (root) {
 或者，使用 CLI 生成入口点：
 
 ```shell
-npx we g popup
+npx web-extend g popup
 ```
 
 ## 开发工作流 {#development-workflow}

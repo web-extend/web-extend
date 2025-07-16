@@ -128,8 +128,8 @@ importers:
         specifier: ^8.8.0
         version: 8.8.0(body-parser@1.20.3)
       web-extend:
-        specifier: 0.0.1
-        version: 0.0.1(@rsbuild/core@1.4.3)(@types/node@22.13.4)(jiti@2.4.2)(web-ext@8.8.0(body-parser@1.20.3))
+        specifier: ^0.0.2
+        version: 0.0.2(@rsbuild/core@1.4.3)(@types/node@22.13.4)(jiti@2.4.2)(web-ext@8.8.0(body-parser@1.20.3))
 
   packages/core/templates/template-react-ts:
     dependencies:
@@ -183,8 +183,8 @@ importers:
         specifier: ^8.8.0
         version: 8.8.0(body-parser@1.20.3)
       web-extend:
-        specifier: 0.0.1
-        version: 0.0.1(@rsbuild/core@1.4.3)(@types/node@22.13.4)(jiti@2.4.2)(web-ext@8.8.0(body-parser@1.20.3))
+        specifier: ^0.0.2
+        version: 0.0.2(@rsbuild/core@1.4.3)(@types/node@22.13.4)(jiti@2.4.2)(web-ext@8.8.0(body-parser@1.20.3))
 
   packages/core/templates/template-solid-ts:
     dependencies:
@@ -226,8 +226,8 @@ importers:
         specifier: ^8.8.0
         version: 8.8.0(body-parser@1.20.3)
       web-extend:
-        specifier: 0.0.1
-        version: 0.0.1(@rsbuild/core@1.4.3)(@types/node@22.13.4)(jiti@2.4.2)(web-ext@8.8.0(body-parser@1.20.3))
+        specifier: ^0.0.2
+        version: 0.0.2(@rsbuild/core@1.4.3)(@types/node@22.13.4)(jiti@2.4.2)(web-ext@8.8.0(body-parser@1.20.3))
 
   packages/core/templates/template-svelte-ts:
     dependencies:
@@ -272,8 +272,8 @@ importers:
         specifier: ^8.8.0
         version: 8.8.0(body-parser@1.20.3)
       web-extend:
-        specifier: 0.0.1
-        version: 0.0.1(@rsbuild/core@1.4.3)(@types/node@22.13.4)(jiti@2.4.2)(web-ext@8.8.0(body-parser@1.20.3))
+        specifier: ^0.0.2
+        version: 0.0.2(@rsbuild/core@1.4.3)(@types/node@22.13.4)(jiti@2.4.2)(web-ext@8.8.0(body-parser@1.20.3))
 
   packages/core/templates/template-vanilla-ts:
     devDependencies:
@@ -305,8 +305,8 @@ importers:
         specifier: ^8.8.0
         version: 8.8.0(body-parser@1.20.3)
       web-extend:
-        specifier: 0.0.1
-        version: 0.0.1(@rsbuild/core@1.4.3)(@types/node@22.13.4)(jiti@2.4.2)(web-ext@8.8.0(body-parser@1.20.3))
+        specifier: ^0.0.2
+        version: 0.0.2(@rsbuild/core@1.4.3)(@types/node@22.13.4)(jiti@2.4.2)(web-ext@8.8.0(body-parser@1.20.3))
 
   packages/core/templates/template-vue-ts:
     dependencies:
@@ -348,8 +348,8 @@ importers:
         specifier: ^8.8.0
         version: 8.8.0(body-parser@1.20.3)
       web-extend:
-        specifier: 0.0.1
-        version: 0.0.1(@rsbuild/core@1.4.3)(@types/node@22.13.4)(jiti@2.4.2)(web-ext@8.8.0(body-parser@1.20.3))
+        specifier: ^0.0.2
+        version: 0.0.2(@rsbuild/core@1.4.3)(@types/node@22.13.4)(jiti@2.4.2)(web-ext@8.8.0(body-parser@1.20.3))
 
   packages/manifest:
     dependencies:
@@ -2330,8 +2330,8 @@ packages:
   '@vueuse/shared@12.7.0':
     resolution: {integrity: sha512-coLlUw2HHKsm7rPN6WqHJQr18WymN4wkA/3ThFaJ4v4gWGWAQQGK+MJxLuJTBs4mojQiazlVWAKNJNpUWGRkNw==}
 
-  '@web-extend/rsbuild-plugin@0.0.1':
-    resolution: {integrity: sha512-ddnNv2Hur4phAi86Z2k2ZUi0zFjqrOkE+kOR/zxWe3xibeLHz3cTGpE8D9mm0EqSemwzEuo422JzX0V9zYNq9g==}
+  '@web-extend/rsbuild-plugin@0.0.2':
+    resolution: {integrity: sha512-yFgclhipOMhy7q55TThkoFI1mzYDKNqGgl9r6tY7Na5A2XBE/GwcfbDdwHqUspaN3oh/T8jV6BiOlXos7qvYAg==}
     engines: {node: '>=16.7.0'}
     peerDependencies:
       '@rsbuild/core': ^1.1.6
@@ -5101,8 +5101,8 @@ packages:
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
     hasBin: true
 
-  web-extend@0.0.1:
-    resolution: {integrity: sha512-w9IcvFEj94L7nzg1PHzjsd9F9ZDyOEgo77flZ38CM/WQXD9rCJlc8YBNYTMnb5nsnY7eO1mA64jz8jxK5GD3Lg==}
+  web-extend@0.0.2:
+    resolution: {integrity: sha512-5C+lPhgnMJzi+1QEIIBnx+Awft6k2UTR5GohJWfbgGSAo3BEIVDHrY+VvO7L5PlfcjCkxwiEhryV4MYPicj2ZQ==}
     engines: {node: '>=16.7.0'}
     hasBin: true
     peerDependencies:
@@ -7266,7 +7266,7 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  '@web-extend/rsbuild-plugin@0.0.1(@rsbuild/core@1.4.3)':
+  '@web-extend/rsbuild-plugin@0.0.2(@rsbuild/core@1.4.3)':
     dependencies:
       '@babel/parser': 7.27.0
       '@babel/traverse': 7.27.0
@@ -10310,10 +10310,10 @@ snapshots:
       - safe-compare
       - supports-color
 
-  web-extend@0.0.1(@rsbuild/core@1.4.3)(@types/node@22.13.4)(jiti@2.4.2)(web-ext@8.8.0(body-parser@1.20.3)):
+  web-extend@0.0.2(@rsbuild/core@1.4.3)(@types/node@22.13.4)(jiti@2.4.2)(web-ext@8.8.0(body-parser@1.20.3)):
     dependencies:
       '@inquirer/prompts': 7.3.2(@types/node@22.13.4)
-      '@web-extend/rsbuild-plugin': 0.0.1(@rsbuild/core@1.4.3)
+      '@web-extend/rsbuild-plugin': 0.0.2(@rsbuild/core@1.4.3)
       archiver: 7.0.1
       chalk: 5.4.1
       chokidar: 4.0.3

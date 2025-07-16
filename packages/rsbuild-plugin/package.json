@@ -1,6 +1,6 @@
 {
   "name": "@web-extend/rsbuild-plugin",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "An Rsbuild plugin for developing and building web extensions.",
   "keywords": ["web extensions", "browser extensions", "rsbuild plugin"],
   "repository": {
@@ -55,6 +55,6 @@
     "registry": "https://registry.npmjs.org/"
   },
   "engines": {
-    "node": ">=16.7.0"
+    "node": ">=18"
   }
 }

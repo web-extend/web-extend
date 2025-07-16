@@ -6,9 +6,7 @@ outline: deep
 
 ## Environment Preparation
 
-Before you begin, ensure you have the following prerequisites:
-
-- [Node.js >= 16](https://nodejs.org/en/download) (LTS version recommended)
+Before you begin, ensure you have installed [Node.js >= 18](https://nodejs.org/en/download) (LTS version recommended).
 
 ## Automatic Installation
 
@@ -140,7 +138,7 @@ if (root) {
 Alternatively, generate entry points using the CLI:
 
 ```shell
-npx we g popup
+npx web-extend g popup
 ```
 
 ## Development Workflow
