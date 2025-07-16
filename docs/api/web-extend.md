@@ -222,59 +222,10 @@ Customize browser target.
 
 #### entriesDir
 
-- Type:
+- Type: `string`
+- Default: `"./src"`
 
-```ts
-type WebExtendEntriesDir =
-  | string
-  | {
-      root?: string;
-      background?: string;
-      content?: string;
-      contents?: string;
-      popup?: string;
-      options?: string;
-      sidepanel?: string;
-      devtools?: string;
-      panel?: string;
-      panels?: string;
-      sandbox?: string;
-      sandboxes?: string;
-      newtab?: string;
-      history?: string;
-      bookmarks?: string;
-      scripting?: string;
-      pages?: string;
-      icons?: string;
-    };
-```
-
-- Default:
-
-```ts
-const defaultEntriesDir = {
-  root: "./src",
-  background: "background",
-  content: "content",
-  contents: "contents",
-  popup: "popup",
-  options: "options",
-  sidepanel: "sidepanel",
-  devtools: "devtools",
-  panel: "panel",
-  panels: "panels",
-  sandbox: "sandbox",
-  sandboxes: "sandboxes",
-  newtab: "newtab",
-  history: "history",
-  bookmarks: "bookmarks",
-  scripting: "scripting",
-  pages: "pages",
-  icons: "assets",
-};
-```
-
-Customize entries directory which defaults to the `./src` directory, falling back to the project root path if `./src` doesn't exists. You can also specify the entries directory for each entry type.
+Customize entries directory which defaults to the `./src` directory, falling back to the project root path if `./src` doesn't exists.
 
 #### outDir
 
@@ -310,6 +261,7 @@ Usage:
 import { defineConfig } from 'web-extend';
 
 export default defineConfig({
+  entriesDir: "./src",
   outDir: "dist",
   manifest: {...},
   target: "firefox-mv2",

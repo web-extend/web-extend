@@ -2,19 +2,13 @@ export type ExtensionTarget = 'chrome-mv3' | 'firefox-mv2' | 'firefox-mv3' | 'sa
 
 export type WebExtendEntryType = 'script' | 'style' | 'html' | 'image';
 
-export interface WebExtendEntryDescription {
+export interface WebExtendEntryInput {
   name: string;
   import: string | string[];
   html?: string;
+  type?: WebExtendEntryType; // default is html
+  config?: ContentScriptConfig; // only for content entry
 }
-
-export interface WebExtendContentEntryDescription extends WebExtendEntryDescription {
-  config?: ContentScriptConfig;
-}
-
-export type WebExtendEntryInput<T = WebExtendEntryDescription> = T & {
-  type: WebExtendEntryType;
-};
 
 export type WebExtendEntryOutput = {
   name: string;
@@ -31,7 +25,7 @@ export interface WebExtendEntries {
   newtab?: WebExtendEntryInput;
   history?: WebExtendEntryInput;
   bookmarks?: WebExtendEntryInput;
-  contents?: WebExtendEntryInput<WebExtendContentEntryDescription>[];
+  contents?: WebExtendEntryInput[];
   sandboxes?: WebExtendEntryInput[];
   panels?: WebExtendEntryInput[];
   pages?: WebExtendEntryInput[];
@@ -217,7 +211,7 @@ export interface WebExtendCommonConfig {
   outDir?: string;
   buildDirTemplate?: string;
   publicDir?: string;
-  entriesDir?: Partial<WebExtendEntriesDir> | string;
+  entriesDir?: string;
 }
 
 export type NormalizeContextOptions = Partial<Pick<WebExtendContext, 'rootPath' | 'mode' | 'runtime'>> &

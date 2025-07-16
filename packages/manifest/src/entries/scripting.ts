@@ -1,5 +1,5 @@
 import { getMultipleDeclarativeEntryFile, isStyleFile, matchMultipleDeclarativeEntryFile } from '../common.js';
-import type { ManifestEntryProcessor, WebExtendEntryInput } from '../types.js';
+import type { ManifestEntryProcessor, WebExtendEntries } from '../types.js';
 
 const key = 'scripting';
 
@@ -9,7 +9,7 @@ const matchDeclarativeEntry: ManifestEntryProcessor['matchDeclarativeEntry'] = (
 
 const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manifest, context, entries }) => {
   const result = await getMultipleDeclarativeEntryFile(key, context, ['script', 'style']);
-  const entry: WebExtendEntryInput[] = [];
+  const entry: WebExtendEntries['scripting'] = [];
 
   for (const item of result) {
     entry.push({

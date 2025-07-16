@@ -220,59 +220,10 @@ type WebExtendTarget =
 
 #### entriesDir
 
-- 类型:
+- 类型: `string`
+- 默认值: `"./src"`
 
-```ts
-type WebExtendEntriesDir =
-  | string
-  | {
-      root?: string;
-      background?: string;
-      content?: string;
-      contents?: string;
-      popup?: string;
-      options?: string;
-      sidepanel?: string;
-      devtools?: string;
-      panel?: string;
-      panels?: string;
-      sandbox?: string;
-      sandboxes?: string;
-      newtab?: string;
-      history?: string;
-      bookmarks?: string;
-      scripting?: string;
-      pages?: string;
-      icons?: string;
-    };
-```
-
-- 默认值：
-
-```ts
-const defaultEntriesDir = {
-  root: "./src",
-  background: "background",
-  content: "content",
-  contents: "contents",
-  popup: "popup",
-  options: "options",
-  sidepanel: "sidepanel",
-  devtools: "devtools",
-  panel: "panel",
-  panels: "panels",
-  sandbox: "sandbox",
-  sandboxes: "sandboxes",
-  newtab: "newtab",
-  history: "history",
-  bookmarks: "bookmarks",
-  scripting: "scripting",
-  pages: "pages",
-  icons: "assets",
-};
-```
-
-源码目录，默认为项目跟路径下的 `./src` 目录，如果 `./src` 目录不存在，则默认为项目根目录。你也可以指定每个入口的源码目录。
+自定义入口目录，默认为项目根路径下的 `./src` 目录，如果 `./src` 目录不存在，则默认为项目根目录。
 
 #### outDir
 
@@ -308,6 +259,7 @@ const defaultEntriesDir = {
 import { defineConfig } from 'web-extend';
 
 export default defineConfig({
+  entriesDir: "./src",
   outDir: "dist",
   manifest: {...},
   target: "firefox-mv2",

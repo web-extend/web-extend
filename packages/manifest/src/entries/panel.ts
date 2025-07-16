@@ -4,7 +4,7 @@ import {
   matchMultipleDeclarativeEntryFile,
   matchSingleDeclarativeEntryFile,
 } from '../common.js';
-import type { ManifestEntryProcessor, WebExtendEntryInput } from '../types.js';
+import type { ManifestEntryProcessor, WebExtendEntries } from '../types.js';
 
 const key = 'panels';
 
@@ -19,7 +19,7 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
   const { devtools_page } = manifest || {};
   if (!devtools_page) return;
 
-  const entry: WebExtendEntryInput[] = [];
+  const entry: WebExtendEntries['panels'] = [];
 
   const singleEntry = await getSingleDeclarativeEntryFile('panel', context);
   const multipleEntry = await getMultipleDeclarativeEntryFile('panels', context);
