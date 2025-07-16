@@ -64,7 +64,7 @@ Background 脚本运行在浏览器扩展的后台上下文中。Background 入�
 自动生成入口：
 
 ```shell
-npx we g background
+npx web-extend g background
 ```
 
 使用示例：
@@ -91,7 +91,7 @@ Bookmarks 入口对应了 `manifest.json` 中的 `chrome_url_overrides.bookmarks
 自动生成入口：
 
 ```shell
-npx we g bookmarks
+npx web-extend g bookmarks
 ```
 
 ### Content Scripts
@@ -124,10 +124,10 @@ Content Scripts 是在网页上下文中运行的 JavaScript 文件。他们可�
 
 ```shell
 # for a single content script
-npx we g content
+npx web-extend g content
 
 # for multiple content scripts
-npx we g contents/site-one contents/site-two
+npx web-extend g contents/site-one contents/site-two
 ```
 
 #### 添加 CSS {#adding-css}
@@ -256,7 +256,7 @@ Devtools 入口对应了 `manifest.json` 中的 `devtools_page` 字段。
 自动生成入口：
 
 ```shell
-npx we g devtools
+npx web-extend g devtools
 ```
 
 使用示例:
@@ -273,10 +273,10 @@ Devtools 页面可以由单个面板或多个面板组成。
 
 ```shell
 # create a single panel
-npx we g panel
+npx web-extend g panel
 
 # create multiple panels
-npx we g panels/panel1,panels/panel2
+npx web-extend g panels/panel1,panels/panel2
 ```
 
 参考 [with-devtools](https://github.com/web-extend/examples/tree/main/with-devtools)。
@@ -295,7 +295,7 @@ History 入口对应了 `manifest.json` 中的 `chrome_url_overrides.history` �
 自动生成入口：
 
 ```shell
-npx we g history
+npx web-extend g history
 ```
 
 ### Icons
@@ -316,10 +316,10 @@ src/assets/
 
 ```shell
 # generate icons in default sizes
-npx we g icons
+npx web-extend g icons
 
 # generate icons in custom sizes
-npx we g icons --size 16 32 48 128
+npx web-extend g icons --size 16 32 48 128
 ```
 
 参考 [with-icons](https://github.com/web-extend/examples/tree/main/with-icons)。
@@ -333,7 +333,7 @@ Newtab 将替换浏览器的默认新标签页。 Newtab 入口对应了 `manife
 自动生成入口：
 
 ```shell
-npx we g newtab
+npx web-extend g newtab
 ```
 
 ### Options
@@ -345,7 +345,7 @@ Options 为用户提供了自定义扩展的方法。 Options 入口对应了 `m
 自动生成入口：
 
 ```shell
-npx we g options
+npx web-extend g options
 ```
 
 参考 [with-options](https://github.com/web-extend/examples/tree/main/with-options).
@@ -362,7 +362,7 @@ Pages 是未在 `manifest.json` 中列出的 HTML 文档，但可以通过扩展
 自动生成入口：
 
 ```shell
-npx we g pages/welcome
+npx web-extend g pages/welcome
 ```
 
 ### Popup
@@ -379,7 +379,7 @@ Popup 是一个临时 UI，当用户单击扩展的图标时显示。Popup 入�
 自动生成入口：
 
 ```shell
-npx we g popup
+npx web-extend g popup
 ```
 
 使用示例：
@@ -419,10 +419,10 @@ Sandbox 入口对应了 `manifest.json` 中的 `sandbox.pages` 字段。
 
 ```shell
 # 单入口
-npx we g sandbox
+npx web-extend g sandbox
 
 # 多入口
-npx we g sandboxes/sandbox1 sandboxes/sandbox2
+npx web-extend g sandboxes/sandbox1 sandboxes/sandbox2
 ```
 
 可以在其他的扩展页面中，将 sandbox 作为 iframe 嵌入使用。
@@ -484,7 +484,7 @@ Sidepanel 入口对应了 `manifest.json` 中的 `side_panel.default_path` 或 `
 自动生成入口：
 
 ```shell
-npx we g sidepanel
+npx web-extend g sidepanel
 ```
 
 参考 [with-sidepanel](https://github.com/web-extend/examples/tree/main/with-sidepanel)。

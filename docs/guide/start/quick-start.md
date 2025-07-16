@@ -140,7 +140,7 @@ if (root) {
 Alternatively, generate entry points using the CLI:
 
 ```shell
-npx we g popup
+npx web-extend g popup
 ```
 
 ## Development Workflow

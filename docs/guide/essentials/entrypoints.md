@@ -64,7 +64,7 @@ The background script runs in the extension's background context. The background
 Generate the entry automatically:
 
 ```shell
-npx we g background
+npx web-extend g background
 ```
 
 Example usage:
@@ -91,7 +91,7 @@ The bookmarks entry will be reflected to the `chrome_url_overrides.bookmarks` fi
 Generate the entry automatically.
 
 ```shell
-npx we g bookmarks
+npx web-extend g bookmarks
 ```
 
 ### Content Scripts
@@ -124,10 +124,10 @@ Generate the entry automatically:
 
 ```shell
 # for a single content script
-npx we g content
+npx web-extend g content
 
 # for multiple content scripts
-npx we g contents/site-one contents/site-two
+npx web-extend g contents/site-one contents/site-two
 ```
 
 #### Adding CSS
@@ -274,7 +274,7 @@ The devtools entry will be reflected to the `devtools_page` field in `manifest.j
 Generate the entry automatically:
 
 ```shell
-npx we g devtools
+npx web-extend g devtools
 ```
 
 For example:
@@ -291,10 +291,10 @@ Generate the panel entry automatically:
 
 ```shell
 # create a single panel
-npx we g panel
+npx web-extend g panel
 
 # create multiple panels
-npx we g panels/panel1,panels/panel2
+npx web-extend g panels/panel1,panels/panel2
 ```
 
 See [with-devtools](https://github.com/web-extend/examples/tree/main/with-devtools).
@@ -313,7 +313,7 @@ The history entry will be reflected to the `chrome_url_overrides.history` field 
 Generate the entry automatically:
 
 ```shell
-npx we g history
+npx web-extend g history
 ```
 
 ### Icons
@@ -334,10 +334,10 @@ Alternatively, you can use WebExtend's generator to automatically create icons i
 
 ```shell
 # generate icons in default sizes
-npx we g icons
+npx web-extend g icons
 
 # generate icons in custom sizes
-npx we g icons --size 16 32 48 128
+npx web-extend g icons --size 16 32 48 128
 ```
 
 See [with-icons](https://github.com/web-extend/examples/tree/main/with-icons).
@@ -356,7 +356,7 @@ The new tab page replaces the browser's default new tab page. The new tab entry 
 Generate the entry automatically:
 
 ```shell
-npx we g newtab
+npx web-extend g newtab
 ```
 
 ### Options
@@ -373,7 +373,7 @@ The options page provides a way for users to customize your extension. The optio
 Generate the entry automatically:
 
 ```shell
-npx we g options
+npx web-extend g options
 ```
 
 See [with-options](https://github.com/web-extend/examples/tree/main/with-options).
@@ -390,7 +390,7 @@ Pages are HTML documents that are not listed in `manifest.json`, but can be acce
 Generate the entry automatically:
 
 ```shell
-npx we g pages/welcome
+npx web-extend g pages/welcome
 ```
 
 ### Popup
@@ -407,7 +407,7 @@ The popup is a temporary UI that appears when users click your extension's icon.
 Generate the entry automatically:
 
 ```shell
-npx we g popup
+npx web-extend g popup
 ```
 
 Here's a basic popup setup using React:
@@ -448,10 +448,10 @@ Generate the entry automatically.
 
 ```shell
 # create a single entry
-npx we g sandbox
+npx web-extend g sandbox
 
 # create multiple entries
-npx we g sandboxes/sandbox1 sandboxes/sandbox2
+npx web-extend g sandboxes/sandbox1 sandboxes/sandbox2
 
 ```
 
@@ -535,7 +535,7 @@ Chrome calls it "Side Panel" while Firefox calls it "Sidebar". There are some AP
 Generate the entry automatically:
 
 ```shell
-npx we g sidepanel
+npx web-extend g sidepanel
 ```
 
 See [with-sidepanel](https://github.com/web-extend/examples/tree/main/with-sidepanel).
