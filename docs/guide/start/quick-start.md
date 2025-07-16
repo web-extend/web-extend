@@ -6,9 +6,7 @@ outline: deep
 
 ## Environment Preparation
 
-Before you begin, ensure you have the following prerequisites:
-
-- [Node.js >= 16](https://nodejs.org/en/download) (LTS version recommended)
+Before you begin, ensure you have installed [Node.js >= 18](https://nodejs.org/en/download) (LTS version recommended).
 
 ## Automatic Installation
 
