@@ -14,7 +14,14 @@
     "docs:preview": "cd docs && pnpm preview"
   },
   "simple-git-hooks": {
-    "pre-commit": "pnpm lint:write"
+    "pre-commit": "npx lint-staged"
+  },
+  "lint-staged": {
+    "*.{md,mdx,json,css,less,scss}": "prettier --write",
+    "*.{js,jsx,ts,tsx,mjs,cjs}": [
+      "biome check --write --formatter-enabled=false --linter-enabled=false --no-errors-on-unmatched",
+      "prettier --write"
+    ]
   },
   "repository": {
     "type": "git",
@@ -32,6 +39,7 @@
     "@biomejs/biome": "^1.9.4",
     "@vitest/coverage-v8": "3.2.3",
     "lint-staged": "^16.1.2",
+    "prettier": "^3.6.2",
     "simple-git-hooks": "^2.13.0",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4"
