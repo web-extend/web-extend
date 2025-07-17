@@ -14,7 +14,7 @@
     "docs:preview": "cd docs && pnpm preview"
   },
   "simple-git-hooks": {
-    "pre-commit": "npx lint-staged"
+    "pre-commit": "lint-staged"
   },
   "lint-staged": {
     "*.{md,mdx,json,css,less,scss}": "prettier --write",
