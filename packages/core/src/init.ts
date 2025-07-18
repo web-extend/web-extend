@@ -6,11 +6,13 @@ import { checkbox, input, select } from '@inquirer/prompts';
 import { normalizeEntriesDir } from '@web-extend/manifest/common';
 import type { WebExtendEntriesDir } from '@web-extend/manifest/types';
 import chalk from 'chalk';
-import { type EntrypointItem, entryTemplates, entrypointItems, frameworks, tools } from './constant.js';
+import { type EntrypointItem, entryTemplates, entrypointItems, frameworks, tools } from './constants.js';
+import { downloadTemplate } from 'giget';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+const REPO = 'web-extend/examples';
 
-export interface InitialOptions {
+interface InitOptions {
   projectName?: string;
   template?: string;
   entries?: string[];
@@ -18,7 +20,11 @@ export interface InitialOptions {
   tools?: string[];
 }
 
-export async function resolveEntryTemplate(text?: string) {
+function isRemoteTemplate(template: string) {
+  return template.startsWith('with-');
+}
+
+export async function normalizeTemplate(text?: string) {
   let template = '';
   // only support ts template
   const variant = 'ts';
@@ -40,18 +46,19 @@ export async function resolveEntryTemplate(text?: string) {
   return template;
 }
 
-export async function normalizeInitialOptions(options: InitialOptions) {
-  console.log(chalk.bgCyan('\n Welcome to WebExtend! \n'));
+export async function normalizeInitOptions(options: InitOptions) {
+  console.log(chalk.cyan('\n 🚀 Welcome to WebExtend! \n'));
 
+  // normalize projectName
   if (!options.projectName) {
-    options.projectName = await input({ message: 'Project name or path', default: 'my-extension-app' });
+    options.projectName = await input({ message: 'Project name', default: 'my-extension-app' });
   }
 
   const root = process.cwd();
   const projectPath = resolve(root, options.projectName);
   if (existsSync(projectPath)) {
     options.override = await select({
-      message: `Target directory ${options.projectName} is not empty, please choose`,
+      message: `${options.projectName} is not empty, please choose`,
       choices: [
         {
           name: 'Cancel operation',
@@ -70,8 +77,13 @@ export async function normalizeInitialOptions(options: InitialOptions) {
     }
   }
 
-  options.template = await resolveEntryTemplate(options.template);
+  // normalize template
+  if (isRemoteTemplate(options.template || '')) {
+    return options;
+  }
+  options.template = await normalizeTemplate(options.template);
 
+  // normalize entries
   if (!options.entries?.length) {
     options.entries = await checkbox({
       message: 'Select entrypoints',
@@ -85,6 +97,7 @@ export async function normalizeInitialOptions(options: InitialOptions) {
     }
   }
 
+  // normalize tools
   if (!options.tools?.length) {
     options.tools = await checkbox({
       message: 'Select additional tools',
@@ -105,27 +118,33 @@ export async function normalizeInitialOptions(options: InitialOptions) {
   return options;
 }
 
-export async function createProject(options: InitialOptions) {
+export async function createProject(options: InitOptions) {
   const { projectName, template } = options;
   if (!projectName || !template) return;
 
   const root = process.cwd();
-  const templatePath = getTemplatePath(template);
   const destPath = resolve(root, projectName);
 
-  if (!existsSync(destPath)) {
-    await mkdir(destPath);
+  if (isRemoteTemplate(template)) {
+    await downloadTemplate(`gh:${REPO}/${template}`, {
+      dir: destPath,
+      force: true,
+    });
+  } else {
+    const templatePath = getTemplatePath(template);
+    if (!existsSync(destPath)) {
+      await mkdir(destPath);
+    }
+    await copyTemplate(templatePath, destPath, options);
+
+    const entriesDir = normalizeEntriesDir(destPath, {});
+    const entrypoints = await normalizeEntrypoints(options.entries || [], entriesDir);
+    await copyEntryFiles({
+      sourcePath: resolve(templatePath, 'src'),
+      destPath: resolve(destPath, entriesDir.root),
+      entrypoints,
+    });
   }
-  await copyTemplate(templatePath, destPath, options);
-
-  const entriesDir = normalizeEntriesDir(destPath, {});
-  const entrypoints = await normalizeEntrypoints(options.entries || [], entriesDir);
-  await copyEntryFiles({
-    sourcePath: resolve(templatePath, 'src'),
-    destPath: resolve(destPath, entriesDir.root),
-    entrypoints,
-  });
-
   await modifyPackageJson(destPath, options);
 }
 
@@ -137,7 +156,7 @@ export function getTemplatePath(template: string) {
   return templatePath;
 }
 
-async function copyTemplate(source: string, dest: string, options: InitialOptions) {
+async function copyTemplate(source: string, dest: string, options: InitOptions) {
   const files = await readdir(source, { withFileTypes: true });
   const entryNames = [...entrypointItems.map((item) => item.value), 'web'];
   const { tools = [] } = options;
@@ -176,7 +195,7 @@ async function copyTemplate(source: string, dest: string, options: InitialOption
   }
 }
 
-async function modifyPackageJson(root: string, options: InitialOptions) {
+async function modifyPackageJson(root: string, options: InitOptions) {
   const { projectName, tools = [] } = options;
   const pkgPath = resolve(root, 'package.json');
   const content = await readFile(pkgPath, 'utf-8');
@@ -186,27 +205,29 @@ async function modifyPackageJson(root: string, options: InitialOptions) {
     newContent.name = basename(resolve(root, projectName));
   }
 
-  const scripts: Record<string, string | undefined> = newContent.scripts || {};
-  const devDependencies: Record<string, string | undefined> = newContent.devDependencies || {};
+  if (!isRemoteTemplate(options.template || '')) {
+    const scripts: Record<string, string | undefined> = newContent.scripts || {};
+    const devDependencies: Record<string, string | undefined> = newContent.devDependencies || {};
 
-  if (!tools.includes('eslint')) {
-    scripts.lint = undefined;
-    for (const key in devDependencies) {
-      if (key.includes('eslint') || key === 'globals') {
-        devDependencies[key] = undefined;
+    if (!tools.includes('eslint')) {
+      scripts.lint = undefined;
+      for (const key in devDependencies) {
+        if (key.includes('eslint') || key === 'globals') {
+          devDependencies[key] = undefined;
+        }
+      }
+    }
+
+    if (!tools.includes('prettier')) {
+      scripts.format = undefined;
+      for (const key in devDependencies) {
+        if (key.includes('prettier')) {
+          devDependencies[key] = undefined;
+        }
       }
     }
   }
-
-  if (!tools.includes('prettier')) {
-    scripts.format = undefined;
-    for (const key in devDependencies) {
-      if (key.includes('prettier')) {
-        devDependencies[key] = undefined;
-      }
-    }
-  }
-
+  
   await writeFile(pkgPath, JSON.stringify(newContent, null, 2), 'utf-8');
 }
 
@@ -269,8 +290,9 @@ export async function copyEntryFiles({
   }
 }
 
-export async function init(cliOptions: InitialOptions) {
-  const options = await normalizeInitialOptions(cliOptions);
+export async function init(cliOptions: InitOptions) {
+  const options = await normalizeInitOptions(cliOptions);
+  console.log(options);
   if (options) {
     await createProject(options);
   }

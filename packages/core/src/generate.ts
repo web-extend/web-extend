@@ -4,8 +4,8 @@ import { checkbox } from '@inquirer/prompts';
 import { normalizeEntriesDir } from '@web-extend/manifest/common';
 import type { WebExtendEntriesDir } from '@web-extend/manifest/types';
 import { loadWebExtendConfig } from './config.js';
-import { entrypointItems } from './constant.js';
-import { copyEntryFiles, getTemplatePath, normalizeEntrypoints, resolveEntryTemplate } from './init.js';
+import { entrypointItems } from './constants.js';
+import { copyEntryFiles, getTemplatePath, normalizeEntrypoints, normalizeTemplate } from './init.js';
 
 export interface GenerateOptions {
   entries: string[];
@@ -74,7 +74,7 @@ async function generateEntryFiles({
     throw Error('Please select an entrypoint at least.');
   }
 
-  const finalTemplate = await resolveEntryTemplate(template);
+  const finalTemplate = await normalizeTemplate(template);
   const templatePath = getTemplatePath(finalTemplate);
   await copyEntryFiles({
     sourcePath: resolve(templatePath, 'src'),
