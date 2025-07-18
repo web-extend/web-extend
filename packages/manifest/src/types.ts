@@ -40,7 +40,7 @@ export interface ExtensionManifest {
   background?: {
     scripts?: string[];
     service_worker?: string;
-    type?: 'module';
+    type?: 'module' | 'classic';
   };
   chrome_url_overrides?: ManifestChromeUrlOverrides;
   commands?: Record<string, ManifestCommandItem>;
