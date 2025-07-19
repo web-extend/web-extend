@@ -2,7 +2,7 @@ import { existsSync } from 'node:fs';
 import { copyFile, cp, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { basename, dirname, extname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { cancel, intro, isCancel, multiselect, note, outro, select, spinner, text } from '@clack/prompts';
+import { cancel, intro, isCancel, multiselect, note, outro, select, spinner, text, log } from '@clack/prompts';
 import { normalizeEntriesDir } from '@web-extend/manifest/common';
 import type { WebExtendEntriesDir } from '@web-extend/manifest/types';
 import chalk from 'chalk';
@@ -128,19 +128,41 @@ async function normalizeProjectName(options: { rootPath: string; projectName?: s
   return { projectName, override };
 }
 
-export async function normalizeEntrypoints(entries: string[], entriesDir: WebExtendEntriesDir) {
-  const res: EntrypointItem[] = [];
-  for (const entry of entries) {
-    const item = ENTRYPOINT_ITEMS.find(
-      (item) => entry === item.value || (item.multiplePrefix && entry.startsWith(`${item.multiplePrefix}/`)),
-    );
+function isEntryNameValid(entryName: string, options: EntrypointItem[]) {
+  const item = options.find(
+    (item) => entryName === item.value || (item.multiplePrefix && entryName.startsWith(`${item.multiplePrefix}/`)),
+  );
+  return item;
+}
+
+export async function normalizeEntrypoints(
+  entries: string[] | undefined,
+  entriesDir: WebExtendEntriesDir,
+  options: EntrypointItem[],
+) {
+  let entryNames = entries || [];
+  if (!entryNames.length) {
+    const result = await multiselect({
+      message: 'Select entrypoints',
+      options: options.map((item) => ({ label: item.name, value: item.value })),
+      required: true,
+    });
+    if (isCancel(result)) {
+      cancel('Operation cancelled.');
+      process.exit(0);
+    }
+    entryNames = result;
+  }
+
+  const entrypoints: EntrypointItem[] = [];
+  for (const entry of entryNames) {
+    const item = isEntryNameValid(entry, options);
     if (!item) {
-      console.warn(`Entry ${entry} is not supported, ignored`);
+      log.warn(`"${entry}" is not supported, the entrypoint will be ignored.`);
       continue;
     }
 
     let entryName = entry;
-
     // map entryName to entriesDir
     if (entryName in entriesDir) {
       const value = entriesDir[entryName as keyof WebExtendEntriesDir];
@@ -150,9 +172,16 @@ export async function normalizeEntrypoints(entries: string[], entriesDir: WebExt
       entryName = entryName.replace(item.multiplePrefix, key);
     }
 
-    res.push({ ...item, name: entryName });
+    entrypoints.push({ ...item, name: entryName });
   }
-  return res;
+
+  if (!entrypoints.length) {
+    log.error('No valid entrypoints selected.');
+    cancel('Operation cancelled.');
+    process.exit(1);
+  }
+
+  return entrypoints;
 }
 
 export async function normalizeInitOptions(cliOptions: InitCliOptions) {
@@ -182,25 +211,16 @@ export async function normalizeInitOptions(cliOptions: InitCliOptions) {
   }
   options.template = await normalizeTemplate(cliOptions.template);
 
-  let entries = cliOptions.entries || [];
-  if (!entries.length) {
-    const result = await multiselect({
-      message: 'Select entrypoints',
-      options: ENTRYPOINT_ITEMS.map((item) => ({ label: item.name, value: item.value })),
-      required: true,
-    });
-    if (isCancel(result)) {
-      cancel('Operation cancelled.');
-      process.exit(0);
-    }
-    entries = result;
-  }
-  options.entrypoints = await normalizeEntrypoints(entries, entriesDir);
+  options.entrypoints = await normalizeEntrypoints(
+    cliOptions.entries,
+    entriesDir,
+    ENTRYPOINT_ITEMS.filter((item) => item.value !== 'icons'),
+  );
 
   if (!options.tools?.length) {
     const result = await multiselect({
       message: 'Select additional tools',
-      options: tools.map((item) => ({ label: item.name, value: item.value })),
+      options: tools,
       required: false,
     });
     if (isCancel(result)) {

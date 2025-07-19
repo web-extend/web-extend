@@ -54,9 +54,10 @@ export type EntryPointType =
   | 'newtab'
   | 'bookmarks'
   | 'history'
-  | 'sandbox';
+  | 'sandbox'
+  | 'icons';
 
-export type EntryTemplateType = 'background' | 'content' | 'devtools' | 'web';
+export type EntryTemplateType = 'background' | 'content' | 'devtools' | 'web' | 'icons';
 
 export interface EntrypointItem {
   name: string;
@@ -66,6 +67,11 @@ export interface EntrypointItem {
 }
 
 export const ENTRYPOINT_ITEMS: EntrypointItem[] = [
+  {
+    name: 'icons',
+    value: 'icons',
+    template: 'icons',
+  },
   {
     name: 'background',
     value: 'background',
@@ -126,14 +132,13 @@ export const ENTRYPOINT_ITEMS: EntrypointItem[] = [
   },
 ];
 
-type ProjectToolType = 'eslint' | 'prettier';
-export const tools: { name: string; value: ProjectToolType }[] = [
+export const tools = [
   {
-    name: 'Add ESLint for code linting',
+    label: 'Add ESLint for code linting',
     value: 'eslint',
   },
   {
-    name: 'Add Prettier for code formatting',
+    label: 'Add Prettier for code formatting',
     value: 'prettier',
   },
 ];

@@ -1,6 +1,5 @@
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { cancel, isCancel, multiselect } from '@clack/prompts';
 import { normalizeEntriesDir } from '@web-extend/manifest/common';
 import type { WebExtendEntriesDir } from '@web-extend/manifest/types';
 import { loadWebExtendConfig } from './config.js';
@@ -63,54 +62,25 @@ async function generateIcons({
   }
 }
 
-async function generateEntryFiles({
-  root,
-  template,
-  entriesDir,
-  entries,
-}: GenerateOptions & { entriesDir: WebExtendEntriesDir }) {
-  const entrypoints = await normalizeEntrypoints(entries || [], entriesDir);
-  if (!entrypoints.length) {
-    throw Error('Please select an entrypoint at least.');
-  }
-
-  const finalTemplate = await normalizeTemplate(template);
-  const templatePath = getTemplatePath(finalTemplate);
-  await copyEntryFiles({
-    sourcePath: resolve(templatePath, 'src'),
-    destPath: resolve(root, entriesDir.root),
-    entrypoints,
-  });
-}
-
 export async function generate(options: GenerateOptions) {
-  if (!options.entries.length) {
-    const result = await multiselect({
-      message: 'Select entrypoints',
-      options: ENTRYPOINT_ITEMS,
-      required: true,
-    });
-    if (isCancel(result)) {
-      cancel('Operation cancelled.');
-      process.exit(0);
-    }
-    options.entries = result;
-  }
-
-  const { entries = [] } = options;
   const { content: webExtendConfig } = await loadWebExtendConfig(options.root);
   const entriesDir = normalizeEntriesDir(options.root, webExtendConfig?.entriesDir || webExtendConfig?.srcDir);
+  const entrypoints = await normalizeEntrypoints(options.entries, entriesDir, ENTRYPOINT_ITEMS);
 
-  if (entries.includes('icons')) {
+  const iconsEntrypoint = entrypoints.find((item) => item.value === 'icons');
+  if (iconsEntrypoint) {
     await generateIcons({ ...options, entriesDir });
   }
 
-  const otherEntries = entries.filter((item) => item !== 'icons');
+  const otherEntries = entrypoints.filter((item) => item.value !== 'icons');
   if (otherEntries.length) {
-    await generateEntryFiles({
-      ...options,
-      entries: otherEntries,
-      entriesDir,
+    const template = await normalizeTemplate(options.template);
+    const templatePath = getTemplatePath(template);
+
+    await copyEntryFiles({
+      sourcePath: resolve(templatePath, 'src'),
+      destPath: resolve(options.root, entriesDir.root),
+      entrypoints: otherEntries,
     });
   }
 }
