@@ -6,8 +6,9 @@ import { checkbox, input, select } from '@inquirer/prompts';
 import { normalizeEntriesDir } from '@web-extend/manifest/common';
 import type { WebExtendEntriesDir } from '@web-extend/manifest/types';
 import chalk from 'chalk';
-import { type EntrypointItem, entryTemplates, entrypointItems, frameworks, tools } from './constants.js';
 import { downloadTemplate } from 'giget';
+import { type EntrypointItem, entryTemplates, entrypointItems, frameworks, tools } from './constants.js';
+import { spinner } from '@clack/prompts';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO = 'web-extend/examples';
@@ -16,7 +17,7 @@ interface InitOptions {
   projectName?: string;
   template?: string;
   entries?: string[];
-  override?: boolean;
+  // override?: boolean;
   tools?: string[];
 }
 
@@ -46,18 +47,35 @@ export async function normalizeTemplate(text?: string) {
   return template;
 }
 
-export async function normalizeInitOptions(options: InitOptions) {
+function welcome() {
   console.log(chalk.cyan('\n 🚀 Welcome to WebExtend! \n'));
+}
+
+function farewell(options: InitOptions) {
+  const { projectName } = options;
+  if (!projectName) return;
+  const pkgManager = 'npm';
+  console.log('\nDone. Next steps:');
+  console.group();
+  console.log(`1. cd ${projectName}`);
+  console.log(`2. git init ${chalk.dim('(optional)')}`);
+  console.log(`3. ${pkgManager} install`);
+  console.log(`4. ${pkgManager} run dev`);
+  console.groupEnd();
+  console.log();
+}
+
+export async function normalizeInitOptions(options: InitOptions) {
+  welcome();
 
   // normalize projectName
   if (!options.projectName) {
     options.projectName = await input({ message: 'Project name', default: 'my-extension-app' });
   }
-
   const root = process.cwd();
   const projectPath = resolve(root, options.projectName);
   if (existsSync(projectPath)) {
-    options.override = await select({
+    const override = await select({
       message: `${options.projectName} is not empty, please choose`,
       choices: [
         {
@@ -70,7 +88,7 @@ export async function normalizeInitOptions(options: InitOptions) {
         },
       ],
     });
-    if (!options.override) {
+    if (!override) {
       const error = new Error('Cancel operation');
       error.name = 'ExitPromptError';
       throw error;
@@ -106,15 +124,6 @@ export async function normalizeInitOptions(options: InitOptions) {
     });
   }
 
-  const pkgManager = 'npm';
-  console.log('\nDone. Next steps:');
-  console.group();
-  console.log(`1. cd ${options.projectName}`);
-  console.log(`2. git init ${chalk.dim('(optional)')}`);
-  console.log(`3. ${pkgManager} install`);
-  console.log(`4. ${pkgManager} run dev`);
-  console.groupEnd();
-  console.log();
   return options;
 }
 
@@ -126,10 +135,18 @@ export async function createProject(options: InitOptions) {
   const destPath = resolve(root, projectName);
 
   if (isRemoteTemplate(template)) {
-    await downloadTemplate(`gh:${REPO}/${template}`, {
-      dir: destPath,
-      force: true,
-    });
+    const s = spinner();
+    s.start('Downloading template...');
+    try {
+      await downloadTemplate(`gh:${REPO}/${template}`, {
+        dir: destPath,
+        force: true,
+      });
+      s.stop('Downloaded template');
+    } catch (error) {
+      s.stop('Failed to download template');
+      throw error;
+    }
   } else {
     const templatePath = getTemplatePath(template);
     if (!existsSync(destPath)) {
@@ -145,7 +162,9 @@ export async function createProject(options: InitOptions) {
       entrypoints,
     });
   }
+
   await modifyPackageJson(destPath, options);
+  farewell(options);
 }
 
 export function getTemplatePath(template: string) {
@@ -227,7 +246,7 @@ async function modifyPackageJson(root: string, options: InitOptions) {
       }
     }
   }
-  
+
   await writeFile(pkgPath, JSON.stringify(newContent, null, 2), 'utf-8');
 }
 
@@ -292,7 +311,6 @@ export async function copyEntryFiles({
 
 export async function init(cliOptions: InitOptions) {
   const options = await normalizeInitOptions(cliOptions);
-  console.log(options);
   if (options) {
     await createProject(options);
   }
