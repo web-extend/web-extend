@@ -1,11 +1,11 @@
 import { existsSync } from 'node:fs';
+import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { normalizeEntriesDir } from '@web-extend/manifest/common';
 import type { WebExtendEntriesDir } from '@web-extend/manifest/types';
 import { loadWebExtendConfig } from './config.js';
 import { ENTRYPOINT_ITEMS, FRAMEWORKS } from './constants.js';
 import { copyEntryFiles, normalizeEntrypoints, normalizeTemplatePath } from './init.js';
-import { readFile } from 'node:fs/promises';
 
 export interface GenerateOptions {
   root?: string;
@@ -90,7 +90,12 @@ export async function generate(options: GenerateOptions) {
 
   const { content: webExtendConfig } = await loadWebExtendConfig(rootPath);
   const entriesDir = normalizeEntriesDir(rootPath, webExtendConfig?.entriesDir || webExtendConfig?.srcDir);
-  const entrypoints = await normalizeEntrypoints(options.entries, entriesDir, ENTRYPOINT_ITEMS);
+
+  const entrypoints = await normalizeEntrypoints(
+    options.entries,
+    entriesDir,
+    ENTRYPOINT_ITEMS.filter((item) => item.value !== 'page'),
+  );
 
   const iconsEntrypoint = entrypoints.find((item) => item.value === 'icons');
   if (iconsEntrypoint) {

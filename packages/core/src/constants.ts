@@ -61,23 +61,19 @@ export type EntryPointType =
   | 'bookmarks'
   | 'history'
   | 'sandbox'
+  | 'page'
   | 'icons';
 
-export type EntryTemplateType = 'background' | 'content' | 'devtools' | 'web' | 'icons';
+export type EntryTemplateType = 'background' | 'content' | 'devtools' | 'web';
 
 export interface EntrypointItem {
   name: string;
   value: EntryPointType;
-  template: EntryTemplateType;
+  template?: EntryTemplateType | null;
   multiplePrefix?: string;
 }
 
 export const ENTRYPOINT_ITEMS: EntrypointItem[] = [
-  {
-    name: 'icons',
-    value: 'icons',
-    template: 'icons',
-  },
   {
     name: 'background',
     value: 'background',
@@ -135,6 +131,17 @@ export const ENTRYPOINT_ITEMS: EntrypointItem[] = [
     value: 'sandbox',
     template: 'web',
     multiplePrefix: 'sandboxes',
+  },
+  {
+    name: 'icons',
+    value: 'icons',
+    template: null,
+  },
+  {
+    name: 'page',
+    value: 'page',
+    template: 'web',
+    multiplePrefix: 'pages',
   },
 ];
 

@@ -129,8 +129,8 @@ async function normalizeProjectName(options: { rootPath: string; projectName?: s
   return { projectName, override };
 }
 
-function isEntryNameValid(entryName: string, options: EntrypointItem[]) {
-  const item = options.find(
+function isEntryNameValid(entryName: string) {
+  const item = ENTRYPOINT_ITEMS.find(
     (item) => entryName === item.value || (item.multiplePrefix && entryName.startsWith(`${item.multiplePrefix}/`)),
   );
   return item;
@@ -157,7 +157,7 @@ export async function normalizeEntrypoints(
 
   const entrypoints: EntrypointItem[] = [];
   for (const entry of entryNames) {
-    const item = isEntryNameValid(entry, options);
+    const item = isEntryNameValid(entry);
     if (!item) {
       log.warn(`"${entry}" is not supported, the entrypoint will be ignored.`);
       continue;
@@ -216,7 +216,7 @@ export async function normalizeInitOptions(cliOptions: InitCliOptions) {
   options.entrypoints = await normalizeEntrypoints(
     cliOptions.entries,
     entriesDir,
-    ENTRYPOINT_ITEMS.filter((item) => item.value !== 'icons'),
+    ENTRYPOINT_ITEMS.filter((item) => item.value !== 'page' && item.value !== 'icons'),
   );
 
   if (!options.tools?.length) {
@@ -357,9 +357,9 @@ export async function copyEntryFiles({
   const files = await readdir(sourcePath, { withFileTypes: true });
   for (const item of entrypoints) {
     const { name, template } = item;
-    const sourceFile = files.find((item) => item.name.startsWith(template));
+    const sourceFile = files.find((item) => template && item.name.startsWith(template));
     if (!sourceFile) {
-      console.warn(`Template ${template} is not found`);
+      log.warn(`${name}'s template is not found, the entrypoint will be ignored.`);
       continue;
     }
 
