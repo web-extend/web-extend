@@ -56,9 +56,6 @@ function applyGenerateCommand(command: Command) {
     .action(async (entry: string[], options: GenerateOptions) => {
       try {
         options.entries = entry.flatMap((item) => item.split(','));
-        if (!options.root) {
-          options.root = process.cwd();
-        }
         if (options.size) {
           options.size = options.size.flatMap((item) => item.split(','));
         }
