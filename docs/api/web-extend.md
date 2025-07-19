@@ -315,3 +315,15 @@ export const config: ContentScriptConfig = {
   matches: ["https://www.google.com/*"],
 };
 ```
+
+### WebExtendManifest
+
+source: [`packages/manifest/src/types.ts`](https://github.com/web-extend/web-extend/blob/main/packages/manifest/src/types.ts)
+
+### WebExtendConfig
+
+source: [`packages/core/src/config.ts`](https://github.com/web-extend/web-extend/blob/main/packages/core/src/config.ts#L9)
+
+### WebExtConfig
+
+source: [`packages/core/src/runner.ts`](https://github.com/web-extend/web-extend/blob/main/packages/core/src/runner.ts#L46)

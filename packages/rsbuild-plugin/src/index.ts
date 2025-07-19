@@ -2,13 +2,13 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { RsbuildConfig, RsbuildPlugin } from '@rsbuild/core';
 import { ManifestManager } from '@web-extend/manifest';
-import type { WebExtendManifest } from '@web-extend/manifest/browser';
 import { isDevMode } from '@web-extend/manifest/common';
 import type {
   WebExtendCommonConfig,
   WebExtendEntries,
   WebExtendEntryInput,
   WebExtendEntryOutput,
+  WebExtendManifest,
 } from '@web-extend/manifest/types';
 import { ContentRuntimePlugin, hotUpdateGlobal } from './content.js';
 import { normalizeRsbuildEnvironments } from './environments.js';

@@ -4,6 +4,8 @@ export type WebExtendTarget = 'chrome-mv3' | 'firefox-mv2' | 'firefox-mv3' | 'sa
 
 export type WebExtendEntryType = 'script' | 'style' | 'html' | 'image';
 
+export type { WebExtendManifest, ContentScriptConfig };
+
 export interface WebExtendEntryInput {
   name: string;
   import: string | string[];

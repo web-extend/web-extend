@@ -4,11 +4,11 @@ import { basename, dirname, extname, join, relative, resolve, sep } from 'node:p
 import type { WebExtendManifest } from './browser.js';
 import type {
   DeclarativeEntryFileResult,
-  WebExtendTarget,
   WebExtendContext,
   WebExtendEntriesDir,
   WebExtendEntryDirKey,
   WebExtendEntryType,
+  WebExtendTarget,
 } from './types.js';
 
 const scriptExts = ['.ts', '.js', '.tsx', '.jsx', '.mts', '.cts', '.mjs', '.cjs'];

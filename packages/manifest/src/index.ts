@@ -13,13 +13,13 @@ import {
 import { entryProcessors } from './entries/index.js';
 import { polyfillManifest } from './polyfill.js';
 import type {
-  WebExtendTarget,
   NormalizeContextOptions,
   NormalizeManifestProps,
   WebExtendContext,
   WebExtendEntries,
   WebExtendEntryKey,
   WebExtendEntryOutput,
+  WebExtendTarget,
 } from './types.js';
 
 async function initManifest(rootPath: string, target?: WebExtendTarget) {
