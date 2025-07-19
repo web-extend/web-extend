@@ -37,7 +37,7 @@
   "devDependencies": {
     "@microsoft/api-extractor": "^7.50.0",
     "@rsbuild/core": "^1.4.3",
-    "@rslib/core": "^0.10.4",
+    "@rslib/core": "^0.10.6",
     "@types/archiver": "^6.0.3",
     "@types/node": "^22.13.1",
     "@web-extend/manifest": "workspace:*",
