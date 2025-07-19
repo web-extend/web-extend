@@ -12,7 +12,7 @@ import { ENTRYPOINT_ITEMS, type EntrypointItem, FRAMEWORKS, REPO, tools } from '
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 interface InitCliOptions {
-  rootPath?: string;
+  root?: string;
   projectName?: string;
   override?: boolean;
   template?: string;
@@ -188,7 +188,7 @@ export async function normalizeEntrypoints(
 export async function normalizeInitOptions(cliOptions: InitCliOptions) {
   welcome();
 
-  const rootPath = cliOptions.rootPath || process.cwd();
+  const rootPath = cliOptions.root || process.cwd();
 
   const { projectName, override } = await normalizeProjectName({
     rootPath,
@@ -238,13 +238,15 @@ export async function normalizeInitOptions(cliOptions: InitCliOptions) {
 async function createProjectFromRemoteTemplate(template: string, destPath: string) {
   const s = spinner();
   s.start('Downloading template...');
-  try {
-    await downloadTemplate(`gh:${REPO}/${template}`, {
-      dir: destPath,
-      force: true,
-    });
+
+  await downloadTemplate(`gh:${REPO}/${template}`, {
+    dir: destPath,
+    force: true,
+  });
+
+  if (existsSync(resolve(destPath, 'package.json'))) {
     s.stop('Downloaded template');
-  } catch (error) {
+  } else {
     s.stop('Failed to download template');
     cancel('Operation cancelled.');
     process.exit(1);
@@ -302,14 +304,14 @@ async function copyTemplate(source: string, dest: string, options: InitCliOption
   }
 }
 
-async function modifyPackageJson(root: string, options: InitOptions) {
+async function modifyPackageJson(rootPath: string, options: InitOptions) {
   const { projectName, tools = [] } = options;
-  const pkgPath = resolve(root, 'package.json');
+  const pkgPath = resolve(rootPath, 'package.json');
   const content = await readFile(pkgPath, 'utf-8');
   const newContent = JSON.parse(content);
 
   if (projectName) {
-    newContent.name = basename(resolve(root, projectName));
+    newContent.name = basename(resolve(rootPath, projectName));
   }
 
   if (!isRemoteTemplate(options.templatePath || '')) {

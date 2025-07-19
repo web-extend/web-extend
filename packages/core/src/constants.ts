@@ -4,26 +4,32 @@ export const FRAMEWORKS = [
   {
     label: chalk.yellow('Vanilla'),
     value: 'vanilla',
+    packageName: '',
   },
   {
     label: chalk.cyan('React'),
     value: 'react',
+    packageName: 'react',
   },
   {
     label: chalk.green('Vue'),
     value: 'vue',
+    packageName: 'vue',
   },
   {
     label: chalk.magenta('Preact'),
     value: 'preact',
+    packageName: 'preact',
   },
   {
     label: chalk.red('Svelte'),
     value: 'svelte',
+    packageName: 'svelte',
   },
   {
     label: chalk.blueBright('Solid'),
     value: 'solid',
+    packageName: 'solid-js',
   },
 ];
 

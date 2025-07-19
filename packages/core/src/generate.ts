@@ -3,8 +3,9 @@ import { resolve } from 'node:path';
 import { normalizeEntriesDir } from '@web-extend/manifest/common';
 import type { WebExtendEntriesDir } from '@web-extend/manifest/types';
 import { loadWebExtendConfig } from './config.js';
-import { ENTRYPOINT_ITEMS } from './constants.js';
+import { ENTRYPOINT_ITEMS, FRAMEWORKS } from './constants.js';
 import { copyEntryFiles, normalizeEntrypoints, normalizeTemplatePath } from './init.js';
+import { readFile } from 'node:fs/promises';
 
 export interface GenerateOptions {
   root?: string;
@@ -62,8 +63,31 @@ async function generateIcons({
   }
 }
 
+async function getProjectDependencies(rootPath: string) {
+  const pkgPath = resolve(rootPath, 'package.json');
+  if (!existsSync(pkgPath)) {
+    return {};
+  }
+  const content = await readFile(pkgPath, 'utf-8');
+  const newContent = JSON.parse(content);
+  const devDependencies = newContent.devDependencies || {};
+  const dependencies = newContent.dependencies || {};
+  const res: Record<string, string> = { ...devDependencies, ...dependencies };
+  return res;
+}
+
+async function getDefaultTemplate(rootPath: string) {
+  const dependencies = await getProjectDependencies(rootPath);
+  const template = FRAMEWORKS.find((item) => dependencies[item.packageName]);
+  if (template) {
+    return template.value;
+  }
+  return 'vanilla';
+}
+
 export async function generate(options: GenerateOptions) {
   const rootPath = options.root || process.cwd();
+
   const { content: webExtendConfig } = await loadWebExtendConfig(rootPath);
   const entriesDir = normalizeEntriesDir(rootPath, webExtendConfig?.entriesDir || webExtendConfig?.srcDir);
   const entrypoints = await normalizeEntrypoints(options.entries, entriesDir, ENTRYPOINT_ITEMS);
@@ -75,7 +99,8 @@ export async function generate(options: GenerateOptions) {
 
   const otherEntries = entrypoints.filter((item) => item.value !== 'icons');
   if (otherEntries.length) {
-    const templatePath = await normalizeTemplatePath(options.template);
+    const template = options.template || (await getDefaultTemplate(rootPath));
+    const templatePath = await normalizeTemplatePath(template);
     await copyEntryFiles({
       sourcePath: resolve(templatePath, 'src'),
       destPath: resolve(rootPath, entriesDir.root),
