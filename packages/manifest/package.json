@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "@types/babel__traverse": "^7.20.6",
+    "@types/chrome": "^0.1.1",
     "@types/node": "^22.8.6",
     "@types/webextension-polyfill": "^0.12.3",
     "typescript": "^5.8.3",

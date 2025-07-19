@@ -110,8 +110,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(@rsbuild/core@1.4.3)(preact@10.26.9)
       '@types/chrome':
-        specifier: ^0.0.290
-        version: 0.0.290
+        specifier: ^0.1.1
+        version: 0.1.1
       eslint:
         specifier: ^9.25.1
         version: 9.29.0(jiti@2.4.2)
@@ -153,8 +153,8 @@ importers:
         specifier: ^1.0.7
         version: 1.1.1(@rsbuild/core@1.4.3)
       '@types/chrome':
-        specifier: ^0.0.290
-        version: 0.0.290
+        specifier: ^0.1.1
+        version: 0.1.1
       '@types/react':
         specifier: ^19.0.0
         version: 19.0.10
@@ -208,8 +208,8 @@ importers:
         specifier: ^1.0.5
         version: 1.0.5(@babel/core@7.26.10)(@rsbuild/core@1.4.3)(solid-js@1.9.5)
       '@types/chrome':
-        specifier: ^0.0.290
-        version: 0.0.290
+        specifier: ^0.1.1
+        version: 0.1.1
       eslint:
         specifier: ^9.23.0
         version: 9.24.0(jiti@2.4.2)
@@ -248,8 +248,8 @@ importers:
         specifier: ^1.0.5
         version: 1.0.8(@babel/core@7.26.10)(@rsbuild/core@1.4.3)(postcss-load-config@3.1.4(postcss@8.5.3))(postcss@8.5.3)(svelte@5.20.2)(typescript@5.8.3)
       '@types/chrome':
-        specifier: ^0.0.290
-        version: 0.0.290
+        specifier: ^0.1.1
+        version: 0.1.1
       eslint:
         specifier: ^9.18.0
         version: 9.24.0(jiti@2.4.2)
@@ -287,8 +287,8 @@ importers:
         specifier: ^1.4.3
         version: 1.4.3
       '@types/chrome':
-        specifier: ^0.0.290
-        version: 0.0.290
+        specifier: ^0.1.1
+        version: 0.1.1
       eslint:
         specifier: ^9.18.0
         version: 9.24.0(jiti@2.4.2)
@@ -327,8 +327,8 @@ importers:
         specifier: ^1.0.5
         version: 1.0.6(@rsbuild/core@1.4.3)(vue@3.5.13(typescript@5.8.3))
       '@types/chrome':
-        specifier: ^0.0.290
-        version: 0.0.290
+        specifier: ^0.1.1
+        version: 0.1.1
       eslint:
         specifier: ^9.18.0
         version: 9.24.0(jiti@2.4.2)
@@ -370,8 +370,8 @@ importers:
         specifier: ^1.0.7
         version: 1.1.1(@rsbuild/core@1.4.3)
       '@types/chrome':
-        specifier: ^0.0.290
-        version: 0.0.290
+        specifier: ^0.1.1
+        version: 0.1.1
       '@types/react':
         specifier: ^19.0.0
         version: 19.0.10
@@ -403,6 +403,9 @@ importers:
       '@types/babel__traverse':
         specifier: ^7.20.6
         version: 7.20.6
+      '@types/chrome':
+        specifier: ^0.1.1
+        version: 0.1.1
       '@types/node':
         specifier: ^22.8.6
         version: 22.13.4
@@ -2178,8 +2181,8 @@ packages:
   '@types/chai@5.2.2':
     resolution: {integrity: sha512-8kB30R7Hwqf40JPiKhVzodJs2Qc1ZJ5zuT3uzw5Hq/dhNCl3G3l83jfpdI1e20BP348+fV7VIL/+FxaXkqBmWg==}
 
-  '@types/chrome@0.0.290':
-    resolution: {integrity: sha512-N92vsAdlwoWameDQ8D4K0EZXXvxsJ1+gJg+4TWjUUsZ6gpontVmwl1XVtysA3mso45Fcn5UPiX/yqiT8GcBV3A==}
+  '@types/chrome@0.1.1':
+    resolution: {integrity: sha512-MLtFW++/n+OPQIaf5hA6pmURd3Zn+OxuvASyf2mYh8B8pHDpbhHjwlVHMw3H/aJC9Z7Z3itO0AFaZeegrGk0yA==}
 
   '@types/deep-eql@4.0.2':
     resolution: {integrity: sha512-c9h9dVVMigMPc4bwTvC5dxqtqJZwQPePsWjPlpSOnojbor6pGqdk541lfA7AqFQr5pB1BRdq0juY9db81BwyFw==}
@@ -7200,7 +7203,7 @@ snapshots:
     dependencies:
       '@types/deep-eql': 4.0.2
 
-  '@types/chrome@0.0.290':
+  '@types/chrome@0.1.1':
     dependencies:
       '@types/filesystem': 0.0.36
       '@types/har-format': 1.2.16

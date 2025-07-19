@@ -19,7 +19,7 @@
     "@eslint/js": "^9.18.0",
     "@rsbuild/core": "^1.4.3",
     "@rsbuild/plugin-svelte": "^1.0.5",
-    "@types/chrome": "^0.0.290",
+    "@types/chrome": "^0.1.1",
     "eslint": "^9.18.0",
     "eslint-plugin-svelte": "^2.46.1",
     "globals": "^15.14.0",
