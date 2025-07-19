@@ -349,7 +349,7 @@ export async function copyEntryFiles({
     throw new Error("Source directory doesn't exist");
   }
   if (!existsSync(destPath)) {
-    await mkdir(destPath);
+    await mkdir(destPath, { recursive: true });
   }
 
   const files = await readdir(sourcePath, { withFileTypes: true });
