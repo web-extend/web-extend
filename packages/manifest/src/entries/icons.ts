@@ -1,8 +1,8 @@
 import { existsSync } from 'node:fs';
 import { readdir } from 'node:fs/promises';
 import { basename, relative, resolve } from 'node:path';
+import type { WebExtendManifest } from '../browser.js';
 import type { ManifestEntryProcessor } from '../types.js';
-import type { ExtensionManifest } from '../browser.js';
 
 const key = 'icons';
 
@@ -31,7 +31,7 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
   const iconsPath = resolve(rootPath, entriesDir.root, entriesDir.icons);
   if (existsSync(iconsPath)) {
     const files = await readdir(iconsPath);
-    const declarativeIcons: ExtensionManifest['icons'] = {};
+    const declarativeIcons: WebExtendManifest['icons'] = {};
     for (const file of files) {
       const filePath = resolve(iconsPath, file);
       const size = matchDeclarativeEntry(filePath, context)?.size || null;
@@ -64,7 +64,7 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
   const pointer = action || browser_action;
   const files = new Set<string>();
 
-  function helper(icons?: ExtensionManifest['icons']) {
+  function helper(icons?: WebExtendManifest['icons']) {
     if (!icons) return;
     for (const size in icons) {
       const file = icons[size];
@@ -101,7 +101,7 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, output, co
 
   const { rootPath } = context;
 
-  function helper(icons: ExtensionManifest['icons']) {
+  function helper(icons: WebExtendManifest['icons']) {
     if (!icons) return;
     for (const size in icons) {
       const file = icons[size];

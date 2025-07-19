@@ -1,10 +1,10 @@
-export interface ExtensionManifest {
+export interface WebExtendManifest {
   action?: ManifestAction;
   browser_action?: ManifestAction;
   background?: {
     scripts?: string[];
     service_worker?: string;
-    type?: 'module';
+    type?: 'module' | 'classic';
   };
   chrome_url_overrides?: ManifestChromeUrlOverrides;
   commands?: Record<string, ManifestCommandItem>;
@@ -105,3 +105,7 @@ export type ManifestWebAccessibleResourcesC2ItemType = {
 };
 
 type IconPath = Record<string, string> | string;
+
+export const defineManifest = <T = WebExtendManifest>(manifest: Partial<T>) => {
+  return manifest;
+};

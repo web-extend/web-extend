@@ -197,7 +197,7 @@ Options:
 
 #### manifest
 
-- Type: `ExtensionManifest`
+- Type: `WebExtendManifest`
 - Default: `{}`
 
 Customize `manifest` configuration. WebExtend will merge the `manifest` option and the fields parsed from entry files (the previous takes precedence). The merged configuration will be used to generate `manifest.json` automatically.

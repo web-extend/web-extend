@@ -2,6 +2,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { RsbuildConfig, RsbuildPlugin } from '@rsbuild/core';
 import { ManifestManager } from '@web-extend/manifest';
+import type { WebExtendManifest } from '@web-extend/manifest/browser';
 import { isDevMode } from '@web-extend/manifest/common';
 import type {
   WebExtendCommonConfig,
@@ -9,7 +10,6 @@ import type {
   WebExtendEntryInput,
   WebExtendEntryOutput,
 } from '@web-extend/manifest/types';
-import type { ExtensionManifest } from '@web-extend/manifest/browser';
 import { ContentRuntimePlugin, hotUpdateGlobal } from './content.js';
 import { normalizeRsbuildEnvironments } from './environments.js';
 import { clearOutdatedHotUpdateFiles } from './helper.js';
@@ -39,7 +39,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
           background: resolve(__dirname, 'static/background-runtime.js'),
           contentBridge: resolve(__dirname, 'static/content-bridge.js'),
         },
-        manifest: options.manifest as ExtensionManifest,
+        manifest: options.manifest as WebExtendManifest,
       });
 
       const { target, outDir, publicDir, mode, entriesDir } = manifestManager.context;

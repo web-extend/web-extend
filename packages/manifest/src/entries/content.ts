@@ -1,6 +1,7 @@
 import { existsSync } from 'node:fs';
 import { copyFile, mkdir, readFile } from 'node:fs/promises';
 import { basename, posix, resolve } from 'node:path';
+import type { ContentScriptConfig, ManifestContentScript } from '../browser.js';
 import {
   getMultipleDeclarativeEntryFile,
   getSingleDeclarativeEntryFile,
@@ -10,7 +11,6 @@ import {
 } from '../common.js';
 import { parseExportObject } from '../parser/export.js';
 import type { DeclarativeEntryFileResult, ManifestEntryProcessor, WebExtendEntries } from '../types.js';
-import type { ContentScriptConfig, ManifestContentScript } from '../browser.js';
 
 const key = 'contents';
 

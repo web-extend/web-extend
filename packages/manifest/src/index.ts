@@ -1,6 +1,7 @@
 import { existsSync } from 'node:fs';
 import { cp, mkdir, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
+import type { WebExtendManifest } from './browser.js';
 import {
   isDevMode,
   normalizeEntriesDir,
@@ -20,10 +21,9 @@ import type {
   WebExtendEntryKey,
   WebExtendEntryOutput,
 } from './types.js';
-import type { ExtensionManifest } from './browser.js';
 
 async function initManifest(rootPath: string, target?: ExtensionTarget) {
-  const manifest: Partial<ExtensionManifest> = {
+  const manifest: Partial<WebExtendManifest> = {
     manifest_version: target?.includes('2') ? 2 : 3,
   };
 
@@ -76,7 +76,7 @@ export const normalizeContext = (options: NormalizeContextOptions): WebExtendCon
 export class ManifestManager {
   public context = {} as WebExtendContext;
   public entries: WebExtendEntries = {};
-  private manifest = {} as ExtensionManifest;
+  private manifest = {} as WebExtendManifest;
 
   async normalize(options: NormalizeContextOptions) {
     this.context = normalizeContext(options);
@@ -90,13 +90,13 @@ export class ManifestManager {
     });
   }
 
-  async normalizeEntries({ manifest = {} as ExtensionManifest }: NormalizeManifestProps) {
+  async normalizeEntries({ manifest = {} as WebExtendManifest }: NormalizeManifestProps) {
     const { rootPath, target, mode } = this.context;
     const defaultManifest = await initManifest(rootPath, target);
     const finalManifest = {
       ...defaultManifest,
       ...manifest,
-    } as ExtensionManifest;
+    } as WebExtendManifest;
     const entries: WebExtendEntries = {};
 
     const requiredFields = ['name', 'version'];

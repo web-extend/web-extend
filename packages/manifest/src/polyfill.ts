@@ -1,6 +1,6 @@
+import type { ManifestWebAccessibleResourcesC2ItemType } from './browser.js';
 import { isDevMode } from './common.js';
 import type { NormalizeManifestProps } from './types.js';
-import type { ManifestWebAccessibleResourcesC2ItemType } from './browser.js';
 
 function polyfillManifestBetweenBrowsers({ manifest, context }: NormalizeManifestProps) {
   if (!manifest || !context) return;

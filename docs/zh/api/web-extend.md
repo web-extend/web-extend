@@ -197,7 +197,7 @@ Options:
 
 #### manifest
 
-- 类型: `ExtensionManifest`
+- 类型: `WebExtendManifest`
 - 默认值: `{}`
 
 `manifest` 配置。WebExtend 会合并 `manifest` 选项和入口文件信息（前者有更高的优先级），在构建时自动生成 `manifest.json`。

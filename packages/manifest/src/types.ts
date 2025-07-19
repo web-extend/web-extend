@@ -1,5 +1,4 @@
-import type { ContentScriptConfig, ExtensionManifest } from './browser.js';
-
+import type { ContentScriptConfig, WebExtendManifest } from './browser.js';
 
 export type ExtensionTarget = 'chrome-mv3' | 'firefox-mv2' | 'firefox-mv3' | 'safari-mv3' | 'edge-mv3' | 'opera-mv3';
 
@@ -55,18 +54,18 @@ export interface WebExtendRuntime {
 }
 
 export interface NormalizeManifestProps {
-  manifest?: ExtensionManifest;
+  manifest?: WebExtendManifest;
   context?: WebExtendContext;
 }
 
 export interface NormalizeMainfestEntryProps {
-  manifest: ExtensionManifest;
+  manifest: WebExtendManifest;
   context: WebExtendContext;
   entries: WebExtendEntries;
 }
 
 export interface WriteMainfestEntryItemProps {
-  manifest: ExtensionManifest;
+  manifest: WebExtendManifest;
   rootPath: string;
   context: WebExtendContext;
   name: string;
@@ -76,7 +75,7 @@ export interface WriteMainfestEntryItemProps {
 
 export interface WriteManifestFileProps {
   distPath: string;
-  manifest: ExtensionManifest;
+  manifest: WebExtendManifest;
   mode: string | undefined;
   runtime?: WebExtendRuntime;
 }
@@ -95,8 +94,8 @@ export interface WebExtendContext {
   runtime?: WebExtendRuntime;
 }
 
-export interface WebExtendCommonConfig {
-  manifest?: ExtensionManifest | ((props: { target: ExtensionTarget; mode: string }) => ExtensionManifest);
+export interface WebExtendCommonConfig<T = WebExtendManifest> {
+  manifest?: T | ((props: { target: ExtensionTarget; mode: string }) => T);
   target?: ExtensionTarget;
   /**
    * @deprecated Use `entriesDir` instead.
