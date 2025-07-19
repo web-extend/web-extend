@@ -2,8 +2,7 @@ import { existsSync } from 'node:fs';
 import { copyFile, cp, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { basename, dirname, extname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { spinner } from '@clack/prompts';
-import { checkbox, input, select } from '@inquirer/prompts';
+import { intro, spinner, text, isCancel, cancel, select, multiselect, note, outro } from '@clack/prompts';
 import { normalizeEntriesDir } from '@web-extend/manifest/common';
 import type { WebExtendEntriesDir } from '@web-extend/manifest/types';
 import chalk from 'chalk';
@@ -14,153 +13,198 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO = 'web-extend/examples';
 
 interface InitOptions {
+  rootPath?: string;
   projectName?: string;
+  override?: boolean;
   template?: string;
   entries?: string[];
-  // override?: boolean;
   tools?: string[];
+}
+
+function welcome() {
+  console.log();
+  intro(chalk.cyan('🚀 Welcome to WebExtend!'));
+}
+
+function farewell(options: InitOptions) {
+  const pkgManager = 'npm';
+  const nextSteps = [
+    `1. ${`cd ${options.projectName}`}`,
+    `2. ${'git init'} ${chalk.dim('(optional)')}`,
+    `3. ${pkgManager} install`,
+    `4. ${pkgManager} run dev`,
+  ];
+  note(nextSteps.map((step) => chalk.reset(step)).join('\n'), 'Next steps');
+  outro('Done');
 }
 
 function isRemoteTemplate(template: string) {
   return template.startsWith('with-');
 }
 
-export async function normalizeTemplate(text?: string) {
-  let template = '';
+export async function normalizeTemplate(value?: string) {
+  let template = value;
+
   // only support ts template
   const variant = 'ts';
-  if (!text) {
-    const framework = await select({
+  if (!template) {
+    const result = await select({
       message: 'Select framework',
-      choices: frameworks,
+      options: frameworks.map((item) => ({ label: item.name, value: item.value })),
     });
-    template = `${framework}-${variant}`;
+    if (isCancel(result)) {
+      cancel('Operation cancelled.');
+      process.exit(0);
+    }
+    template = `${result}-${variant}`;
   } else {
-    const list = text.split('-');
-    const framework = list[0];
+    const framework = template.split('-')[0];
     template = `${framework}-${variant}`;
   }
 
   if (!entryTemplates.includes(template)) {
     throw new Error("Template doesn't exist");
   }
+
   return template;
 }
 
-function welcome() {
-  console.log(chalk.cyan('\n 🚀 Welcome to WebExtend! \n'));
-}
+async function normalizeProjectName(options: InitOptions) {
+  let projectName = options.projectName;
+  let override = options.override;
 
-function farewell(options: InitOptions) {
-  const { projectName } = options;
-  if (!projectName) return;
-  const pkgManager = 'npm';
-  console.log('\nDone. Next steps:');
-  console.group();
-  console.log(`1. cd ${projectName}`);
-  console.log(`2. git init ${chalk.dim('(optional)')}`);
-  console.log(`3. ${pkgManager} install`);
-  console.log(`4. ${pkgManager} run dev`);
-  console.groupEnd();
-  console.log();
+  if (!projectName) {
+    const result = await text({
+      message: 'Project name',
+      placeholder: 'my-extension-app',
+      validate(value) {
+        if (!value) return 'Project name is required!';
+      },
+    });
+    if (isCancel(result)) {
+      cancel('Operation cancelled.');
+      process.exit(0);
+    }
+    projectName = result;
+  }
+
+  const projectPath = resolve(options.rootPath || process.cwd(), projectName);
+  if (existsSync(projectPath)) {
+    const result =
+      override !== undefined
+        ? override
+        : await select({
+            message: `"${projectName}" is not empty, please choose`,
+            options: [
+              {
+                label: 'Cancel operation',
+                value: false,
+              },
+              {
+                label: 'Continue and override files',
+                value: true,
+              },
+            ],
+          });
+
+    if (isCancel(result) || !result) {
+      cancel('Operation cancelled.');
+      process.exit(0);
+    }
+    override = result;
+  } else {
+    override = true;
+  }
+
+  return { projectName, override };
 }
 
 export async function normalizeInitOptions(options: InitOptions) {
   welcome();
 
-  // normalize projectName
-  if (!options.projectName) {
-    options.projectName = await input({ message: 'Project name', default: 'my-extension-app' });
-  }
-  const root = process.cwd();
-  const projectPath = resolve(root, options.projectName);
-  if (existsSync(projectPath)) {
-    const override = await select({
-      message: `${options.projectName} is not empty, please choose`,
-      choices: [
-        {
-          name: 'Cancel operation',
-          value: false,
-        },
-        {
-          name: 'Continue and override files',
-          value: true,
-        },
-      ],
-    });
-    if (!override) {
-      const error = new Error('Cancel operation');
-      error.name = 'ExitPromptError';
-      throw error;
-    }
+  if (!options.rootPath) {
+    options.rootPath = process.cwd();
   }
 
-  // normalize template
-  if (isRemoteTemplate(options.template || '')) {
+  const { projectName, override } = await normalizeProjectName(options);
+  options.projectName = projectName;
+  options.override = override;
+
+  if (options.template && isRemoteTemplate(options.template)) {
     return options;
   }
   options.template = await normalizeTemplate(options.template);
 
-  // normalize entries
   if (!options.entries?.length) {
-    options.entries = await checkbox({
+    const result = await multiselect({
       message: 'Select entrypoints',
-      choices: entrypointItems,
-      loop: false,
+      options: entrypointItems.map((item) => ({ label: item.name, value: item.value })),
       required: true,
     });
-    if (options.entries.includes('page')) {
-      const name = await input({ message: 'What is the name of page?', required: true });
-      options.entries = options.entries.filter((item) => item !== 'page').concat(`pages/${name}`);
+    if (isCancel(result)) {
+      cancel('Operation cancelled.');
+      process.exit(0);
     }
+    options.entries = result;
   }
 
-  // normalize tools
   if (!options.tools?.length) {
-    options.tools = await checkbox({
+    const result = await multiselect({
       message: 'Select additional tools',
-      choices: tools,
-      loop: false,
+      options: tools.map((item) => ({ label: item.name, value: item.value })),
+      required: false,
     });
+    if (isCancel(result)) {
+      cancel('Operation cancelled.');
+      process.exit(0);
+    }
+    options.tools = result;
   }
 
   return options;
+}
+
+async function createProjectFromRemoteTemplate(template: string, destPath: string) {
+  const s = spinner();
+  s.start('Downloading template...');
+  try {
+    await downloadTemplate(`gh:${REPO}/${template}`, {
+      dir: destPath,
+      force: true,
+    });
+    s.stop('Downloaded template');
+  } catch (error) {
+    s.stop('Failed to download template');
+    throw error;
+  }
+}
+
+async function createProjectFromLocalTemplate(template: string, destPath: string, options: InitOptions) {
+  const templatePath = getTemplatePath(template);
+  if (!existsSync(destPath)) {
+    await mkdir(destPath);
+  }
+  await copyTemplate(templatePath, destPath, options);
+
+  const entriesDir = normalizeEntriesDir(destPath, {});
+  const entrypoints = await normalizeEntrypoints(options.entries || [], entriesDir);
+  await copyEntryFiles({
+    sourcePath: resolve(templatePath, 'src'),
+    destPath: resolve(destPath, entriesDir.root),
+    entrypoints,
+  });
 }
 
 export async function createProject(options: InitOptions) {
   const { projectName, template } = options;
   if (!projectName || !template) return;
 
-  const root = process.cwd();
-  const destPath = resolve(root, projectName);
+  const destPath = resolve(options.rootPath || process.cwd(), projectName);
 
   if (isRemoteTemplate(template)) {
-    const s = spinner();
-    s.start('Downloading template...');
-    try {
-      await downloadTemplate(`gh:${REPO}/${template}`, {
-        dir: destPath,
-        force: true,
-      });
-      s.stop('Downloaded template');
-    } catch (error) {
-      s.stop('Failed to download template');
-      throw error;
-    }
+    await createProjectFromRemoteTemplate(template, destPath);
   } else {
-    const templatePath = getTemplatePath(template);
-    if (!existsSync(destPath)) {
-      await mkdir(destPath);
-    }
-    await copyTemplate(templatePath, destPath, options);
-
-    const entriesDir = normalizeEntriesDir(destPath, {});
-    const entrypoints = await normalizeEntrypoints(options.entries || [], entriesDir);
-    await copyEntryFiles({
-      sourcePath: resolve(templatePath, 'src'),
-      destPath: resolve(destPath, entriesDir.root),
-      entrypoints,
-    });
+    await createProjectFromLocalTemplate(template, destPath, options);
   }
 
   await modifyPackageJson(destPath, options);
@@ -262,10 +306,6 @@ export async function normalizeEntrypoints(entries: string[], entriesDir: WebExt
     }
 
     let entryName = entry;
-    if (entry === 'page') {
-      const name = await input({ message: 'What is the name of page?', required: true });
-      entryName = `${item.multiplePrefix}/${name}`;
-    }
 
     // map entryName to entriesDir
     if (entryName in entriesDir) {
@@ -311,7 +351,5 @@ export async function copyEntryFiles({
 
 export async function init(cliOptions: InitOptions) {
   const options = await normalizeInitOptions(cliOptions);
-  if (options) {
-    await createProject(options);
-  }
+  await createProject(options);
 }

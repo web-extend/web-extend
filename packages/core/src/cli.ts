@@ -41,10 +41,6 @@ function applyInitCommand(command: Command) {
           ...otherOptions,
         });
       } catch (error) {
-        if (error instanceof Error && error.name === 'ExitPromptError') {
-          console.log(`${chalk.red('✕')} ${chalk.bold('Operation Canceled')}`);
-          return;
-        }
         console.error('Failed to create the project.');
         console.error(error);
         process.exit(1);

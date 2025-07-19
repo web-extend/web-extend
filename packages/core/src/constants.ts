@@ -50,7 +50,7 @@ export type EntryPointType =
   | 'options'
   | 'sidepanel'
   | 'devtools'
-  | 'page'
+  | 'panel'
   | 'newtab'
   | 'bookmarks'
   | 'history'
@@ -98,10 +98,10 @@ export const entrypointItems: EntrypointItem[] = [
     template: 'devtools',
   },
   {
-    name: 'page',
-    value: 'page',
+    name: 'panel',
+    value: 'panel',
     template: 'web',
-    multiplePrefix: 'pages',
+    multiplePrefix: 'panels',
   },
   {
     name: 'newtab',
