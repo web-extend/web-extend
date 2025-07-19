@@ -187,38 +187,13 @@ Options:
 
 Options:
 
-- [`manifest`](#manifest)
-- [`target`](#target)
 - [`entriesDir`](#entriesDir)
 - [`outDir`](#outDir)
 - [`publicDir`](#publicDir)
+- [`manifest`](#manifest)
+- [`target`](#target)
 - [`rsbuild`](#rsbuild)
 - [`webExt`](#webExt)
-
-#### manifest
-
-- Type: `WebExtendManifest`
-- Default: `{}`
-
-Customize `manifest` configuration. WebExtend will merge the `manifest` option and the fields parsed from entry files (the previous takes precedence). The merged configuration will be used to generate `manifest.json` automatically.
-
-#### target
-
-- Type:
-
-```ts
-type WebExtendTarget =
-  | "chrome-mv3"
-  | "firefox-mv2"
-  | "firefox-mv3"
-  | "safari-mv3"
-  | "edge-mv3"
-  | "opera-mv3";
-```
-
-- Default: `"chrome-mv3"`
-
-Customize browser target.
 
 #### entriesDir
 
@@ -241,23 +216,44 @@ Customize dist path.
 
 Customize public path.
 
-#### rsbuild
+#### manifest
 
-- Type: `RsbuildConfig`
+- Type: [`WebExtendManifest`](#web-extend-manifest)
 - Default: `{}`
 
-See [Rsbuild Configuration](https://rsbuild.rs/config/) for more details.
+Customize `manifest` configuration. WebExtend will merge the `manifest` option and the fields parsed from entry files (the previous takes precedence). The merged configuration will be used to generate `manifest.json` automatically.
+
+#### target
+
+- Type:
+
+```ts
+type WebExtendTarget =
+  | "chrome-mv3"
+  | "firefox-mv2"
+  | "firefox-mv3"
+  | "safari-mv3"
+  | "edge-mv3"
+  | "opera-mv3";
+```
+
+- Default: `"chrome-mv3"`
+
+Customize browser target.
+
+#### rsbuild
+
+- Type: [`RsbuildConfig`](https://rsbuild.rs/config/)
+- Default: `{}`
 
 #### webExt
 
-- Type: `WebExtConfig`
+- Type: [`WebExtConfig`](#web-ext-config)
 - Default: `{}`
-
-See [web-ext run](https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#web-ext-run) for a full list of configurations.
 
 Usage:
 
-```ts [web-extend.config.js]
+```ts [web-extend.config.ts]
 import { defineConfig } from 'web-extend';
 
 export default defineConfig({
@@ -274,7 +270,7 @@ export default defineConfig({
 
 Usage:
 
-```js [web-ext.config.js]
+```ts [web-ext.config.ts]
 import { defineWebExtConfig } from "web-extend";
 
 export default defineWebExtConfig({
@@ -286,7 +282,7 @@ export default defineWebExtConfig({
 
 ## Types
 
-### ContentScriptConfig
+### ContentScriptConfig {#content-script-config}
 
 - Type:
 
@@ -316,14 +312,14 @@ export const config: ContentScriptConfig = {
 };
 ```
 
-### WebExtendManifest
+### WebExtendManifest {#web-extend-manifest}
 
 source: [`packages/manifest/src/types.ts`](https://github.com/web-extend/web-extend/blob/main/packages/manifest/src/types.ts)
 
-### WebExtendConfig
+### WebExtendConfig {#web-extend-config}
 
 source: [`packages/core/src/config.ts`](https://github.com/web-extend/web-extend/blob/main/packages/core/src/config.ts#L9)
 
-### WebExtConfig
+### WebExtConfig {#web-ext-config}
 
 source: [`packages/core/src/runner.ts`](https://github.com/web-extend/web-extend/blob/main/packages/core/src/runner.ts#L46)

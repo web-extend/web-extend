@@ -187,36 +187,13 @@ Options:
 
 选项：
 
-- [`manifest`](#manifest)
-- [`target`](#target)
 - [`entriesDir`](#entriesDir)
 - [`outDir`](#outDir)
 - [`publicDir`](#publicDir)
+- [`manifest`](#manifest)
+- [`target`](#target)
 - [`rsbuild`](#rsbuild)
 - [`webExt`](#webExt)
-
-#### manifest
-
-- 类型: `WebExtendManifest`
-- 默认值: `{}`
-
-`manifest` 配置。WebExtend 会合并 `manifest` 选项和入口文件信息（前者有更高的优先级），在构建时自动生成 `manifest.json`。
-
-#### target
-
-- 类型:
-
-```ts
-type WebExtendTarget =
-  | "chrome-mv3"
-  | "firefox-mv2"
-  | "firefox-mv3"
-  | "safari-mv3"
-  | "edge-mv3"
-  | "opera-mv3";
-```
-
-- 默认值: `"chrome-mv3"`
 
 #### entriesDir
 
@@ -239,23 +216,42 @@ type WebExtendTarget =
 
 设置公共目录。
 
-#### rsbuild
+#### manifest
 
-- 类型: `RsbuildConfig`
+- 类型: [`WebExtendManifest`](#web-extend-manifest)
 - 默认值: `{}`
 
-参考 [Rsbuild Configuration](https://rsbuild.rs/config/) 了解更多配置项。
+`manifest` 配置。WebExtend 会合并 `manifest` 选项和入口文件信息（前者有更高的优先级），在构建时自动生成 `manifest.json`。
+
+#### target
+
+- 类型:
+
+```ts
+type WebExtendTarget =
+  | "chrome-mv3"
+  | "firefox-mv2"
+  | "firefox-mv3"
+  | "safari-mv3"
+  | "edge-mv3"
+  | "opera-mv3";
+```
+
+- 默认值: `"chrome-mv3"`
+
+#### rsbuild
+
+- 类型: [`RsbuildConfig`](https://rsbuild.rs/config/)
+- 默认值: `{}`
 
 #### webExt
 
-- 类型: `WebExtConfig`
+- 类型: [`WebExtConfig`](#web-ext-config)
 - 默认值: `{}`
-
-参考 [web-ext run](https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#web-ext-run) 了解更多配置项。
 
 使用：
 
-```ts [web-extend.config.js]
+```ts [web-extend.config.ts]
 import { defineConfig } from 'web-extend';
 
 export default defineConfig({
@@ -272,7 +268,7 @@ export default defineConfig({
 
 使用：
 
-```js [web-ext.config.js]
+```ts [web-ext.config.ts]
 import { defineWebExtConfig } from "web-extend";
 
 export default defineWebExtConfig({
@@ -284,7 +280,7 @@ export default defineWebExtConfig({
 
 ## 类型
 
-### ContentScriptConfig
+### ContentScriptConfig {#content-script-config}
 
 - 类型：
 
@@ -313,3 +309,15 @@ export const config: ContentScriptConfig = {
   matches: ["https://www.google.com/*"],
 };
 ```
+
+### WebExtendManifest {#web-extend-manifest}
+
+源码: [`packages/manifest/src/types.ts`](https://github.com/web-extend/web-extend/blob/main/packages/manifest/src/types.ts)
+
+### WebExtendConfig {#web-extend-config}
+
+源码: [`packages/core/src/config.ts`](https://github.com/web-extend/web-extend/blob/main/packages/core/src/config.ts#L9)
+
+### WebExtConfig {#web-ext-config}
+
+源码: [`packages/core/src/runner.ts`](https://github.com/web-extend/web-extend/blob/main/packages/core/src/runner.ts#L46)

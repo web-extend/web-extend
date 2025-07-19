@@ -106,7 +106,7 @@ export interface WebExtendCommonConfig<T = WebExtendManifest> {
   outDir?: string;
   buildDirTemplate?: string;
   publicDir?: string;
-  entriesDir?: string;
+  entriesDir?: string | Partial<WebExtendEntriesDir>;
 }
 
 export type NormalizeContextOptions = Partial<Pick<WebExtendContext, 'rootPath' | 'mode' | 'runtime'>> &
