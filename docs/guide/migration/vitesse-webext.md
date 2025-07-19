@@ -12,7 +12,7 @@ We adapted it to WebExtend. So you can use it to create a new project.
 npx web-extend@latest init --template with-vitesse-webext
 ```
 
-If you want to migrate an existing project, just follow the steps below.
+If you want to migrate an existing vitesse-webext project, just follow the steps below.
 
 ## Installing dependencies
 
