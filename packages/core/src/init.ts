@@ -356,10 +356,10 @@ export async function copyEntryFiles({
 
   const files = await readdir(sourcePath, { withFileTypes: true });
   for (const item of entrypoints) {
-    const { name, template } = item;
+    const { name, template, value } = item;
     const sourceFile = files.find((item) => template && item.name.startsWith(template));
     if (!sourceFile) {
-      log.warn(`${name}'s template is not found, the entrypoint will be ignored.`);
+      log.warn(`${value}'s template is not found, the entrypoint will be ignored.`);
       continue;
     }
 
