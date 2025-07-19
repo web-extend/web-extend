@@ -2,13 +2,13 @@ import { existsSync } from 'node:fs';
 import { copyFile, cp, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { basename, dirname, extname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { spinner } from '@clack/prompts';
 import { checkbox, input, select } from '@inquirer/prompts';
 import { normalizeEntriesDir } from '@web-extend/manifest/common';
 import type { WebExtendEntriesDir } from '@web-extend/manifest/types';
 import chalk from 'chalk';
 import { downloadTemplate } from 'giget';
 import { type EntrypointItem, entryTemplates, entrypointItems, frameworks, tools } from './constants.js';
-import { spinner } from '@clack/prompts';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO = 'web-extend/examples';
