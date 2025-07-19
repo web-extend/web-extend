@@ -1,7 +1,8 @@
 import { existsSync } from 'node:fs';
 import { readdir } from 'node:fs/promises';
 import { basename, relative, resolve } from 'node:path';
-import type { ExtensionManifest, ManifestEntryProcessor } from '../types.js';
+import type { ManifestEntryProcessor } from '../types.js';
+import type { ExtensionManifest } from '../browser.js';
 
 const key = 'icons';
 

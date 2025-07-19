@@ -3,13 +3,13 @@ import { readFile, readdir } from 'node:fs/promises';
 import { basename, dirname, extname, join, relative, resolve, sep } from 'node:path';
 import type {
   DeclarativeEntryFileResult,
-  ExtensionManifest,
   ExtensionTarget,
   WebExtendContext,
   WebExtendEntriesDir,
   WebExtendEntryDirKey,
   WebExtendEntryType,
 } from './types.js';
+import type { ExtensionManifest } from './browser.js';
 
 const scriptExts = ['.ts', '.js', '.tsx', '.jsx', '.mts', '.cts', '.mjs', '.cjs'];
 const styleExts = ['.css', '.scss', '.sass', '.less', '.styl', '.stylus'];

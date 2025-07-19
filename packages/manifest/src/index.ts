@@ -12,7 +12,6 @@ import {
 import { entryProcessors } from './entries/index.js';
 import { polyfillManifest } from './polyfill.js';
 import type {
-  ExtensionManifest,
   ExtensionTarget,
   NormalizeContextOptions,
   NormalizeManifestProps,
@@ -21,6 +20,7 @@ import type {
   WebExtendEntryKey,
   WebExtendEntryOutput,
 } from './types.js';
+import type { ExtensionManifest } from './browser.js';
 
 async function initManifest(rootPath: string, target?: ExtensionTarget) {
   const manifest: Partial<ExtensionManifest> = {

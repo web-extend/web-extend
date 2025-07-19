@@ -1,5 +1,6 @@
 import { getSingleDeclarativeEntryFile, matchSingleDeclarativeEntryFile } from '../common.js';
-import type { ManifestChromeUrlOverrides, ManifestEntryProcessor } from '../types.js';
+import type { ManifestEntryProcessor } from '../types.js';
+import type { ManifestChromeUrlOverrides } from '../browser.js';
 
 const overrides = ['newtab', 'history', 'bookmarks'] as const;
 

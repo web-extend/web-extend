@@ -4,12 +4,12 @@ import type { RsbuildConfig, RsbuildPlugin } from '@rsbuild/core';
 import { ManifestManager } from '@web-extend/manifest';
 import { isDevMode } from '@web-extend/manifest/common';
 import type {
-  ExtensionManifest,
   WebExtendCommonConfig,
   WebExtendEntries,
   WebExtendEntryInput,
   WebExtendEntryOutput,
 } from '@web-extend/manifest/types';
+import type { ExtensionManifest } from '@web-extend/manifest/browser';
 import { ContentRuntimePlugin, hotUpdateGlobal } from './content.js';
 import { normalizeRsbuildEnvironments } from './environments.js';
 import { clearOutdatedHotUpdateFiles } from './helper.js';

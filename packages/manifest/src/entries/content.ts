@@ -9,13 +9,8 @@ import {
   matchSingleDeclarativeEntryFile,
 } from '../common.js';
 import { parseExportObject } from '../parser/export.js';
-import type {
-  ContentScriptConfig,
-  DeclarativeEntryFileResult,
-  ManifestContentScript,
-  ManifestEntryProcessor,
-  WebExtendEntries,
-} from '../types.js';
+import type { DeclarativeEntryFileResult, ManifestEntryProcessor, WebExtendEntries } from '../types.js';
+import type { ContentScriptConfig, ManifestContentScript } from '../browser.js';
 
 const key = 'contents';
 
