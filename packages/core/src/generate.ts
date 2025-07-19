@@ -4,7 +4,7 @@ import { normalizeEntriesDir } from '@web-extend/manifest/common';
 import type { WebExtendEntriesDir } from '@web-extend/manifest/types';
 import { loadWebExtendConfig } from './config.js';
 import { ENTRYPOINT_ITEMS } from './constants.js';
-import { copyEntryFiles, getTemplatePath, normalizeEntrypoints, normalizeTemplate } from './init.js';
+import { copyEntryFiles, normalizeEntrypoints, normalizeTemplatePath } from './init.js';
 
 export interface GenerateOptions {
   entries: string[];
@@ -74,13 +74,13 @@ export async function generate(options: GenerateOptions) {
 
   const otherEntries = entrypoints.filter((item) => item.value !== 'icons');
   if (otherEntries.length) {
-    const template = await normalizeTemplate(options.template);
-    const templatePath = getTemplatePath(template);
-
+    const templatePath = await normalizeTemplatePath(options.template);
     await copyEntryFiles({
       sourcePath: resolve(templatePath, 'src'),
       destPath: resolve(options.root, entriesDir.root),
       entrypoints: otherEntries,
     });
   }
+
+  console.log('Generated successfully!');
 }

@@ -39,9 +39,9 @@ export const variants = [
   },
 ];
 
-export const TEMPLATES = FRAMEWORKS.flatMap((framework) =>
-  variants.filter((variant) => !variant.disabled).map((variant) => `${framework.value}-${variant.value}`),
-);
+// export const TEMPLATES = FRAMEWORKS.flatMap((framework) =>
+//   variants.filter((variant) => !variant.disabled).map((variant) => `${framework.value}-${variant.value}`),
+// );
 
 export type EntryPointType =
   | 'background'

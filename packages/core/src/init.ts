@@ -2,12 +2,12 @@ import { existsSync } from 'node:fs';
 import { copyFile, cp, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { basename, dirname, extname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { cancel, intro, isCancel, multiselect, note, outro, select, spinner, text, log } from '@clack/prompts';
+import { cancel, intro, isCancel, log, multiselect, note, outro, select, spinner, text } from '@clack/prompts';
 import { normalizeEntriesDir } from '@web-extend/manifest/common';
 import type { WebExtendEntriesDir } from '@web-extend/manifest/types';
 import chalk from 'chalk';
 import { downloadTemplate } from 'giget';
-import { type EntrypointItem, TEMPLATES, ENTRYPOINT_ITEMS, FRAMEWORKS, REPO, tools } from './constants.js';
+import { ENTRYPOINT_ITEMS, type EntrypointItem, FRAMEWORKS, REPO, tools } from './constants.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -25,7 +25,7 @@ interface InitOptions {
   projectName: string;
   override?: boolean;
   destPath: string;
-  template?: string;
+  templatePath: string;
   entriesDir: WebExtendEntriesDir;
   entrypoints?: EntrypointItem[];
   tools?: string[];
@@ -52,9 +52,8 @@ function isRemoteTemplate(template: string) {
   return template.startsWith('with-');
 }
 
-export async function normalizeTemplate(value?: string) {
+export async function normalizeTemplatePath(value?: string) {
   let template = value;
-
   // only support ts template
   const variant = 'ts';
   if (!template) {
@@ -72,12 +71,14 @@ export async function normalizeTemplate(value?: string) {
     template = `${framework}-${variant}`;
   }
 
-  if (!TEMPLATES.includes(template)) {
-    cancel(`"${value || template}" doesn't exist, please provide a valid template.`);
+  const templatePath = resolve(__dirname, `../templates/template-${template}`);
+  if (!existsSync(templatePath)) {
+    log.error(`Cannot find template ${value || template}`);
+    cancel('Operation cancelled.');
     process.exit(1);
   }
 
-  return template;
+  return templatePath;
 }
 
 async function normalizeProjectName(options: { rootPath: string; projectName?: string; override?: boolean }) {
@@ -202,14 +203,15 @@ export async function normalizeInitOptions(cliOptions: InitCliOptions) {
     rootPath,
     projectName,
     override,
+    templatePath: cliOptions.template || '',
     destPath,
     entriesDir,
   };
 
-  if (cliOptions.template && isRemoteTemplate(cliOptions.template)) {
+  if (options.templatePath && isRemoteTemplate(options.templatePath)) {
     return options;
   }
-  options.template = await normalizeTemplate(cliOptions.template);
+  options.templatePath = await normalizeTemplatePath(options.templatePath);
 
   options.entrypoints = await normalizeEntrypoints(
     cliOptions.entries,
@@ -244,29 +246,21 @@ async function createProjectFromRemoteTemplate(template: string, destPath: strin
     s.stop('Downloaded template');
   } catch (error) {
     s.stop('Failed to download template');
-    throw error;
+    cancel('Operation cancelled.');
+    process.exit(1);
   }
 }
 
-async function createProjectFromLocalTemplate(template: string, destPath: string, options: InitOptions) {
+async function createProjectFromLocalTemplate(templatePath: string, destPath: string, options: InitOptions) {
   if (!existsSync(destPath)) {
     await mkdir(destPath);
   }
-  const templatePath = getTemplatePath(template);
   await copyTemplate(templatePath, destPath, options);
   await copyEntryFiles({
     sourcePath: resolve(templatePath, 'src'),
     destPath: resolve(destPath, options.entriesDir.root),
     entrypoints: options.entrypoints || [],
   });
-}
-
-export function getTemplatePath(template: string) {
-  const templatePath = resolve(__dirname, `../templates/template-${template}`);
-  if (!existsSync(templatePath)) {
-    throw new Error(`Cannot find template ${template}`);
-  }
-  return templatePath;
 }
 
 async function copyTemplate(source: string, dest: string, options: InitCliOptions) {
@@ -308,7 +302,7 @@ async function copyTemplate(source: string, dest: string, options: InitCliOption
   }
 }
 
-async function modifyPackageJson(root: string, options: InitCliOptions) {
+async function modifyPackageJson(root: string, options: InitOptions) {
   const { projectName, tools = [] } = options;
   const pkgPath = resolve(root, 'package.json');
   const content = await readFile(pkgPath, 'utf-8');
@@ -318,7 +312,7 @@ async function modifyPackageJson(root: string, options: InitCliOptions) {
     newContent.name = basename(resolve(root, projectName));
   }
 
-  if (!isRemoteTemplate(options.template || '')) {
+  if (!isRemoteTemplate(options.templatePath || '')) {
     const scripts: Record<string, string | undefined> = newContent.scripts || {};
     const devDependencies: Record<string, string | undefined> = newContent.devDependencies || {};
 
@@ -374,13 +368,12 @@ export async function copyEntryFiles({
 
 export async function init(cliOptions: InitCliOptions) {
   const options = await normalizeInitOptions(cliOptions);
-  const { template, destPath } = options;
+  const { templatePath, destPath } = options;
 
-  if (!template) return;
-  if (isRemoteTemplate(template)) {
-    await createProjectFromRemoteTemplate(template, destPath);
+  if (isRemoteTemplate(templatePath)) {
+    await createProjectFromRemoteTemplate(templatePath, destPath);
   } else {
-    await createProjectFromLocalTemplate(template, destPath, options);
+    await createProjectFromLocalTemplate(templatePath, destPath, options);
   }
 
   await modifyPackageJson(destPath, options);

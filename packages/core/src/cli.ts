@@ -1,4 +1,3 @@
-import chalk from 'chalk';
 import { type Command, program } from 'commander';
 import { type GenerateOptions, generate } from './generate.js';
 import { init } from './init.js';
@@ -64,12 +63,7 @@ function applyGenerateCommand(command: Command) {
           options.size = options.size.flatMap((item) => item.split(','));
         }
         await generate(options);
-        console.log('Generated successfully!');
       } catch (error) {
-        if (error instanceof Error && error.name === 'ExitPromptError') {
-          console.log(`${chalk.red('✕')} ${chalk.bold('Operation Canceled')}`);
-          return;
-        }
         console.error('Failed to generate.');
         console.log(error);
         process.exit(1);
