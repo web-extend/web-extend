@@ -9,27 +9,30 @@ import { generate } from '../src/generate';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const rootDir = resolve(__dirname, 'main');
 const contentEntryPath = resolve(rootDir, 'src', 'content');
-// const iconsEntryPath = resolve(rootDir, 'src', 'assets');
+const iconsEntryPath = resolve(rootDir, 'src', 'assets');
 const popupEntryPath = resolve(rootDir, 'src', 'popup');
 
 describe('generate', () => {
-  // beforeAll(async () => {
-  //   for (const entryPath of [contentEntryPath, popupEntryPath]) {
-  //     if (existsSync(entryPath)) {
-  //       await rm(entryPath, { recursive: true });
-  //     }
-  //   }
-  // });
+  beforeAll(async () => {
+    for (const entryPath of [contentEntryPath, popupEntryPath]) {
+      if (existsSync(entryPath)) {
+        await rm(entryPath, { recursive: true });
+      }
+    }
+  });
 
   it('should generate entrypoints', async () => {
     expect(existsSync(contentEntryPath)).toBe(false);
+    expect(existsSync(popupEntryPath)).toBe(false);
+
     const cliOptions = {
       root: rootDir,
-      entries: ['content'],
+      entries: ['icons', 'content', 'popup'],
     };
     await generate(cliOptions);
+
     expect(existsSync(contentEntryPath)).toBe(true);
-    // expect(existsSync(iconsEntryPath)).toBe(true);
-    // expect(existsSync(popupEntryPath)).toBe(true);
+    expect(existsSync(iconsEntryPath)).toBe(true);
+    expect(existsSync(popupEntryPath)).toBe(true);
   });
 });
