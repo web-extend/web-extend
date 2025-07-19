@@ -186,8 +186,6 @@ export async function normalizeEntrypoints(
 }
 
 export async function normalizeInitOptions(cliOptions: InitCliOptions) {
-  welcome();
-
   const rootPath = cliOptions.root || process.cwd();
 
   const { projectName, override } = await normalizeProjectName({
@@ -255,7 +253,7 @@ async function createProjectFromRemoteTemplate(template: string, destPath: strin
 
 async function createProjectFromLocalTemplate(templatePath: string, destPath: string, options: InitOptions) {
   if (!existsSync(destPath)) {
-    await mkdir(destPath);
+    await mkdir(destPath, { recursive: true });
   }
   await copyTemplate(templatePath, destPath, options);
   await copyEntryFiles({
@@ -369,6 +367,7 @@ export async function copyEntryFiles({
 }
 
 export async function init(cliOptions: InitCliOptions) {
+  welcome();
   const options = await normalizeInitOptions(cliOptions);
   const { templatePath, destPath } = options;
 
