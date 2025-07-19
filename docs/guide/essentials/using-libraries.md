@@ -277,14 +277,14 @@ Import UnoCSS to your CSS entry file.
 Now you can use UnoCSS in your components or HTML.
 
 ```tsx
-<div class="m-1">>Hello world!</div>
+<div class="m-1">Hello world!</div>
 ```
 
-## Auto Imports
+## Unplugin
+
+### unplugin-auto-import
 
 [unplugin-auto-import](https://github.com/unplugin/unplugin-auto-import) is a library for auto importing APIs on-demand. To use it in a WebExtend project, you need to register the corresponding plugin.
-
-For example.
 
 ```ts [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
@@ -330,6 +330,23 @@ function openOptionsPage() {
     <button @click="openOptionsPage">Open Options</button>
   </main>
 </template>
+```
+
+### unplugin-icons
+
+[unplugin-icons](https://github.com/antfu/unplugin-icons) is a library for importing icons as components. To use it in a WebExtend project, you need to register the corresponding plugin.
+
+```ts [rsbuild.config.ts]
+import { defineConfig } from "@rsbuild/core";
+import Icons from "unplugin-icons/rspack";
+
+export default defineConfig({
+  tools: {
+    rspack: {
+      plugins: [Icons()],
+    },
+  },
+});
 ```
 
 ## Linting & Formatting

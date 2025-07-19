@@ -277,14 +277,14 @@ export default defineConfig({
 在组件或 HTML 中使用 UnoCSS。
 
 ```tsx
-<div class="m-1">>Hello world!</div>
+<div class="m-1">Hello world!</div>
 ```
 
-## 自动导入
+## Unplugin
+
+### unplugin-auto-import
 
 [unplugin-auto-import](https://github.com/unplugin/unplugin-auto-import) 是一个用于按需自动导入 API 的库。若要在 WebExtend 项目中使它，需要引入对应的插件。
-
-示例如下。
 
 ```ts [rsbuild.config.ts]
 import { defineConfig } from "@rsbuild/core";
@@ -330,6 +330,23 @@ function openOptionsPage() {
     <button @click="openOptionsPage">Open Options</button>
   </main>
 </template>
+```
+
+### unplugin-icons
+
+[unplugin-icons](https://github.com/antfu/unplugin-icons) 是一个用于导入图标的库。若要在 WebExtend 项目中使用它，需要引入对应的插件。
+
+```ts [rsbuild.config.ts]
+import { defineConfig } from "@rsbuild/core";
+import Icons from "unplugin-icons/rspack";
+
+export default defineConfig({
+  tools: {
+    rspack: {
+      plugins: [Icons()],
+    },
+  },
+});
 ```
 
 ## 校验与格式化
