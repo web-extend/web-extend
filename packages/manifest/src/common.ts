@@ -4,7 +4,7 @@ import { basename, dirname, extname, join, relative, resolve, sep } from 'node:p
 import type { WebExtendManifest } from './browser.js';
 import type {
   DeclarativeEntryFileResult,
-  ExtensionTarget,
+  WebExtendTarget,
   WebExtendContext,
   WebExtendEntriesDir,
   WebExtendEntryDirKey,
@@ -178,7 +178,7 @@ export function isProdMode(mode?: string) {
   return mode === 'production';
 }
 
-const EXTENSION_TARGETS: ExtensionTarget[] = [
+const EXTENSION_TARGETS: WebExtendTarget[] = [
   'chrome-mv3',
   'firefox-mv3',
   'firefox-mv2',
@@ -189,13 +189,13 @@ const EXTENSION_TARGETS: ExtensionTarget[] = [
 
 export const defaultExtensionTarget = 'chrome-mv3';
 
-export function resolveTarget(target?: string): ExtensionTarget {
-  const envTarget = process.env.WEB_EXTEND_TARGET as ExtensionTarget;
+export function resolveTarget(target?: string): WebExtendTarget {
+  const envTarget = process.env.WEB_EXTEND_TARGET as WebExtendTarget;
   if (envTarget && EXTENSION_TARGETS.includes(envTarget)) {
     return envTarget;
   }
 
-  const optionTarget = target as ExtensionTarget;
+  const optionTarget = target as WebExtendTarget;
   if (optionTarget && EXTENSION_TARGETS.includes(optionTarget)) {
     return optionTarget;
   }
@@ -208,7 +208,7 @@ export function setTargetEnv(target: string) {
 
 interface ResolveOutDirProps {
   outDir?: string | undefined;
-  target?: ExtensionTarget;
+  target?: WebExtendTarget;
   mode?: string | undefined;
   buildDirTemplate?: string | undefined;
 }

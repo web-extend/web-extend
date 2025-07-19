@@ -56,11 +56,11 @@ interface ManifestAction {
 }
 
 export interface ManifestContentScript {
-  matches: string[];
+  matches?: string[];
   exclude_matches?: string[];
   js?: string[];
   css?: string[];
-  run_at?: 'document_start' | 'document_end' | 'document_idle';
+  run_at?: 'document_start' | 'document_end' | 'document_idle' | string;
   all_frames?: boolean;
   match_about_blank?: boolean;
   include_globs?: string[];
@@ -105,7 +105,3 @@ export type ManifestWebAccessibleResourcesC2ItemType = {
 };
 
 type IconPath = Record<string, string> | string;
-
-export const defineManifest = <T = WebExtendManifest>(manifest: Partial<T>) => {
-  return manifest;
-};

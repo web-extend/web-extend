@@ -1,7 +1,7 @@
 import { createWriteStream, existsSync } from 'node:fs';
 import { basename, dirname, relative, resolve } from 'node:path';
 import { readManifestFile } from '@web-extend/manifest/common';
-import type { ExtensionTarget } from '@web-extend/manifest/types';
+import type { WebExtendTarget } from '@web-extend/manifest/types';
 import archiver from 'archiver';
 import chalk from 'chalk';
 import { loadBuildResult } from './result.js';
@@ -10,7 +10,7 @@ export interface ZipOptions {
   root?: string;
   outDir?: string;
   filename?: string;
-  target?: ExtensionTarget;
+  target?: WebExtendTarget;
 }
 
 export async function zip({ filename, outDir, root = process.cwd(), target }: ZipOptions) {

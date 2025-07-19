@@ -2,7 +2,7 @@ import { existsSync } from 'node:fs';
 import { copyFile, unlink } from 'node:fs/promises';
 import { isAbsolute, relative, resolve } from 'node:path';
 import type { RsbuildConfig, RsbuildMode } from '@rsbuild/core';
-import type { ExtensionTarget } from '@web-extend/manifest/types';
+import type { WebExtendTarget } from '@web-extend/manifest/types';
 import chalk from 'chalk';
 import type { FSWatcher } from 'chokidar';
 import { type WebExtendConfigResult, loadWebExtendConfig } from './config.js';
@@ -316,7 +316,7 @@ function prepareEnv(command: 'dev' | 'build', options: StartOptions) {
 
 function getBuildTarget() {
   const target = process.env.WEB_EXTEND_TARGET || '';
-  return target as ExtensionTarget;
+  return target as WebExtendTarget;
 }
 
 async function rewritePublicFile({

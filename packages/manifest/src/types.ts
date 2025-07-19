@@ -1,6 +1,6 @@
 import type { ContentScriptConfig, WebExtendManifest } from './browser.js';
 
-export type ExtensionTarget = 'chrome-mv3' | 'firefox-mv2' | 'firefox-mv3' | 'safari-mv3' | 'edge-mv3' | 'opera-mv3';
+export type WebExtendTarget = 'chrome-mv3' | 'firefox-mv2' | 'firefox-mv3' | 'safari-mv3' | 'edge-mv3' | 'opera-mv3';
 
 export type WebExtendEntryType = 'script' | 'style' | 'html' | 'image';
 
@@ -85,7 +85,7 @@ export type WebExtendEntryDirKey = WebExtendEntryKey | 'root' | 'content' | 'san
 export type WebExtendEntriesDir = Record<WebExtendEntryDirKey, string>;
 
 export interface WebExtendContext {
-  target: ExtensionTarget;
+  target: WebExtendTarget;
   mode: string;
   rootPath: string;
   outDir: string;
@@ -95,8 +95,8 @@ export interface WebExtendContext {
 }
 
 export interface WebExtendCommonConfig<T = WebExtendManifest> {
-  manifest?: T | ((props: { target: ExtensionTarget; mode: string }) => T);
-  target?: ExtensionTarget;
+  manifest?: T | ((props: { target: WebExtendTarget; mode: string }) => T);
+  target?: WebExtendTarget;
   /**
    * @deprecated Use `entriesDir` instead.
    */

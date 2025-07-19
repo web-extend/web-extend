@@ -13,7 +13,7 @@ import {
 import { entryProcessors } from './entries/index.js';
 import { polyfillManifest } from './polyfill.js';
 import type {
-  ExtensionTarget,
+  WebExtendTarget,
   NormalizeContextOptions,
   NormalizeManifestProps,
   WebExtendContext,
@@ -22,7 +22,7 @@ import type {
   WebExtendEntryOutput,
 } from './types.js';
 
-async function initManifest(rootPath: string, target?: ExtensionTarget) {
+async function initManifest(rootPath: string, target?: WebExtendTarget) {
   const manifest: Partial<WebExtendManifest> = {
     manifest_version: target?.includes('2') ? 2 : 3,
   };

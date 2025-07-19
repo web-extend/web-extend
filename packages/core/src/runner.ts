@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import { relative, resolve } from 'node:path';
 import { defaultExtensionTarget } from '@web-extend/manifest/common';
-import type { ExtensionTarget } from '@web-extend/manifest/types';
+import type { WebExtendTarget } from '@web-extend/manifest/types';
 import chalk from 'chalk';
 import { loadConfig, loadWebExtendConfig } from './config.js';
 import { loadBuildResult } from './result.js';
@@ -54,7 +54,7 @@ export interface ExtensionRunner {
 
 export interface PreviewOptions {
   root?: string;
-  target?: ExtensionTarget;
+  target?: WebExtendTarget;
   outDir?: string;
 }
 
