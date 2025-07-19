@@ -9,7 +9,7 @@ import { copyEntryFiles, normalizeEntrypoints, normalizeTemplatePath } from './i
 
 export interface GenerateOptions {
   root?: string;
-  entries: string[];
+  entries?: string[];
   template?: string;
   size?: string[]; // just for icons
 }

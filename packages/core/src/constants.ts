@@ -145,7 +145,7 @@ export const ENTRYPOINT_ITEMS: EntrypointItem[] = [
   },
 ];
 
-export const tools = [
+export const TOOLS = [
   {
     label: 'Add ESLint for code linting',
     value: 'eslint',

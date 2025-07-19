@@ -7,7 +7,7 @@ import { normalizeEntriesDir } from '@web-extend/manifest/common';
 import type { WebExtendEntriesDir } from '@web-extend/manifest/types';
 import chalk from 'chalk';
 import { downloadTemplate } from 'giget';
-import { ENTRYPOINT_ITEMS, type EntrypointItem, FRAMEWORKS, REPO, tools } from './constants.js';
+import { ENTRYPOINT_ITEMS, type EntrypointItem, FRAMEWORKS, REPO, TOOLS } from './constants.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -141,8 +141,8 @@ export async function normalizeEntrypoints(
   entriesDir: WebExtendEntriesDir,
   options: EntrypointItem[],
 ) {
-  let entryNames = entries || [];
-  if (!entryNames.length) {
+  let entryNames = entries;
+  if (!entryNames) {
     const result = await multiselect({
       message: 'Select entrypoints',
       options: options.map((item) => ({ label: item.name, value: item.value })),
@@ -217,10 +217,10 @@ export async function normalizeInitOptions(cliOptions: InitCliOptions) {
     ENTRYPOINT_ITEMS.filter((item) => item.value !== 'page' && item.value !== 'icons'),
   );
 
-  if (!options.tools?.length) {
+  if (!options.tools) {
     const result = await multiselect({
       message: 'Select additional tools',
-      options: tools,
+      options: TOOLS,
       required: false,
     });
     if (isCancel(result)) {

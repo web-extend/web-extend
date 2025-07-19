@@ -32,7 +32,7 @@ function applyInitCommand(command: Command) {
     .option('-e, --entry <name...>', 'specify entrypoints')
     .action(async (projectName: string, cliOptions: { entry?: string[]; template?: string }) => {
       const { entry, ...otherOptions } = cliOptions;
-      const entries = entry?.flatMap((item) => item.split(',')) || [];
+      const entries = entry?.flatMap((item) => item.split(','));
       try {
         await init({
           projectName,
@@ -53,9 +53,9 @@ function applyGenerateCommand(command: Command) {
     .option('-r, --root <dir>', 'specify the project root directory')
     .option('-t, --template <name>', 'specify the template name or path')
     .option('--size <size...>', 'specify sizes for output icons')
-    .action(async (entry: string[], options: GenerateOptions) => {
+    .action(async (entry: string[] | undefined, options: GenerateOptions) => {
       try {
-        options.entries = entry.flatMap((item) => item.split(','));
+        options.entries = entry?.flatMap((item) => item.split(','));
         if (options.size) {
           options.size = options.size.flatMap((item) => item.split(','));
         }

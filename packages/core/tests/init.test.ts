@@ -1,9 +1,9 @@
-import { dirname, resolve } from 'node:path';
-import { beforeAll, describe, expect, it } from 'vitest';
-import { init } from '../src/init';
-import { fileURLToPath } from 'node:url';
 import { existsSync } from 'node:fs';
 import { rm } from 'node:fs/promises';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { beforeAll, describe, expect, it } from 'vitest';
+import { init } from '../src/init';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const rootDir = resolve(__dirname, 'test-projects');
@@ -22,7 +22,7 @@ describe('init', () => {
       override: true,
       template: 'react',
       entries: ['background', 'content', 'popup', 'devtools'],
-      tools: ['eslint', 'prettier'],
+      tools: [],
     };
 
     await init(cliOptions);
