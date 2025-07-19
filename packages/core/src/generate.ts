@@ -1,10 +1,10 @@
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { checkbox } from '@inquirer/prompts';
+import { cancel, isCancel, multiselect } from '@clack/prompts';
 import { normalizeEntriesDir } from '@web-extend/manifest/common';
 import type { WebExtendEntriesDir } from '@web-extend/manifest/types';
 import { loadWebExtendConfig } from './config.js';
-import { entrypointItems } from './constants.js';
+import { ENTRYPOINT_ITEMS } from './constants.js';
 import { copyEntryFiles, getTemplatePath, normalizeEntrypoints, normalizeTemplate } from './init.js';
 
 export interface GenerateOptions {
@@ -85,20 +85,19 @@ async function generateEntryFiles({
 
 export async function generate(options: GenerateOptions) {
   if (!options.entries.length) {
-    options.entries = await checkbox({
+    const result = await multiselect({
       message: 'Select entrypoints',
-      choices: [...entrypointItems, { name: 'icons', value: 'icons' }],
-      loop: false,
+      options: ENTRYPOINT_ITEMS,
       required: true,
     });
+    if (isCancel(result)) {
+      cancel('Operation cancelled.');
+      process.exit(0);
+    }
+    options.entries = result;
   }
 
   const { entries = [] } = options;
-
-  if (!entries.length) {
-    throw Error('Please select an entrypoint at least.');
-  }
-
   const { content: webExtendConfig } = await loadWebExtendConfig(options.root);
   const entriesDir = normalizeEntriesDir(options.root, webExtendConfig?.entriesDir || webExtendConfig?.srcDir);
 

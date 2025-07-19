@@ -1,45 +1,45 @@
 import chalk from 'chalk';
 
-export const frameworks = [
+export const FRAMEWORKS = [
   {
-    name: chalk.yellow('Vanilla'),
+    label: chalk.yellow('Vanilla'),
     value: 'vanilla',
   },
   {
-    name: chalk.cyan('React'),
+    label: chalk.cyan('React'),
     value: 'react',
   },
   {
-    name: chalk.green('Vue'),
+    label: chalk.green('Vue'),
     value: 'vue',
   },
   {
-    name: chalk.magenta('Preact'),
+    label: chalk.magenta('Preact'),
     value: 'preact',
   },
   {
-    name: chalk.red('Svelte'),
+    label: chalk.red('Svelte'),
     value: 'svelte',
   },
   {
-    name: chalk.blueBright('Solid'),
+    label: chalk.blueBright('Solid'),
     value: 'solid',
   },
 ];
 
 export const variants = [
   {
-    name: 'TypeScript',
+    label: 'TypeScript',
     value: 'ts',
   },
   {
-    name: 'JavaScript',
+    label: 'JavaScript',
     value: 'js',
     disabled: true,
   },
 ];
 
-export const entryTemplates = frameworks.flatMap((framework) =>
+export const TEMPLATES = FRAMEWORKS.flatMap((framework) =>
   variants.filter((variant) => !variant.disabled).map((variant) => `${framework.value}-${variant.value}`),
 );
 
@@ -65,7 +65,7 @@ export interface EntrypointItem {
   multiplePrefix?: string;
 }
 
-export const entrypointItems: EntrypointItem[] = [
+export const ENTRYPOINT_ITEMS: EntrypointItem[] = [
   {
     name: 'background',
     value: 'background',
@@ -137,3 +137,5 @@ export const tools: { name: string; value: ProjectToolType }[] = [
     value: 'prettier',
   },
 ];
+
+export const REPO = 'web-extend/examples';

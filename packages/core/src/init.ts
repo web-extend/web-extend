@@ -2,17 +2,16 @@ import { existsSync } from 'node:fs';
 import { copyFile, cp, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { basename, dirname, extname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { intro, spinner, text, isCancel, cancel, select, multiselect, note, outro } from '@clack/prompts';
+import { cancel, intro, isCancel, multiselect, note, outro, select, spinner, text } from '@clack/prompts';
 import { normalizeEntriesDir } from '@web-extend/manifest/common';
 import type { WebExtendEntriesDir } from '@web-extend/manifest/types';
 import chalk from 'chalk';
 import { downloadTemplate } from 'giget';
-import { type EntrypointItem, entryTemplates, entrypointItems, frameworks, tools } from './constants.js';
+import { type EntrypointItem, TEMPLATES, ENTRYPOINT_ITEMS, FRAMEWORKS, REPO, tools } from './constants.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const REPO = 'web-extend/examples';
 
-interface InitOptions {
+interface InitCliOptions {
   rootPath?: string;
   projectName?: string;
   override?: boolean;
@@ -21,12 +20,23 @@ interface InitOptions {
   tools?: string[];
 }
 
+interface InitOptions {
+  rootPath: string;
+  projectName: string;
+  override?: boolean;
+  destPath: string;
+  template?: string;
+  entriesDir: WebExtendEntriesDir;
+  entrypoints?: EntrypointItem[];
+  tools?: string[];
+}
+
 function welcome() {
   console.log();
   intro(chalk.cyan('🚀 Welcome to WebExtend!'));
 }
 
-function farewell(options: InitOptions) {
+function farewell(options: InitCliOptions) {
   const pkgManager = 'npm';
   const nextSteps = [
     `1. ${`cd ${options.projectName}`}`,
@@ -50,7 +60,7 @@ export async function normalizeTemplate(value?: string) {
   if (!template) {
     const result = await select({
       message: 'Select framework',
-      options: frameworks.map((item) => ({ label: item.name, value: item.value })),
+      options: FRAMEWORKS,
     });
     if (isCancel(result)) {
       cancel('Operation cancelled.');
@@ -62,14 +72,15 @@ export async function normalizeTemplate(value?: string) {
     template = `${framework}-${variant}`;
   }
 
-  if (!entryTemplates.includes(template)) {
-    throw new Error("Template doesn't exist");
+  if (!TEMPLATES.includes(template)) {
+    cancel(`"${value || template}" doesn't exist, please provide a valid template.`);
+    process.exit(1);
   }
 
   return template;
 }
 
-async function normalizeProjectName(options: InitOptions) {
+async function normalizeProjectName(options: { rootPath: string; projectName?: string; override?: boolean }) {
   let projectName = options.projectName;
   let override = options.override;
 
@@ -112,41 +123,79 @@ async function normalizeProjectName(options: InitOptions) {
       process.exit(0);
     }
     override = result;
-  } else {
-    override = true;
   }
 
   return { projectName, override };
 }
 
-export async function normalizeInitOptions(options: InitOptions) {
+export async function normalizeEntrypoints(entries: string[], entriesDir: WebExtendEntriesDir) {
+  const res: EntrypointItem[] = [];
+  for (const entry of entries) {
+    const item = ENTRYPOINT_ITEMS.find(
+      (item) => entry === item.value || (item.multiplePrefix && entry.startsWith(`${item.multiplePrefix}/`)),
+    );
+    if (!item) {
+      console.warn(`Entry ${entry} is not supported, ignored`);
+      continue;
+    }
+
+    let entryName = entry;
+
+    // map entryName to entriesDir
+    if (entryName in entriesDir) {
+      const value = entriesDir[entryName as keyof WebExtendEntriesDir];
+      entryName = value;
+    } else if (item.multiplePrefix && item.multiplePrefix in entriesDir) {
+      const key = entriesDir[item.multiplePrefix as keyof WebExtendEntriesDir];
+      entryName = entryName.replace(item.multiplePrefix, key);
+    }
+
+    res.push({ ...item, name: entryName });
+  }
+  return res;
+}
+
+export async function normalizeInitOptions(cliOptions: InitCliOptions) {
   welcome();
 
-  if (!options.rootPath) {
-    options.rootPath = process.cwd();
-  }
+  const rootPath = cliOptions.rootPath || process.cwd();
 
-  const { projectName, override } = await normalizeProjectName(options);
-  options.projectName = projectName;
-  options.override = override;
+  const { projectName, override } = await normalizeProjectName({
+    rootPath,
+    projectName: cliOptions.projectName,
+    override: cliOptions.override,
+  });
+  const destPath = resolve(rootPath, projectName);
+  const entriesDir = normalizeEntriesDir(destPath, {});
 
-  if (options.template && isRemoteTemplate(options.template)) {
+  const options: InitOptions = {
+    ...cliOptions,
+    rootPath,
+    projectName,
+    override,
+    destPath,
+    entriesDir,
+  };
+
+  if (cliOptions.template && isRemoteTemplate(cliOptions.template)) {
     return options;
   }
-  options.template = await normalizeTemplate(options.template);
+  options.template = await normalizeTemplate(cliOptions.template);
 
-  if (!options.entries?.length) {
+  let entries = cliOptions.entries || [];
+  if (!entries.length) {
     const result = await multiselect({
       message: 'Select entrypoints',
-      options: entrypointItems.map((item) => ({ label: item.name, value: item.value })),
+      options: ENTRYPOINT_ITEMS.map((item) => ({ label: item.name, value: item.value })),
       required: true,
     });
     if (isCancel(result)) {
       cancel('Operation cancelled.');
       process.exit(0);
     }
-    options.entries = result;
+    entries = result;
   }
+  options.entrypoints = await normalizeEntrypoints(entries, entriesDir);
 
   if (!options.tools?.length) {
     const result = await multiselect({
@@ -180,35 +229,16 @@ async function createProjectFromRemoteTemplate(template: string, destPath: strin
 }
 
 async function createProjectFromLocalTemplate(template: string, destPath: string, options: InitOptions) {
-  const templatePath = getTemplatePath(template);
   if (!existsSync(destPath)) {
     await mkdir(destPath);
   }
+  const templatePath = getTemplatePath(template);
   await copyTemplate(templatePath, destPath, options);
-
-  const entriesDir = normalizeEntriesDir(destPath, {});
-  const entrypoints = await normalizeEntrypoints(options.entries || [], entriesDir);
   await copyEntryFiles({
     sourcePath: resolve(templatePath, 'src'),
-    destPath: resolve(destPath, entriesDir.root),
-    entrypoints,
+    destPath: resolve(destPath, options.entriesDir.root),
+    entrypoints: options.entrypoints || [],
   });
-}
-
-export async function createProject(options: InitOptions) {
-  const { projectName, template } = options;
-  if (!projectName || !template) return;
-
-  const destPath = resolve(options.rootPath || process.cwd(), projectName);
-
-  if (isRemoteTemplate(template)) {
-    await createProjectFromRemoteTemplate(template, destPath);
-  } else {
-    await createProjectFromLocalTemplate(template, destPath, options);
-  }
-
-  await modifyPackageJson(destPath, options);
-  farewell(options);
 }
 
 export function getTemplatePath(template: string) {
@@ -219,9 +249,9 @@ export function getTemplatePath(template: string) {
   return templatePath;
 }
 
-async function copyTemplate(source: string, dest: string, options: InitOptions) {
+async function copyTemplate(source: string, dest: string, options: InitCliOptions) {
   const files = await readdir(source, { withFileTypes: true });
-  const entryNames = [...entrypointItems.map((item) => item.value), 'web'];
+  const entryNames = [...ENTRYPOINT_ITEMS.map((item) => item.value), 'web'];
   const { tools = [] } = options;
 
   const ignores = ['node_modules', 'dist', '.web-extend'];
@@ -258,7 +288,7 @@ async function copyTemplate(source: string, dest: string, options: InitOptions) 
   }
 }
 
-async function modifyPackageJson(root: string, options: InitOptions) {
+async function modifyPackageJson(root: string, options: InitCliOptions) {
   const { projectName, tools = [] } = options;
   const pkgPath = resolve(root, 'package.json');
   const content = await readFile(pkgPath, 'utf-8');
@@ -294,33 +324,6 @@ async function modifyPackageJson(root: string, options: InitOptions) {
   await writeFile(pkgPath, JSON.stringify(newContent, null, 2), 'utf-8');
 }
 
-export async function normalizeEntrypoints(entries: string[], entriesDir: WebExtendEntriesDir) {
-  const res: EntrypointItem[] = [];
-  for (const entry of entries) {
-    const item = entrypointItems.find(
-      (item) => entry === item.value || (item.multiplePrefix && entry.startsWith(`${item.multiplePrefix}/`)),
-    );
-    if (!item) {
-      console.warn(`Entry ${entry} is not supported, ignored`);
-      continue;
-    }
-
-    let entryName = entry;
-
-    // map entryName to entriesDir
-    if (entryName in entriesDir) {
-      const value = entriesDir[entryName as keyof WebExtendEntriesDir];
-      entryName = value;
-    } else if (item.multiplePrefix && item.multiplePrefix in entriesDir) {
-      const key = entriesDir[item.multiplePrefix as keyof WebExtendEntriesDir];
-      entryName = entryName.replace(item.multiplePrefix, key);
-    }
-
-    res.push({ ...item, name: entryName });
-  }
-  return res;
-}
-
 export async function copyEntryFiles({
   sourcePath,
   destPath,
@@ -349,7 +352,17 @@ export async function copyEntryFiles({
   }
 }
 
-export async function init(cliOptions: InitOptions) {
+export async function init(cliOptions: InitCliOptions) {
   const options = await normalizeInitOptions(cliOptions);
-  await createProject(options);
+  const { template, destPath } = options;
+
+  if (!template) return;
+  if (isRemoteTemplate(template)) {
+    await createProjectFromRemoteTemplate(template, destPath);
+  } else {
+    await createProjectFromLocalTemplate(template, destPath, options);
+  }
+
+  await modifyPackageJson(destPath, options);
+  farewell(options);
 }
