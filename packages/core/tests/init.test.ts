@@ -20,7 +20,6 @@ describe('init', () => {
     const cliOptions = {
       root,
       projectName: 'test1',
-      override: true,
       template: 'react',
       entries: ['background', 'content', 'popup', 'contents/site-one'],
       tools: [],
@@ -39,7 +38,6 @@ describe('init', () => {
     const cliOptions = {
       root,
       projectName: 'test2',
-      override: true,
       template: 'with-react',
     };
 
@@ -52,9 +50,8 @@ describe('init', () => {
     const cliOptions = {
       root,
       projectName: 'test3',
-      override: true,
       template: 'vanilla',
-      entries: ['background', 'contents/site-one', 'pages', 'panels', 'sandboxes', 'scripting', 'not-valid'],
+      entries: ['background', 'contents/site-one', 'pages', 'panels', 'sandboxes', 'scripting', 'not-valid', 'icons'],
       tools: [],
     };
 
@@ -71,7 +68,6 @@ describe('init', () => {
     const cliOptions = {
       root,
       projectName: 'test4',
-      override: true,
       template: 'not-valid',
       entries: ['background', 'content', 'popup', 'devtools'],
       tools: [],
@@ -84,7 +80,6 @@ describe('init', () => {
     const cliOptions = {
       root,
       projectName: 'test5',
-      override: true,
       template: 'with-not-valid',
     };
 
