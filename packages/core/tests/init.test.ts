@@ -54,7 +54,7 @@ describe('init', () => {
       projectName: 'test3',
       override: true,
       template: 'vanilla',
-      entries: ['background', 'not-valid'],
+      entries: ['background', 'contents/site-one', 'pages', 'panels', 'sandboxes', 'scripting', 'not-valid'],
       tools: [],
     };
 
@@ -62,8 +62,9 @@ describe('init', () => {
     const distPath = resolve(cliOptions.root, cliOptions.projectName);
 
     expect(existsSync(distPath)).toBe(true);
-    expect(existsSync(getEntryPath(distPath, cliOptions.entries[0]))).toBe(true);
-    expect(existsSync(getEntryPath(distPath, cliOptions.entries[1]))).toBe(false);
+    cliOptions.entries.forEach((entry, index) => {
+      expect(existsSync(getEntryPath(distPath, entry))).toBe(index < 2);
+    });
   });
 
   it('should throw error when the template is not valid', async () => {

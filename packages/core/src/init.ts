@@ -1,5 +1,5 @@
 import { existsSync } from 'node:fs';
-import { copyFile, cp, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
+import { copyFile, cp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { basename, dirname, extname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { cancel, intro, isCancel, log, multiselect, note, outro, select, spinner, text } from '@clack/prompts';
@@ -14,7 +14,6 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 interface InitOptions {
   root?: string;
   projectName?: string;
-  override?: boolean;
   template?: string;
   entries?: string[];
   tools?: string[];
@@ -23,7 +22,6 @@ interface InitOptions {
 interface NormalizedInitOptions {
   rootPath: string;
   projectName: string;
-  override?: boolean;
   destPath: string;
   templatePath: string;
   entriesDir: WebExtendEntriesDir;
@@ -81,9 +79,8 @@ export async function normalizeTemplatePath(value?: string) {
   return templatePath;
 }
 
-async function normalizeProjectName(options: { rootPath: string; projectName?: string; override?: boolean }) {
+async function normalizeProjectName(options: { rootPath: string; projectName?: string }) {
   let projectName = options.projectName;
-  let override = options.override;
 
   if (!projectName) {
     const result = await text({
@@ -102,31 +99,34 @@ async function normalizeProjectName(options: { rootPath: string; projectName?: s
 
   const projectPath = resolve(options.rootPath || process.cwd(), projectName);
   if (existsSync(projectPath)) {
-    const result =
-      override !== undefined
-        ? override
-        : await select({
-            message: `"${projectName}" is not empty, please choose`,
-            options: [
-              {
-                label: 'Cancel operation',
-                value: false,
-              },
-              {
-                label: 'Continue and override files',
-                value: true,
-              },
-            ],
-          });
+    const result = await select({
+      message: `"${projectName}" is not empty, please choose`,
+      options: [
+        {
+          label: 'Cancel operation',
+          value: 'cancel',
+        },
+        {
+          label: 'Remove existing files and continue',
+          value: 'remove',
+        },
+        {
+          label: 'Override existing files and continue',
+          value: 'override',
+        },
+      ],
+    });
 
-    if (isCancel(result) || !result) {
+    if (isCancel(result) || result === 'cancel') {
       cancel('Operation cancelled.');
       process.exit(0);
+    } else if (result === 'remove') {
+      await rm(projectPath, { recursive: true });
+      await mkdir(projectPath, { recursive: true });
     }
-    override = result;
   }
 
-  return { projectName, override };
+  return projectName;
 }
 
 function isEntryNameValid(entryName: string) {
@@ -181,10 +181,9 @@ export async function normalizeEntrypoints(
 export async function normalizeInitOptions(cliOptions: InitOptions) {
   const rootPath = cliOptions.root || process.cwd();
 
-  const { projectName, override } = await normalizeProjectName({
+  const projectName = await normalizeProjectName({
     rootPath,
     projectName: cliOptions.projectName,
-    override: cliOptions.override,
   });
   const destPath = resolve(rootPath, projectName);
   const entriesDir = normalizeEntriesDir(destPath, {
@@ -195,7 +194,6 @@ export async function normalizeInitOptions(cliOptions: InitOptions) {
     ...cliOptions,
     rootPath,
     projectName,
-    override,
     templatePath: cliOptions.template || '',
     destPath,
     entriesDir,
