@@ -10,10 +10,10 @@ import type {
   WebExtendEntryOutput,
   WebExtendManifest,
 } from '@web-extend/manifest/types';
+import semver from 'semver';
 import { ContentRuntimePlugin, hotUpdateGlobal } from './content.js';
 import { normalizeRsbuildEnvironments } from './environments.js';
 import { clearOutdatedHotUpdateFiles } from './helper.js';
-import semver from 'semver';
 
 export type PluginWebExtendOptions = WebExtendCommonConfig;
 
