@@ -1,7 +1,7 @@
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
-import { loadWebExtendConfig, loadConfig, type WebExtendConfig } from '../src/config';
+import { type WebExtendConfig, loadConfig, loadWebExtendConfig } from '../src/config';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
