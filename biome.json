@@ -36,6 +36,6 @@
     }
   },
   "files": {
-    "ignore": [".rslib", "templates"]
+    "ignore": [".rslib", "templates", "tests"]
   }
 }

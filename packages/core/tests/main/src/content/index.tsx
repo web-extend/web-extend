@@ -1,6 +1,6 @@
-import type { ContentScriptConfig } from 'web-extend';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import type { ContentScriptConfig } from 'web-extend';
 import App from './App';
 
 let rootEl = document.getElementById('web-extend-content');

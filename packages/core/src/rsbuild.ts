@@ -37,18 +37,24 @@ const loadRsbuildConfig = async (root: string) => {
   const { loadConfig } = await import('@rsbuild/core');
 
   let config: RsbuildConfig = {};
-  let filePath = '';
+  const filePaths: string[] = [];
   const { content: webExtendContent, filePath: webExtendConfigPath } = webExtendConfig;
+
+  if (webExtendConfigPath) {
+    filePaths.push(webExtendConfigPath);
+  }
+
   if (webExtendContent?.rsbuild) {
     config = webExtendContent.rsbuild;
-    filePath = webExtendConfigPath as string;
   } else {
     const { content: rsbuildContent, filePath: rsbuildConfigPath } = await loadConfig({
       cwd: root,
       envMode: commonOptions.envMode,
     });
     config = rsbuildContent || {};
-    filePath = rsbuildConfigPath as string;
+    if (rsbuildConfigPath) {
+      filePaths.push(rsbuildConfigPath);
+    }
   }
 
   config.dev ||= {};
@@ -81,12 +87,12 @@ const loadRsbuildConfig = async (root: string) => {
   }
 
   // watch the config file
-  if (filePath) {
+  if (filePaths.length) {
     config.dev.watchFiles ||= [];
     config.dev.watchFiles = [
       ...[config.dev.watchFiles].flat(),
       {
-        paths: [filePath],
+        paths: filePaths,
         type: 'reload-server',
       },
     ];
