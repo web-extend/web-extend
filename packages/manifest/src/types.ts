@@ -19,6 +19,21 @@ export type WebExtendEntryOutput = {
   output: string[];
 };
 
+export type WebExtendSingleEntryKey =
+  | 'icons'
+  | 'background'
+  | 'content'
+  | 'popup'
+  | 'options'
+  | 'sidepanel'
+  | 'devtools'
+  | 'newtab'
+  | 'history'
+  | 'bookmarks'
+  | 'sandbox'
+  | 'panel';
+export type WebExtendMultipleEntryKey = 'contents' | 'sandboxes' | 'panels' | 'pages' | 'scripting';
+
 export interface WebExtendEntries {
   icons?: WebExtendEntryInput;
   background?: WebExtendEntryInput;
@@ -82,7 +97,7 @@ export interface WriteManifestFileProps {
   runtime?: WebExtendRuntime;
 }
 
-export type WebExtendEntryDirKey = WebExtendEntryKey | 'root' | 'content' | 'sandbox' | 'panel';
+export type WebExtendEntryDirKey = WebExtendSingleEntryKey | WebExtendMultipleEntryKey | 'root';
 
 export type WebExtendEntriesDir = Record<WebExtendEntryDirKey, string>;
 

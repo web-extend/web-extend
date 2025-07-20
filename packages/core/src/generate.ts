@@ -94,7 +94,7 @@ export async function generate(options: GenerateOptions) {
   const entrypoints = await normalizeEntrypoints(
     options.entries,
     entriesDir,
-    ENTRYPOINT_ITEMS.filter((item) => item.value !== 'page'),
+    ENTRYPOINT_ITEMS.filter((item) => !item.multiple),
   );
 
   const iconsEntrypoint = entrypoints.find((item) => item.value === 'icons');

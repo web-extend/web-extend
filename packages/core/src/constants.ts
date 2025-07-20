@@ -1,4 +1,5 @@
 import chalk from 'chalk';
+import type { WebExtendSingleEntryKey, WebExtendMultipleEntryKey } from '@web-extend/manifest/types';
 
 export const FRAMEWORKS = [
   {
@@ -49,28 +50,11 @@ export const variants = [
 //   variants.filter((variant) => !variant.disabled).map((variant) => `${framework.value}-${variant.value}`),
 // );
 
-export type EntryPointType =
-  | 'background'
-  | 'content'
-  | 'popup'
-  | 'options'
-  | 'sidepanel'
-  | 'devtools'
-  | 'panel'
-  | 'newtab'
-  | 'bookmarks'
-  | 'history'
-  | 'sandbox'
-  | 'page'
-  | 'icons';
-
-export type EntryTemplateType = 'background' | 'content' | 'devtools' | 'web';
-
 export interface EntrypointItem {
   name: string;
-  value: EntryPointType;
-  template?: EntryTemplateType | null;
-  multiplePrefix?: string;
+  value: WebExtendSingleEntryKey | WebExtendMultipleEntryKey;
+  template?: 'background' | 'content' | 'devtools' | 'web' | null;
+  multiple?: boolean; // default is false
 }
 
 export const ENTRYPOINT_ITEMS: EntrypointItem[] = [
@@ -80,10 +64,15 @@ export const ENTRYPOINT_ITEMS: EntrypointItem[] = [
     template: 'background',
   },
   {
+    name: 'contents',
+    value: 'contents',
+    template: 'web',
+    multiple: true,
+  },
+  {
     name: 'content',
     value: 'content',
     template: 'content',
-    multiplePrefix: 'contents',
   },
   {
     name: 'popup',
@@ -106,10 +95,15 @@ export const ENTRYPOINT_ITEMS: EntrypointItem[] = [
     template: 'devtools',
   },
   {
+    name: 'panels',
+    value: 'panels',
+    template: 'web',
+    multiple: true,
+  },
+  {
     name: 'panel',
     value: 'panel',
     template: 'web',
-    multiplePrefix: 'panels',
   },
   {
     name: 'newtab',
@@ -127,10 +121,15 @@ export const ENTRYPOINT_ITEMS: EntrypointItem[] = [
     template: 'web',
   },
   {
+    name: 'sandboxes',
+    value: 'sandboxes',
+    template: 'web',
+    multiple: true,
+  },
+  {
     name: 'sandbox',
     value: 'sandbox',
     template: 'web',
-    multiplePrefix: 'sandboxes',
   },
   {
     name: 'icons',
@@ -138,10 +137,16 @@ export const ENTRYPOINT_ITEMS: EntrypointItem[] = [
     template: null,
   },
   {
-    name: 'page',
-    value: 'page',
+    name: 'pages',
+    value: 'pages',
     template: 'web',
-    multiplePrefix: 'pages',
+    multiple: true,
+  },
+  {
+    name: 'scripting',
+    value: 'scripting',
+    template: null,
+    multiple: true,
   },
 ];
 

@@ -55,7 +55,8 @@ function applyGenerateCommand(command: Command) {
     .option('--size <size...>', 'specify sizes for output icons')
     .action(async (entry: string[] | undefined, options: GenerateOptions) => {
       try {
-        options.entries = entry?.flatMap((item) => item.split(','));
+        options.entries = entry?.length ? entry.flatMap((item) => item.split(',')) : undefined;
+
         if (options.size) {
           options.size = options.size.flatMap((item) => item.split(','));
         }

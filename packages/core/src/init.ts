@@ -130,8 +130,8 @@ async function normalizeProjectName(options: { rootPath: string; projectName?: s
 }
 
 function isEntryNameValid(entryName: string) {
-  const item = ENTRYPOINT_ITEMS.find(
-    (item) => entryName === item.value || (item.multiplePrefix && entryName.startsWith(`${item.multiplePrefix}/`)),
+  const item = ENTRYPOINT_ITEMS.find((item) =>
+    item.multiple ? entryName.startsWith(`${item.value}/`) : entryName === item.value,
   );
   return item;
 }
@@ -163,15 +163,8 @@ export async function normalizeEntrypoints(
       continue;
     }
 
-    let entryName = entry;
-    // map entryName to entriesDir
-    if (entryName in entriesDir) {
-      const value = entriesDir[entryName as keyof WebExtendEntriesDir];
-      entryName = value;
-    } else if (item.multiplePrefix && item.multiplePrefix in entriesDir) {
-      const key = entriesDir[item.multiplePrefix as keyof WebExtendEntriesDir];
-      entryName = entryName.replace(item.multiplePrefix, key);
-    }
+    const dirName = entriesDir[item.value] || item.value;
+    const entryName = item.multiple ? entry.replace(`${item.value}/`, `${dirName}/`) : dirName;
 
     entrypoints.push({ ...item, name: entryName });
   }
@@ -216,7 +209,7 @@ export async function normalizeInitOptions(cliOptions: InitOptions) {
   options.entrypoints = await normalizeEntrypoints(
     cliOptions.entries,
     entriesDir,
-    ENTRYPOINT_ITEMS.filter((item) => item.value !== 'page' && item.value !== 'icons'),
+    ENTRYPOINT_ITEMS.filter((item) => !item.multiple && item.value !== 'icons'),
   );
 
   if (!options.tools) {
