@@ -5,12 +5,13 @@ import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { generate } from '../src/generate';
+import { getEntryPath } from './helper';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const rootDir = resolve(__dirname, 'main');
-const contentEntryPath = resolve(rootDir, 'src', 'content');
-const iconsEntryPath = resolve(rootDir, 'src', 'assets');
-const popupEntryPath = resolve(rootDir, 'src', 'popup');
+const root = resolve(__dirname, 'main');
+const contentEntryPath = getEntryPath(root, 'content');
+const iconsEntryPath = getEntryPath(root, 'assets');
+const popupEntryPath = getEntryPath(root, 'popup');
 
 describe('generate', () => {
   beforeAll(async () => {
@@ -26,7 +27,7 @@ describe('generate', () => {
     expect(existsSync(popupEntryPath)).toBe(false);
 
     const cliOptions = {
-      root: rootDir,
+      root,
       entries: ['icons', 'content', 'popup'],
     };
     await generate(cliOptions);

@@ -11,7 +11,7 @@ import { ENTRYPOINT_ITEMS, type EntrypointItem, FRAMEWORKS, REPO, TOOLS } from '
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-interface InitCliOptions {
+interface InitOptions {
   root?: string;
   projectName?: string;
   override?: boolean;
@@ -20,7 +20,7 @@ interface InitCliOptions {
   tools?: string[];
 }
 
-interface InitOptions {
+interface NormalizedInitOptions {
   rootPath: string;
   projectName: string;
   override?: boolean;
@@ -36,7 +36,7 @@ function welcome() {
   intro(chalk.cyan('🚀 Welcome to WebExtend!'));
 }
 
-function farewell(options: InitCliOptions) {
+function farewell(options: InitOptions) {
   const pkgManager = 'npm';
   const nextSteps = [
     `1. ${`cd ${options.projectName}`}`,
@@ -73,7 +73,7 @@ export async function normalizeTemplatePath(value?: string) {
 
   const templatePath = resolve(__dirname, `../templates/template-${template}`);
   if (!existsSync(templatePath)) {
-    log.error(`Cannot find template ${value || template}`);
+    log.error(`Cannot find template "${value || template}"`);
     cancel('Operation cancelled.');
     process.exit(1);
   }
@@ -185,7 +185,7 @@ export async function normalizeEntrypoints(
   return entrypoints;
 }
 
-export async function normalizeInitOptions(cliOptions: InitCliOptions) {
+export async function normalizeInitOptions(cliOptions: InitOptions) {
   const rootPath = cliOptions.root || process.cwd();
 
   const { projectName, override } = await normalizeProjectName({
@@ -194,9 +194,11 @@ export async function normalizeInitOptions(cliOptions: InitCliOptions) {
     override: cliOptions.override,
   });
   const destPath = resolve(rootPath, projectName);
-  const entriesDir = normalizeEntriesDir(destPath, {});
+  const entriesDir = normalizeEntriesDir(destPath, {
+    root: './src',
+  });
 
-  const options: InitOptions = {
+  const options: NormalizedInitOptions = {
     ...cliOptions,
     rootPath,
     projectName,
@@ -251,7 +253,7 @@ async function createProjectFromRemoteTemplate(template: string, destPath: strin
   }
 }
 
-async function createProjectFromLocalTemplate(templatePath: string, destPath: string, options: InitOptions) {
+async function createProjectFromLocalTemplate(templatePath: string, destPath: string, options: NormalizedInitOptions) {
   if (!existsSync(destPath)) {
     await mkdir(destPath, { recursive: true });
   }
@@ -263,7 +265,7 @@ async function createProjectFromLocalTemplate(templatePath: string, destPath: st
   });
 }
 
-async function copyTemplate(source: string, dest: string, options: InitCliOptions) {
+async function copyTemplate(source: string, dest: string, options: InitOptions) {
   const files = await readdir(source, { withFileTypes: true });
   const entryNames = [...ENTRYPOINT_ITEMS.map((item) => item.value), 'web'];
   const { tools = [] } = options;
@@ -302,7 +304,7 @@ async function copyTemplate(source: string, dest: string, options: InitCliOption
   }
 }
 
-async function modifyPackageJson(rootPath: string, options: InitOptions) {
+async function modifyPackageJson(rootPath: string, options: NormalizedInitOptions) {
   const { projectName, tools = [] } = options;
   const pkgPath = resolve(rootPath, 'package.json');
   const content = await readFile(pkgPath, 'utf-8');
@@ -366,7 +368,7 @@ export async function copyEntryFiles({
   }
 }
 
-export async function init(cliOptions: InitCliOptions) {
+export async function init(cliOptions: InitOptions) {
   welcome();
   const options = await normalizeInitOptions(cliOptions);
   const { templatePath, destPath } = options;
