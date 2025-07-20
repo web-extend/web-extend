@@ -70,27 +70,25 @@ console.log(import.meta.env.FOO); // 'Hello Test'
 console.log(import.meta.env.BAR); // '1'
 ```
 
-## 使用环境变量
+## Public 变量
 
-### 在客户端代码中使用
-
-所有内置的环境变量和以 `PUBLIC_` 前缀开头的自定义环境变量均可以在客户端代码中被访问。
+所有内置的环境变量和以 `PUBLIC_` 前缀开头的自定义环境变量均可以在客户端代码中被访问。例如，如果定义了如下的环境变量：
 
 ```[.env]
 PUBLIC_FOO=1
 BAR=2
 ```
 
-在客户端代码中，可以通过 `import.meta.env.<name>` 来引入一个环境变量。
+在客户端代码中，可以通过 `import.meta.env.<name>` 来访问环境变量。
 
 ```ts [src/popup/index.ts]
 console.log(import.meta.env.PUBLIC_FOO); // -> '1'
 console.log(import.meta.env.BAR); // -> undefined
 ```
 
-### 类型声明
+## 类型声明
 
-为了避免一些 TypeScript 类型错误，你可能需要扩展 `import.meta.env` 的类型，如下所示。
+为了避免因环境变量而导致的 TypeScript 类型错误，你可能需要扩展 `import.meta.env` 的类型。例如：
 
 ```ts [src/env.d.ts]
 /// <reference types="@rsbuild/core/types" />

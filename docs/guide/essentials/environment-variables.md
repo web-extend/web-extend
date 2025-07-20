@@ -70,27 +70,25 @@ console.log(import.meta.env.FOO); // 'Hello Test'
 console.log(import.meta.env.BAR); // '1'
 ```
 
-## Use Env Variables
+## Public Variables
 
-### In Client Code
-
-All the built-in env variables and the custom env variables with the `PUBLIC_` prefix can be accessed in client code.
+All the built-in env variables and the custom env variables with the `PUBLIC_` prefix can be accessed in client code. For example, if the following variables are defined:
 
 ```[.env]
 PUBLIC_FOO=1
 BAR=2
 ```
 
-In the client code, you can reference an environment variable through `import.meta.env.<name>`.
+In the client code, you can access the environment variables through `import.meta.env.<name>`.
 
 ```ts [src/popup/index.ts]
 console.log(import.meta.env.PUBLIC_FOO); // -> '1'
 console.log(import.meta.env.BAR); // -> undefined
 ```
 
-### Type Declarations
+## Type Declarations
 
-To avoid some TypeScript errors, you might need to extend the type of `import.meta.env` like this:
+To fix TypeScript type errors when using env variables, you might need to extend the type of `import.meta.env`.
 
 ```ts [src/env.d.ts]
 /// <reference types="@rsbuild/core/types" />

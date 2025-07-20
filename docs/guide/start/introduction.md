@@ -19,7 +19,7 @@ While there are several tools available for web extension development like Plasm
 - **Optimized Performance**: Built on Rsbuild for exceptional build speeds and development experience
 - **Zero Configuration**: Sensible defaults that work out of the box while maintaining flexibility for customization
 
-### Common Pain Points Solved
+### Pain Points Solved
 
 Many existing tools suffer from limitations that WebExtend specifically addresses:
 

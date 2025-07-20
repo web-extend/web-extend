@@ -99,6 +99,10 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
             root: outDir,
           },
         },
+      };
+
+      // The preset config can be overridden by the user
+      const presetConfig: RsbuildConfig = {
         tools: {
           rspack: {
             experiments: {
@@ -111,7 +115,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       };
 
       // extraConfig must be at the end, for dev.writeToDisk
-      return mergeRsbuildConfig(config, extraConfig);
+      return mergeRsbuildConfig(presetConfig, config, extraConfig);
     });
 
     api.onBeforeStartDevServer(() => {
