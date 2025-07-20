@@ -6,7 +6,7 @@ outline: deep
 
 ## 环境准备 {#environment-preparation}
 
-在开始之前，请确保你已安装：[Node.js >= 18](https://nodejs.org/en/download)（推荐使用 LTS 版本）。
+[Node.js >= 18](https://nodejs.org/en/download)（推荐使用 LTS 版本）是必需的。
 
 ## 自动安装 {#automatic-installation}
 
@@ -22,9 +22,9 @@ npx web-extend@latest init
 2. 选择模板
 3. 配置其他功能
 
-### 可用模板 {#available-templates}
+### 模板 {#templates}
 
-`web-extend` 工具提供以下模板，默认都使用 TypeScript：
+WebExtend 提供以下模板，默认都使用 TypeScript：
 
 - Vanilla
 - [React](https://react.dev/)
@@ -34,6 +34,12 @@ npx web-extend@latest init
 - [Solid](https://www.solidjs.com/)
 
 > 注意：虽然这些模板是开箱即用的，但 WebExtend 是框架无关的，可以与任何前端框架一起使用。对于其他框架，你可能需要遵循手动安装流程。
+
+你也可以通过附加参数直接指定项目名称和模板。例如，创建一个 React 项目：
+
+```shell
+npx web-extend@latest init my-extension-app --template react
+```
 
 ## 手动安装 {#manual-installation}
 
