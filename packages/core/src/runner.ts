@@ -2,7 +2,6 @@ import { existsSync } from 'node:fs';
 import { relative, resolve } from 'node:path';
 import { defaultExtensionTarget } from '@web-extend/manifest/common';
 import type { WebExtendTarget } from '@web-extend/manifest/types';
-import chalk from 'chalk';
 import { loadConfig, loadWebExtendConfig } from './config.js';
 import { loadBuildResult } from './result.js';
 
@@ -48,7 +47,7 @@ export interface WebExtConfig {
 }
 
 export interface ExtensionRunner {
-  reloadAllExtensions: () => void;
+  // reloadAllExtensions?: () => void;
   exit: () => void;
 }
 
@@ -93,6 +92,22 @@ export async function normalizeRunnerConfig(
 }
 
 export async function importWebExt() {
+  if (process.env.NODE_ENV === 'test') {
+    const mockWebExt = {
+      cmd: {
+        run: () => {
+          console.log('web-ext run');
+          return {
+            exit: () => {
+              console.log('web-ext exit');
+            },
+          } as ExtensionRunner;
+        },
+      },
+    };
+    return mockWebExt;
+  }
+
   const webExt = await import('web-ext').then((mod) => mod.default).catch(() => null);
   return webExt;
 }
@@ -113,11 +128,11 @@ export async function preview({ root = process.cwd(), outDir, target }: PreviewO
 
   const { distPath, target: finalTarget } = await loadBuildResult({ root, outDir, target });
   if (!distPath) {
-    throw Error('Cannot find build info; please build first or specify the artifact directory.');
+    throw Error('Cannot find the build artifact, please build first or specify the artifact directory.');
   }
 
   if (!existsSync(distPath)) {
-    throw new Error(`Directory ${chalk.yellow(relative(root, distPath))} doesn't exist.`);
+    throw new Error(`"${relative(root, distPath)}" doesn't exist.`);
   }
 
   const config = await normalizeRunnerConfig(root, distPath, finalTarget);
