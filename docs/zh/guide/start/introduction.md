@@ -32,7 +32,7 @@ WebExtend 以深思熟虑、以开发者为中心的方式解决了这些问题�
 
 ## 主要特点 {#main-features}
 
-### 声明式入口 {#declarative-entrypoints}
+### 📝 声明式入口 {#declarative-entrypoints}
 
 WebExtend 使用基于文件系统的方法来管理扩展入口点。只需在约定目录中创建文件，WebExtend 就会自动配置你的 `manifest.json`。这减少了配置开销，使项目结构更直观。
 
@@ -48,50 +48,50 @@ src/
 
 查阅[入口点](../essentials/entrypoints.md)了解更多详情。
 
-### 无缝的开发体验 {#seamless-development-experience}
+### ⚡️ 无缝的开发体验 {#seamless-development-experience}
 
 体验一个开箱即用的开发环境：
 
-- 🔥 为所有组件（包括 content scripts）提供真正的 HMR
-- 🚀 自动打开浏览器和运行扩展
-- 🛠️ 提供项目模板和组件生成器的脚手架支持
+- 为所有组件（包括 content scripts）提供真正的 HMR
+- 自动打开浏览器和运行扩展
+- 提供项目模板和组件生成器的脚手架支持
 
-### 多浏览器支持 {#multi-browser-support}
+### 🧭 多浏览器支持 {#multi-browser-support}
 
 一次编写，到处运行。WebExtend 自动处理浏览器特定的 manifest 配置和 polyfills：
 
-- ✅ Chrome/基于 Chromium 的浏览器
-- ✅ Firefox
-- ✅ Safari
-- ✅ Edge
+- Chrome/基于 Chromium 的浏览器
+- Firefox
+- Safari
+- Edge
 
 查阅[浏览器支持](../essentials/browsers.md)了解更多详情。
 
-### ESM & TypeScript 支持 {#esm-typescript-support}
+### 🛠️ ESM & TypeScript 支持 {#esm-typescript-support}
 
 现代 JavaScript 特性开箱即用：
 
-- 📦 原生 ESM 支持
-- 🔷 一流的 TypeScript 支持
-- 🎯 路径别名
+- 原生 ESM 支持
+- 一流的 TypeScript 支持
+- 路径别名
 
-### 框架无关 {#framework-agnostic}
+### ✈️ 框架无关 {#framework-agnostic}
 
 选择最适合你项目的工具：
 
-- 🔧 使用任何现代框架（React、Vue、Svelte 等）
-- 🎨 使用任何样式解决方案（CSS Modules、Tailwind 等）
-- 🔌 轻松集成现有工具
+- 使用任何现代框架（React、Vue、Svelte 等）
+- 使用任何样式解决方案（CSS Modules、Tailwind 等）
+- 轻松集成现有工具
 
 查阅[使用库](../essentials/using-libraries.md)获取集成指南。
 
-### 极速性能 {#lightning-fast-performance}
+### 🚀 极速性能 {#lightning-fast-performance}
 
 基于 [Rsbuild](https://rsbuild.rs/) 构建，WebExtend 提供卓越的性能：
 
-- ⚡️ 极快的开发服务器启动
-- 🔄 智能缓存的快速重建
-- 📊 包大小优化
+- 极快的开发服务器启动
+- 智能缓存的快速重建
+- 包大小优化
 
 ## 比较 {#comparisons}
 
@@ -107,7 +107,7 @@ src/
 | MV3 和 MV2 支持                  | ✅        | ✅      | ✅      | 🟡 [^3] |
 | 多浏览器支持                     | ✅        | ✅      | ✅      | 🟡 [^4] |
 | 自动运行扩展                     | ✅        | ❌      | ✅      | ❌      |
-| 构建性能                         | ⚡️ 快速  | 中等    | 快速    | 快速    |
+| 构建性能                         | 快速      | 中等    | 快速    | 快速    |
 | 配置复杂度                       | 低        | 中等    | 高      | 低      |
 | 学习曲线                         | 平缓      | 中等    | 陡峭    | 中等    |
 | 社区和生态系统                   | 成长中    | 大      | 中等    | 中等    |
