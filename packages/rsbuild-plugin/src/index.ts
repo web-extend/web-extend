@@ -13,6 +13,7 @@ import type {
 import { ContentRuntimePlugin, hotUpdateGlobal } from './content.js';
 import { normalizeRsbuildEnvironments } from './environments.js';
 import { clearOutdatedHotUpdateFiles } from './helper.js';
+import semver from 'semver';
 
 export type PluginWebExtendOptions = WebExtendCommonConfig;
 
@@ -102,8 +103,11 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       };
 
       // The preset config can be overridden by the user
-      const presetConfig: RsbuildConfig = {
-        tools: {
+      const presetConfig: RsbuildConfig = {};
+
+      const version = api.context.version;
+      if (semver.gte(version, '1.3.0')) {
+        presetConfig.tools = {
           rspack: {
             experiments: {
               buildHttp: {
@@ -111,8 +115,8 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
               },
             },
           },
-        },
-      };
+        };
+      }
 
       // extraConfig must be at the end, for dev.writeToDisk
       return mergeRsbuildConfig(presetConfig, config, extraConfig);
