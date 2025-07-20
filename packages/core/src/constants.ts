@@ -1,5 +1,5 @@
+import type { WebExtendMultipleEntryKey, WebExtendSingleEntryKey } from '@web-extend/manifest/types';
 import chalk from 'chalk';
-import type { WebExtendSingleEntryKey, WebExtendMultipleEntryKey } from '@web-extend/manifest/types';
 
 export const FRAMEWORKS = [
   {
