@@ -10,7 +10,6 @@ import type {
   WebExtendEntryOutput,
   WebExtendManifest,
 } from '@web-extend/manifest/types';
-import semver from 'semver';
 import { ContentRuntimePlugin, hotUpdateGlobal } from './content.js';
 import { normalizeRsbuildEnvironments } from './environments.js';
 import { clearOutdatedHotUpdateFiles } from './helper.js';
@@ -102,24 +101,8 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         },
       };
 
-      // The preset config can be overridden by the user
-      const presetConfig: RsbuildConfig = {};
-
-      const version = api.context.version;
-      if (semver.gte(version, '1.3.0')) {
-        presetConfig.tools = {
-          rspack: {
-            experiments: {
-              buildHttp: {
-                allowedUris: [/https?:\/\//],
-              },
-            },
-          },
-        };
-      }
-
       // extraConfig must be at the end, for dev.writeToDisk
-      return mergeRsbuildConfig(presetConfig, config, extraConfig);
+      return mergeRsbuildConfig(config, extraConfig);
     });
 
     api.onBeforeStartDevServer(() => {

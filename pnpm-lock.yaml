@@ -430,9 +430,6 @@ importers:
       '@babel/types':
         specifier: ^7.26.7
         version: 7.26.9
-      semver:
-        specifier: ^7.7.2
-        version: 7.7.2
     devDependencies:
       '@microsoft/api-extractor':
         specifier: ^7.52.8
@@ -449,9 +446,6 @@ importers:
       '@types/node':
         specifier: ^22.12.0
         version: 22.13.4
-      '@types/semver':
-        specifier: ^7.7.0
-        version: 7.7.0
       '@web-extend/manifest':
         specifier: workspace:*
         version: link:../manifest
@@ -2251,9 +2245,6 @@ packages:
 
   '@types/readdir-glob@1.1.5':
     resolution: {integrity: sha512-raiuEPUYqXu+nvtY2Pe8s8FEmZ3x5yAH4VkLdihcPdalvsHltomrRC9BzuStrJ9yk06470hS0Crw0f1pXqD+Hg==}
-
-  '@types/semver@7.7.0':
-    resolution: {integrity: sha512-k107IF4+Xr7UHjwDc7Cfd6PRQfbdkiRabXGRjo07b4WyPahFBZCZ1sE+BNxYIJPPg73UkfOsVOLwqVc/6ETrIA==}
 
   '@types/unist@3.0.3':
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
@@ -7274,8 +7265,6 @@ snapshots:
   '@types/readdir-glob@1.1.5':
     dependencies:
       '@types/node': 22.13.4
-
-  '@types/semver@7.7.0': {}
 
   '@types/unist@3.0.3': {}
 

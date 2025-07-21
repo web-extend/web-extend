@@ -1,10 +1,22 @@
 # 远程代码 {#remote-code}
 
-为了满足 [Manifest V3 中远程代码的限制](https://developer.chrome.com/docs/extensions/develop/migrate/improve-security#remove-remote-code)，WebExtend 会自动下载和打包所有以 `http|https` 前缀开头的 import 语句。
+根据 [Chrome Web Store 政策](https://developer.chrome.com/docs/extensions/develop/migrate/improve-security#remove-remote-code)，在 Manifest V3 中不被允许使用远程代码。但是，你可以使用 Rspack 的 [`buildHttp`](https://rspack.rs/config/experiments#experimentsbuildhttp) 特性来支持构建远程代码。配置如下：
 
-::: info
-WebExend 使用 `experiments.buildHttp` 来支持构建远程代码。你可以参考 [Rspack 文档](https://rspack.rs/config/experiments#experimentsbuildhttp)了解更多详情。
-:::
+```ts [rsbuild.config.ts]
+import { defineConfig } from "@rsbuild/core";
+
+export default defineConfig({
+  tools: {
+    rspack: {
+      experiments: {
+        buildHttp: {
+          allowedUris: [/https?:\/\//],
+        },
+      },
+    },
+  },
+});
+```
 
 ## Google Analytics
 
