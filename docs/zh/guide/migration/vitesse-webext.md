@@ -4,9 +4,7 @@ outline: deep
 
 # vitesse-webext
 
-[vitesse-webext](https://github.com/antfu-collective/vitesse-webext) 是一个非常棒的 WebExtension 项目模板。
-
-我们将其迁移到了 WebExtend。所以你可以使用它来创建一个新项目。
+[vitesse-webext](https://github.com/antfu-collective/vitesse-webext) 是一个非常棒的 WebExtension 项目模板。我们将其迁移到了 WebExtend。你可以使用它来创建一个新项目。
 
 ```shell
 npx web-extend@latest init --template with-vitesse-webext

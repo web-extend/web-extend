@@ -4,9 +4,7 @@ outline: deep
 
 # vitesse-webext
 
-[Vitesse-webext](https://github.com/antfu-collective/vitesse-webext) is an awesome WebExtension starter template.
-
-We adapted it to WebExtend. So you can use it to create a new project.
+[Vitesse-webext](https://github.com/antfu-collective/vitesse-webext) is an awesome WebExtension starter template. We adapted it to WebExtend. You can use it to create a new project.
 
 ```shell
 npx web-extend@latest init --template with-vitesse-webext
