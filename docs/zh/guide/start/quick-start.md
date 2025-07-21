@@ -20,7 +20,37 @@ npx web-extend@latest init
 
 1. 选择项目名称
 2. 选择模板
-3. 配置其他功能
+3. 选择入口点
+4. 选择其他功能
+
+以下是初始化过程的示例。
+
+```shell
+┌  🚀 Welcome to WebExtend!
+│
+◇  Project name
+│  my-extension-app
+│
+◇  Select framework
+│  Vanilla
+│
+◇  Select entrypoints
+│  content, popup
+│
+◇  Select additional tools
+│  ESLint for code linting, Prettier for code formatting
+│
+◇  Next steps ─────────────╮
+│                          │
+│  1. cd my-extension-app  │
+│  2. git init (optional)  │
+│  3. npm install          │
+│  4. npm run dev          │
+│                          │
+├──────────────────────────╯
+│
+└  Done
+```
 
 ### 模板 {#templates}
 

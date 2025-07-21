@@ -152,11 +152,11 @@ export const ENTRYPOINT_ITEMS: EntrypointItem[] = [
 
 export const TOOLS = [
   {
-    label: 'Add ESLint for code linting',
+    label: 'ESLint for code linting',
     value: 'eslint',
   },
   {
-    label: 'Add Prettier for code formatting',
+    label: 'Prettier for code formatting',
     value: 'prettier',
   },
 ];

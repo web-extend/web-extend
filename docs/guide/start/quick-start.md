@@ -20,7 +20,37 @@ During the initialization, you'll be prompted to:
 
 1. Choose a project name
 2. Select a template
-3. Configure additional features
+3. Select entrypoints
+4. Select additional tools
+
+The following is an example of the initialization process.
+
+```shell
+┌  🚀 Welcome to WebExtend!
+│
+◇  Project name
+│  my-extension-app
+│
+◇  Select framework
+│  Vanilla
+│
+◇  Select entrypoints
+│  content, popup
+│
+◇  Select additional tools
+│  ESLint for code linting, Prettier for code formatting
+│
+◇  Next steps ─────────────╮
+│                          │
+│  1. cd my-extension-app  │
+│  2. git init (optional)  │
+│  3. npm install          │
+│  4. npm run dev          │
+│                          │
+├──────────────────────────╯
+│
+└  Done
+```
 
 ### Templates
 
