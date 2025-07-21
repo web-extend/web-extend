@@ -18,10 +18,10 @@ npx web-extend@latest init
 
 During the initialization, you'll be prompted to:
 
-1. Choose a project name
+1. Input a project name
 2. Select a template
 3. Select entrypoints
-4. Select additional tools
+4. Select additional tools (optional)
 
 The following is an example of the initialization process.
 
