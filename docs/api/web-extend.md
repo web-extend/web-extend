@@ -8,17 +8,24 @@ outline: [2, 3]
 
 ## Commands
 
-Usage:
+`web-extend` is the main command. It includes several subcommands. These subcommands follow the same usage pattern below.
 
 ```shell
 npx web-extend [options] [command]
-
-# or
-npm add -D web-extend
-npx we [options] [command]
 ```
 
-`we` is a shortened form for `web-extend`. They are equal in function, but the `we` command only can be used after the `web-extend` tool installed.
+`we` is a shortened form for `web-extend`. The alias is convenient in some cases. For example, use `we g` to generate entry points.
+
+::: info Note
+`we` command should be used after the `web-extend` tool installed.
+:::
+
+```shell
+npx we g popup
+
+# equals to
+npx web-extend generate popup
+```
 
 ### web-extend init
 

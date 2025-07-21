@@ -8,17 +8,24 @@ outline: [2, 3]
 
 ## 命令
 
-使用：
+`web-extend` 是主命令，包含几个子命令。这些子命令遵循相同的用法模式。
 
 ```shell
 npx web-extend [options] [command]
-
-# or
-npm add -D web-extend
-npx we [options] [command]
 ```
 
-`we` 命令是 `web-extend` 命令的简写形式，二者是等价的。唯一的区别是：`we` 命令需要在安装 `web-extend` 工具后才可以使用。
+`we` 命令是 `web-extend` 命令的简写形式。`we` 命令在某些情况下非常方便。例如，使用 `we g` 来生成入口文件。
+
+::: info 注意
+`we` 命令需要在安装 `web-extend` 工具后才可以使用。
+:::
+
+```shell
+npx we g popup
+
+# equals to
+npx web-extend generate popup
+```
 
 ### web-extend init
 
