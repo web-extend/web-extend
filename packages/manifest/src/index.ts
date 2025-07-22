@@ -83,7 +83,7 @@ export class ManifestManager {
 
     const { target, mode } = this.context;
     const optionManifest =
-      typeof options.manifest === 'function' ? options.manifest({ target, mode }) : options.manifest;
+      typeof options.manifest === 'function' ? await options.manifest({ target, mode }) : options.manifest;
 
     await this.normalizeEntries({
       manifest: optionManifest,
