@@ -1,9 +1,7 @@
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { preview } from '../src/runner';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, 'extension');
 
 describe('preview', () => {

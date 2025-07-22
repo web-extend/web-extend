@@ -224,6 +224,7 @@ async function startDevServer(options: StartOptions) {
 
   const { server } = await rsbuild.startDevServer();
   onBeforeRestart(server.close);
+  return { server, rsbuild };
 }
 
 const restartDevServer: WatchCallback = async ({ filePath, rootPath }) => {
@@ -278,6 +279,8 @@ async function startBuild(options: StartOptions) {
   } else {
     await buildInstance.close();
   }
+
+  return { buildInstance, rsbuild };
 }
 
 const restartBuild: WatchCallback = async ({ rootPath, filePath }) => {

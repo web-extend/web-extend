@@ -1,10 +1,8 @@
 import { rm } from 'node:fs/promises';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { zip } from '../src/zip';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, 'extension');
 
 describe('zip', () => {

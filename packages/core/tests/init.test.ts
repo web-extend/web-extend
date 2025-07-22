@@ -1,12 +1,10 @@
 import { existsSync } from 'node:fs';
 import { rm } from 'node:fs/promises';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { resolve } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { init } from '../src/init';
 import { getEntryPath } from './helper';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, 'test-projects');
 
 describe('init', () => {
