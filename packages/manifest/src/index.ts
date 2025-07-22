@@ -106,6 +106,14 @@ export class ManifestManager {
     }
 
     if (isDevMode(mode)) {
+      finalManifest.permissions ||= [];
+      if (!finalManifest.permissions.includes('scripting')) {
+        finalManifest.permissions.push('scripting');
+      }
+      if (!finalManifest.permissions.includes('activeTab')) {
+        finalManifest.permissions.push('activeTab');
+      }
+
       finalManifest.commands = {
         'web-extend:reload-extension': {
           suggested_key: {

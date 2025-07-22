@@ -1,5 +1,4 @@
 import type { ManifestWebAccessibleResourcesC2ItemType } from './browser.js';
-import { isDevMode } from './common.js';
 import type { NormalizeManifestProps } from './types.js';
 
 function polyfillManifestBetweenBrowsers({ manifest, context }: NormalizeManifestProps) {
@@ -40,19 +39,6 @@ function polyfillManifestBetweenBrowsers({ manifest, context }: NormalizeManifes
 
 function pollyfillManifestBetweenVersions({ manifest, context }: NormalizeManifestProps) {
   if (!manifest || !context) return;
-  const { mode } = context;
-
-  if (isDevMode(mode)) {
-    manifest.permissions ||= [];
-    if (!manifest.permissions.includes('scripting')) {
-      manifest.permissions.push('scripting');
-    }
-
-    manifest.host_permissions ||= [];
-    if (!manifest.host_permissions.includes('*://*/*')) {
-      manifest.host_permissions.push('*://*/*');
-    }
-  }
 
   const {
     action,
