@@ -115,16 +115,19 @@ async function initRsbuild({
   const root = commonOptions.root ? resolve(cwd, commonOptions.root) : cwd;
   const envDirPath = commonOptions.envDir ? resolve(cwd, commonOptions.envDir) : cwd;
 
-  webExtendConfig = await loadWebExtendConfig(root);
-
   const { createRsbuild } = await import('@rsbuild/core');
   const rsbuild = await createRsbuild({
     cwd: root,
-    rsbuildConfig: () => loadRsbuildConfig(root),
     environment: commonOptions.environment,
     loadEnv: {
       cwd: envDirPath,
       mode: commonOptions.envMode,
+    },
+    rsbuildConfig: async () => {
+      // load config after env loaded
+      webExtendConfig = await loadWebExtendConfig(root);
+      const config = await loadRsbuildConfig(root);
+      return config;
     },
   });
 
