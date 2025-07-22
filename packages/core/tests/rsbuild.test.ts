@@ -15,6 +15,7 @@ describe('rsbuild', () => {
     const { server, rsbuild } = await startDevServer({
       root,
       mode: 'development',
+      open: true,
     });
 
     return new Promise((resolve, reject) => {
@@ -32,11 +33,13 @@ describe('rsbuild', () => {
     const { buildInstance, rsbuild } = await startBuild({
       root,
       mode: 'production',
+      zip: true,
+      // watch: true,
     });
-    await buildInstance.close();
 
     const distPath = rsbuild.context.distPath;
     const manifest = await readManifestFile(distPath);
     expect(manifest).toBeDefined();
+    await buildInstance.close();
   });
 });
