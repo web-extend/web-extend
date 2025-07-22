@@ -1,8 +1,8 @@
-import { resolve } from 'node:path';
-import { describe, it, expect, beforeAll } from 'vitest';
-import { startBuild, startDevServer } from '../src/rsbuild';
 import { rm } from 'node:fs/promises';
+import { resolve } from 'node:path';
 import { readManifestFile } from '@web-extend/manifest/common';
+import { beforeAll, describe, expect, it } from 'vitest';
+import { startBuild, startDevServer } from '../src/rsbuild';
 
 const root = resolve(__dirname, 'main');
 
