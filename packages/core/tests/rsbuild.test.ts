@@ -34,12 +34,13 @@ describe('rsbuild', () => {
       root,
       mode: 'production',
       zip: true,
-      // watch: true,
+      // watch: true, // watch and zip can not work together
     });
+
+    await buildInstance.close();
 
     const distPath = rsbuild.context.distPath;
     const manifest = await readManifestFile(distPath);
     expect(manifest).toBeDefined();
-    await buildInstance.close();
   });
 });

@@ -1,5 +1,5 @@
 import './index.css';
-import type { ContentScriptConfig } from 'web-extend'
+import type { ContentScriptConfig } from 'web-extend';
 
 function render(root: HTMLElement) {
   root.innerHTML = `<div class="web-extend-content-container">
@@ -28,9 +28,7 @@ function render(root: HTMLElement) {
   </div>`;
 
   const handleClick = () => {
-    const el = document.getElementsByClassName(
-      'web-extend-content',
-    )[0] as HTMLElement;
+    const el = document.getElementsByClassName('web-extend-content')[0] as HTMLElement;
     if (el) {
       el.style.display = el.style.display === 'none' ? 'block' : 'none';
     }

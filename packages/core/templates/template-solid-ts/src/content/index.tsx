@@ -1,5 +1,5 @@
-import type { ContentScriptConfig } from 'web-extend';
 import { render } from 'solid-js/web';
+import type { ContentScriptConfig } from 'web-extend';
 import App from './App';
 
 let root = document.getElementById('web-extend-content');

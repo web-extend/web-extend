@@ -1,5 +1,5 @@
-import type { ContentScriptConfig } from 'web-extend';
 import { mount } from 'svelte';
+import type { ContentScriptConfig } from 'web-extend';
 import App from './App.svelte';
 
 let app = null;
