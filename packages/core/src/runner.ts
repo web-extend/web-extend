@@ -92,22 +92,6 @@ export async function normalizeRunnerConfig(
 }
 
 export async function importWebExt() {
-  if (process.env.NODE_ENV === 'test') {
-    const mockWebExt = {
-      cmd: {
-        run: () => {
-          console.log('web-ext run');
-          return {
-            exit: () => {
-              console.log('web-ext exit');
-            },
-          } as ExtensionRunner;
-        },
-      },
-    };
-    return mockWebExt;
-  }
-
   const webExt = await import('web-ext').then((mod) => mod.default).catch(() => null);
   return webExt;
 }

@@ -1,8 +1,33 @@
 import { rm } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { readManifestFile } from '@web-extend/manifest/common';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { startBuild, startDevServer } from '../src/rsbuild';
+
+vi.mock('@web-extend/rsbuild-plugin', async () => {
+  const { pluginWebExtend } = await import('../../rsbuild-plugin/src/index.js');
+  return {
+    pluginWebExtend,
+  };
+});
+
+vi.mock('web-ext', () => {
+  const mockWebExt = {
+    cmd: {
+      run: () => {
+        console.log('web-ext run');
+        return {
+          exit: () => {
+            console.log('web-ext exit');
+          },
+        };
+      },
+    },
+  };
+  return {
+    default: mockWebExt,
+  };
+});
 
 const root = resolve(__dirname, 'main');
 

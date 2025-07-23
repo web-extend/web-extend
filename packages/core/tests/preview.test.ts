@@ -1,6 +1,24 @@
 import { resolve } from 'node:path';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { preview } from '../src/runner';
+
+vi.mock('web-ext', () => {
+  const mockWebExt = {
+    cmd: {
+      run: () => {
+        console.log('web-ext run');
+        return {
+          exit: () => {
+            console.log('web-ext exit');
+          },
+        };
+      },
+    },
+  };
+  return {
+    default: mockWebExt,
+  };
+});
 
 const root = resolve(__dirname, 'extension');
 
