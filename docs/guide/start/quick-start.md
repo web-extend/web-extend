@@ -71,6 +71,14 @@ You can also directly specify the project name and the template via additional a
 npx web-extend@latest init my-extension-app --template react
 ```
 
+### Examples
+
+We also provide lots of examples to help you get started. You can find them in the [examples](https://github.com/web-extend/examples) repository and select a example as the template to start. For example, a React project with Tailwind CSS:
+
+```shell
+npx web-extend@latest init my-extension-app --template with-react-tailwindcss
+```
+
 ## Manual Installation
 
 If you prefer to set up your project manually or use a different framework, follow these steps.

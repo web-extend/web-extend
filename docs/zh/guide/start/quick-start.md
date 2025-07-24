@@ -71,6 +71,16 @@ WebExtend 提供以下模板，默认都使用 TypeScript：
 npx web-extend@latest init my-extension-app --template react
 ```
 
+
+### 示例
+
+我们还提供了许多示例来帮助你入门。你可以在 [examples](https://github.com/web-extend/examples) 仓库中找到它们，并选择一个示例作为模板来开始。例如一个使用 React 和 Tailwind CSS 的示例：
+
+```shell
+npx web-extend@latest init my-extension-app --template with-react-tailwindcss
+```
+
+
 ## 手动安装 {#manual-installation}
 
 如果你更喜欢手动设置项目或使用其他框架，请按照以下步骤操作：
