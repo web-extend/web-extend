@@ -1,10 +1,29 @@
-# web-extend
+# WebExtend
 
-A build tool for web extensions.
+WebExtend is a modern build tool for browser extensions.
+
+## Features
+
+- 📝 File-based Entry Points
+- ⚡️ Seamless Development Experience, including instant HMR, automatic browser opening and extension running
+- 🧭 Multi-Browser Support
+- 🛠️ ESM & TypeScript Support
+- ✈️ Framework-agnostic, such as React, Vue, Svelte, etc.
+- 🚀 Lightning Fast Performance, powered by Rsbuild for extremely fast development and building.
+
+## Quick Start
+
+```bash
+npx web-extend@latest init
+```
 
 ## Documentation
 
 https://web-extend.github.io/web-extend/
+
+## Examples
+
+https://github.com/web-extend/examples
 
 ## Packages
 

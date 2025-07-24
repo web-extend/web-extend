@@ -1,14 +1,14 @@
 import { existsSync } from 'node:fs';
 import { readFile, readdir } from 'node:fs/promises';
 import { basename, dirname, extname, join, relative, resolve, sep } from 'node:path';
+import type { WebExtendManifest } from './browser.js';
 import type {
   DeclarativeEntryFileResult,
-  ExtensionManifest,
-  ExtensionTarget,
   WebExtendContext,
   WebExtendEntriesDir,
   WebExtendEntryDirKey,
   WebExtendEntryType,
+  WebExtendTarget,
 } from './types.js';
 
 const scriptExts = ['.ts', '.js', '.tsx', '.jsx', '.mts', '.cts', '.mjs', '.cjs'];
@@ -178,7 +178,7 @@ export function isProdMode(mode?: string) {
   return mode === 'production';
 }
 
-const EXTENSION_TARGETS: ExtensionTarget[] = [
+const EXTENSION_TARGETS: WebExtendTarget[] = [
   'chrome-mv3',
   'firefox-mv3',
   'firefox-mv2',
@@ -189,13 +189,13 @@ const EXTENSION_TARGETS: ExtensionTarget[] = [
 
 export const defaultExtensionTarget = 'chrome-mv3';
 
-export function resolveTarget(target?: string): ExtensionTarget {
-  const envTarget = process.env.WEB_EXTEND_TARGET as ExtensionTarget;
+export function resolveTarget(target?: string): WebExtendTarget {
+  const envTarget = process.env.WEB_EXTEND_TARGET as WebExtendTarget;
   if (envTarget && EXTENSION_TARGETS.includes(envTarget)) {
     return envTarget;
   }
 
-  const optionTarget = target as ExtensionTarget;
+  const optionTarget = target as WebExtendTarget;
   if (optionTarget && EXTENSION_TARGETS.includes(optionTarget)) {
     return optionTarget;
   }
@@ -208,7 +208,7 @@ export function setTargetEnv(target: string) {
 
 interface ResolveOutDirProps {
   outDir?: string | undefined;
-  target?: ExtensionTarget;
+  target?: WebExtendTarget;
   mode?: string | undefined;
   buildDirTemplate?: string | undefined;
 }
@@ -239,7 +239,7 @@ export async function readManifestFile(distPath: string) {
   if (!existsSync(manifestFile)) {
     throw new Error(`Cannot find manifest.json in ${distPath}`);
   }
-  const manifest = JSON.parse(await readFile(manifestFile, 'utf-8')) as ExtensionManifest;
+  const manifest = JSON.parse(await readFile(manifestFile, 'utf-8')) as WebExtendManifest;
   return manifest;
 }
 

@@ -25,18 +25,19 @@
   "license": "ISC",
   "description": "A Build Tool for building web extensions.",
   "dependencies": {
-    "@inquirer/prompts": "^7.3.1",
+    "@clack/prompts": "^0.11.0",
     "@web-extend/rsbuild-plugin": "workspace:*",
     "archiver": "^7.0.1",
     "chalk": "^5.4.1",
     "chokidar": "^4.0.3",
     "commander": "^12.1.0",
+    "giget": "^2.0.0",
     "sharp": "^0.33.5"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "^7.50.0",
-    "@rsbuild/core": "^1.4.3",
-    "@rslib/core": "^0.10.4",
+    "@rsbuild/core": "^1.4.9",
+    "@rslib/core": "^0.10.6",
     "@types/archiver": "^6.0.3",
     "@types/node": "^22.13.1",
     "@web-extend/manifest": "workspace:*",

@@ -6,7 +6,7 @@ export default defineConfig({
   output: {
     // https://github.com/web-infra-dev/rsbuild/issues/3217
     sourceMap: {
-      js: false
-    }
-  }
+      js: false,
+    },
+  },
 });

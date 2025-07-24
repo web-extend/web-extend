@@ -1,5 +1,5 @@
-import type { ContentScriptConfig } from 'web-extend';
 import { render } from 'preact';
+import type { ContentScriptConfig } from 'web-extend';
 import App from './App';
 
 let root = document.getElementById('web-extend-content');

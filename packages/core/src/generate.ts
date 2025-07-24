@@ -1,31 +1,31 @@
 import { existsSync } from 'node:fs';
+import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import { checkbox } from '@inquirer/prompts';
 import { normalizeEntriesDir } from '@web-extend/manifest/common';
 import type { WebExtendEntriesDir } from '@web-extend/manifest/types';
 import { loadWebExtendConfig } from './config.js';
-import { entrypointItems } from './constant.js';
-import { copyEntryFiles, getTemplatePath, normalizeEntrypoints, resolveEntryTemplate } from './init.js';
+import { ENTRYPOINT_ITEMS, FRAMEWORKS } from './constants.js';
+import { copyEntryFiles, normalizeEntrypoints, normalizeTemplatePath } from './init.js';
 
 export interface GenerateOptions {
-  entries: string[];
-  root: string;
+  root?: string;
+  entries?: string[];
   template?: string;
   size?: string[]; // just for icons
 }
 
 function getIconTemplatePath({
-  root,
+  rootPath,
   entriesDir,
   template,
-}: { root: string; entriesDir: WebExtendEntriesDir; template?: string }) {
+}: { rootPath: string; entriesDir: WebExtendEntriesDir; template?: string }) {
   let templatePath = '';
   if (template) {
-    templatePath = resolve(root, template);
+    templatePath = resolve(rootPath, template);
   } else {
     const templateNames = ['icon.png', 'icon-1024.png', 'icon-512.png', 'icon-128.png'];
     for (const name of templateNames) {
-      const path = resolve(root, entriesDir.root, entriesDir.icons, name);
+      const path = resolve(rootPath, entriesDir.root, entriesDir.icons, name);
       if (existsSync(path)) {
         templatePath = path;
         break;
@@ -42,76 +42,76 @@ function getIconTemplatePath({
 const ICON_SIZES = ['16', '32', '48', '128'];
 
 async function generateIcons({
-  root,
+  rootPath,
   template,
   entriesDir,
   size = ICON_SIZES,
-}: GenerateOptions & { entriesDir: WebExtendEntriesDir }) {
+}: { entriesDir: WebExtendEntriesDir; rootPath: string; template?: string; size?: string[] }) {
   const sharp = await import('sharp').then((mod) => mod.default);
 
-  const templatePath = getIconTemplatePath({ root, template, entriesDir });
+  const templatePath = getIconTemplatePath({ rootPath, template, entriesDir });
   const filename = 'icon-{size}.png';
 
   const sizes = size.map((item) => Number(item)).filter((item) => Number.isInteger(item) && item > 0);
 
   for (const size of sizes) {
     const name = filename.replace('{size}', String(size));
-    const destPath = resolve(root, entriesDir.root, entriesDir.icons);
+    const destPath = resolve(rootPath, entriesDir.root, entriesDir.icons);
     const destFile = resolve(destPath, name);
     if (existsSync(destFile)) continue;
     await sharp(templatePath).resize(size).toFile(destFile);
   }
 }
 
-async function generateEntryFiles({
-  root,
-  template,
-  entriesDir,
-  entries,
-}: GenerateOptions & { entriesDir: WebExtendEntriesDir }) {
-  const entrypoints = await normalizeEntrypoints(entries || [], entriesDir);
-  if (!entrypoints.length) {
-    throw Error('Please select an entrypoint at least.');
+async function getProjectDependencies(rootPath: string) {
+  const pkgPath = resolve(rootPath, 'package.json');
+  if (!existsSync(pkgPath)) {
+    return {};
   }
+  const content = await readFile(pkgPath, 'utf-8');
+  const newContent = JSON.parse(content);
+  const devDependencies = newContent.devDependencies || {};
+  const dependencies = newContent.dependencies || {};
+  const res: Record<string, string> = { ...devDependencies, ...dependencies };
+  return res;
+}
 
-  const finalTemplate = await resolveEntryTemplate(template);
-  const templatePath = getTemplatePath(finalTemplate);
-  await copyEntryFiles({
-    sourcePath: resolve(templatePath, 'src'),
-    destPath: resolve(root, entriesDir.root),
-    entrypoints,
-  });
+async function getDefaultTemplate(rootPath: string) {
+  const dependencies = await getProjectDependencies(rootPath);
+  const template = FRAMEWORKS.find((item) => dependencies[item.packageName]);
+  if (template) {
+    return template.value;
+  }
+  return 'vanilla';
 }
 
 export async function generate(options: GenerateOptions) {
-  if (!options.entries.length) {
-    options.entries = await checkbox({
-      message: 'Select entrypoints',
-      choices: [...entrypointItems, { name: 'icons', value: 'icons' }],
-      loop: false,
-      required: true,
-    });
+  const rootPath = options.root || process.cwd();
+
+  const { content: webExtendConfig } = await loadWebExtendConfig(rootPath);
+  const entriesDir = normalizeEntriesDir(rootPath, webExtendConfig?.entriesDir || webExtendConfig?.srcDir);
+
+  const entrypoints = await normalizeEntrypoints(
+    options.entries,
+    entriesDir,
+    ENTRYPOINT_ITEMS.filter((item) => !item.multiple),
+  );
+
+  const iconsEntrypoint = entrypoints.find((item) => item.value === 'icons');
+  if (iconsEntrypoint) {
+    await generateIcons({ ...options, entriesDir, rootPath });
   }
 
-  const { entries = [] } = options;
-
-  if (!entries.length) {
-    throw Error('Please select an entrypoint at least.');
-  }
-
-  const { content: webExtendConfig } = await loadWebExtendConfig(options.root);
-  const entriesDir = normalizeEntriesDir(options.root, webExtendConfig?.entriesDir || webExtendConfig?.srcDir);
-
-  if (entries.includes('icons')) {
-    await generateIcons({ ...options, entriesDir });
-  }
-
-  const otherEntries = entries.filter((item) => item !== 'icons');
+  const otherEntries = entrypoints.filter((item) => item.value !== 'icons');
   if (otherEntries.length) {
-    await generateEntryFiles({
-      ...options,
-      entries: otherEntries,
-      entriesDir,
+    const template = options.template || (await getDefaultTemplate(rootPath));
+    const templatePath = await normalizeTemplatePath(template);
+    await copyEntryFiles({
+      sourcePath: resolve(templatePath, 'src'),
+      destPath: resolve(rootPath, entriesDir.root),
+      entrypoints: otherEntries,
     });
   }
+
+  console.log('Generated successfully!');
 }

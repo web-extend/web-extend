@@ -12,20 +12,20 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "solid-js": "^1.9.5"
+    "solid-js": "^1.9.7"
   },
   "devDependencies": {
-    "@eslint/js": "^9.23.0",
-    "@rsbuild/core": "^1.4.3",
-    "@rsbuild/plugin-babel": "^1.0.4",
+    "@eslint/js": "^9.31.0",
+    "@rsbuild/core": "^1.4.9",
+    "@rsbuild/plugin-babel": "^1.0.5",
     "@rsbuild/plugin-solid": "^1.0.5",
-    "@types/chrome": "^0.0.290",
-    "eslint": "^9.23.0",
-    "globals": "^16.0.0",
-    "prettier": "^3.5.3",
+    "@types/chrome": "^0.1.1",
+    "eslint": "^9.31.0",
+    "globals": "^16.3.0",
+    "prettier": "^3.6.2",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.29.0",
-    "web-ext": "^8.8.0",
+    "typescript-eslint": "^8.38.0",
+    "web-ext": "^8.9.0",
     "web-extend": "^0.0.2"
   }
 }

@@ -11,7 +11,7 @@ WebExtend 提供了一个标准化的项目结构，可帮助你有效地组织�
 一个典型的 WebExtend 项目目录结构如下。
 
 ```
-my-web-extension/
+my-extension-app/
 ├── public/                # Static assets
 │   └── _locales/          # Localization files
 ├── src/                   # Source code
@@ -19,16 +19,12 @@ my-web-extension/
 │   │   ├── icon-16.png
 │   │   ├── icon-32.png
 │   │   └── icon-128.png
-│   ├── background/        # Background script
-│   │   └── index.js
+│   ├── background.js        # Background script
 │   ├── content/           # Content script
 │   │   └── index.js
 │   ├── devtools.js        # DevTools page
 │   ├── pages/
-│   │   ├── welcome/
-│   │   │   ├── index.js
-│   │   │   └── style.css
-│   │   └── panel/         # Panel implementation
+│   │   └── welcome/       # Page implementation
 │   │       ├── index.js
 │   │       └── style.css
 │   ├── popup/             # Popup UI

@@ -1,6 +1,22 @@
 # Remote Code
 
-WebExtend will automatically download and bundle all import statements with the `https|http` prefix for fulfilling [the remote code restriction in Manifest V3](https://developer.chrome.com/docs/webstore/program-policies/mv3-requirements).
+In Manifest V3, the remote code is not allowed according to the [Chrome Web Store policy](https://developer.chrome.com/docs/extensions/develop/migrate/improve-security#remove-remote-code). Never mind, you can use Rspack's [`buildHttp`](https://rspack.rs/config/experiments#experimentsbuildhttp) feature to support building remote code. The configuration is as follows:
+
+```ts [rsbuild.config.ts]
+import { defineConfig } from "@rsbuild/core";
+
+export default defineConfig({
+  tools: {
+    rspack: {
+      experiments: {
+        buildHttp: {
+          allowedUris: [/https?:\/\//],
+        },
+      },
+    },
+  },
+});
+```
 
 ## Google Analytics
 

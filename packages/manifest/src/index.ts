@@ -1,6 +1,7 @@
 import { existsSync } from 'node:fs';
 import { cp, mkdir, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
+import type { WebExtendManifest } from './browser.js';
 import {
   isDevMode,
   normalizeEntriesDir,
@@ -12,18 +13,17 @@ import {
 import { entryProcessors } from './entries/index.js';
 import { polyfillManifest } from './polyfill.js';
 import type {
-  ExtensionManifest,
-  ExtensionTarget,
   NormalizeContextOptions,
   NormalizeManifestProps,
   WebExtendContext,
   WebExtendEntries,
   WebExtendEntryKey,
   WebExtendEntryOutput,
+  WebExtendTarget,
 } from './types.js';
 
-async function initManifest(rootPath: string, target?: ExtensionTarget) {
-  const manifest: Partial<ExtensionManifest> = {
+async function initManifest(rootPath: string, target?: WebExtendTarget) {
+  const manifest: Partial<WebExtendManifest> = {
     manifest_version: target?.includes('2') ? 2 : 3,
   };
 
@@ -76,27 +76,27 @@ export const normalizeContext = (options: NormalizeContextOptions): WebExtendCon
 export class ManifestManager {
   public context = {} as WebExtendContext;
   public entries: WebExtendEntries = {};
-  private manifest = {} as ExtensionManifest;
+  private manifest = {} as WebExtendManifest;
 
   async normalize(options: NormalizeContextOptions) {
     this.context = normalizeContext(options);
 
     const { target, mode } = this.context;
     const optionManifest =
-      typeof options.manifest === 'function' ? options.manifest({ target, mode }) : options.manifest;
+      typeof options.manifest === 'function' ? await options.manifest({ target, mode }) : options.manifest;
 
     await this.normalizeEntries({
       manifest: optionManifest,
     });
   }
 
-  async normalizeEntries({ manifest = {} as ExtensionManifest }: NormalizeManifestProps) {
+  async normalizeEntries({ manifest = {} as WebExtendManifest }: NormalizeManifestProps) {
     const { rootPath, target, mode } = this.context;
     const defaultManifest = await initManifest(rootPath, target);
     const finalManifest = {
       ...defaultManifest,
       ...manifest,
-    } as ExtensionManifest;
+    } as WebExtendManifest;
     const entries: WebExtendEntries = {};
 
     const requiredFields = ['name', 'version'];
@@ -106,6 +106,14 @@ export class ManifestManager {
     }
 
     if (isDevMode(mode)) {
+      finalManifest.permissions ||= [];
+      if (!finalManifest.permissions.includes('scripting')) {
+        finalManifest.permissions.push('scripting');
+      }
+      if (!finalManifest.permissions.includes('activeTab')) {
+        finalManifest.permissions.push('activeTab');
+      }
+
       finalManifest.commands = {
         'web-extend:reload-extension': {
           suggested_key: {

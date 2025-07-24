@@ -7,6 +7,7 @@
 node_modules
 dist/
 test-results
+test-projects
 
 # IDE
 .vscode/*

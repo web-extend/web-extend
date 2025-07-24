@@ -4,7 +4,13 @@ outline: deep
 
 # vitesse-webext
 
-本章介绍如何从一个 [vitesse-webext](https://github.com/antfu-collective/vitesse-webext) 项目迁移到 WebExtend。完整的代码迁移过程可以参考 [examples/from-vitesse-webext](https://github.com/web-extend/examples/pull/4/files)。
+[vitesse-webext](https://github.com/antfu-collective/vitesse-webext) 是一个非常棒的 WebExtension 项目模板。我们将其迁移到了 WebExtend。你可以使用它来创建一个新项目。
+
+```shell
+npx web-extend@latest init --template with-vitesse-webext
+```
+
+如果你想要迁移一个已有的 vitesse-webext 项目，请按照以下步骤进行。
 
 ## 安装依赖
 
@@ -35,27 +41,24 @@ yarn add -D @rsbuild/plugin-vue @unocss/postcss
 
 ```shell [npm]
 npm add -D unocss@latest @unocss/reset@latest
-npm add -D unplugin-auto-import@latest
-npm add -D unplugin-icons@latest
+npm add -D unplugin-auto-import@latest unplugin-icons@latest unplugin-vue-components@latest
 ```
 
 ```shell [pnpm]
 pnpm add -D unocss@latest @unocss/reset@latest
-pnpm add -D unplugin-auto-import@latest
-pnpm add -D unplugin-icons@latest
+pnpm add -D unplugin-auto-import@latest unplugin-icons@latest unplugin-vue-components@latest
 ```
 
 ```shell [yarn]
 yarn add -D unocss@latest @unocss/reset@latest
-yarn add -D unplugin-auto-import@latest
-yarn add -D unplugin-icons@latest
+yarn add -D unplugin-auto-import@latest unplugin-icons@latest unplugin-vue-components@latest
 ```
 
 :::
 
 ## 更新 npm scripts
 
-在 package.json 中添加 `"type": "module"` 字段，并使用 `web-extend` 的 CLI 命令替换 `scripts` 中的 `dev`、`build`、 `pack`、 `start` 等命令。
+使用 `web-extend` 的 CLI 命令替换 `scripts` 中的 `dev`、`build`、 `pack`、 `start` 等命令。
 
 ::: details package.json
 
@@ -103,7 +106,7 @@ yarn add -D unplugin-icons@latest
 
 WebExtend 底层使用 Rsbuild 作为构建工具，因此需要从 Vite 迁移至 Rsbuild。整个迁移过程比较简单，主要改动如下：
 
-1. 创建 `wen-extend.config.ts`，用于配置 manifest。
+1. 创建 `web-extend.config.ts`，用于配置 WebExtend。
 2. 创建 `rsbuild.config.ts`，用于配置 Rsbuild.
 3. 添加插件：
    - [@rsbuild/plugin-vue](https://rsbuild.rs/plugins/list/plugin-vue)
@@ -228,14 +231,14 @@ export default defineConfig({
 
 :::
 
-如果您在项目中有其他自定义配置，请参考：
+如果您在项目中有其他自定义配置，请参考以下文档：
 
 - [Rsbuild Vite](https://rsbuild.rs/guide/migration/vite)
 - [UnoCSS](https://unocss.dev/integrations/postcss)
 
-## 更新源码内容
+## 更新源码
 
-WebExtend 会根据文件系统自动解析入口文件，因此无需在 `manifest.json` 中显示声明。核心改动如下：
+WebExtend 会根据文件系统自动解析入口文件，因此无需在 `manifest.json` 中显示声明。源码内容的主要改动如下：
 
 - 生成 icons：运行 `npx web-extend g icons --template ./extension/assets/icon-512.png` 命令在 `src/assets` 目录下生成需要的 icon 文件。
 - 更改 popup、options、sidepanel：分别在对应的目录中移除 `index.html`，将 `main.ts` 重命名为 `index.ts`。

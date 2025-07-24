@@ -1,0 +1,26 @@
+{
+  "name": "main",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "web-extend dev --open",
+    "build": "web-extend build",
+    "preview": "web-extend preview",
+    "zip": "web-extend zip"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@rsbuild/core": "^1.4.9",
+    "@rsbuild/plugin-react": "^1.0.7",
+    "@types/chrome": "^0.1.1",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.8.3",
+    "web-ext": "^8.8.0",
+    "web-extend": "^0.0.2"
+  }
+}

@@ -1,6 +1,10 @@
-export type ExtensionTarget = 'chrome-mv3' | 'firefox-mv2' | 'firefox-mv3' | 'safari-mv3' | 'edge-mv3' | 'opera-mv3';
+import type { ContentScriptConfig, WebExtendManifest } from './browser.js';
+
+export type WebExtendTarget = 'chrome-mv3' | 'firefox-mv2' | 'firefox-mv3' | 'safari-mv3' | 'edge-mv3' | 'opera-mv3';
 
 export type WebExtendEntryType = 'script' | 'style' | 'html' | 'image';
+
+export type { WebExtendManifest, ContentScriptConfig };
 
 export interface WebExtendEntryInput {
   name: string;
@@ -14,6 +18,21 @@ export type WebExtendEntryOutput = {
   name: string;
   output: string[];
 };
+
+export type WebExtendSingleEntryKey =
+  | 'icons'
+  | 'background'
+  | 'content'
+  | 'popup'
+  | 'options'
+  | 'sidepanel'
+  | 'devtools'
+  | 'newtab'
+  | 'history'
+  | 'bookmarks'
+  | 'sandbox'
+  | 'panel';
+export type WebExtendMultipleEntryKey = 'contents' | 'sandboxes' | 'panels' | 'pages' | 'scripting';
 
 export interface WebExtendEntries {
   icons?: WebExtendEntryInput;
@@ -33,100 +52,6 @@ export interface WebExtendEntries {
 }
 
 export type WebExtendEntryKey = keyof WebExtendEntries;
-
-export interface ExtensionManifest {
-  action?: ManifestAction;
-  browser_action?: ManifestAction;
-  background?: {
-    scripts?: string[];
-    service_worker?: string;
-    type?: 'module';
-  };
-  chrome_url_overrides?: ManifestChromeUrlOverrides;
-  commands?: Record<string, ManifestCommandItem>;
-  content_scripts?: ManifestContentScript[];
-  content_security_policy?:
-    | {
-        extension_pages?: string;
-        sandbox?: string;
-      }
-    | string;
-  description?: string;
-  default_locale?: string;
-  devtools_page?: string;
-  homepage_url?: string;
-  host_permissions?: string[];
-  icons?: ManifestIcons;
-  manifest_version?: number;
-  minimum_chrome_version?: string;
-  name?: string;
-  options_page?: string;
-  options_ui?: {
-    page?: string;
-    open_in_tab?: boolean;
-  };
-  permissions?: string[];
-  sandbox?: ManifestSandbox;
-  side_panel?: ManifestSidePanel;
-  sidebar_action?: ManifestSidebarActionType;
-  version?: string;
-  version_name?: string;
-  web_accessible_resources?: ManifestWebAccessibleResourcesC2ItemType[] | string[];
-  [key: string]: unknown; // allow other custom fields
-}
-
-export interface ManifestChromeUrlOverrides {
-  newtab?: string;
-  history?: string;
-  bookmarks?: string;
-}
-
-interface ManifestIcons {
-  [size: number]: string;
-}
-
-interface ManifestAction {
-  default_icon?: ManifestIcons;
-  default_title?: string;
-  default_popup?: string;
-}
-
-export interface ManifestContentScript {
-  matches: string[];
-  exclude_matches?: string[];
-  js?: string[];
-  css?: string[];
-  run_at?: 'document_start' | 'document_end' | 'document_idle';
-  all_frames?: boolean;
-  match_about_blank?: boolean;
-  include_globs?: string[];
-  exclude_globs?: string[];
-  world?: 'ISOLATED' | 'MAIN';
-}
-
-export type ContentScriptConfig = Omit<ManifestContentScript, 'js'>;
-
-interface ManifestSandbox {
-  pages: string[];
-  content_security_policy?: string;
-}
-
-interface ManifestCommandItem {
-  suggested_key?: {
-    default?: string;
-    windows?: string;
-    mac?: string;
-    chromeos?: string;
-    linux?: string;
-  };
-  description?: string;
-  global?: boolean;
-}
-
-interface ManifestSidePanel {
-  default_path?: string;
-}
-
 export type MaybePromise<T = unknown> = T | Promise<T>;
 
 export interface ManifestEntryProcessor {
@@ -146,18 +71,18 @@ export interface WebExtendRuntime {
 }
 
 export interface NormalizeManifestProps {
-  manifest?: ExtensionManifest;
+  manifest?: WebExtendManifest;
   context?: WebExtendContext;
 }
 
 export interface NormalizeMainfestEntryProps {
-  manifest: ExtensionManifest;
+  manifest: WebExtendManifest;
   context: WebExtendContext;
   entries: WebExtendEntries;
 }
 
 export interface WriteMainfestEntryItemProps {
-  manifest: ExtensionManifest;
+  manifest: WebExtendManifest;
   rootPath: string;
   context: WebExtendContext;
   name: string;
@@ -167,32 +92,17 @@ export interface WriteMainfestEntryItemProps {
 
 export interface WriteManifestFileProps {
   distPath: string;
-  manifest: ExtensionManifest;
+  manifest: WebExtendManifest;
   mode: string | undefined;
   runtime?: WebExtendRuntime;
 }
 
-type IconPath = Record<string, string> | string;
-
-interface ManifestSidebarActionType {
-  default_title?: string;
-  default_icon?: IconPath;
-  browser_style?: boolean;
-  default_panel: string;
-  open_at_install?: boolean;
-}
-
-export type ManifestWebAccessibleResourcesC2ItemType = {
-  resources: string[];
-  matches?: string[];
-};
-
-export type WebExtendEntryDirKey = WebExtendEntryKey | 'root' | 'content' | 'sandbox' | 'panel';
+export type WebExtendEntryDirKey = WebExtendSingleEntryKey | WebExtendMultipleEntryKey | 'root';
 
 export type WebExtendEntriesDir = Record<WebExtendEntryDirKey, string>;
 
 export interface WebExtendContext {
-  target: ExtensionTarget;
+  target: WebExtendTarget;
   mode: string;
   rootPath: string;
   outDir: string;
@@ -202,8 +112,10 @@ export interface WebExtendContext {
 }
 
 export interface WebExtendCommonConfig {
-  manifest?: ExtensionManifest | ((props: { target: ExtensionTarget; mode: string }) => ExtensionManifest);
-  target?: ExtensionTarget;
+  manifest?:
+    | WebExtendManifest
+    | ((props: { target: WebExtendTarget; mode: string }) => MaybePromise<WebExtendManifest>);
+  target?: WebExtendTarget;
   /**
    * @deprecated Use `entriesDir` instead.
    */
@@ -211,7 +123,7 @@ export interface WebExtendCommonConfig {
   outDir?: string;
   buildDirTemplate?: string;
   publicDir?: string;
-  entriesDir?: string;
+  entriesDir?: string | Partial<WebExtendEntriesDir>;
 }
 
 export type NormalizeContextOptions = Partial<Pick<WebExtendContext, 'rootPath' | 'mode' | 'runtime'>> &

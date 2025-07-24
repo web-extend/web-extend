@@ -1,8 +1,7 @@
 import { existsSync } from 'node:fs';
 import { relative, resolve } from 'node:path';
 import { defaultExtensionTarget } from '@web-extend/manifest/common';
-import type { ExtensionTarget } from '@web-extend/manifest/types';
-import chalk from 'chalk';
+import type { WebExtendTarget } from '@web-extend/manifest/types';
 import { loadConfig, loadWebExtendConfig } from './config.js';
 import { loadBuildResult } from './result.js';
 
@@ -48,13 +47,13 @@ export interface WebExtConfig {
 }
 
 export interface ExtensionRunner {
-  reloadAllExtensions: () => void;
+  // reloadAllExtensions?: () => void;
   exit: () => void;
 }
 
 export interface PreviewOptions {
   root?: string;
-  target?: ExtensionTarget;
+  target?: WebExtendTarget;
   outDir?: string;
 }
 
@@ -113,11 +112,11 @@ export async function preview({ root = process.cwd(), outDir, target }: PreviewO
 
   const { distPath, target: finalTarget } = await loadBuildResult({ root, outDir, target });
   if (!distPath) {
-    throw Error('Cannot find build info; please build first or specify the artifact directory.');
+    throw Error('Cannot find the build artifact, please build first or specify the artifact directory.');
   }
 
   if (!existsSync(distPath)) {
-    throw new Error(`Directory ${chalk.yellow(relative(root, distPath))} doesn't exist.`);
+    throw new Error(`"${relative(root, distPath)}" doesn't exist.`);
   }
 
   const config = await normalizeRunnerConfig(root, distPath, finalTarget);

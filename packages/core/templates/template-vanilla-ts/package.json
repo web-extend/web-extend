@@ -12,15 +12,15 @@
     "format": "prettier --write ."
   },
   "devDependencies": {
-    "@eslint/js": "^9.18.0",
-    "@rsbuild/core": "^1.4.3",
-    "@types/chrome": "^0.0.290",
-    "eslint": "^9.18.0",
-    "globals": "^15.14.0",
-    "prettier": "^3.4.2",
+    "@eslint/js": "^9.31.0",
+    "@rsbuild/core": "^1.4.9",
+    "@types/chrome": "^0.1.1",
+    "eslint": "^9.31.0",
+    "globals": "^15.15.0",
+    "prettier": "^3.6.2",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.21.0",
-    "web-ext": "^8.8.0",
+    "typescript-eslint": "^8.38.0",
+    "web-ext": "^8.9.0",
     "web-extend": "^0.0.2"
   }
 }

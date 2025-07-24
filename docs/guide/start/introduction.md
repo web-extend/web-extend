@@ -19,7 +19,7 @@ While there are several tools available for web extension development like Plasm
 - **Optimized Performance**: Built on Rsbuild for exceptional build speeds and development experience
 - **Zero Configuration**: Sensible defaults that work out of the box while maintaining flexibility for customization
 
-### Common Pain Points Solved
+### Pain Points Solved
 
 Many existing tools suffer from limitations that WebExtend specifically addresses:
 
@@ -32,7 +32,7 @@ WebExtend solves these issues with a thoughtful, developer-first approach.
 
 ## Main Features {#main-features}
 
-### File-based Entry Points {#file-based-entrypoints}
+### 📝 File-based Entry Points {#file-based-entrypoints}
 
 WebExtend uses a file-system based approach for managing extension entrypoints. Simply create files in the conventional directories, and WebExtend automatically configures your `manifest.json`. This reduces configuration overhead and makes your project structure more intuitive.
 
@@ -48,50 +48,50 @@ src/
 
 See [entry points](../essentials/entrypoints.md) for more details.
 
-### Seamless Development Experience {#seamless-development-experience}
+### ⚡️ Seamless Development Experience {#seamless-development-experience}
 
 Experience a development environment that just works:
 
-- 🔥 True HMR for all components including content scripts
-- 🚀 Automatic browser opening and extension running
-- 🛠️ Scaffold support with project templates and component generators
+- True HMR for all components including content scripts
+- Automatic browser opening and extension running
+- Scaffold support with project templates and component generators
 
-### Multi-Browser Support {#multi-browser-support}
+### 🧭 Multi-Browser Support {#multi-browser-support}
 
 Write once, run everywhere. WebExtend handles browser-specific manifest configurations and polyfills automatically:
 
-- ✅ Chrome/Chromium-based browsers
-- ✅ Firefox
-- ✅ Safari
-- ✅ Edge
+- Chrome/Chromium-based browsers
+- Firefox
+- Safari
+- Edge
 
 See [browser support](../essentials/browsers.md) for more details.
 
-### ESM & TypeScript Support {#esm-typescript-support}
+### 🛠️ ESM & TypeScript Support {#esm-typescript-support}
 
 Modern JavaScript features work out of the box:
 
-- 📦 Native ESM support
-- 🔷 First-class TypeScript support
-- 🎯 Path aliases
+- Native ESM support
+- First-class TypeScript support
+- Path aliases
 
-### Framework Agnostic {#framework-agnostic}
+### ✈️ Framework Agnostic {#framework-agnostic}
 
 Choose the tools that work best for your project:
 
-- 🔧 Use any modern framework (React, Vue, Svelte, etc.)
-- 🎨 Use any styling solution (CSS Modules, Tailwind, etc.)
-- 🔌 Easy integration with existing tools
+- Use any modern framework (React, Vue, Svelte, etc.)
+- Use any styling solution (CSS Modules, Tailwind, etc.)
+- Easy integration with existing tools
 
 See [using libraries](../essentials/using-libraries.md) for integration guides.
 
-### Lightning Fast Performance {#lightning-fast-performance}
+### 🚀 Lightning Fast Performance {#lightning-fast-performance}
 
 Built on [Rsbuild](https://rsbuild.rs/), WebExtend delivers exceptional performance:
 
-- ⚡️ Blazing fast dev server startup
-- 🔄 Quick rebuild times with intelligent caching
-- 📊 Bundle size optimization
+- Blazing fast dev server startup
+- Quick rebuild times with intelligent caching
+- Bundle size optimization
 
 ## Comparisons {#comparisons}
 
@@ -107,7 +107,7 @@ Here's how WebExtend stacks up against other popular web extension development t
 | MV3 and MV2 support                      | ✅        | ✅       | ✅      | 🟡 [^3]  |
 | Multi-browser support                    | ✅        | ✅       | ✅      | 🟡 [^4]  |
 | Automatic extension running              | ✅        | ❌       | ✅      | ❌       |
-| Build performance                        | ⚡️ Fast  | Moderate | Fast    | Fast     |
+| Build performance                        | Fast      | Moderate | Fast    | Fast     |
 | Configuration complexity                 | Low       | Moderate | High    | Low      |
 | Learning curve                           | Gentle    | Moderate | Steep   | Moderate |
 | Community and ecosystem                  | Growing   | Large    | Medium  | Medium   |

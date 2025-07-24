@@ -1,26 +1,36 @@
 import { createWriteStream, existsSync } from 'node:fs';
 import { basename, dirname, relative, resolve } from 'node:path';
 import { readManifestFile } from '@web-extend/manifest/common';
-import type { ExtensionTarget } from '@web-extend/manifest/types';
+import type { WebExtendTarget } from '@web-extend/manifest/types';
 import archiver from 'archiver';
-import chalk from 'chalk';
 import { loadBuildResult } from './result.js';
 
 export interface ZipOptions {
   root?: string;
   outDir?: string;
   filename?: string;
-  target?: ExtensionTarget;
+  target?: WebExtendTarget;
 }
 
-export async function zip({ filename, outDir, root = process.cwd(), target }: ZipOptions) {
-  const { distPath } = await loadBuildResult({ root, outDir, target });
+export interface ZipResult {
+  output: string;
+  total: number;
+}
+
+export async function zip({ filename, outDir, root = process.cwd(), target }: ZipOptions): Promise<ZipResult> {
+  let distPath = outDir ? resolve(root, outDir) : undefined;
+
   if (!distPath) {
-    throw Error('Cannot find build info; please build first or specify the artifact directory.');
+    const result = await loadBuildResult({ root, outDir, target });
+    distPath = result.distPath;
+  }
+
+  if (!distPath) {
+    throw Error('Cannot find the build artifact, please build first or specify the artifact directory.');
   }
 
   if (!existsSync(distPath)) {
-    throw new Error(`Directory ${chalk.yellow(relative(root, distPath))} doesn't exist.`);
+    throw new Error(`"${relative(root, distPath)}" doesn't exist.`);
   }
 
   const distPathName = basename(distPath);

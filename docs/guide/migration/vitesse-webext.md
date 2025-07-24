@@ -4,7 +4,13 @@ outline: deep
 
 # vitesse-webext
 
-This chapter introduces how to migrate a [vitesse-webext](https://github.com/antfu-collective/vitesse-webext) project to WebExtend. Here is a migration example [from-vitesse-webext](https://github.com/web-extend/examples/pull/4/files).
+[Vitesse-webext](https://github.com/antfu-collective/vitesse-webext) is an awesome WebExtension starter template. We adapted it to WebExtend. You can use it to create a new project.
+
+```shell
+npx web-extend@latest init --template with-vitesse-webext
+```
+
+If you want to migrate an existing vitesse-webext project, just follow the steps below.
 
 ## Installing dependencies
 
@@ -35,27 +41,24 @@ Update the versions of the following dependencies, guaranteeing they can be inte
 
 ```shell [npm]
 npm add -D unocss@latest @unocss/reset@latest
-npm add -D unplugin-auto-import@latest
-npm add -D unplugin-icons@latest
+npm add -D unplugin-auto-import@latest unplugin-icons@latest unplugin-vue-components@latest
 ```
 
 ```shell [pnpm]
 pnpm add -D unocss@latest @unocss/reset@latest
-pnpm add -D unplugin-auto-import@latest
-pnpm add -D unplugin-icons@latest
+pnpm add -D unplugin-auto-import@latest unplugin-icons@latest unplugin-vue-components@latest
 ```
 
 ```shell [yarn]
 yarn add -D unocss@latest @unocss/reset@latest
-yarn add -D unplugin-auto-import@latest
-yarn add -D unplugin-icons@latest
+yarn add -D unplugin-auto-import@latest unplugin-icons@latest unplugin-vue-components@latest
 ```
 
 :::
 
 ## Updating npm scripts
 
-Next, add the `"type": "module"` field and update scripts with the following WebExtend's CLI commands in `package.json`.
+Next, update scripts with the following WebExtend's CLI commands in `package.json`.
 
 ::: details package.json
 
@@ -99,18 +102,18 @@ Next, add the `"type": "module"` field and update scripts with the following Web
 
 :::
 
-## Migrate bundler
+## Migrating bundler
 
 WebExtend uses Rsbuild under the hood, so you need to migrate the bundler from Vite to Rsbuild. Nevertheless, the migration process is easy, and the main changes are as follows.
 
-1. Create `web-extend.config.ts` for manifest configuration.
-2. Create `rsbuild.config.ts` for bundler configuration.
-3. Add the following plugins.
+1. Create `web-extend.config.ts` for WebExtend configuration.
+2. Create `rsbuild.config.ts` for Rsbuild configuration.
+3. Add the following plugins to Rsbuild.
    - [@rsbuild/plugin-vue](https://rsbuild.rs/plugins/list/plugin-vue)
    - [unplugin-vue-components/rspack](https://github.com/unplugin/unplugin-vue-components)
    - [unplugin-auto-import/rspack](https://github.com/unplugin/unplugin-auto-import)
    - [unplugin-icons/rspack](https://github.com/unplugin/unplugin-icons)
-4. Migrate the following config.
+4. Migrate the following config to Rsbuild.
    - `resolve.alias` -> `resolve.alias`
    - `define` -> `source.define`
    - set `html.mountId: "app"`. Rsbuild will inject an HTML file for each entry file, so the original HTML files in source are useless.
@@ -228,7 +231,7 @@ export default defineConfig({
 
 :::
 
-To custom other config in the project, please refer to:
+To migrate other config in the project, please refer to the following documents:
 
 - [Rsbuild Vite](https://rsbuild.rs/guide/migration/vite)
 - [UnoCSS](https://unocss.dev/integrations/postcss)

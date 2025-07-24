@@ -6,7 +6,7 @@ outline: deep
 
 ## Environment Preparation
 
-Before you begin, ensure you have installed [Node.js >= 18](https://nodejs.org/en/download) (LTS version recommended).
+[Node.js >= 18](https://nodejs.org/en/download) (LTS version recommended) is required.
 
 ## Automatic Installation
 
@@ -18,13 +18,43 @@ npx web-extend@latest init
 
 During the initialization, you'll be prompted to:
 
-1. Choose a project name
+1. Input a project name
 2. Select a template
-3. Configure additional features
+3. Select entrypoints
+4. Select additional tools (optional)
 
-### Available Templates
+The following is an example of the initialization process.
 
-The `web-extend` tool provides the following templates, all using TypeScript by default:
+```shell
+┌  🚀 Welcome to WebExtend!
+│
+◇  Project name
+│  my-extension-app
+│
+◇  Select framework
+│  Vanilla
+│
+◇  Select entrypoints
+│  content, popup
+│
+◇  Select additional tools
+│  ESLint for code linting, Prettier for code formatting
+│
+◇  Next steps ─────────────╮
+│                          │
+│  1. cd my-extension-app  │
+│  2. git init (optional)  │
+│  3. npm install          │
+│  4. npm run dev          │
+│                          │
+├──────────────────────────╯
+│
+└  Done
+```
+
+### Templates
+
+WebExtend provides the following templates, all using TypeScript by default.
 
 - Vanilla
 - [React](https://react.dev/)
@@ -35,9 +65,15 @@ The `web-extend` tool provides the following templates, all using TypeScript by 
 
 > Note: While these templates are provided out of the box, WebExtend is framework-agnostic and can work with any frontend framework. For other frameworks, you may need to follow the manual installation process.
 
+You can also directly specify the project name and the template via additional arguments. For example, to create a React project:
+
+```shell
+npx web-extend@latest init my-extension-app --template react
+```
+
 ## Manual Installation
 
-If you prefer to set up your project manually or use a different framework, follow these steps:
+If you prefer to set up your project manually or use a different framework, follow these steps.
 
 ### 1. Install Dependencies
 

@@ -4,11 +4,11 @@ import type { RsbuildConfig, RsbuildPlugin } from '@rsbuild/core';
 import { ManifestManager } from '@web-extend/manifest';
 import { isDevMode } from '@web-extend/manifest/common';
 import type {
-  ExtensionManifest,
   WebExtendCommonConfig,
   WebExtendEntries,
   WebExtendEntryInput,
   WebExtendEntryOutput,
+  WebExtendManifest,
 } from '@web-extend/manifest/types';
 import { ContentRuntimePlugin, hotUpdateGlobal } from './content.js';
 import { normalizeRsbuildEnvironments } from './environments.js';
@@ -39,7 +39,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
           background: resolve(__dirname, 'static/background-runtime.js'),
           contentBridge: resolve(__dirname, 'static/content-bridge.js'),
         },
-        manifest: options.manifest as ExtensionManifest,
+        manifest: options.manifest as WebExtendManifest,
       });
 
       const { target, outDir, publicDir, mode, entriesDir } = manifestManager.context;
@@ -97,15 +97,6 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         output: {
           distPath: {
             root: outDir,
-          },
-        },
-        tools: {
-          rspack: {
-            experiments: {
-              buildHttp: {
-                allowedUris: [/https?:\/\//],
-              },
-            },
           },
         },
       };

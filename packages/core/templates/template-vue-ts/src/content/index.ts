@@ -1,5 +1,5 @@
-import type { ContentScriptConfig } from 'web-extend';
 import { createApp } from 'vue';
+import type { ContentScriptConfig } from 'web-extend';
 import App from './App.vue';
 
 let root = document.getElementById('web-extend-content');
