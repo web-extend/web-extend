@@ -1,5 +1,5 @@
 import { existsSync } from 'node:fs';
-import { readFile, readdir } from 'node:fs/promises';
+import { readdir, readFile } from 'node:fs/promises';
 import { basename, dirname, extname, join, relative, resolve, sep } from 'node:path';
 import type { WebExtendManifest } from './browser.js';
 import type {

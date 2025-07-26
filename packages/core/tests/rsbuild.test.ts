@@ -43,7 +43,7 @@ describe('rsbuild', () => {
       open: true,
     });
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, _reject) => {
       rsbuild.onDevCompileDone(async () => {
         const distPath = rsbuild.context.distPath;
         const manifest = await readManifestFile(distPath);

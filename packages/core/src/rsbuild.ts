@@ -5,10 +5,10 @@ import type { RsbuildConfig, RsbuildMode } from '@rsbuild/core';
 import type { WebExtendTarget } from '@web-extend/manifest/types';
 import chalk from 'chalk';
 import type { FSWatcher } from 'chokidar';
-import { type WebExtendConfigResult, loadWebExtendConfig } from './config.js';
+import { loadWebExtendConfig, type WebExtendConfigResult } from './config.js';
 import { cacheBuildResult } from './result.js';
 import { type ExtensionRunner, importWebExt, normalizeRunnerConfig, run } from './runner.js';
-import { type WatchCallback, watchFiles as chokidarWatchFiles } from './watcher.js';
+import { watchFiles as chokidarWatchFiles, type WatchCallback } from './watcher.js';
 import { zip } from './zip.js';
 
 interface RsbuildCommonOptions {

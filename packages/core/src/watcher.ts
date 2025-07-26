@@ -1,5 +1,5 @@
-import chokidar from 'chokidar';
 import type { ChokidarOptions } from 'chokidar';
+import chokidar from 'chokidar';
 import { debounce } from './util.js';
 
 export type WatchCallback = (props: { filePath: string; rootPath: string }) => Promise<unknown> | unknown;
