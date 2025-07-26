@@ -3,10 +3,10 @@ import type { ContentScriptConfig } from 'web-extend';
 import App from './App.svelte';
 
 let app = null;
-let root = document.getElementById('web-extend-content');
+let root = document.getElementById('my-content');
 if (!root) {
   root = document.createElement('div');
-  root.id = 'web-extend-content';
+  root.id = 'my-content';
   document.body.appendChild(root);
   app = mount(App, {
     target: root,

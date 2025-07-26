@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <h1>WebExtend + Vue</h1>
+    <h1>Hello Vue</h1>
     <p>This is a web page.</p>
   </div>
 </template>

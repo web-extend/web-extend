@@ -14,5 +14,3 @@ dist/
 .vscode/*
 !.vscode/extensions.json
 .idea
-
-.web-extend

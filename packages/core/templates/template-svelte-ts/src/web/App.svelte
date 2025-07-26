@@ -1,6 +1,6 @@
 <main>
   <div class="content">
-    <h1>WebExtend + Svelte</h1>
+    <h1>Hello Svelte</h1>
     <p>This is a web page.</p>
   </div>
 </main>
