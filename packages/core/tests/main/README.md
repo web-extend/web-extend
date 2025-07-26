@@ -1,4 +1,4 @@
-# WebExtend Project
+# Test Project
 
 ## Setup
 

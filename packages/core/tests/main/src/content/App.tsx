@@ -12,7 +12,6 @@ function App() {
     <div className="my-content-container">
       {visible && (
         <div className="my-content">
-          <h1>WebExtend + React</h1>
           <p>This is a content script.</p>
         </div>
       )}
