@@ -254,7 +254,7 @@ Customize browser target.
 
 Usage:
 
-```ts [web-extend.config.ts]
+```ts [bext.config.ts]
 import { defineConfig } from 'web-extend';
 
 export default defineConfig({

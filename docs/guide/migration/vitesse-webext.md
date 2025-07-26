@@ -106,7 +106,7 @@ Next, update scripts with the following WebExtend's CLI commands in `package.jso
 
 WebExtend uses Rsbuild under the hood, so you need to migrate the bundler from Vite to Rsbuild. Nevertheless, the migration process is easy, and the main changes are as follows.
 
-1. Create `web-extend.config.ts` for WebExtend configuration.
+1. Create `bext.config.ts` for WebExtend configuration.
 2. Create `rsbuild.config.ts` for Rsbuild configuration.
 3. Add the following plugins to Rsbuild.
    - [@rsbuild/plugin-vue](https://rsbuild.rs/plugins/list/plugin-vue)
@@ -124,7 +124,7 @@ WebExtend uses Rsbuild under the hood, so you need to migrate the bundler from V
 
 The full list of all config are as follows.
 
-::: details web-extend.config.ts
+::: details bext.config.ts
 
 ```ts
 import { defineConfig } from 'web-extend';

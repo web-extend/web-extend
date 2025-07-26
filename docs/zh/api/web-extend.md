@@ -252,7 +252,7 @@ type WebExtendTarget = 'chrome-mv3' | 'firefox-mv2' | 'firefox-mv3' | 'safari-mv
 
 使用：
 
-```ts [web-extend.config.ts]
+```ts [bext.config.ts]
 import { defineConfig } from 'web-extend';
 
 export default defineConfig({

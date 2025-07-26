@@ -106,7 +106,7 @@ yarn add -D unplugin-auto-import@latest unplugin-icons@latest unplugin-vue-compo
 
 WebExtend 底层使用 Rsbuild 作为构建工具，因此需要从 Vite 迁移至 Rsbuild。整个迁移过程比较简单，主要改动如下：
 
-1. 创建 `web-extend.config.ts`，用于配置 WebExtend。
+1. 创建 `bext.config.ts`，用于配置 WebExtend。
 2. 创建 `rsbuild.config.ts`，用于配置 Rsbuild.
 3. 添加插件：
    - [@rsbuild/plugin-vue](https://rsbuild.rs/plugins/list/plugin-vue)
@@ -124,7 +124,7 @@ WebExtend 底层使用 Rsbuild 作为构建工具，因此需要从 Vite 迁移�
 
 相关配置文件的完整内容如下：
 
-::: details web-extend.config.ts
+::: details bext.config.ts
 
 ```ts
 import { defineConfig } from 'web-extend';

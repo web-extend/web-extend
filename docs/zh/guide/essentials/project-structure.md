@@ -41,7 +41,7 @@ my-extension-app/
 ├── .env.production        # Production env vars
 ├── .gitignore             # Git ignore rules
 ├── package.json           # Project metadata
-├── web-extend.config.js   # Web-extend configuration
+├── bext.config.js         # WebExtend configuration
 ├── web-ext.config.js      # Web-ext configuration
 ├── rsbuild.config.ts      # Rsbuild configuration
 └── tsconfig.json          # TypeScript configuration
@@ -55,7 +55,6 @@ my-extension-app/
 | ------------------------ | ------------------------------------------------------------------------------------------- |
 | `public/`                | 公共的静态资源，这些资源会被直接拷贝到构建产物目录下                                        |
 | `src/`                   | 源码目录                                                                                    |
-| `.web-extend/`           | WebExtend 临时目录，存放构建信息                                                            |
 | `.env`                   | 公共环境变量文件                                                                            |
 | `.env.local`             | 本地的公共环境变量文件，需要添加到 .gitignore 中                                            |
 | `.env.development`       | 环境变量文件，在 process.env.NODE_ENV 为 'development' 时有效                               |
@@ -65,7 +64,7 @@ my-extension-app/
 | `.gitignore`             | Git 的忽略文件                                                                              |
 | `package.json`           | 项目的依赖和脚本                                                                            |
 | `rsbuild.config.ts`      | Rsbuild 配置文件                                                                            |
-| `web-extend.config.js`   | WebExtend 配置文件                                                                          |
+| `bext.config.js`         | WebExtend 配置文件                                                                          |
 | `web-ext.config.js`      | web-ext 配置文件                                                                            |
 | `tsconfig.json`          | TypeScript 配置文件                                                                         |
 
@@ -151,13 +150,13 @@ DEBUG=true
 
 参考 [environment variables](../essentials/environment-variables.md)。
 
-### web-extend.config.js
+### bext.config.js
 
-WebExtend 允许你通过 `web-extend.config.(ts|js|mjs)` 文件来自定义项目的各个方面。
+WebExtend 允许你通过 `bext.config.(ts|js|mjs)` 文件来自定义项目的各个方面。
 
 示例如下：
 
-```ts [web-extend.config.js]
+```ts [bext.config.js]
 import { defineConfig } from 'web-extend';
 
 export default defineConfig({
@@ -174,10 +173,10 @@ export default defineConfig({
 
 WebExtend 使用 [web-ext](https://github.com/mozilla/web-ext) 作为浏览器运行器。你可以通过以下两种方式来自定义运行器配置：
 
-- `web-extend.config.js` 文件中的 `webExt` 选项
+- `bext.config.js` 文件中的 `webExt` 选项
 - 独立的 `web-ext.config.(ts|js|mjs)` 文件
 
-当两种配置方法都提供时，`web-extend.config.js` 中的 `webExt` 选项将优先，`web-ext.config.js` 将被忽略。
+当两种配置方法都提供时，`bext.config.js` 中的 `webExt` 选项将优先，`web-ext.config.js` 将被忽略。
 
 示例如下：
 
@@ -193,10 +192,10 @@ export default defineWebExtConfig({
 
 WebExtend 使用 [Rsbuild](https://rsbuild.rs/) 作为打包器。你可以通过以下两种方式来自定义 Rsbuild 配置：
 
-- `web-extend.config.js` 文件中的 `rsbuild` 选项
+- `bext.config.js` 文件中的 `rsbuild` 选项
 - 独立的 `rsbuild.config.(ts|js|mjs)` 文件
 
-当两种配置方法都提供时，`web-extend.config.js` 中的 `rsbuild` 选项将优先，`rsbuild.config.js` 将被忽略。
+当两种配置方法都提供时，`bext.config.js` 中的 `rsbuild` 选项将优先，`rsbuild.config.js` 将被忽略。
 
 示例如下：
 

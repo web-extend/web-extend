@@ -49,7 +49,7 @@ Next, update scripts with the following WebExtend's CLI commands in `package.jso
 
 When migrating bundler from Vite to Rsbuild, the main changes are as follows.
 
-1. Create `web-extend.config.ts` for manifest configuration.
+1. Create `bext.config.ts` for manifest configuration.
 2. Create `rsbuild.config.ts` for bundler configuration.
 3. Migrate plugins, see [rsbuild-migrating-plugins](https://rsbuild.rs/guide/migration/vite#migrating-plugins).
 4. Migrate configuration, see [rsbuild-configuration-migration](https://rsbuild.rs/guide/migration/vite#configuration-migration).
@@ -58,7 +58,7 @@ For example:
 
 ::: code-group
 
-```ts [web-extend.config.ts]
+```ts [bext.config.ts]
 import { defineConfig } from 'web-extend';
 import manifest from './manifest.config';
 

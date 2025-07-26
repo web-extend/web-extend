@@ -41,7 +41,7 @@ my-extension-app/
 ├── .env.production        # Production env vars
 ├── .gitignore             # Git ignore rules
 ├── package.json           # Project metadata
-├── web-extend.config.js   # WebExtend configuration
+├── bext.config.js         # WebExtend configuration
 ├── web-ext.config.js      # Web-ext configuration
 ├── rsbuild.config.ts      # Rsbuild configuration
 └── tsconfig.json          # TypeScript configuration
@@ -55,7 +55,6 @@ The following table describes the main files and directories at the root of your
 | ------------------------ | ---------------------------------------------------------------- |
 | `public/`                | Static assets that will be copied directly to the dist folder    |
 | `src/`                   | Source code directory containing your extension's implementation |
-| `.web-extend/`           | Temporary directory used by WebExtend for build artifacts        |
 | `.env`                   | Environment variables loaded in all scenarios                    |
 | `.env.local`             | Local environment overrides (should be added to `.gitignore`)    |
 | `.env.development`       | Development-specific environment variables                       |
@@ -65,7 +64,7 @@ The following table describes the main files and directories at the root of your
 | `.gitignore`             | Specifies which files Git should ignore                          |
 | `package.json`           | Project metadata, dependencies and scripts                       |
 | `rsbuild.config.ts`      | Rsbuild configuration file for build customization               |
-| `web-extend.config.js`   | Configuration file for WebExtend                                 |
+| `bext.config.js`         | Configuration file for WebExtend                                 |
 | `web-ext.config.js`      | Configuration file for web-ext                                   |
 | `tsconfig.json`          | TypeScript configuration (if using TypeScript)                   |
 
@@ -150,13 +149,13 @@ DEBUG=true
 
 See [environment variables](../essentials/environment-variables.md) for more details.
 
-### web-extend.config.js
+### bext.config.js
 
-WebExtend allows customization of various aspects of your project through the `web-extend.config.(ts|js|mjs)` file.
+WebExtend allows customization of various aspects of your project through the `bext.config.(ts|js|mjs)` file.
 
 For example:
 
-```ts [web-extend.config.js]
+```ts [bext.config.js]
 import { defineConfig } from 'web-extend';
 
 export default defineConfig({
@@ -173,10 +172,10 @@ export default defineConfig({
 
 WebExtend uses [web-ext](https://github.com/mozilla/web-ext) as the browser runner. You can customize runner configurations through either:
 
-- The `webExt` option in `web-extend.config.js` file
+- The `webExt` option in `bext.config.js` file
 - A separate `web-ext.config.(ts|js|mjs)` file
 
-When both configuration methods are provided, the `webExt` option in `web-extend.config.js` will take precedence, and `web-ext.config.js` will be ignored.
+When both configuration methods are provided, the `webExt` option in `bext.config.js` will take precedence, and `web-ext.config.js` will be ignored.
 
 For example:
 
@@ -192,10 +191,10 @@ export default defineWebExtConfig({
 
 WebExtend uses [Rsbuild](https://rsbuild.rs/) as the bundler. You can customize Rsbuild configurations through either:
 
-- The `rsbuild` option in `web-extend.config.js` file
+- The `rsbuild` option in `bext.config.js` file
 - A separate `rsbuild.config.(ts|js|mjs)` file
 
-When both configuration methods are provided, the `rsbuild` option in `web-extend.config.js` will take precedence, and `rsbuild.config.js` will be ignored.
+When both configuration methods are provided, the `rsbuild` option in `bext.config.js` will take precedence, and `rsbuild.config.js` will be ignored.
 
 For example:
 

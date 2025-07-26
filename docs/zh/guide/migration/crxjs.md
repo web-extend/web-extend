@@ -54,7 +54,7 @@ yarn add -D web-extend @rsbuild/core web-ext
 
 ::: code-group
 
-```ts [web-extend.config.ts]
+```ts [bext.config.ts]
 import { defineConfig } from 'web-extend';
 import manifest from './manifest.config';
 

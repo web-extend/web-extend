@@ -78,7 +78,7 @@ WebExtend automatically handles manifest compatibility by:
 
 Example of custom manifest configuration:
 
-```js [web-extend.config.ts]
+```js [bext.config.ts]
 import { defineConfig } from 'web-extend';
 
 export default defineConfig({
