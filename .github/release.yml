@@ -5,7 +5,7 @@ changelog:
     authors:
       - github-actions
   categories:
-    - title: Breaking Changes 💥
+    - title: Breaking Changes 🚨
       labels:
         - "release: breaking change"
     - title: New Features 🎉
