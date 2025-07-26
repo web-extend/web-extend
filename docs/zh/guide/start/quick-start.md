@@ -71,7 +71,6 @@ WebExtend 提供以下模板，默认都使用 TypeScript：
 npx web-extend@latest init my-extension-app --template react
 ```
 
-
 ### 示例
 
 我们还提供了许多示例来帮助你入门。你可以在 [examples](https://github.com/web-extend/examples) 仓库中找到它们，并选择一个示例作为模板来开始。例如一个使用 React 和 Tailwind CSS 的示例：
@@ -79,7 +78,6 @@ npx web-extend@latest init my-extension-app --template react
 ```shell
 npx web-extend@latest init my-extension-app --template with-react-tailwindcss
 ```
-
 
 ## 手动安装 {#manual-installation}
 
@@ -170,7 +168,7 @@ yarn add -D eslint prettier
 弹出窗口入口点示例：
 
 ```ts [src/popup.ts]
-const root = document.querySelector("#root");
+const root = document.querySelector('#root');
 if (root) {
   root.innerHTML = `
   <div class="content">

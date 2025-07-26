@@ -335,7 +335,11 @@ export async function copyEntryFiles({
   sourcePath,
   destPath,
   entrypoints,
-}: { sourcePath: string; destPath: string; entrypoints?: EntrypointItem[] }) {
+}: {
+  sourcePath: string;
+  destPath: string;
+  entrypoints?: EntrypointItem[];
+}) {
   if (!entrypoints?.length) return;
 
   if (!existsSync(sourcePath)) {

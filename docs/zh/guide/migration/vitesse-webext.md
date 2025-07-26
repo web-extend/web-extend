@@ -127,8 +127,8 @@ WebExtend 底层使用 Rsbuild 作为构建工具，因此需要从 Vite 迁移�
 ::: details web-extend.config.ts
 
 ```ts
-import { defineConfig } from "web-extend";
-import manifest from "./src/manifest";
+import { defineConfig } from 'web-extend';
+import manifest from './src/manifest';
 
 export default defineConfig({
   manifest,
@@ -140,24 +140,24 @@ export default defineConfig({
 ::: details rsbuild.config.ts
 
 ```ts
-import { defineConfig } from "@rsbuild/core";
-import { pluginVue } from "@rsbuild/plugin-vue";
-import Components from "unplugin-vue-components/rspack";
-import AutoImport from "unplugin-auto-import/rspack";
-import Icons from "unplugin-icons/rspack";
-import IconsResolver from "unplugin-icons/resolver";
-import { isDev, r } from "./scripts/utils";
-import packageJson from "./package.json";
-import manifest from "./src/manifest";
+import { defineConfig } from '@rsbuild/core';
+import { pluginVue } from '@rsbuild/plugin-vue';
+import Components from 'unplugin-vue-components/rspack';
+import AutoImport from 'unplugin-auto-import/rspack';
+import Icons from 'unplugin-icons/rspack';
+import IconsResolver from 'unplugin-icons/resolver';
+import { isDev, r } from './scripts/utils';
+import packageJson from './package.json';
+import manifest from './src/manifest';
 
 export default defineConfig({
   plugins: [pluginVue()],
   html: {
-    mountId: "app",
+    mountId: 'app',
   },
   resolve: {
     alias: {
-      "~/": "./src/",
+      '~/': './src/',
     },
   },
   source: {
@@ -171,22 +171,22 @@ export default defineConfig({
       plugins: [
         AutoImport({
           imports: [
-            "vue",
+            'vue',
             {
-              "webextension-polyfill": [["=", "browser"]],
+              'webextension-polyfill': [['=', 'browser']],
             },
           ],
-          dts: r("src/auto-imports.d.ts"),
+          dts: r('src/auto-imports.d.ts'),
         }),
 
         Components({
-          dirs: [r("src/components")],
+          dirs: [r('src/components')],
           // generate `components.d.ts` for ts support with Volar
-          dts: r("src/components.d.ts"),
+          dts: r('src/components.d.ts'),
           resolvers: [
             // auto import icons
             IconsResolver({
-              prefix: "",
+              prefix: '',
             }),
           ],
         }),
@@ -203,7 +203,7 @@ export default defineConfig({
 ::: details postcss.config.mjs
 
 ```js
-import UnoCSS from "@unocss/postcss";
+import UnoCSS from '@unocss/postcss';
 
 export default {
   plugins: [UnoCSS()],
@@ -215,15 +215,12 @@ export default {
 ::: details unocss.config.ts
 
 ```js
-import { defineConfig } from "unocss/vite";
-import { presetAttributify, presetIcons, presetWind3 } from "unocss";
+import { defineConfig } from 'unocss/vite';
+import { presetAttributify, presetIcons, presetWind3 } from 'unocss';
 
 export default defineConfig({
   content: {
-    filesystem: [
-      "src/**/*.{html,js,ts,jsx,tsx,vue,svelte,astro}",
-      "!src/**/*.d.ts",
-    ],
+    filesystem: ['src/**/*.{html,js,ts,jsx,tsx,vue,svelte,astro}', '!src/**/*.d.ts'],
   },
   presets: [presetWind3(), presetAttributify(), presetIcons()],
 });

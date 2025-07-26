@@ -168,7 +168,7 @@ Create your extension's entry points in the `src` directory. WebExtend automatic
 Example popup entry point:
 
 ```ts [src/popup.ts]
-const root = document.querySelector("#root");
+const root = document.querySelector('#root');
 if (root) {
   root.innerHTML = `
   <div class="content">

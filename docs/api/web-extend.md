@@ -235,13 +235,7 @@ Customize `manifest` configuration. WebExtend will merge the `manifest` option a
 - Type:
 
 ```ts
-type WebExtendTarget =
-  | "chrome-mv3"
-  | "firefox-mv2"
-  | "firefox-mv3"
-  | "safari-mv3"
-  | "edge-mv3"
-  | "opera-mv3";
+type WebExtendTarget = 'chrome-mv3' | 'firefox-mv2' | 'firefox-mv3' | 'safari-mv3' | 'edge-mv3' | 'opera-mv3';
 ```
 
 - Default: `"chrome-mv3"`
@@ -278,7 +272,7 @@ export default defineConfig({
 Usage:
 
 ```ts [web-ext.config.ts]
-import { defineWebExtConfig } from "web-extend";
+import { defineWebExtConfig } from 'web-extend';
 
 export default defineWebExtConfig({
   run: {
@@ -298,12 +292,12 @@ export interface ContentScriptConfig {
   matches: string[];
   exclude_matches?: string[];
   css?: string[];
-  run_at?: "document_start" | "document_end" | "document_idle";
+  run_at?: 'document_start' | 'document_end' | 'document_idle';
   all_frames?: boolean;
   match_about_blank?: boolean;
   include_globs?: string[];
   exclude_globs?: string[];
-  world?: "ISOLATED" | "MAIN";
+  world?: 'ISOLATED' | 'MAIN';
 }
 ```
 
@@ -312,10 +306,10 @@ export interface ContentScriptConfig {
 Usage:
 
 ```ts [src/content/index.ts]
-import type { ContentScriptConfig } from "web-extend";
+import type { ContentScriptConfig } from 'web-extend';
 
 export const config: ContentScriptConfig = {
-  matches: ["https://www.google.com/*"],
+  matches: ['https://www.google.com/*'],
 };
 ```
 

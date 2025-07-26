@@ -35,20 +35,16 @@ web-extend zip -t firefox-mv2
 Webextend 会在代码构建时注入一个环境变量 `import.meta.env.WEB_EXTEND_TARGET`，这有助于处理不同浏览器之间的特异性。
 
 ```js [src/background.js]
-const target = import.meta.env.WEB_EXTEND_TARGET || "";
+const target = import.meta.env.WEB_EXTEND_TARGET || '';
 
 // Chrome-specific code
-if (target.includes("chrome")) {
-  chrome.sidePanel
-    .setPanelBehavior({ openPanelOnActionClick: true })
-    .catch((error) => console.error(error));
+if (target.includes('chrome')) {
+  chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch((error) => console.error(error));
 }
 
 // Firefox-specific code
-if (target.includes("firefox")) {
-  browser.sidebarAction
-    .setPanel({ url: "sidepanel.html" })
-    .catch((error) => console.error(error));
+if (target.includes('firefox')) {
+  browser.sidebarAction.setPanel({ url: 'sidepanel.html' }).catch((error) => console.error(error));
 }
 ```
 
@@ -65,19 +61,17 @@ WebExtend 会基于文件系统和构建目标，自动解析和生成 `manifest
 
 此外，可以自定义 manifest 兼容性，示例如下：
 
-
 ```js [web-extend.config.js]
-import { defineConfig } from "@rsbuild/core";
+import { defineConfig } from '@rsbuild/core';
 
 export default defineConfig({
   manifest: ({ target, mode }) => {
     return {
       // ...
-    }
-  }
+    };
+  },
 });
 ```
-
 
 参考文档：
 
@@ -98,8 +92,8 @@ Extension API 文档：
 可以直接使用 `chrome` API。
 
 ```ts
-chrome.storage.local.set({ key: "value" });
-chrome.runtime.sendMessage({ type: "message" });
+chrome.storage.local.set({ key: 'value' });
+chrome.runtime.sendMessage({ type: 'message' });
 ```
 
 推荐包： [@types/chrome](https://www.npmjs.com/package/@types/chrome)。
@@ -109,10 +103,10 @@ chrome.runtime.sendMessage({ type: "message" });
 使用 `webextension-polyfill` 包：
 
 ```js
-import browser from "webextension-polyfill";
+import browser from 'webextension-polyfill';
 
-browser.storage.local.set({ key: "value" });
-browser.runtime.sendMessage({ type: "message" });
+browser.storage.local.set({ key: 'value' });
+browser.runtime.sendMessage({ type: 'message' });
 ```
 
 推荐包：
@@ -141,11 +135,11 @@ npx web-extend preview
 在浏览器启动时，打开一个指定的链接。示例如下：
 
 ```js [web-ext.config.js]
-import { defineWebExtConfig } from "web-extend";
+import { defineWebExtConfig } from 'web-extend';
 
 export default defineWebExtConfig({
   run: {
-    startUrl: "https://www.google.com",
+    startUrl: 'https://www.google.com',
   },
 });
 ```
@@ -155,12 +149,12 @@ export default defineWebExtConfig({
 设置一个 Chromium 或 Firefox 的可执行路径，来打开一个指定的浏览器。示例如下：
 
 ```js [web-ext.config.js]
-import { defineWebExtConfig } from "web-extend";
+import { defineWebExtConfig } from 'web-extend';
 
 export default defineWebExtConfig({
   run: {
-    firefox: "/path/to/firefox",
-    chromiumBinary: "/path/to/chrome",
+    firefox: '/path/to/firefox',
+    chromiumBinary: '/path/to/chrome',
   },
 });
 ```
@@ -173,23 +167,23 @@ export default defineWebExtConfig({
 
 ```js [Mac/Linux]
 // web-ext.config.js
-import { defineWebExtConfig } from "web-extend";
+import { defineWebExtConfig } from 'web-extend';
 
 export default defineWebExtConfig({
   run: {
-    args: ["--user-data-dir=path/to/profile"],
+    args: ['--user-data-dir=path/to/profile'],
   },
 });
 ```
 
 ```js [Windows]
 // web-ext.config.js
-import { resolve } from "node:path";
-import { defineWebExtConfig } from "web-extend";
+import { resolve } from 'node:path';
+import { defineWebExtConfig } from 'web-extend';
 
 export default defineWebExtConfig({
   run: {
-    chromiumProfile: resolve("/path/to/profile"),
+    chromiumProfile: resolve('/path/to/profile'),
     keepProfileChanges: true,
   },
 });

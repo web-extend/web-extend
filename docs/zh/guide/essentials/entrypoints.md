@@ -71,7 +71,7 @@ npx web-extend g background
 
 ```js [src/background.js]
 chrome.runtime.onInstalled.addListener(() => {
-  console.log("Extension installed");
+  console.log('Extension installed');
 });
 ```
 
@@ -167,12 +167,12 @@ npx web-extend g contents/site-one contents/site-two
 ```
 
 ```js [src/content/index.ts]
-import "./index.css";
+import './index.css';
 
-let root = document.getElementById("myContent");
+let root = document.getElementById('myContent');
 if (!root) {
-  root = document.createElement("div");
-  root.id = "myContent";
+  root = document.createElement('div');
+  root.id = 'myContent';
   root.innerHTML = `<div class="web-extend-content-container">
     <div class="web-extend-content">
       <p>This is a content script.</p>
@@ -187,20 +187,20 @@ if (!root) {
 Shadow DOM 为 DOM 和样式提供了更好的封装。
 
 ```ts [src/content/index.ts]
-import inlineStyles from "./index.css?inline";
+import inlineStyles from './index.css?inline';
 
-let host = document.getElementById("myContentHost");
+let host = document.getElementById('myContentHost');
 if (!host) {
-  host = document.createElement("div");
-  host.id = "myContentHost";
+  host = document.createElement('div');
+  host.id = 'myContentHost';
 
-  const shadow = host.attachShadow({ mode: "open" });
+  const shadow = host.attachShadow({ mode: 'open' });
 
   const sheet = new CSSStyleSheet();
   sheet.replaceSync(inlineStyles);
   shadow.adoptedStyleSheets = [sheet];
 
-  const root = document.createElement("div");
+  const root = document.createElement('div');
   root.innerHTML = `<div class="web-extend-content-container">
     <div class="web-extend-content">
       <p>This is a content script.</p>
@@ -220,18 +220,18 @@ if (!host) {
 
 ```js [src/content/index.js]
 export const config = {
-  matches: ["https://www.google.com/*"],
-  run_at: "document_end",
+  matches: ['https://www.google.com/*'],
+  run_at: 'document_end',
   all_frames: false,
 };
 ```
 
 ```ts [src/content/index.ts]
-import type { ContentScriptConfig } from "web-extend";
+import type { ContentScriptConfig } from 'web-extend';
 
 export const config: ContentScriptConfig = {
-  matches: ["https://www.google.com/*"],
-  run_at: "document_end",
+  matches: ['https://www.google.com/*'],
+  run_at: 'document_end',
   all_frames: false,
 };
 ```
@@ -262,7 +262,7 @@ npx web-extend g devtools
 使用示例:
 
 ```ts [src/devtools.ts]
-chrome.devtools.panels.create("My Panel", "", "panel.html");
+chrome.devtools.panels.create('My Panel', '', 'panel.html');
 ```
 
 #### 添加面板 {#adding-panels}
@@ -385,17 +385,17 @@ npx web-extend g popup
 使用示例：
 
 ```tsx [src/popup/index.tsx]
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import App from "./App";
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './App';
 
-const rootEl = document.getElementById("root");
+const rootEl = document.getElementById('root');
 if (rootEl) {
   const root = createRoot(rootEl);
   root.render(
     <StrictMode>
       <App />
-    </StrictMode>
+    </StrictMode>,
   );
 }
 ```
@@ -458,12 +458,12 @@ Scripting 允许你以编程方式将 JavaScript 和 CSS 注入网页。这与�
 chrome.tabs.onActivated.addListener((e) => {
   chrome.scripting.executeScript({
     target: { tabId: e.tabId },
-    files: ["scripting/injected-script.js"],
+    files: ['scripting/injected-script.js'],
   });
 
   chrome.scripting.insertCSS({
     target: { tabId: e.tabId },
-    files: ["scripting/injected-style.css"],
+    files: ['scripting/injected-style.css'],
   });
 });
 ```

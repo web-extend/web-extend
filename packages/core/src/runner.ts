@@ -110,7 +110,11 @@ export async function preview({ root = process.cwd(), outDir, target }: PreviewO
     throw Error(`Cannot find package 'web-ext'; please install web-ext first.`);
   }
 
-  const { distPath, target: finalTarget } = await loadBuildResult({ root, outDir, target });
+  const { distPath, target: finalTarget } = await loadBuildResult({
+    root,
+    outDir,
+    target,
+  });
   if (!distPath) {
     throw Error('Cannot find the build artifact, please build first or specify the artifact directory.');
   }

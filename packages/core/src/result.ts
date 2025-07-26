@@ -32,7 +32,11 @@ export async function cacheBuildResult({
   root,
   data,
   cacheDir = defaultCacheDir,
-}: { root: string; data: CacheBuildInfo; cacheDir?: string }) {
+}: {
+  root: string;
+  data: CacheBuildInfo;
+  cacheDir?: string;
+}) {
   const resultPath = resolve(root, cacheDir, resultFile);
 
   const cacheDirPath = dirname(resultPath);
@@ -58,15 +62,7 @@ export async function cacheBuildResult({
   await writeFile(resultPath, JSON.stringify(result), 'utf-8');
 }
 
-export async function loadBuildResult({
-  root,
-  outDir,
-  target,
-}: {
-  root: string;
-  outDir?: string;
-  target?: string;
-}) {
+export async function loadBuildResult({ root, outDir, target }: { root: string; outDir?: string; target?: string }) {
   const { content: webExtendConfig } = await loadWebExtendConfig(root);
   const cacheDir = webExtendConfig?.cacheDir || defaultCacheDir;
   const res = {
