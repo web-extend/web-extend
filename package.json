@@ -14,8 +14,9 @@
     "docs:preview": "cd docs && pnpm preview",
     "prepare": "husky"
   },
-  "simple-git-hooks": {
-    "pre-commit": "pnpm lint:write"
+  "lint-staged": {
+    "*.{js,ts,cjs,mjs,jsx,tsx,json,jsonc}": ["biome check --write --no-errors-on-unmatched"],
+    "*": ["biome check --no-errors-on-unmatched --files-ignore-unknown=true"]
   },
   "repository": {
     "type": "git",
