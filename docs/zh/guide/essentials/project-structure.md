@@ -157,7 +157,7 @@ WebExtend 允许你通过 `bext.config.(ts|js|mjs)` 文件来自定义项目的�
 示例如下：
 
 ```ts [bext.config.js]
-import { defineConfig } from 'web-extend';
+import { defineConfig } from 'bext';
 
 export default defineConfig({
   entriesDir: './src', // Entries directory (default: "src")
@@ -181,7 +181,7 @@ WebExtend 使用 [web-ext](https://github.com/mozilla/web-ext) 作为浏览器�
 示例如下：
 
 ```javascript [web-ext.config.js]
-import { defineWebExtConfig } from 'web-extend';
+import { defineWebExtConfig } from 'bext';
 
 export default defineWebExtConfig({
   startUrl: ['https://example.com'],

@@ -21,13 +21,13 @@ WebExtend 支持以下浏览器扩展目标。
 
 当构建目标为 `chrome-mv3` 时，对应的构建产物可以在 Chromium 系列的浏览器中使用（包括 Chrome、Edge、Brave、Opera 等）。
 
-可以为 `web-extend` 的下列子命令传递 `--target` 或 `-t` 标志来指定目标。
+可以为 `bext` 的下列子命令传递 `--target` 或 `-t` 标志来指定目标。
 
 ```shell
-web-extend dev -t firefox-mv2
-web-extend build -t firefox-mv2
-web-extend preview -t firefox-mv2
-web-extend zip -t firefox-mv2
+bext dev -t firefox-mv2
+bext build -t firefox-mv2
+bext preview -t firefox-mv2
+bext zip -t firefox-mv2
 ```
 
 ### 环境变量
@@ -120,10 +120,10 @@ browser.runtime.sendMessage({ type: 'message' });
 
 ```shell
 # developemnt
-npx web-extend dev --open
+npx bext dev --open
 
 # production
-npx web-extend preview
+npx bext preview
 ```
 
 上述能力基于 [`web-ext`](https://github.com/mozilla/web-ext) 的 `run` 命令实现。如果需要自定义运行器的配置，可以在根目录下创建一个 `web-ext.config.[m|c]js` 文件。
@@ -135,7 +135,7 @@ npx web-extend preview
 在浏览器启动时，打开一个指定的链接。示例如下：
 
 ```js [web-ext.config.js]
-import { defineWebExtConfig } from 'web-extend';
+import { defineWebExtConfig } from 'bext';
 
 export default defineWebExtConfig({
   run: {
@@ -149,7 +149,7 @@ export default defineWebExtConfig({
 设置一个 Chromium 或 Firefox 的可执行路径，来打开一个指定的浏览器。示例如下：
 
 ```js [web-ext.config.js]
-import { defineWebExtConfig } from 'web-extend';
+import { defineWebExtConfig } from 'bext';
 
 export default defineWebExtConfig({
   run: {
@@ -167,7 +167,7 @@ export default defineWebExtConfig({
 
 ```js [Mac/Linux]
 // web-ext.config.js
-import { defineWebExtConfig } from 'web-extend';
+import { defineWebExtConfig } from 'bext';
 
 export default defineWebExtConfig({
   run: {
@@ -179,7 +179,7 @@ export default defineWebExtConfig({
 ```js [Windows]
 // web-ext.config.js
 import { resolve } from 'node:path';
-import { defineWebExtConfig } from 'web-extend';
+import { defineWebExtConfig } from 'bext';
 
 export default defineWebExtConfig({
   run: {

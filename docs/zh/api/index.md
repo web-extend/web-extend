@@ -2,39 +2,26 @@
 outline: [2, 3]
 ---
 
-# web-extend
+# Bext
 
-[`web-extend`](https://www.npmjs.com/package/web-extend) 是一个功能强大的工具集，用于创建、开发和构建浏览器扩展。它提供了一个流线型的工作流程，强大的 CLI 命令和灵活的配置选项。
+[`bext`](https://www.npmjs.com/package/bext) 是一个 CLI 工具，用于创建、开发和构建浏览器扩展。它提供了一个流线型的工作流程，强大的 CLI 命令和灵活的配置选项。
 
 ## 命令
 
-`web-extend` 是主命令，包含几个子命令。这些子命令遵循相同的用法模式。
+`bext` 是主命令，包含几个子命令。这些子命令遵循相同的用法模式。
 
 ```shell
-npx web-extend [options] [command]
+bext [options] [command]
 ```
 
-`we` 命令是 `web-extend` 命令的简写形式。`we` 命令在某些情况下非常方便。例如，使用 `we g` 来生成入口文件。
-
-::: info 注意
-`we` 命令需要在安装 `web-extend` 工具后才可以使用。
-:::
-
-```shell
-npx we g popup
-
-# equals to
-npx web-extend generate popup
-```
-
-### web-extend init
+### bext init
 
 `init` 命令用于初始化一个项目，内置了 Vanilla、[React](https://react.dev/)、[Vue](https://vuejs.org/)、[Svelte](https://svelte.dev/) 的项目模板。
 
 使用：
 
 ```shell
-npx web-extend@latest init [options] [dir]
+npx bext@latest init [options] [dir]
 ```
 
 选项：
@@ -75,14 +62,14 @@ Options:
 - `pages/{name}`
 - `icons`
 
-### web-extend generate
+### bext generate
 
 `generate` 命令用于生成入口文件。
 
 使用：
 
 ```shell
-npx web-extend generate|g [options] [entry...]
+npx bext generate|g [options] [entry...]
 ```
 
 选项：
@@ -99,14 +86,14 @@ Options:
 
 可用入口：同 `init` 命令。
 
-### web-extend dev
+### bext dev
 
 `dev` 命令使用 Rsbuild 作为构建工具，在开发环境中构建、运行扩展。
 
 使用：
 
 ```shell
-npx web-extend dev [options]
+bext dev [options]
 ```
 
 选项：
@@ -123,14 +110,14 @@ Options:
   -h, --help             display help for command
 ```
 
-### web-extend build
+### bext build
 
 `build` 命令使用 Rsbuild 作为构建工具，构建生产版本的扩展。
 
 使用：
 
 ```shell
-npx web-extend build [options]
+bext build [options]
 ```
 
 选项：
@@ -147,14 +134,14 @@ Options:
   -h, --help             display help for command
 ```
 
-### web-extend preview
+### bext preview
 
 `preview` 命令用于预览生产版本的扩展。运行之前需要先使用 `build` 命令构建扩展。
 
 使用：
 
 ```shell
-npx web-extend preview [options] [dir]
+bext preview [options] [dir]
 ```
 
 选项：
@@ -166,14 +153,14 @@ Options:
   -h, --help             display help for command
 ```
 
-### web-extend zip
+### bext zip
 
 `zip` 命令用于将生产版本的扩展压缩为一个 `.zip` 格式的文件。运行之前需要先使用 `build` 命令构建扩展。
 
 使用：
 
 ```shell
-npx web-extend zip [options] [dir]
+bext zip [options] [dir]
 ```
 
 选项：
@@ -253,7 +240,7 @@ type WebExtendTarget = 'chrome-mv3' | 'firefox-mv2' | 'firefox-mv3' | 'safari-mv
 使用：
 
 ```ts [bext.config.ts]
-import { defineConfig } from 'web-extend';
+import { defineConfig } from 'bext';
 
 export default defineConfig({
   entriesDir: "./src",
@@ -270,7 +257,7 @@ export default defineConfig({
 使用：
 
 ```ts [web-ext.config.ts]
-import { defineWebExtConfig } from 'web-extend';
+import { defineWebExtConfig } from 'bext';
 
 export default defineWebExtConfig({
   run: {
@@ -304,21 +291,9 @@ export interface ContentScriptConfig {
 使用：
 
 ```ts [src/content/index.ts]
-import type { ContentScriptConfig } from 'web-extend';
+import type { ContentScriptConfig } from 'bext';
 
 export const config: ContentScriptConfig = {
   matches: ['https://www.google.com/*'],
 };
 ```
-
-<!-- ### WebExtendManifest {#web-extend-manifest}
-
-源码: [`packages/manifest/src/types.ts`](https://github.com/web-extend/web-extend/blob/main/packages/manifest/src/types.ts)
-
-### WebExtendConfig {#web-extend-config}
-
-源码: [`packages/core/src/config.ts`](https://github.com/web-extend/web-extend/blob/main/packages/core/src/config.ts#L9)
-
-### WebExtConfig {#web-ext-config}
-
-源码: [`packages/core/src/runner.ts`](https://github.com/web-extend/web-extend/blob/main/packages/core/src/runner.ts#L46) -->

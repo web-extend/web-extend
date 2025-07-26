@@ -156,7 +156,7 @@ WebExtend allows customization of various aspects of your project through the `b
 For example:
 
 ```ts [bext.config.js]
-import { defineConfig } from 'web-extend';
+import { defineConfig } from 'bext';
 
 export default defineConfig({
   entriesDir: './src', // Entries directory (default: "src")
@@ -180,7 +180,7 @@ When both configuration methods are provided, the `webExt` option in `bext.confi
 For example:
 
 ```javascript [web-ext.config.js]
-import { defineWebExtConfig } from 'web-extend';
+import { defineWebExtConfig } from 'bext';
 
 export default defineWebExtConfig({
   startUrl: ['https://example.com'],

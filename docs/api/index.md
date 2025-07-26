@@ -2,39 +2,26 @@
 outline: [2, 3]
 ---
 
-# web-extend
+# Bext
 
-[`web-extend`](https://www.npmjs.com/package/web-extend) is a comprehensive toolkit for creating, developing, and building browser extensions. It provides a streamlined workflow with powerful CLI commands and flexible configuration options.
+[`bext`](https://www.npmjs.com/package/bext) is a CLI tool for creating, developing, and building browser extensions. It provides a streamlined workflow with powerful CLI commands and flexible configuration options.
 
 ## Commands
 
-`web-extend` is the main command. It includes several subcommands. These subcommands follow the same usage pattern below.
+`bext` is the main command. It includes several subcommands. These subcommands follow the same usage pattern below.
 
 ```shell
-npx web-extend [options] [command]
+npx bext [options] [command]
 ```
 
-`we` is a shortened form for `web-extend`. The alias is convenient in some cases. For example, use `we g` to generate entry points.
-
-::: info Note
-`we` command should be used after the `web-extend` tool installed.
-:::
-
-```shell
-npx we g popup
-
-# equals to
-npx web-extend generate popup
-```
-
-### web-extend init
+### bext init
 
 The `init` command is used to create a project.
 
 Usage:
 
 ```shell
-npx web-extend@latest init [options] [dir]
+npx bext@latest init [options] [dir]
 ```
 
 Options:
@@ -75,14 +62,14 @@ Available entrypoints:
 - `pages/{name}`
 - `icons`
 
-### web-extend generate
+### bext generate
 
 The `generate` command is used to generate entry files.
 
 Usage:
 
 ```shell
-npx web-extend generate|g [options] [entry...]
+npx bext generate|g [options] [entry...]
 ```
 
 Options:
@@ -99,14 +86,14 @@ Available templates: The same as the `init` command.
 
 Available entrypoints: The same as the `init` command.
 
-### web-extend dev
+### bext dev
 
 The `dev` command uses Rsbuild to build and run the extension in the development environment.
 
 Usage:
 
 ```shell
-npx web-extend dev [options]
+npx bext dev [options]
 ```
 
 Options:
@@ -123,14 +110,14 @@ Options:
   -h, --help             display help for command
 ```
 
-### web-extend build
+### bext build
 
 The `dev` command uses Rsbuild to build the extension in the production environment.
 
 Usage:
 
 ```shell
-npx web-extend build [options]
+npx bext build [options]
 ```
 
 Options:
@@ -147,14 +134,14 @@ Options:
   -h, --help             display help for command
 ```
 
-### web-extend preview
+### bext preview
 
 The `preview` command is used to preview the extension for production.
 
 Usage:
 
 ```shell
-npx web-extend preview [options] [dir]
+npx bext preview [options] [dir]
 ```
 
 Options:
@@ -166,14 +153,14 @@ Options:
   -h, --help             display help for command
 ```
 
-### web-extend zip
+### bext zip
 
 The `zip` command is used to package the extension for production.
 
 Usage:
 
 ```shell
-npx web-extend zip [options] [dir]
+npx bext zip [options] [dir]
 ```
 
 Options:
@@ -255,7 +242,7 @@ Customize browser target.
 Usage:
 
 ```ts [bext.config.ts]
-import { defineConfig } from 'web-extend';
+import { defineConfig } from 'bext';
 
 export default defineConfig({
   entriesDir: "./src",
@@ -272,7 +259,7 @@ export default defineConfig({
 Usage:
 
 ```ts [web-ext.config.ts]
-import { defineWebExtConfig } from 'web-extend';
+import { defineWebExtConfig } from 'bext';
 
 export default defineWebExtConfig({
   run: {
@@ -306,21 +293,9 @@ export interface ContentScriptConfig {
 Usage:
 
 ```ts [src/content/index.ts]
-import type { ContentScriptConfig } from 'web-extend';
+import type { ContentScriptConfig } from 'bext';
 
 export const config: ContentScriptConfig = {
   matches: ['https://www.google.com/*'],
 };
 ```
-
-<!-- ### WebExtendManifest {#web-extend-manifest}
-
-source: [`packages/manifest/src/types.ts`](https://github.com/web-extend/web-extend/blob/main/packages/manifest/src/types.ts)
-
-### WebExtendConfig {#web-extend-config}
-
-source: [`packages/core/src/config.ts`](https://github.com/web-extend/web-extend/blob/main/packages/core/src/config.ts#L9)
-
-### WebExtConfig {#web-ext-config}
-
-source: [`packages/core/src/runner.ts`](https://github.com/web-extend/web-extend/blob/main/packages/core/src/runner.ts#L46) -->

@@ -13,7 +13,7 @@ WebExtend supports lots of frontend frameworks or libraries, which benefits from
 To create a project with WebExtend and React, just run the following command.
 
 ```shell
-npx web-extend@latest init --template react
+npx bext@latest init --template react
 ```
 
 To use React in an existing WebExtend project, you need to register the [Rsbuild React plugin](https://rsbuild.rs/plugins/list/plugin-react).
@@ -32,7 +32,7 @@ export default defineConfig({
 To create a project with WebExtend and Vue, just run the following command.
 
 ```shell
-npx web-extend@latest init --template vue
+npx bext@latest init --template vue
 ```
 
 To use Vue in an existing WebExtend project, you need to register the [Rsbuild Vue plugin](https://rsbuild.rs/plugins/list/plugin-vue).
@@ -57,7 +57,7 @@ export default defineConfig({
 To create a project with WebExtend and React, just run the following command.
 
 ```shell
-npx web-extend@latest init --template preact
+npx bext@latest init --template preact
 ```
 
 To use Preact in an existing WebExtend project, you need to register the [Rsbuild Rreact plugin](https://rsbuild.rs/plugins/list/plugin-preact).
@@ -76,7 +76,7 @@ export default defineConfig({
 To create a project with WebExtend and Svelte, just run the following command.
 
 ```shell
-npx web-extend@latest init --template svelte
+npx bext@latest init --template svelte
 ```
 
 To use Svelte in an existing WebExtend project, you need to register the [Rsbuild Svelte plugin](https://rsbuild.rs/plugins/list/plugin-svelte).
@@ -95,7 +95,7 @@ export default defineConfig({
 To create a project with WebExtend and Solid, just run the following command.
 
 ```shell
-npx web-extend@latest init --template solid
+npx bext@latest init --template solid
 ```
 
 To use Solid in an existing WebExtend project, you need to register the [Rsbuild Solid plugin](https://rsbuild.rs/plugins/list/plugin-solid).

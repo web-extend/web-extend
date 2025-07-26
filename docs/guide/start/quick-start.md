@@ -10,10 +10,10 @@ outline: deep
 
 ## Automatic Installation
 
-The easiest way to get started is using the `web-extend` CLI tool. This will set up a complete project structure with all necessary configurations.
+The easiest way to get started is using the `bext` CLI tool. This will set up a complete project structure with all necessary configurations.
 
 ```shell
-npx web-extend@latest init
+npx bext@latest init
 ```
 
 During the initialization, you'll be prompted to:
@@ -26,7 +26,7 @@ During the initialization, you'll be prompted to:
 The following is an example of the initialization process.
 
 ```shell
-┌  🚀 Welcome to WebExtend!
+┌  🚀 Welcome to Bext CLI!
 │
 ◇  Project name
 │  my-extension-app
@@ -68,7 +68,7 @@ WebExtend provides the following templates, all using TypeScript by default.
 You can also directly specify the project name and the template via additional arguments. For example, to create a React project:
 
 ```shell
-npx web-extend@latest init my-extension-app --template react
+npx bext@latest init my-extension-app --template react
 ```
 
 ### Examples
@@ -76,7 +76,7 @@ npx web-extend@latest init my-extension-app --template react
 We also provide lots of examples to help you get started. You can find them in the [examples](https://github.com/web-extend/examples) repository and select a example as the template to start. For example, a React project with Tailwind CSS:
 
 ```shell
-npx web-extend@latest init my-extension-app --template with-react-tailwindcss
+npx bext@latest init my-extension-app --template with-react-tailwindcss
 ```
 
 ## Manual Installation
@@ -94,7 +94,7 @@ mkdir my-extension-app
 cd my-extension-app
 
 npm init -y
-npm add -D web-extend @rsbuild/core web-ext
+npm add -D bext @rsbuild/core web-ext
 ```
 
 ```shell [pnpm]
@@ -102,7 +102,7 @@ mkdir my-extension-app
 cd my-extension-app
 
 npm init -y
-pnpm add -D web-extend @rsbuild/core web-ext
+pnpm add -D bext @rsbuild/core web-ext
 ```
 
 ```shell [yarn]
@@ -110,7 +110,7 @@ mkdir my-extension-app
 cd my-extension-app
 
 npm init -y
-yarn add -D web-extend @rsbuild/core web-ext
+yarn add -D bext @rsbuild/core web-ext
 ```
 
 :::
@@ -153,10 +153,10 @@ Add the following configuration to your `package.json`:
 {
   "type": "module",
   "scripts": {
-    "dev": "web-extend dev --open",
-    "build": "web-extend build",
-    "preview": "web-extend preview",
-    "zip": "web-extend zip"
+    "dev": "bext dev --open",
+    "build": "bext build",
+    "preview": "bext preview",
+    "zip": "bext zip"
   }
 }
 ```
@@ -182,7 +182,7 @@ if (root) {
 Alternatively, generate entry points using the CLI:
 
 ```shell
-npx web-extend g popup
+npx bext g popup
 ```
 
 ## Development Workflow

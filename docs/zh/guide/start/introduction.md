@@ -145,7 +145,7 @@ src/
 开始使用 WebExtend 非常简单：
 
 ```bash
-npx web-extend@latest init
+npx bext@latest init
 ```
 
 前往我们的[快速开始](./quick-start.md)指南开始你的旅程。
