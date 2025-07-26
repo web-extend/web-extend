@@ -6,7 +6,7 @@ import { type PreviewOptions, preview } from './runner.js';
 import { type ZipOptions, zip } from './zip.js';
 
 function runCli() {
-  program.name('web-extend');
+  program.name('bext');
 
   const initCommand = program.command('init').description('create a new project');
   const generateCommand = program.command('generate').alias('g').description('generate entry files');

@@ -31,7 +31,7 @@ interface NormalizedInitOptions {
 
 function welcome() {
   console.log();
-  intro(chalk.cyan('🚀 Welcome to WebExtend!'));
+  intro(chalk.cyan('🚀 Welcome to Bext CLI!'));
 }
 
 function farewell(options: InitOptions) {
