@@ -261,7 +261,7 @@ async function copyTemplate(source: string, dest: string, options: InitOptions) 
   const entryNames = [...ENTRYPOINT_ITEMS.map((item) => item.value), 'web'];
   const { tools = [] } = options;
 
-  const ignores = ['node_modules', 'dist', '.web-extend'];
+  const ignores = ['node_modules', 'dist', '.bext'];
   if (!tools.includes('eslint')) {
     ignores.push('eslint.config.js');
   }

@@ -13,15 +13,15 @@ Install the following dependencies.
 ::: code-group
 
 ```shell [npm]
-npm add -D web-extend @rsbuild/core web-ext
+npm add -D bext @rsbuild/core web-ext
 ```
 
 ```shell [pnpm]
-pnpm add -D web-extend @rsbuild/core web-ext
+pnpm add -D bext @rsbuild/core web-ext
 ```
 
 ```shell [yarn]
-yarn add -D web-extend @rsbuild/core web-ext
+yarn add -D bext @rsbuild/core web-ext
 ```
 
 :::
@@ -35,10 +35,10 @@ Next, update scripts with the following WebExtend's CLI commands in `package.jso
 ```json [package.json]
 {
   "scripts": {
-    "dev": "web-extend dev --open",
-    "build": "web-extend build",
-    "preview": "web-extend preview",
-    "zip": "web-extend zip"
+    "dev": "bext dev --open",
+    "build": "bext build",
+    "preview": "bext preview",
+    "zip": "bext zip"
   }
 }
 ```
@@ -59,7 +59,7 @@ For example:
 ::: code-group
 
 ```ts [bext.config.ts]
-import { defineConfig } from 'web-extend';
+import { defineConfig } from 'bext';
 import manifest from './manifest.config';
 
 export default defineConfig({

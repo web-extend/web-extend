@@ -7,7 +7,7 @@ outline: deep
 [Vitesse-webext](https://github.com/antfu-collective/vitesse-webext) is an awesome WebExtension starter template. We adapted it to WebExtend. You can use it to create a new project.
 
 ```shell
-npx web-extend@latest init --template with-vitesse-webext
+npx bext@latest init --template with-vitesse-webext
 ```
 
 If you want to migrate an existing vitesse-webext project, just follow the steps below.
@@ -19,17 +19,17 @@ Install the following dependencies.
 ::: code-group
 
 ```shell [npm]
-npm add -D web-extend @rsbuild/core
+npm add -D bext @rsbuild/core
 npm add -D @rsbuild/plugin-vue @unocss/postcss
 ```
 
 ```shell [pnpm]
-pnpm add -D web-extend @rsbuild/core
+pnpm add -D bext @rsbuild/core
 pnpm add -D @rsbuild/plugin-vue @unocss/postcss
 ```
 
 ```shell [yarn]
-yarn add -D web-extend @rsbuild/core
+yarn add -D bext @rsbuild/core
 yarn add -D @rsbuild/plugin-vue @unocss/postcss
 ```
 
@@ -72,28 +72,28 @@ Next, update scripts with the following WebExtend's CLI commands in `package.jso
     "dev:background": "npm run build:background -- --mode development", // [!code --]
     "dev:web": "vite", // [!code --]
     "dev:js": "npm run build:js -- --mode development", // [!code --]
-    "dev": "web-extend dev --open", // [!code ++]
-    "dev:firefox": "web-extend dev --open --target firefox-mv2", // [!code ++]
+    "dev": "bext dev --open", // [!code ++]
+    "dev:firefox": "bext dev --open --target firefox-mv2", // [!code ++]
 
     "build": "cross-env NODE_ENV=production run-s clear build:web build:prepare build:background build:js", // [!code --]
     "build:prepare": "esno scripts/prepare.ts", // [!code --]
     "build:background": "vite build --config vite.config.background.mts", // [!code --]
     "build:web": "vite build", // [!code --]
     "build:js": "vite build --config vite.config.content.mts", // [!code --]
-    "build": "web-extend build", // [!code ++]
-    "build:firefox": "web-extend build --target firefox-mv2", // [!code ++]
+    "build": "bext build", // [!code ++]
+    "build:firefox": "bext build --target firefox-mv2", // [!code ++]
 
     "pack": "cross-env NODE_ENV=production run-p pack:*", // [!code --]
     "pack:zip": "rimraf extension.zip && jszip-cli add extension/* -o ./extension.zip", // [!code --]
     "pack:crx": "crx pack extension -o ./extension.crx", // [!code --]
     "pack:xpi": "cross-env WEB_EXT_ARTIFACTS_DIR=./ web-ext build --source-dir ./extension --filename extension.xpi --overwrite-dest", // [!code --]
-    "zip": "web-extend zip", // [!code ++]
-    "zip:firefox": "web-extend zip --target firefox-mv2", // [!code ++]
+    "zip": "bext zip", // [!code ++]
+    "zip:firefox": "bext zip --target firefox-mv2", // [!code ++]
 
     "start:chromium": "web-ext run --source-dir ./extension --target=chromium", // [!code --]
     "start:firefox": "web-ext run --source-dir ./extension --target=firefox-desktop", // [!code --]
-    "preview": "web-extend preview", // [!code ++]
-    "preview:firefox": "web-extend preview --target firefox-mv2", // [!code ++]
+    "preview": "bext preview", // [!code ++]
+    "preview:firefox": "bext preview --target firefox-mv2", // [!code ++]
 
     "clear": "rimraf --glob extension/dist extension/manifest.json extension.*" // [!code --]
   }
@@ -127,7 +127,7 @@ The full list of all config are as follows.
 ::: details bext.config.ts
 
 ```ts
-import { defineConfig } from 'web-extend';
+import { defineConfig } from 'bext';
 import manifest from './src/manifest';
 
 export default defineConfig({
@@ -237,7 +237,7 @@ To migrate other config in the project, please refer to the following documents:
 
 WebExtend uses the file system to parse entry files and generates the corresponding fields for `manifest.json`. So you don't need to define them explicitly any more. The main changes are as follows.
 
-- Generate icons: run `npx web-extend g icons --template ./extension/assets/icon-512.png` to generate icon files under the `src/assets` directory.
+- Generate icons: run `npx bext g icons --template ./extension/assets/icon-512.png` to generate icon files under the `src/assets` directory.
 - Change popup, options and sidepanel: remove `index.html` and rename `main.ts` to `index.ts` respectively.
 - Change content: rename the `contentScripts` directory to `content`.
 - Change background: rename `main.ts` to `index.ts`, and remove `import.meta.hot` related content in code.

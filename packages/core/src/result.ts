@@ -13,7 +13,7 @@ interface CacheResult {
   build?: CacheBuildInfo[];
 }
 
-const defaultCacheDir = join('node_modules', '.web-extend');
+const defaultCacheDir = join('node_modules', '.bext');
 const resultFile = 'results.json';
 
 async function readResultFromCache(root: string, cacheDir: string) {

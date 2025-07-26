@@ -7,7 +7,7 @@ outline: deep
 [vitesse-webext](https://github.com/antfu-collective/vitesse-webext) 是一个非常棒的 WebExtension 项目模板。我们将其迁移到了 WebExtend。你可以使用它来创建一个新项目。
 
 ```shell
-npx web-extend@latest init --template with-vitesse-webext
+npx bext@latest init --template with-vitesse-webext
 ```
 
 如果你想要迁移一个已有的 vitesse-webext 项目，请按照以下步骤进行。
@@ -19,17 +19,17 @@ npx web-extend@latest init --template with-vitesse-webext
 ::: code-group
 
 ```shell [npm]
-npm add -D @rsbuild/core web-extend
+npm add -D @rsbuild/core bext
 npm add -D @rsbuild/plugin-vue @unocss/postcss
 ```
 
 ```shell [pnpm]
-pnpm add -D @rsbuild/core web-extend
+pnpm add -D @rsbuild/core bext
 pnpm add -D @rsbuild/plugin-vue @unocss/postcss
 ```
 
 ```shell [yarn]
-yarn add -D @rsbuild/core web-extend
+yarn add -D @rsbuild/core bext
 yarn add -D @rsbuild/plugin-vue @unocss/postcss
 ```
 
@@ -58,7 +58,7 @@ yarn add -D unplugin-auto-import@latest unplugin-icons@latest unplugin-vue-compo
 
 ## 更新 npm scripts
 
-使用 `web-extend` 的 CLI 命令替换 `scripts` 中的 `dev`、`build`、 `pack`、 `start` 等命令。
+使用 `bext` 的 CLI 命令替换 `scripts` 中的 `dev`、`build`、 `pack`、 `start` 等命令。
 
 ::: details package.json
 
@@ -72,28 +72,28 @@ yarn add -D unplugin-auto-import@latest unplugin-icons@latest unplugin-vue-compo
     "dev:background": "npm run build:background -- --mode development", // [!code --]
     "dev:web": "vite", // [!code --]
     "dev:js": "npm run build:js -- --mode development", // [!code --]
-    "dev": "web-extend dev --open", // [!code ++]
-    "dev:firefox": "web-extend dev --open --target firefox-mv2", // [!code ++]
+    "dev": "bext dev --open", // [!code ++]
+    "dev:firefox": "bext dev --open --target firefox-mv2", // [!code ++]
 
     "build": "cross-env NODE_ENV=production run-s clear build:web build:prepare build:background build:js", // [!code --]
     "build:prepare": "esno scripts/prepare.ts", // [!code --]
     "build:background": "vite build --config vite.config.background.mts", // [!code --]
     "build:web": "vite build", // [!code --]
     "build:js": "vite build --config vite.config.content.mts", // [!code --]
-    "build": "web-extend build", // [!code ++]
-    "build:firefox": "web-extend build --target firefox-mv2", // [!code ++]
+    "build": "bext build", // [!code ++]
+    "build:firefox": "bext build --target firefox-mv2", // [!code ++]
 
     "pack": "cross-env NODE_ENV=production run-p pack:*", // [!code --]
     "pack:zip": "rimraf extension.zip && jszip-cli add extension/* -o ./extension.zip", // [!code --]
     "pack:crx": "crx pack extension -o ./extension.crx", // [!code --]
     "pack:xpi": "cross-env WEB_EXT_ARTIFACTS_DIR=./ web-ext build --source-dir ./extension --filename extension.xpi --overwrite-dest", // [!code --]
-    "zip": "web-extend zip", // [!code ++]
-    "zip:firefox": "web-extend zip --target firefox-mv2", // [!code ++]
+    "zip": "bext zip", // [!code ++]
+    "zip:firefox": "bext zip --target firefox-mv2", // [!code ++]
 
     "start:chromium": "web-ext run --source-dir ./extension --target=chromium", // [!code --]
     "start:firefox": "web-ext run --source-dir ./extension --target=firefox-desktop", // [!code --]
-    "preview": "web-extend preview", // [!code ++]
-    "preview:firefox": "web-extend preview --target firefox-mv2", // [!code ++]
+    "preview": "bext preview", // [!code ++]
+    "preview:firefox": "bext preview --target firefox-mv2", // [!code ++]
 
     "clear": "rimraf --glob extension/dist extension/manifest.json extension.*" // [!code --]
   }
@@ -127,7 +127,7 @@ WebExtend 底层使用 Rsbuild 作为构建工具，因此需要从 Vite 迁移�
 ::: details bext.config.ts
 
 ```ts
-import { defineConfig } from 'web-extend';
+import { defineConfig } from 'bext';
 import manifest from './src/manifest';
 
 export default defineConfig({
@@ -237,7 +237,7 @@ export default defineConfig({
 
 WebExtend 会根据文件系统自动解析入口文件，因此无需在 `manifest.json` 中显示声明。源码内容的主要改动如下：
 
-- 生成 icons：运行 `npx web-extend g icons --template ./extension/assets/icon-512.png` 命令在 `src/assets` 目录下生成需要的 icon 文件。
+- 生成 icons：运行 `npx bext g icons --template ./extension/assets/icon-512.png` 命令在 `src/assets` 目录下生成需要的 icon 文件。
 - 更改 popup、options、sidepanel：分别在对应的目录中移除 `index.html`，将 `main.ts` 重命名为 `index.ts`。
 - 更改 content：将 `contentScripts` 目录重命名为 `content`。
 - 更改 background: 该目录中的 `main.ts` 重命名为 `index.ts`，删除代码中的 `import.meta.hot` 相关内容。
