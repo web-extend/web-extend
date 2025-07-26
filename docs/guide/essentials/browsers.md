@@ -48,20 +48,16 @@ web-extend zip -t firefox-mv2
 WebExtend injects the `import.meta.env.WEB_EXTEND_TARGET` environment variable during build, which helps handle browser-specific code:
 
 ```js [src/background.js]
-const target = import.meta.env.WEB_EXTEND_TARGET || "";
+const target = import.meta.env.WEB_EXTEND_TARGET || '';
 
 // Chrome-specific code
-if (target.includes("chrome")) {
-  chrome.sidePanel
-    .setPanelBehavior({ openPanelOnActionClick: true })
-    .catch((error) => console.error(error));
+if (target.includes('chrome')) {
+  chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch((error) => console.error(error));
 }
 
 // Firefox-specific code
-if (target.includes("firefox")) {
-  browser.sidebarAction
-    .setPanel({ url: "sidepanel.html" })
-    .catch((error) => console.error(error));
+if (target.includes('firefox')) {
+  browser.sidebarAction.setPanel({ url: 'sidepanel.html' }).catch((error) => console.error(error));
 }
 ```
 
@@ -83,7 +79,7 @@ WebExtend automatically handles manifest compatibility by:
 Example of custom manifest configuration:
 
 ```js [web-extend.config.ts]
-import { defineConfig } from "web-extend";
+import { defineConfig } from 'web-extend';
 
 export default defineConfig({
   manifest: ({ target, mode }) => {
@@ -108,8 +104,8 @@ WebExtend currently doesn't handle Extension API compatibility automatically. Yo
 Use the `chrome` API directly:
 
 ```ts
-chrome.storage.local.set({ key: "value" });
-chrome.runtime.sendMessage({ type: "message" });
+chrome.storage.local.set({ key: 'value' });
+chrome.runtime.sendMessage({ type: 'message' });
 ```
 
 Recommended packages: [@types/chrome](https://www.npmjs.com/package/@types/chrome)
@@ -119,11 +115,11 @@ Recommended packages: [@types/chrome](https://www.npmjs.com/package/@types/chrom
 Use the `webextension-polyfill` package:
 
 ```ts
-import browser from "webextension-polyfill";
+import browser from 'webextension-polyfill';
 
 // The API is similar to chrome.* but uses promises
-browser.storage.local.set({ key: "value" });
-browser.runtime.sendMessage({ type: "message" });
+browser.storage.local.set({ key: 'value' });
+browser.runtime.sendMessage({ type: 'message' });
 ```
 
 Recommended packages:
@@ -157,11 +153,11 @@ To customize settings for the runner, you can create a `web-ext.config.[m|c]js` 
 Open a tab at the specificed URL when the browser starts. Example:
 
 ```js [web-ext.config.js]
-import { defineWebExtConfig } from "web-extend";
+import { defineWebExtConfig } from 'web-extend';
 
 export default defineWebExtConfig({
   run: {
-    startUrl: "https://www.google.com",
+    startUrl: 'https://www.google.com',
   },
 });
 ```
@@ -171,12 +167,12 @@ export default defineWebExtConfig({
 Provide a custom Chromium or Firefox executable path to open the specific browser.
 
 ```js [web-ext.config.js]
-import { defineWebExtConfig } from "web-extend";
+import { defineWebExtConfig } from 'web-extend';
 
 export default defineWebExtConfig({
   run: {
-    firefox: "/path/to/firefox",
-    chromiumBinary: "/path/to/chrome",
+    firefox: '/path/to/firefox',
+    chromiumBinary: '/path/to/chrome',
   },
 });
 ```
@@ -189,23 +185,23 @@ export default defineWebExtConfig({
 
 ```js [Mac/Linux]
 // web-ext.config.js
-import { defineWebExtConfig } from "web-extend";
+import { defineWebExtConfig } from 'web-extend';
 
 export default defineWebExtConfig({
   run: {
-    args: ["--user-data-dir=path/to/profile"],
+    args: ['--user-data-dir=path/to/profile'],
   },
 });
 ```
 
 ```js [Windows]
 // web-ext.config.js
-import { resolve } from "node:path";
-import { defineWebExtConfig } from "web-extend";
+import { resolve } from 'node:path';
+import { defineWebExtConfig } from 'web-extend';
 
 export default defineWebExtConfig({
   run: {
-    chromiumProfile: resolve("/path/to/profile"),
+    chromiumProfile: resolve('/path/to/profile'),
     keepProfileChanges: true,
   },
 });

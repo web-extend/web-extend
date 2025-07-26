@@ -55,7 +55,10 @@ export async function loadConfig<T>({
 const webExtendConfigFiles = ['web-extend.config.mjs', 'web-extend.config.ts', 'web-extend.config.js'];
 
 export function loadWebExtendConfig(root: string) {
-  return loadConfig<WebExtendConfig>({ root, configFiles: webExtendConfigFiles });
+  return loadConfig<WebExtendConfig>({
+    root,
+    configFiles: webExtendConfigFiles,
+  });
 }
 
 export const defineWebExtendConfig = (config: WebExtendConfig) => {

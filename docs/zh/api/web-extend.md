@@ -225,7 +225,7 @@ Options:
 
 #### manifest
 
-- 类型: [`WebExtendManifest`](#web-extend-manifest)
+- 类型: [`WebExtensionManifest`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json)
 - 默认值: `{}`
 
 `manifest` 配置。WebExtend 会合并 `manifest` 选项和入口文件信息（前者有更高的优先级），在构建时自动生成 `manifest.json`。
@@ -235,13 +235,7 @@ Options:
 - 类型:
 
 ```ts
-type WebExtendTarget =
-  | "chrome-mv3"
-  | "firefox-mv2"
-  | "firefox-mv3"
-  | "safari-mv3"
-  | "edge-mv3"
-  | "opera-mv3";
+type WebExtendTarget = 'chrome-mv3' | 'firefox-mv2' | 'firefox-mv3' | 'safari-mv3' | 'edge-mv3' | 'opera-mv3';
 ```
 
 - 默认值: `"chrome-mv3"`
@@ -276,7 +270,7 @@ export default defineConfig({
 使用：
 
 ```ts [web-ext.config.ts]
-import { defineWebExtConfig } from "web-extend";
+import { defineWebExtConfig } from 'web-extend';
 
 export default defineWebExtConfig({
   run: {
@@ -296,12 +290,12 @@ export interface ContentScriptConfig {
   matches: string[];
   exclude_matches?: string[];
   css?: string[];
-  run_at?: "document_start" | "document_end" | "document_idle";
+  run_at?: 'document_start' | 'document_end' | 'document_idle';
   all_frames?: boolean;
   match_about_blank?: boolean;
   include_globs?: string[];
   exclude_globs?: string[];
-  world?: "ISOLATED" | "MAIN";
+  world?: 'ISOLATED' | 'MAIN';
 }
 ```
 
@@ -310,14 +304,14 @@ export interface ContentScriptConfig {
 使用：
 
 ```ts [src/content/index.ts]
-import type { ContentScriptConfig } from "web-extend";
+import type { ContentScriptConfig } from 'web-extend';
 
 export const config: ContentScriptConfig = {
-  matches: ["https://www.google.com/*"],
+  matches: ['https://www.google.com/*'],
 };
 ```
 
-### WebExtendManifest {#web-extend-manifest}
+<!-- ### WebExtendManifest {#web-extend-manifest}
 
 源码: [`packages/manifest/src/types.ts`](https://github.com/web-extend/web-extend/blob/main/packages/manifest/src/types.ts)
 
@@ -327,4 +321,4 @@ export const config: ContentScriptConfig = {
 
 ### WebExtConfig {#web-ext-config}
 
-源码: [`packages/core/src/runner.ts`](https://github.com/web-extend/web-extend/blob/main/packages/core/src/runner.ts#L46)
+源码: [`packages/core/src/runner.ts`](https://github.com/web-extend/web-extend/blob/main/packages/core/src/runner.ts#L46) -->

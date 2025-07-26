@@ -158,13 +158,13 @@ WebExtend 允许你通过 `web-extend.config.(ts|js|mjs)` 文件来自定义项�
 示例如下：
 
 ```ts [web-extend.config.js]
-import { defineConfig } from "web-extend";
+import { defineConfig } from 'web-extend';
 
 export default defineConfig({
-  entriesDir: "./src", // Entries directory (default: "src")
-  outDir: ".output", // Output directory (default: "dist")
+  entriesDir: './src', // Entries directory (default: "src")
+  outDir: '.output', // Output directory (default: "dist")
   manifest: {}, // Custom manifest overrides (default: {})
-  target: "firefox-mv2", // Browser target (default: "chrome-mv3")
+  target: 'firefox-mv2', // Browser target (default: "chrome-mv3")
   webExt: {}, // Customize web-ext configurations
   rsbuild: {}, // Customize Rsbuild configurations
 });
@@ -182,10 +182,10 @@ WebExtend 使用 [web-ext](https://github.com/mozilla/web-ext) 作为浏览器�
 示例如下：
 
 ```javascript [web-ext.config.js]
-import { defineWebExtConfig } from "web-extend";
+import { defineWebExtConfig } from 'web-extend';
 
 export default defineWebExtConfig({
-  startUrl: ["https://example.com"],
+  startUrl: ['https://example.com'],
 });
 ```
 
@@ -201,8 +201,8 @@ WebExtend 使用 [Rsbuild](https://rsbuild.rs/) 作为打包器。你可以通�
 示例如下：
 
 ```js [rsbuild.config.js]
-import { defineConfig } from "@rsbuild/core";
-import { pluginReact } from "@rsbuild/plugin-react";
+import { defineConfig } from '@rsbuild/core';
+import { pluginReact } from '@rsbuild/plugin-react';
 
 export default defineConfig({
   plugins: [pluginReact()],

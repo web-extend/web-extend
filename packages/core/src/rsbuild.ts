@@ -5,10 +5,10 @@ import type { RsbuildConfig, RsbuildMode } from '@rsbuild/core';
 import type { WebExtendTarget } from '@web-extend/manifest/types';
 import chalk from 'chalk';
 import type { FSWatcher } from 'chokidar';
-import { type WebExtendConfigResult, loadWebExtendConfig } from './config.js';
+import { loadWebExtendConfig, type WebExtendConfigResult } from './config.js';
 import { cacheBuildResult } from './result.js';
 import { type ExtensionRunner, importWebExt, normalizeRunnerConfig, run } from './runner.js';
-import { type WatchCallback, watchFiles as chokidarWatchFiles } from './watcher.js';
+import { watchFiles as chokidarWatchFiles, type WatchCallback } from './watcher.js';
 import { zip } from './zip.js';
 
 interface RsbuildCommonOptions {
@@ -106,7 +106,12 @@ async function initRsbuild({
   cliOptions,
   isBuildWatch,
   isDev,
-}: { cliOptions?: StartOptions; isRestart?: boolean; isBuildWatch?: boolean; isDev?: boolean }) {
+}: {
+  cliOptions?: StartOptions;
+  isRestart?: boolean;
+  isBuildWatch?: boolean;
+  isDev?: boolean;
+}) {
   if (cliOptions) {
     commonOptions = cliOptions;
   }
@@ -175,7 +180,12 @@ async function initRsbuild({
         files: [publicDir],
         root,
         callback: ({ rootPath, filePath }) =>
-          rewritePublicFile({ rootPath, distPath: rsbuild.context.distPath, filePath, publicDir }),
+          rewritePublicFile({
+            rootPath,
+            distPath: rsbuild.context.distPath,
+            filePath,
+            publicDir,
+          }),
       });
       publicWatcher && watchers.push(publicWatcher);
     }
@@ -336,7 +346,12 @@ async function rewritePublicFile({
   distPath,
   filePath,
   publicDir,
-}: { rootPath: string; distPath: string; filePath: string; publicDir: string }) {
+}: {
+  rootPath: string;
+  distPath: string;
+  filePath: string;
+  publicDir: string;
+}) {
   if (!filePath || !publicDir) return;
   const publicPath = resolve(rootPath, publicDir);
   const publichFilePath = isAbsolute(filePath) ? filePath : resolve(rootPath, filePath);
@@ -364,7 +379,12 @@ async function beforeRestart({
   filePath,
   id,
   clear = true,
-}: { rootPath: string; filePath?: string; id: string; clear?: boolean }) {
+}: {
+  rootPath: string;
+  filePath?: string;
+  id: string;
+  clear?: boolean;
+}) {
   if (clear) {
     console.clear();
   }

@@ -19,8 +19,8 @@ npx web-extend@latest init --template react
 To use React in an existing WebExtend project, you need to register the [Rsbuild React plugin](https://rsbuild.rs/plugins/list/plugin-react).
 
 ```ts [rsbuild.config.ts]
-import { defineConfig } from "@rsbuild/core";
-import { pluginReact } from "@rsbuild/plugin-react";
+import { defineConfig } from '@rsbuild/core';
+import { pluginReact } from '@rsbuild/plugin-react';
 
 export default defineConfig({
   plugins: [pluginReact()],
@@ -38,8 +38,8 @@ npx web-extend@latest init --template vue
 To use Vue in an existing WebExtend project, you need to register the [Rsbuild Vue plugin](https://rsbuild.rs/plugins/list/plugin-vue).
 
 ```ts [rsbuild.config.ts]
-import { defineConfig } from "@rsbuild/core";
-import { pluginVue } from "@rsbuild/plugin-vue";
+import { defineConfig } from '@rsbuild/core';
+import { pluginVue } from '@rsbuild/plugin-vue';
 
 export default defineConfig({
   plugins: [pluginVue()],
@@ -63,8 +63,8 @@ npx web-extend@latest init --template preact
 To use Preact in an existing WebExtend project, you need to register the [Rsbuild Rreact plugin](https://rsbuild.rs/plugins/list/plugin-preact).
 
 ```ts [rsbuild.config.ts]
-import { defineConfig } from "@rsbuild/core";
-import { pluginPreact } from "@rsbuild/plugin-preact";
+import { defineConfig } from '@rsbuild/core';
+import { pluginPreact } from '@rsbuild/plugin-preact';
 
 export default defineConfig({
   plugins: [pluginPreact()],
@@ -82,8 +82,8 @@ npx web-extend@latest init --template svelte
 To use Svelte in an existing WebExtend project, you need to register the [Rsbuild Svelte plugin](https://rsbuild.rs/plugins/list/plugin-svelte).
 
 ```ts [rsbuild.config.ts]
-import { defineConfig } from "@rsbuild/core";
-import { pluginSvelte } from "@rsbuild/plugin-svelte";
+import { defineConfig } from '@rsbuild/core';
+import { pluginSvelte } from '@rsbuild/plugin-svelte';
 
 export default defineConfig({
   plugins: [pluginSvelte()],
@@ -101,9 +101,9 @@ npx web-extend@latest init --template solid
 To use Solid in an existing WebExtend project, you need to register the [Rsbuild Solid plugin](https://rsbuild.rs/plugins/list/plugin-solid).
 
 ```ts [rsbuild.config.ts]
-import { defineConfig } from "@rsbuild/core";
-import { pluginBabel } from "@rsbuild/plugin-babel";
-import { pluginSolid } from "@rsbuild/plugin-solid";
+import { defineConfig } from '@rsbuild/core';
+import { pluginBabel } from '@rsbuild/plugin-babel';
+import { pluginSolid } from '@rsbuild/plugin-solid';
 
 export default defineConfig({
   plugins: [
@@ -149,7 +149,7 @@ You can use CSS preprocessors in a WebExtend project, including Sass, Less and S
 
 ```ts [Sass]
 // rsbuild.config.ts
-import { pluginSass } from "@rsbuild/plugin-sass";
+import { pluginSass } from '@rsbuild/plugin-sass';
 
 export default {
   plugins: [pluginSass()],
@@ -158,7 +158,7 @@ export default {
 
 ```ts [Less]
 // rsbuild.config.ts
-import { pluginLess } from "@rsbuild/plugin-less";
+import { pluginLess } from '@rsbuild/plugin-less';
 
 export default {
   plugins: [pluginLess()],
@@ -167,7 +167,7 @@ export default {
 
 ```ts [Stylus]
 // rsbuild.config.ts
-import { pluginStylus } from "@rsbuild/plugin-stylus";
+import { pluginStylus } from '@rsbuild/plugin-stylus';
 
 export default {
   plugins: [pluginStylus()],
@@ -203,7 +203,7 @@ Register the Tailwind CSS PostCSS plugin through `postcss.config.js`.
 ```js [postcss.config.mjs]
 export default {
   plugins: {
-    "@tailwindcss/postcss": {},
+    '@tailwindcss/postcss': {},
   },
 };
 ```
@@ -211,7 +211,7 @@ export default {
 Import Tailwind CSS to your CSS entry file.
 
 ```css [src/popup/index.css]
-@import "tailwindcss";
+@import 'tailwindcss';
 ```
 
 Now you can use Tailwind CSS in your components or HTML.
@@ -245,7 +245,7 @@ yarn add unocss @unocss/postcss -D
 Register the UnoCSS PostCSS plugin through `postcss.config.js`.
 
 ```js [postcss.config.mjs]
-import UnoCSS from "@unocss/postcss";
+import UnoCSS from '@unocss/postcss';
 
 export default {
   plugins: [UnoCSS()],
@@ -255,14 +255,11 @@ export default {
 Add UnoCSS configuration through `uno.config.ts`.
 
 ```ts [uno.config.ts]
-import { defineConfig, presetWind3 } from "unocss";
+import { defineConfig, presetWind3 } from 'unocss';
 
 export default defineConfig({
   content: {
-    filesystem: [
-      "**/*.{html,js,ts,jsx,tsx,vue,svelte,astro}",
-      "!src/**/*.d.ts",
-    ],
+    filesystem: ['**/*.{html,js,ts,jsx,tsx,vue,svelte,astro}', '!src/**/*.d.ts'],
   },
   presets: [presetWind3()],
 });
@@ -287,8 +284,8 @@ Now you can use UnoCSS in your components or HTML.
 [unplugin-auto-import](https://github.com/unplugin/unplugin-auto-import) is a library for auto importing APIs on-demand. To use it in a WebExtend project, you need to register the corresponding plugin.
 
 ```ts [rsbuild.config.ts]
-import { defineConfig } from "@rsbuild/core";
-import AutoImport from "unplugin-auto-import/rspack";
+import { defineConfig } from '@rsbuild/core';
+import AutoImport from 'unplugin-auto-import/rspack';
 
 export default defineConfig({
   tools: {
@@ -296,12 +293,12 @@ export default defineConfig({
       plugins: [
         AutoImport({
           imports: [
-            "vue",
+            'vue',
             {
-              "webextension-polyfill": [["=", "browser"]],
+              'webextension-polyfill': [['=', 'browser']],
             },
           ],
-          dts: "./src/auto-imports.d.ts",
+          dts: './src/auto-imports.d.ts',
         }),
       ],
     },
@@ -332,13 +329,30 @@ function openOptionsPage() {
 </template>
 ```
 
+### unplugin-vue-components
+
+[unplugin-vue-components](https://github.com/unplugin/unplugin-vue-components) is a library for on-demand auto importing Vue components. To use it in a WebExtend project, you need to register the corresponding plugin.
+
+```ts [rsbuild.config.ts]
+import { defineConfig } from '@rsbuild/core';
+import Components from 'unplugin-vue-components/rspack';
+
+export default defineConfig({
+  tools: {
+    rspack: {
+      plugins: [Components({})],
+    },
+  },
+});
+```
+
 ### unplugin-icons
 
 [unplugin-icons](https://github.com/antfu/unplugin-icons) is a library for importing icons as components. To use it in a WebExtend project, you need to register the corresponding plugin.
 
 ```ts [rsbuild.config.ts]
-import { defineConfig } from "@rsbuild/core";
-import Icons from "unplugin-icons/rspack";
+import { defineConfig } from '@rsbuild/core';
+import Icons from 'unplugin-icons/rspack';
 
 export default defineConfig({
   tools: {

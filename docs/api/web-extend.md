@@ -225,7 +225,7 @@ Customize public path.
 
 #### manifest
 
-- Type: [`WebExtendManifest`](#web-extend-manifest)
+- Type: [`WebExtensionManifest`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json)
 - Default: `{}`
 
 Customize `manifest` configuration. WebExtend will merge the `manifest` option and the fields parsed from entry files (the previous takes precedence). The merged configuration will be used to generate `manifest.json` automatically.
@@ -235,13 +235,7 @@ Customize `manifest` configuration. WebExtend will merge the `manifest` option a
 - Type:
 
 ```ts
-type WebExtendTarget =
-  | "chrome-mv3"
-  | "firefox-mv2"
-  | "firefox-mv3"
-  | "safari-mv3"
-  | "edge-mv3"
-  | "opera-mv3";
+type WebExtendTarget = 'chrome-mv3' | 'firefox-mv2' | 'firefox-mv3' | 'safari-mv3' | 'edge-mv3' | 'opera-mv3';
 ```
 
 - Default: `"chrome-mv3"`
@@ -278,7 +272,7 @@ export default defineConfig({
 Usage:
 
 ```ts [web-ext.config.ts]
-import { defineWebExtConfig } from "web-extend";
+import { defineWebExtConfig } from 'web-extend';
 
 export default defineWebExtConfig({
   run: {
@@ -298,12 +292,12 @@ export interface ContentScriptConfig {
   matches: string[];
   exclude_matches?: string[];
   css?: string[];
-  run_at?: "document_start" | "document_end" | "document_idle";
+  run_at?: 'document_start' | 'document_end' | 'document_idle';
   all_frames?: boolean;
   match_about_blank?: boolean;
   include_globs?: string[];
   exclude_globs?: string[];
-  world?: "ISOLATED" | "MAIN";
+  world?: 'ISOLATED' | 'MAIN';
 }
 ```
 
@@ -312,14 +306,14 @@ export interface ContentScriptConfig {
 Usage:
 
 ```ts [src/content/index.ts]
-import type { ContentScriptConfig } from "web-extend";
+import type { ContentScriptConfig } from 'web-extend';
 
 export const config: ContentScriptConfig = {
-  matches: ["https://www.google.com/*"],
+  matches: ['https://www.google.com/*'],
 };
 ```
 
-### WebExtendManifest {#web-extend-manifest}
+<!-- ### WebExtendManifest {#web-extend-manifest}
 
 source: [`packages/manifest/src/types.ts`](https://github.com/web-extend/web-extend/blob/main/packages/manifest/src/types.ts)
 
@@ -329,4 +323,4 @@ source: [`packages/core/src/config.ts`](https://github.com/web-extend/web-extend
 
 ### WebExtConfig {#web-ext-config}
 
-source: [`packages/core/src/runner.ts`](https://github.com/web-extend/web-extend/blob/main/packages/core/src/runner.ts#L46)
+source: [`packages/core/src/runner.ts`](https://github.com/web-extend/web-extend/blob/main/packages/core/src/runner.ts#L46) -->

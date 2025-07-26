@@ -1,5 +1,5 @@
 import { existsSync } from 'node:fs';
-import { copyFile, cp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { copyFile, cp, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { basename, dirname, extname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { cancel, intro, isCancel, log, multiselect, note, outro, select, spinner, text } from '@clack/prompts';
@@ -335,7 +335,11 @@ export async function copyEntryFiles({
   sourcePath,
   destPath,
   entrypoints,
-}: { sourcePath: string; destPath: string; entrypoints?: EntrypointItem[] }) {
+}: {
+  sourcePath: string;
+  destPath: string;
+  entrypoints?: EntrypointItem[];
+}) {
   if (!entrypoints?.length) return;
 
   if (!existsSync(sourcePath)) {

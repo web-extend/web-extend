@@ -3,9 +3,9 @@
 layout: home
 
 hero:
-  name: "WebExtend"
-  text: "The build tool for web extensions"
-  tagline: "Build browser extensions the modern way."
+  name: 'WebExtend'
+  text: 'The build tool for web extensions'
+  tagline: 'Build browser extensions the modern way.'
   actions:
     - theme: brand
       text: Introduction

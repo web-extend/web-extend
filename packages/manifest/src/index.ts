@@ -30,7 +30,7 @@ async function initManifest(rootPath: string, target?: WebExtendTarget) {
   try {
     const pkg = await readPackageJson(rootPath);
     const { name, displayName, version, description, author, homepage } = pkg;
-    const trimVersion = version?.match(/[\d\.]+/)?.[0];
+    const trimVersion = version?.match(/[\d.]+/)?.[0];
 
     manifest.name ??= displayName || name;
     manifest.version ??= trimVersion;

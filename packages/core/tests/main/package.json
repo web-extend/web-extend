@@ -21,6 +21,6 @@
     "@types/react-dom": "^19.0.0",
     "typescript": "^5.8.3",
     "web-ext": "^8.8.0",
-    "web-extend": "^0.0.2"
+    "web-extend": "~0.0.3"
   }
 }

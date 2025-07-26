@@ -113,8 +113,11 @@ Here's how WebExtend stacks up against other popular web extension development t
 | Community and ecosystem                  | Growing   | Large    | Medium  | Medium   |
 
 [^1]: Only React HMR support available.
+
 [^2]: Only basic live-reloading without state preservation.
+
 [^3]: Limited to Manifest V3 only.
+
 [^4]: Primarily focused on Chrome/Chromium browsers.
 
 ## Getting Help {#getting-help}

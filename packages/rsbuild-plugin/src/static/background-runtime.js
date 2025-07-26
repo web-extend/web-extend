@@ -3,7 +3,7 @@ if (typeof browser === 'undefined' && typeof chrome !== 'undefined') {
 }
 
 if (typeof browser !== 'undefined') {
-  browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  browser.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     if (typeof message !== 'object') return;
 
     if (message.type === 'web-extend:reload-extension') {

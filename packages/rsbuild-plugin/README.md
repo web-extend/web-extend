@@ -30,7 +30,7 @@ npm add @web-extend/rsbuild-plugin -D
 Add the plugin to your `rsbuild.config.ts`.
 
 ```ts
-import { pluginWebExtend } from "@web-extend/rsbuild-plugin";
+import { pluginWebExtend } from '@web-extend/rsbuild-plugin';
 
 export default {
   plugins: [pluginWebExtend()],

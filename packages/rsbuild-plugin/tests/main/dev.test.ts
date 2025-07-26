@@ -10,7 +10,7 @@ describe('test dev for chrome', () => {
     const { server } = await rsbuild.startDevServer();
     const distPath = rsbuild.context.distPath;
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, _reject) => {
       rsbuild.onDevCompileDone(async () => {
         const manifest = await readManifestFile(distPath);
         const { manifest_version, background, content_scripts = [] } = manifest;

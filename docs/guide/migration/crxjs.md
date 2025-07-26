@@ -45,7 +45,7 @@ Next, update scripts with the following WebExtend's CLI commands in `package.jso
 
 :::
 
-## Migrate bundler
+## Migrating bundler
 
 When migrating bundler from Vite to Rsbuild, the main changes are as follows.
 
@@ -59,8 +59,8 @@ For example:
 ::: code-group
 
 ```ts [web-extend.config.ts]
-import { defineConfig } from "web-extend";
-import manifest from "./manifest.config";
+import { defineConfig } from 'web-extend';
+import manifest from './manifest.config';
 
 export default defineConfig({
   manifest,
@@ -68,14 +68,14 @@ export default defineConfig({
 ```
 
 ```ts [rsbuild.config.ts]
-import { resolve } from "node:path";
-import { defineConfig } from "@rsbuild/core";
-import { pluginReact } from "@rsbuild/plugin-react";
+import { resolve } from 'node:path';
+import { defineConfig } from '@rsbuild/core';
+import { pluginReact } from '@rsbuild/plugin-react';
 
 export default defineConfig({
   resolve: {
     alias: {
-      "@": `${resolve(__dirname, "src")}`,
+      '@': `${resolve(__dirname, 'src')}`,
     },
   },
   plugins: [pluginReact()],
@@ -93,20 +93,20 @@ Example.
 ::: code-group
 
 ```ts [manifest.config.ts]
-import pkg from "./package.json"; // [!code --]
+import pkg from './package.json'; // [!code --]
 
 export default {
   manifest_version: 3, // no more need [!code --]
   name: pkg.name, // no more need [!code --]
   version: pkg.version, // no more need [!code --]
   action: {
-    default_popup: "src/popup/index.html", // [!code --]
-    default_popup: "src/popup/main.tsx", // [!code ++]
+    default_popup: 'src/popup/index.html', // [!code --]
+    default_popup: 'src/popup/main.tsx', // [!code ++]
   },
   content_scripts: [
     {
-      js: ["src/content/main.ts"],
-      matches: ["https://*/*"],
+      js: ['src/content/main.ts'],
+      matches: ['https://*/*'],
     },
   ],
 };

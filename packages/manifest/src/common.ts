@@ -1,5 +1,5 @@
 import { existsSync } from 'node:fs';
-import { readFile, readdir } from 'node:fs/promises';
+import { readdir, readFile } from 'node:fs/promises';
 import { basename, dirname, extname, join, relative, resolve, sep } from 'node:path';
 import type { WebExtendManifest } from './browser.js';
 import type {
@@ -107,7 +107,9 @@ export const getSingleDeclarativeEntryFile = async (
     }
 
     if (file.isDirectory()) {
-      const subFiles = await readdir(resolve(dirPath, file.name), { withFileTypes: true });
+      const subFiles = await readdir(resolve(dirPath, file.name), {
+        withFileTypes: true,
+      });
       for (const subFile of subFiles) {
         const subExt = extname(subFile.name);
         const subName = basename(subFile.name, subExt);
@@ -142,11 +144,17 @@ export const getMultipleDeclarativeEntryFile = async (
     const ext = extname(file.name);
     const name = basename(file.name, ext);
     if (file.isFile() && isAllowableEntryFile(file.name, entryTypes)) {
-      possibleFiles.push({ name: `${entryName}/${name}`, ext, path: resolve(entryDir, file.name) });
+      possibleFiles.push({
+        name: `${entryName}/${name}`,
+        ext,
+        path: resolve(entryDir, file.name),
+      });
     }
 
     if (file.isDirectory()) {
-      const subFiles = await readdir(resolve(entryDir, file.name), { withFileTypes: true });
+      const subFiles = await readdir(resolve(entryDir, file.name), {
+        withFileTypes: true,
+      });
       for (const subFile of subFiles) {
         const subExt = extname(subFile.name);
         const subName = basename(subFile.name, subExt);

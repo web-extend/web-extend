@@ -18,7 +18,11 @@ function getIconTemplatePath({
   rootPath,
   entriesDir,
   template,
-}: { rootPath: string; entriesDir: WebExtendEntriesDir; template?: string }) {
+}: {
+  rootPath: string;
+  entriesDir: WebExtendEntriesDir;
+  template?: string;
+}) {
   let templatePath = '';
   if (template) {
     templatePath = resolve(rootPath, template);
@@ -46,7 +50,12 @@ async function generateIcons({
   template,
   entriesDir,
   size = ICON_SIZES,
-}: { entriesDir: WebExtendEntriesDir; rootPath: string; template?: string; size?: string[] }) {
+}: {
+  entriesDir: WebExtendEntriesDir;
+  rootPath: string;
+  template?: string;
+  size?: string[];
+}) {
   const sharp = await import('sharp').then((mod) => mod.default);
 
   const templatePath = getIconTemplatePath({ rootPath, template, entriesDir });

@@ -71,7 +71,7 @@ Example usage:
 
 ```ts [src/background.ts]
 chrome.runtime.onInstalled.addListener(() => {
-  console.log("Extension installed");
+  console.log('Extension installed');
 });
 ```
 
@@ -167,12 +167,12 @@ For example:
 ```
 
 ```js [src/content/index.ts]
-import "./index.css";
+import './index.css';
 
-let root = document.getElementById("myContent");
+let root = document.getElementById('myContent');
 if (!root) {
-  root = document.createElement("div");
-  root.id = "myContent";
+  root = document.createElement('div');
+  root.id = 'myContent';
   root.innerHTML = `<div class="web-extend-content-container">
     <div class="web-extend-content">
       <p>This is a content script.</p>
@@ -187,20 +187,20 @@ if (!root) {
 Shadow DOM provides better encapsulation for both DOM and styles. Here's how to use it:
 
 ```ts [src/content/index.ts]
-import inlineStyles from "./index.css?inline";
+import inlineStyles from './index.css?inline';
 
-let host = document.getElementById("myContentHost");
+let host = document.getElementById('myContentHost');
 if (!host) {
-  host = document.createElement("div");
-  host.id = "myContentHost";
+  host = document.createElement('div');
+  host.id = 'myContentHost';
 
-  const shadow = host.attachShadow({ mode: "open" });
+  const shadow = host.attachShadow({ mode: 'open' });
 
   const sheet = new CSSStyleSheet();
   sheet.replaceSync(inlineStyles);
   shadow.adoptedStyleSheets = [sheet];
 
-  const root = document.createElement("div");
+  const root = document.createElement('div');
   root.innerHTML = `<div class="web-extend-content-container">
     <div class="web-extend-content">
       <p>This is a content script.</p>
@@ -229,18 +229,18 @@ Common configuration options include:
 
 ```js [src/content/index.js]
 export const config = {
-  matches: ["https://www.google.com/*"],
-  run_at: "document_end",
+  matches: ['https://www.google.com/*'],
+  run_at: 'document_end',
   all_frames: false,
 };
 ```
 
 ```ts [src/content/index.ts]
-import type { ContentScriptConfig } from "web-extend";
+import type { ContentScriptConfig } from 'web-extend';
 
 export const config: ContentScriptConfig = {
-  matches: ["https://www.google.com/*"],
-  run_at: "document_end",
+  matches: ['https://www.google.com/*'],
+  run_at: 'document_end',
   all_frames: false,
 };
 ```
@@ -280,7 +280,7 @@ npx web-extend g devtools
 For example:
 
 ```ts [src/devtools.ts]
-chrome.devtools.panels.create("My Panel", "", "panel.html");
+chrome.devtools.panels.create('My Panel', '', 'panel.html');
 ```
 
 #### Adding panels
@@ -413,18 +413,18 @@ npx web-extend g popup
 Here's a basic popup setup using React:
 
 ```tsx [src/popup/index.tsx]
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import App from "./App";
-import "./index.css";
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './App';
+import './index.css';
 
-const rootEl = document.getElementById("root");
+const rootEl = document.getElementById('root');
 if (rootEl) {
   const root = createRoot(rootEl);
   root.render(
     <StrictMode>
       <App />
-    </StrictMode>
+    </StrictMode>,
   );
 }
 ```
@@ -501,12 +501,12 @@ Example usage:
 chrome.tabs.onActivated.addListener((e) => {
   chrome.scripting.executeScript({
     target: { tabId: e.tabId },
-    files: ["scripting/injected-script.js"],
+    files: ['scripting/injected-script.js'],
   });
 
   chrome.scripting.insertCSS({
     target: { tabId: e.tabId },
-    files: ["scripting/injected-style.css"],
+    files: ['scripting/injected-style.css'],
   });
 });
 ```
