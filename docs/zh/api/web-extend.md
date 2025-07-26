@@ -225,7 +225,7 @@ Options:
 
 #### manifest
 
-- 类型: [`WebExtendManifest`](#web-extend-manifest)
+- 类型: [`WebExtensionManifest`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json)
 - 默认值: `{}`
 
 `manifest` 配置。WebExtend 会合并 `manifest` 选项和入口文件信息（前者有更高的优先级），在构建时自动生成 `manifest.json`。
@@ -317,7 +317,7 @@ export const config: ContentScriptConfig = {
 };
 ```
 
-### WebExtendManifest {#web-extend-manifest}
+<!-- ### WebExtendManifest {#web-extend-manifest}
 
 源码: [`packages/manifest/src/types.ts`](https://github.com/web-extend/web-extend/blob/main/packages/manifest/src/types.ts)
 
@@ -327,4 +327,4 @@ export const config: ContentScriptConfig = {
 
 ### WebExtConfig {#web-ext-config}
 
-源码: [`packages/core/src/runner.ts`](https://github.com/web-extend/web-extend/blob/main/packages/core/src/runner.ts#L46)
+源码: [`packages/core/src/runner.ts`](https://github.com/web-extend/web-extend/blob/main/packages/core/src/runner.ts#L46) -->

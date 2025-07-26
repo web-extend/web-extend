@@ -45,7 +45,7 @@ Next, update scripts with the following WebExtend's CLI commands in `package.jso
 
 :::
 
-## Migrate bundler
+## Migrating bundler
 
 When migrating bundler from Vite to Rsbuild, the main changes are as follows.
 

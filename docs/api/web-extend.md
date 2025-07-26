@@ -225,7 +225,7 @@ Customize public path.
 
 #### manifest
 
-- Type: [`WebExtendManifest`](#web-extend-manifest)
+- Type: [`WebExtensionManifest`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json)
 - Default: `{}`
 
 Customize `manifest` configuration. WebExtend will merge the `manifest` option and the fields parsed from entry files (the previous takes precedence). The merged configuration will be used to generate `manifest.json` automatically.
@@ -319,7 +319,7 @@ export const config: ContentScriptConfig = {
 };
 ```
 
-### WebExtendManifest {#web-extend-manifest}
+<!-- ### WebExtendManifest {#web-extend-manifest}
 
 source: [`packages/manifest/src/types.ts`](https://github.com/web-extend/web-extend/blob/main/packages/manifest/src/types.ts)
 
@@ -329,4 +329,4 @@ source: [`packages/core/src/config.ts`](https://github.com/web-extend/web-extend
 
 ### WebExtConfig {#web-ext-config}
 
-source: [`packages/core/src/runner.ts`](https://github.com/web-extend/web-extend/blob/main/packages/core/src/runner.ts#L46)
+source: [`packages/core/src/runner.ts`](https://github.com/web-extend/web-extend/blob/main/packages/core/src/runner.ts#L46) -->

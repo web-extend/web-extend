@@ -332,6 +332,23 @@ function openOptionsPage() {
 </template>
 ```
 
+### unplugin-vue-components
+
+[unplugin-vue-components](https://github.com/unplugin/unplugin-vue-components) is a library for on-demand auto importing Vue components. To use it in a WebExtend project, you need to register the corresponding plugin.
+
+```ts [rsbuild.config.ts]
+import { defineConfig } from "@rsbuild/core";
+import Components from "unplugin-vue-components/rspack";
+
+export default defineConfig({
+  tools: {
+    rspack: {
+      plugins: [Components({})],
+    },
+  },
+});
+```
+
 ### unplugin-icons
 
 [unplugin-icons](https://github.com/antfu/unplugin-icons) is a library for importing icons as components. To use it in a WebExtend project, you need to register the corresponding plugin.

@@ -332,6 +332,23 @@ function openOptionsPage() {
 </template>
 ```
 
+### unplugin-vue-components
+
+[unplugin-vue-components](https://github.com/unplugin/unplugin-vue-components) 是一个用于按需自动导入 Vue 组件的库。若要在 WebExtend 项目中使用它，需要引入对应的插件。
+
+```ts [rsbuild.config.ts]
+import { defineConfig } from "@rsbuild/core";
+import Components from "unplugin-vue-components/rspack";
+
+export default defineConfig({
+  tools: {
+    rspack: {
+      plugins: [Components({})],
+    },
+  },
+});
+```
+
 ### unplugin-icons
 
 [unplugin-icons](https://github.com/antfu/unplugin-icons) 是一个用于导入图标的库。若要在 WebExtend 项目中使用它，需要引入对应的插件。
