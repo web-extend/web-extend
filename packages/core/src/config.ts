@@ -52,7 +52,14 @@ export async function loadConfig<T>({
   }
 }
 
-const webExtendConfigFiles = ['web-extend.config.mjs', 'web-extend.config.ts', 'web-extend.config.js'];
+const webExtendConfigFiles = [
+  'bext.config.mjs',
+  'bext.config.ts',
+  'bext.config.js',
+  'web-extend.config.mjs',
+  'web-extend.config.ts',
+  'web-extend.config.js',
+];
 
 export function loadWebExtendConfig(root: string) {
   return loadConfig<WebExtendConfig>({
