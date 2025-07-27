@@ -54,7 +54,7 @@ The following is an example of the initialization process.
 
 ### Templates
 
-WebExtend provides the following templates, all using TypeScript by default.
+Bext provides the following templates, all using TypeScript by default.
 
 - Vanilla
 - [React](https://react.dev/)
@@ -63,7 +63,7 @@ WebExtend provides the following templates, all using TypeScript by default.
 - [Svelte](https://svelte.dev/)
 - [Solid](https://www.solidjs.com/)
 
-> Note: While these templates are provided out of the box, WebExtend is framework-agnostic and can work with any frontend framework. For other frameworks, you may need to follow the manual installation process.
+> Note: While these templates are provided out of the box, Bext is framework-agnostic and can work with any frontend framework. For other frameworks, you may need to follow the manual installation process.
 
 You can also directly specify the project name and the template via additional arguments. For example, to create a React project:
 
@@ -163,7 +163,7 @@ Add the following configuration to your `package.json`:
 
 ### 3. Create Entry Points
 
-Create your extension's entry points in the `src` directory. WebExtend automatically detects entry points based on the file system structure.
+Create your extension's entry points in the `src` directory. Bext automatically detects entry points based on the file system structure.
 
 Example popup entry point:
 

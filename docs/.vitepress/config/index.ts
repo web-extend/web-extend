@@ -5,7 +5,7 @@ import en from './en';
 import zh from './zh';
 
 const shared = defineConfig({
-  title: 'WebExtend',
+  title: 'Bext',
   base: '/web-extend/',
   head: [['link', { rel: 'icon', href: '/web-extend/favicon.ico' }]],
   lastUpdated: true,

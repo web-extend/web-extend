@@ -4,11 +4,11 @@ outline: deep
 
 # Environment Variables
 
-WebExtend supports injecting environment variables into your code based on Rsbuild, which is helpful for dynamic configuration, thanks to Rsbuild.
+Bext supports injecting environment variables into your code based on Rsbuild, which is helpful for dynamic configuration, thanks to Rsbuild.
 
 ## Built-in Env Variables
 
-There are two kinds of built-in env variables you can use: the ones provided by Rsbuild, and the ones provided by WebExtend.
+There are two kinds of built-in env variables you can use: the ones provided by Rsbuild, and the ones provided by Bext.
 
 Rsbuild provides the following variables.
 
@@ -16,7 +16,7 @@ Rsbuild provides the following variables.
 - `import.meta.env.DEV`: whether the mode is 'development'.
 - `import.meta.env.PROD`: whether the mode is 'production'.
 
-WebExtend provides the following variables.
+Bext provides the following variables.
 
 - `import.meta.env.WEB_EXTEND_TARGET`: read the extension target.
 

@@ -4,7 +4,7 @@ outline: deep
 
 # vitesse-webext
 
-[Vitesse-webext](https://github.com/antfu-collective/vitesse-webext) is an awesome WebExtension starter template. We adapted it to WebExtend. You can use it to create a new project.
+[Vitesse-webext](https://github.com/antfu-collective/vitesse-webext) is an awesome WebExtension starter template. We adapted it to Bext. You can use it to create a new project.
 
 ```shell
 npx bext@latest init --template with-vitesse-webext
@@ -58,7 +58,7 @@ yarn add -D unplugin-auto-import@latest unplugin-icons@latest unplugin-vue-compo
 
 ## Updating npm scripts
 
-Next, update scripts with the following WebExtend's CLI commands in `package.json`.
+Next, update scripts with the following Bext's CLI commands in `package.json`.
 
 ::: details package.json
 
@@ -104,9 +104,9 @@ Next, update scripts with the following WebExtend's CLI commands in `package.jso
 
 ## Migrating bundler
 
-WebExtend uses Rsbuild under the hood, so you need to migrate the bundler from Vite to Rsbuild. Nevertheless, the migration process is easy, and the main changes are as follows.
+Bext uses Rsbuild under the hood, so you need to migrate the bundler from Vite to Rsbuild. Nevertheless, the migration process is easy, and the main changes are as follows.
 
-1. Create `bext.config.ts` for WebExtend configuration.
+1. Create `bext.config.ts` for Bext configuration.
 2. Create `rsbuild.config.ts` for Rsbuild configuration.
 3. Add the following plugins to Rsbuild.
    - [@rsbuild/plugin-vue](https://rsbuild.rs/plugins/list/plugin-vue)
@@ -235,7 +235,7 @@ To migrate other config in the project, please refer to the following documents:
 
 ## Updating source code
 
-WebExtend uses the file system to parse entry files and generates the corresponding fields for `manifest.json`. So you don't need to define them explicitly any more. The main changes are as follows.
+Bext uses the file system to parse entry files and generates the corresponding fields for `manifest.json`. So you don't need to define them explicitly any more. The main changes are as follows.
 
 - Generate icons: run `npx bext g icons --template ./extension/assets/icon-512.png` to generate icon files under the `src/assets` directory.
 - Change popup, options and sidepanel: remove `index.html` and rename `main.ts` to `index.ts` respectively.

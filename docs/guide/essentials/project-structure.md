@@ -6,9 +6,9 @@ outline: deep
 
 ## Overview
 
-WebExtend provides a standardized project structure that helps you organize your browser extension code efficiently. This guide explains the key directories and files in a WebExtend project.
+Bext provides a standardized project structure that helps you organize your browser extension code efficiently. This guide explains the key directories and files in a Bext project.
 
-A typical WebExtend project structure looks like this:
+A typical Bext project structure looks like this:
 
 ```
 my-extension-app/
@@ -41,7 +41,7 @@ my-extension-app/
 ├── .env.production        # Production env vars
 ├── .gitignore             # Git ignore rules
 ├── package.json           # Project metadata
-├── bext.config.js         # WebExtend configuration
+├── bext.config.js         # Bext configuration
 ├── web-ext.config.js      # Web-ext configuration
 ├── rsbuild.config.ts      # Rsbuild configuration
 └── tsconfig.json          # TypeScript configuration
@@ -64,7 +64,7 @@ The following table describes the main files and directories at the root of your
 | `.gitignore`             | Specifies which files Git should ignore                          |
 | `package.json`           | Project metadata, dependencies and scripts                       |
 | `rsbuild.config.ts`      | Rsbuild configuration file for build customization               |
-| `bext.config.js`         | Configuration file for WebExtend                                 |
+| `bext.config.js`         | Configuration file for Bext                                      |
 | `web-ext.config.js`      | Configuration file for web-ext                                   |
 | `tsconfig.json`          | TypeScript configuration (if using TypeScript)                   |
 
@@ -90,7 +90,7 @@ Entries directory is used to organize entry files.
 
 ## Manifest Generation
 
-There is no need to manually write `manifest.json` file, WebExtend will generate it automatically based on your project structure. The following table shows how your files map to manifest fields:
+There is no need to manually write `manifest.json` file, Bext will generate it automatically based on your project structure. The following table shows how your files map to manifest fields:
 
 | Manifest Keys                    | Source Location                                  |
 | -------------------------------- | ------------------------------------------------ |
@@ -118,7 +118,7 @@ There is no need to manually write `manifest.json` file, WebExtend will generate
 
 ### .env
 
-WebExtend uses a flexible environment configuration system:
+Bext uses a flexible environment configuration system:
 
 ```
 .env                   # Base variables, always loaded
@@ -151,7 +151,7 @@ See [environment variables](../essentials/environment-variables.md) for more det
 
 ### bext.config.js
 
-WebExtend allows customization of various aspects of your project through the `bext.config.(ts|js|mjs)` file.
+Bext allows customization of various aspects of your project through the `bext.config.(ts|js|mjs)` file.
 
 For example:
 
@@ -170,7 +170,7 @@ export default defineConfig({
 
 ### web-ext.config.js
 
-WebExtend uses [web-ext](https://github.com/mozilla/web-ext) as the browser runner. You can customize runner configurations through either:
+Bext uses [web-ext](https://github.com/mozilla/web-ext) as the browser runner. You can customize runner configurations through either:
 
 - The `webExt` option in `bext.config.js` file
 - A separate `web-ext.config.(ts|js|mjs)` file
@@ -189,7 +189,7 @@ export default defineWebExtConfig({
 
 ### rsbuild.config.js
 
-WebExtend uses [Rsbuild](https://rsbuild.rs/) as the bundler. You can customize Rsbuild configurations through either:
+Bext uses [Rsbuild](https://rsbuild.rs/) as the bundler. You can customize Rsbuild configurations through either:
 
 - The `rsbuild` option in `bext.config.js` file
 - A separate `rsbuild.config.(ts|js|mjs)` file

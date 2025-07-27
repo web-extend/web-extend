@@ -4,7 +4,7 @@ outline: deep
 
 # CRXJS
 
-This chaptor introduces how to migrate a [CRXJS](https://crxjs.dev/vite-plugin) project to WebExtend. The main difference between WebExtend and CRXJS is WebExtend using Rsbuild as the bundler instead of Vite. Nevertheless, the migration process is simple and Rsbuild is really fast. Here is a migration example [from-crxjs](https://github.com/web-extend/examples/pull/7/files).
+This chaptor introduces how to migrate a [CRXJS](https://crxjs.dev/vite-plugin) project to Bext. The main difference between Bext and CRXJS is Bext using Rsbuild as the bundler instead of Vite. Nevertheless, the migration process is simple and Rsbuild is really fast. Here is a migration example [from-crxjs](https://github.com/web-extend/examples/pull/7/files).
 
 ## Installing dependencies
 
@@ -28,7 +28,7 @@ yarn add -D bext @rsbuild/core web-ext
 
 ## Updating npm scripts
 
-Next, update scripts with the following WebExtend's CLI commands in `package.json`.
+Next, update scripts with the following Bext's CLI commands in `package.json`.
 
 ::: code-group
 
@@ -86,7 +86,7 @@ export default defineConfig({
 
 ## Updating mainfest
 
-The `mainfest` file in CRXJS is also supported in WebExtend. For adaption, you need to modify all `*.html` entry points to `*.js` entry points.
+The `mainfest` file in CRXJS is also supported in Bext. For adaption, you need to modify all `*.html` entry points to `*.js` entry points.
 
 Example.
 

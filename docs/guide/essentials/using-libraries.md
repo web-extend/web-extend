@@ -4,19 +4,19 @@ outline: deep
 
 # Using Libraries
 
-WebExtend supports lots of frontend frameworks or libraries, which benefits from [Rsbuild's features](https://rsbuild.rs/guide/start/features). This chapter covers most commonly used cases.
+Bext supports lots of frontend frameworks or libraries, which benefits from [Rsbuild's features](https://rsbuild.rs/guide/start/features). This chapter covers most commonly used cases.
 
 ## UI Libraries
 
 ### React
 
-To create a project with WebExtend and React, just run the following command.
+To create a project with Bext and React, just run the following command.
 
 ```shell
 npx bext@latest init --template react
 ```
 
-To use React in an existing WebExtend project, you need to register the [Rsbuild React plugin](https://rsbuild.rs/plugins/list/plugin-react).
+To use React in an existing Bext project, you need to register the [Rsbuild React plugin](https://rsbuild.rs/plugins/list/plugin-react).
 
 ```ts [rsbuild.config.ts]
 import { defineConfig } from '@rsbuild/core';
@@ -29,13 +29,13 @@ export default defineConfig({
 
 ### Vue
 
-To create a project with WebExtend and Vue, just run the following command.
+To create a project with Bext and Vue, just run the following command.
 
 ```shell
 npx bext@latest init --template vue
 ```
 
-To use Vue in an existing WebExtend project, you need to register the [Rsbuild Vue plugin](https://rsbuild.rs/plugins/list/plugin-vue).
+To use Vue in an existing Bext project, you need to register the [Rsbuild Vue plugin](https://rsbuild.rs/plugins/list/plugin-vue).
 
 ```ts [rsbuild.config.ts]
 import { defineConfig } from '@rsbuild/core';
@@ -54,13 +54,13 @@ export default defineConfig({
 
 ### Preact
 
-To create a project with WebExtend and React, just run the following command.
+To create a project with Bext and React, just run the following command.
 
 ```shell
 npx bext@latest init --template preact
 ```
 
-To use Preact in an existing WebExtend project, you need to register the [Rsbuild Rreact plugin](https://rsbuild.rs/plugins/list/plugin-preact).
+To use Preact in an existing Bext project, you need to register the [Rsbuild Rreact plugin](https://rsbuild.rs/plugins/list/plugin-preact).
 
 ```ts [rsbuild.config.ts]
 import { defineConfig } from '@rsbuild/core';
@@ -73,13 +73,13 @@ export default defineConfig({
 
 ### Svelte
 
-To create a project with WebExtend and Svelte, just run the following command.
+To create a project with Bext and Svelte, just run the following command.
 
 ```shell
 npx bext@latest init --template svelte
 ```
 
-To use Svelte in an existing WebExtend project, you need to register the [Rsbuild Svelte plugin](https://rsbuild.rs/plugins/list/plugin-svelte).
+To use Svelte in an existing Bext project, you need to register the [Rsbuild Svelte plugin](https://rsbuild.rs/plugins/list/plugin-svelte).
 
 ```ts [rsbuild.config.ts]
 import { defineConfig } from '@rsbuild/core';
@@ -92,13 +92,13 @@ export default defineConfig({
 
 ### Solid
 
-To create a project with WebExtend and Solid, just run the following command.
+To create a project with Bext and Solid, just run the following command.
 
 ```shell
 npx bext@latest init --template solid
 ```
 
-To use Solid in an existing WebExtend project, you need to register the [Rsbuild Solid plugin](https://rsbuild.rs/plugins/list/plugin-solid).
+To use Solid in an existing Bext project, you need to register the [Rsbuild Solid plugin](https://rsbuild.rs/plugins/list/plugin-solid).
 
 ```ts [rsbuild.config.ts]
 import { defineConfig } from '@rsbuild/core';
@@ -119,7 +119,7 @@ export default defineConfig({
 
 ### CSS Modules
 
-You can directly use [CSS Modules](https://github.com/css-modules/css-modules) in a WebExtend project. Files ending with `.module.(css|less|sass|scss|styl|stylus)` are considered CSS Modules.
+You can directly use [CSS Modules](https://github.com/css-modules/css-modules) in a Bext project. Files ending with `.module.(css|less|sass|scss|styl|stylus)` are considered CSS Modules.
 
 For example.
 
@@ -139,7 +139,7 @@ export default () => {
 
 ### CSS Preprocessors
 
-You can use CSS preprocessors in a WebExtend project, including Sass, Less and Stylus. To use one of them, you need to register the corresponding Rsbuild plugin.
+You can use CSS preprocessors in a Bext project, including Sass, Less and Stylus. To use one of them, you need to register the corresponding Rsbuild plugin.
 
 - [Sass Plugin](https://rsbuild.rs/plugins/list/plugin-sass)
 - [Less Plugin](https://rsbuild.rs/plugins/list/plugin-less)
@@ -178,7 +178,7 @@ export default {
 
 ### Tailwind CSS
 
-To use [Tailwind CSS](https://tailwindcss.com/) in a WebExtend project, you can integrate it with PostCSS, which is built-in supported in Rsbuild.
+To use [Tailwind CSS](https://tailwindcss.com/) in a Bext project, you can integrate it with PostCSS, which is built-in supported in Rsbuild.
 
 Install the following dependencies.
 
@@ -222,7 +222,7 @@ Now you can use Tailwind CSS in your components or HTML.
 
 ### UnoCSS
 
-To use [UnoCSS](https://unocss.dev/) in a WebExtend project, you can integrate it with PostCSS, which is built-in supported in Rsbuild.
+To use [UnoCSS](https://unocss.dev/) in a Bext project, you can integrate it with PostCSS, which is built-in supported in Rsbuild.
 
 Install the following dependencies.
 
@@ -281,7 +281,7 @@ Now you can use UnoCSS in your components or HTML.
 
 ### unplugin-auto-import
 
-[unplugin-auto-import](https://github.com/unplugin/unplugin-auto-import) is a library for auto importing APIs on-demand. To use it in a WebExtend project, you need to register the corresponding plugin.
+[unplugin-auto-import](https://github.com/unplugin/unplugin-auto-import) is a library for auto importing APIs on-demand. To use it in a Bext project, you need to register the corresponding plugin.
 
 ```ts [rsbuild.config.ts]
 import { defineConfig } from '@rsbuild/core';
@@ -331,7 +331,7 @@ function openOptionsPage() {
 
 ### unplugin-vue-components
 
-[unplugin-vue-components](https://github.com/unplugin/unplugin-vue-components) is a library for on-demand auto importing Vue components. To use it in a WebExtend project, you need to register the corresponding plugin.
+[unplugin-vue-components](https://github.com/unplugin/unplugin-vue-components) is a library for on-demand auto importing Vue components. To use it in a Bext project, you need to register the corresponding plugin.
 
 ```ts [rsbuild.config.ts]
 import { defineConfig } from '@rsbuild/core';
@@ -348,7 +348,7 @@ export default defineConfig({
 
 ### unplugin-icons
 
-[unplugin-icons](https://github.com/antfu/unplugin-icons) is a library for importing icons as components. To use it in a WebExtend project, you need to register the corresponding plugin.
+[unplugin-icons](https://github.com/antfu/unplugin-icons) is a library for importing icons as components. To use it in a Bext project, you need to register the corresponding plugin.
 
 ```ts [rsbuild.config.ts]
 import { defineConfig } from '@rsbuild/core';

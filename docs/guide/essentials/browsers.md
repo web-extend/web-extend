@@ -4,11 +4,11 @@ outline: [2, 3]
 
 # Browser Support
 
-WebExtend is designed to help you build cross-browser extensions with ease. This guide covers everything you need to know about browser compatibility, configuration, and development workflow.
+Bext is designed to help you build cross-browser extensions with ease. This guide covers everything you need to know about browser compatibility, configuration, and development workflow.
 
 ## Browser Targets
 
-WebExtend supports the following extension targets:
+Bext supports the following extension targets:
 
 | Target        | Description         | Status                               |
 | ------------- | ------------------- | ------------------------------------ |
@@ -45,7 +45,7 @@ bext zip -t firefox-mv2
 
 ### Environment Variables
 
-WebExtend injects the `import.meta.env.WEB_EXTEND_TARGET` environment variable during build, which helps handle browser-specific code:
+Bext injects the `import.meta.env.WEB_EXTEND_TARGET` environment variable during build, which helps handle browser-specific code:
 
 ```js [src/background.js]
 const target = import.meta.env.WEB_EXTEND_TARGET || '';
@@ -70,7 +70,7 @@ When developing cross-browser extensions, you'll encounter two main types of com
 
 ### Manifest Configuration
 
-WebExtend automatically handles manifest compatibility by:
+Bext automatically handles manifest compatibility by:
 
 - Parsing entry files from the file system
 - Reflecting them to `manifest.json` items
@@ -97,7 +97,7 @@ Reference documentation:
 
 ### Extension API
 
-WebExtend currently doesn't handle Extension API compatibility automatically. You'll need to manage this yourself using the following approaches:
+Bext currently doesn't handle Extension API compatibility automatically. You'll need to manage this yourself using the following approaches:
 
 #### For Chromium-based Browsers
 
@@ -129,7 +129,7 @@ Recommended packages:
 
 ## Browser Startup
 
-WebExtend automatically opens the appropriate browser when running development or preview commands:
+Bext automatically opens the appropriate browser when running development or preview commands:
 
 ```shell
 # Development mode with auto-open

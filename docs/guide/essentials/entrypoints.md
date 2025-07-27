@@ -5,18 +5,18 @@ outline: [2, 3]
 # Entry Points
 
 ::: tip What are Entry Points?
-Entry points are the core building blocks of a browser extension. They define different components like background, popup, or content scripts that make up your extension. WebExtend makes it easy to manage these entry points through a file-based convention system.
+Entry points are the core building blocks of a browser extension. They define different components like background, popup, or content scripts that make up your extension. Bext makes it easy to manage these entry points through a file-based convention system.
 :::
 
 ## File-based Entry Points
 
-WebExtend supports file-conventional entry points, meaning it parses entry points based on the file system and generates the corresponding manifest fields. So you no longer need to define these entry points manually in `manifest.json`.
+Bext supports file-conventional entry points, meaning it parses entry points based on the file system and generates the corresponding manifest fields. So you no longer need to define these entry points manually in `manifest.json`.
 
 ::: tip Why File-based Entry Points?
 File-based entry points reduce boilerplate code and make your extension more maintainable. Instead of managing complex manifest configurations, you can focus on writing the actual extension code.
 :::
 
-In WebExtend, all entry points are located in the source directory. Every entry point can be a folder or a file.
+In Bext, all entry points are located in the source directory. Every entry point can be a folder or a file.
 
 When the entry point is a file, only files ending with `.js|.jsx|.ts|.tsx` will be discovered. The build tool injects an HTML template for each entry point, if necessary, and generates the corresponding HTML file.
 
@@ -330,7 +330,7 @@ src/assets/
 └─ icon-128.png
 ```
 
-Alternatively, you can use WebExtend's generator to automatically create icons in different sizes. The generator will read a template icon file from the `src/assets` directory (named `icon.png`, `icon-1024.png`, `icon-512.png` or `icon-128.png`) and generate resized versions at 16px, 32px, 48px and 128px. You can also specify custom sizes using the `--size` option:
+Alternatively, you can use Bext's generator to automatically create icons in different sizes. The generator will read a template icon file from the `src/assets` directory (named `icon.png`, `icon-1024.png`, `icon-512.png` or `icon-128.png`) and generate resized versions at 16px, 32px, 48px and 128px. You can also specify custom sizes using the `--size` option:
 
 ```shell
 # generate icons in default sizes
