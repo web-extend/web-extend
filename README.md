@@ -14,7 +14,7 @@ WebExtend is a modern build tool for browser extensions.
 ## Quick Start
 
 ```bash
-npx web-extend@latest init
+npx bext@latest init
 ```
 
 ## Documentation
@@ -27,7 +27,7 @@ https://github.com/web-extend/examples
 
 ## Packages
 
-- [web-extend](https://www.npmjs.com/package/web-extend)
+- [bext](https://www.npmjs.com/package/bext)
 - [@web-extend/rsbuild-plugin](https://www.npmjs.com/package/@web-extend/rsbuild-plugin)
 
 ## Publish
@@ -38,7 +38,7 @@ https://github.com/web-extend/examples
 pnpm publish
 ```
 
-2. Publish `web-extend`. Before publish, you need to update the versions in templates.
+2. Publish `bext`. Before publish, you need to update the versions in templates.
 
 ```shell
 pnpm publish

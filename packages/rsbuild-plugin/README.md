@@ -15,9 +15,9 @@ An Rsbuild plugin for developing and building browser extensions.
 There are two ways to use this plugin.
 
 1. Use the `@web-extend/rsbuild-plugin` package directly.
-2. Use `web-extend` CLI, which is a wrapper of `@web-extend/rsbuild-plugin`.
+2. Use `bext` CLI, which is a wrapper of `@web-extend/rsbuild-plugin`.
 
-We recommend using the `web-extend` CLI to initialize a new extension project. Because it provides a more user-friendly experience.
+We recommend using the `bext` CLI to initialize a new extension project. Because it provides a more user-friendly experience.
 
 ### Use `@web-extend/rsbuild-plugin` directly
 
@@ -43,12 +43,12 @@ Development workflow:
 - Enable developer mode in browser extensions page and load the `dist` directory.
 - Run `npm run build` to build for production.
 
-### Use `web-extend` CLI
+### Use `bext` CLI
 
 Run the following command to initialize a new extension project.
 
 ```bash
-npx web-extend@latest init
+npx bext@latest init
 ```
 
 ## Documentation

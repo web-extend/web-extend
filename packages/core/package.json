@@ -1,12 +1,12 @@
 {
-  "name": "web-extend",
-  "version": "0.0.3",
+  "name": "bext",
+  "version": "0.0.1-beta.1",
   "type": "module",
   "main": "dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "web-extend": "bin/index.js",
-    "we": "bin/index.js"
+    "bext": "bin/index.js",
+    "web-extend": "bin/index.js"
   },
   "scripts": {
     "build": "rslib build",
@@ -20,8 +20,8 @@
     "templates"
   ],
   "keywords": [
-    "web extensions",
     "browser extensions",
+    "web extensions",
     "CLI"
   ],
   "repository": {

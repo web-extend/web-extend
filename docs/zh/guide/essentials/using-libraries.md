@@ -13,7 +13,7 @@ WebExtend 支持众多前端框架或库，这得益于 [Rsbuild 提供的功能
 若要使用 React 创建一个新的 WebExtend 项目，请执行以下命令。
 
 ```shell
-npx web-extend@latest init --template react
+npx bext@latest init --template react
 ```
 
 若要在已有的 WebExtend 项目中使用 React，则需要引入 [Rsbuild React 插件](https://rsbuild.rs/plugins/list/plugin-react)。
@@ -32,7 +32,7 @@ export default defineConfig({
 若要使用 Vue 创建一个新的 WebExtend 项目，请执行以下命令。
 
 ```shell
-npx web-extend@latest init --template vue
+npx bext@latest init --template vue
 ```
 
 若要在已有的 WebExtend 项目中使用 Vue，则需要引入 [Rsbuild Vue 插件](https://rsbuild.rs/plugins/list/plugin-vue)。
@@ -57,7 +57,7 @@ export default defineConfig({
 若要使用 Preact 创建一个新的 WebExtend 项目，请执行以下命令。
 
 ```shell
-npx web-extend@latest init --template preact
+npx bext@latest init --template preact
 ```
 
 若要在已有的 WebExtend 项目中使用 React，则需要引入 [Rsbuild Preact 插件](https://rsbuild.rs/plugins/list/plugin-preact)。
@@ -76,7 +76,7 @@ export default defineConfig({
 若要使用 Svelte 创建一个新的 WebExtend 项目，请执行以下命令。
 
 ```shell
-npx web-extend@latest init --template svelte
+npx bext@latest init --template svelte
 ```
 
 若要在已有的 WebExtend 项目中使用 Svelte，则需要引入 [Rsbuild Svelte 插件](https://rsbuild.rs/plugins/list/plugin-svelte)。
@@ -95,7 +95,7 @@ export default defineConfig({
 若要使用 Solid 创建一个新的 WebExtend 项目，请执行以下命令。
 
 ```shell
-npx web-extend@latest init --template solid
+npx bext@latest init --template solid
 ```
 
 若要在已有的 WebExtend 项目中使用 Solid，则需要引入 [Rsbuild Solid 插件](https://rsbuild.rs/plugins/list/plugin-solid)。

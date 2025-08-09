@@ -3,9 +3,9 @@
 layout: home
 
 hero:
-  name: 'WebExtend'
-  text: 'The build tool for web extensions'
-  tagline: 'Build browser extensions the modern way.'
+  name: Bext
+  text: A framework for browser extensions
+  tagline: Build browser extensions the modern way
   actions:
     - theme: brand
       text: Introduction
@@ -15,7 +15,7 @@ hero:
       link: /guide/start/quick-start
   image:
     src: /logo.svg
-    alt: WebExtend
+    alt: Logo
 
 features:
   - icon: 📝

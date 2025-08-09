@@ -4,7 +4,7 @@ outline: deep
 
 # CRXJS
 
-This chaptor introduces how to migrate a [CRXJS](https://crxjs.dev/vite-plugin) project to WebExtend. The main difference between WebExtend and CRXJS is WebExtend using Rsbuild as the bundler instead of Vite. Nevertheless, the migration process is simple and Rsbuild is really fast. Here is a migration example [from-crxjs](https://github.com/web-extend/examples/pull/7/files).
+This chaptor introduces how to migrate a [CRXJS](https://crxjs.dev/vite-plugin) project to Bext. The main difference between Bext and CRXJS is Bext using Rsbuild as the bundler instead of Vite. Nevertheless, the migration process is simple and Rsbuild is really fast. Here is a migration example [from-crxjs](https://github.com/web-extend/examples/pull/7/files).
 
 ## Installing dependencies
 
@@ -13,32 +13,32 @@ Install the following dependencies.
 ::: code-group
 
 ```shell [npm]
-npm add -D web-extend @rsbuild/core web-ext
+npm add -D bext @rsbuild/core web-ext
 ```
 
 ```shell [pnpm]
-pnpm add -D web-extend @rsbuild/core web-ext
+pnpm add -D bext @rsbuild/core web-ext
 ```
 
 ```shell [yarn]
-yarn add -D web-extend @rsbuild/core web-ext
+yarn add -D bext @rsbuild/core web-ext
 ```
 
 :::
 
 ## Updating npm scripts
 
-Next, update scripts with the following WebExtend's CLI commands in `package.json`.
+Next, update scripts with the following Bext's CLI commands in `package.json`.
 
 ::: code-group
 
 ```json [package.json]
 {
   "scripts": {
-    "dev": "web-extend dev --open",
-    "build": "web-extend build",
-    "preview": "web-extend preview",
-    "zip": "web-extend zip"
+    "dev": "bext dev --open",
+    "build": "bext build",
+    "preview": "bext preview",
+    "zip": "bext zip"
   }
 }
 ```
@@ -49,7 +49,7 @@ Next, update scripts with the following WebExtend's CLI commands in `package.jso
 
 When migrating bundler from Vite to Rsbuild, the main changes are as follows.
 
-1. Create `web-extend.config.ts` for manifest configuration.
+1. Create `bext.config.ts` for manifest configuration.
 2. Create `rsbuild.config.ts` for bundler configuration.
 3. Migrate plugins, see [rsbuild-migrating-plugins](https://rsbuild.rs/guide/migration/vite#migrating-plugins).
 4. Migrate configuration, see [rsbuild-configuration-migration](https://rsbuild.rs/guide/migration/vite#configuration-migration).
@@ -58,8 +58,8 @@ For example:
 
 ::: code-group
 
-```ts [web-extend.config.ts]
-import { defineConfig } from 'web-extend';
+```ts [bext.config.ts]
+import { defineConfig } from 'bext';
 import manifest from './manifest.config';
 
 export default defineConfig({
@@ -86,7 +86,7 @@ export default defineConfig({
 
 ## Updating mainfest
 
-The `mainfest` file in CRXJS is also supported in WebExtend. For adaption, you need to modify all `*.html` entry points to `*.js` entry points.
+The `mainfest` file in CRXJS is also supported in Bext. For adaption, you need to modify all `*.html` entry points to `*.js` entry points.
 
 Example.
 

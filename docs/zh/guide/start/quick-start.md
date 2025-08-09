@@ -10,10 +10,10 @@ outline: deep
 
 ## 自动安装 {#automatic-installation}
 
-最简单的方式是使用 `web-extend` CLI 工具。这将为你设置一个包含所有必要配置的完整项目结构。
+最简单的方式是使用 `bext` CLI 工具。这将为你设置一个包含所有必要配置的完整项目结构。
 
 ```shell
-npx web-extend@latest init
+npx bext@latest init
 ```
 
 在初始化过程中，你需要：
@@ -26,7 +26,7 @@ npx web-extend@latest init
 以下是初始化过程的示例。
 
 ```shell
-┌  🚀 Welcome to WebExtend!
+┌  🚀 Welcome to Bext CLI!
 │
 ◇  Project name
 │  my-extension-app
@@ -68,7 +68,7 @@ WebExtend 提供以下模板，默认都使用 TypeScript：
 你也可以通过附加参数直接指定项目名称和模板。例如，创建一个 React 项目：
 
 ```shell
-npx web-extend@latest init my-extension-app --template react
+npx bext@latest init my-extension-app --template react
 ```
 
 ### 示例
@@ -76,7 +76,7 @@ npx web-extend@latest init my-extension-app --template react
 我们还提供了许多示例来帮助你入门。你可以在 [examples](https://github.com/web-extend/examples) 仓库中找到它们，并选择一个示例作为模板来开始。例如一个使用 React 和 Tailwind CSS 的示例：
 
 ```shell
-npx web-extend@latest init my-extension-app --template with-react-tailwindcss
+npx bext@latest init my-extension-app --template with-react-tailwindcss
 ```
 
 ## 手动安装 {#manual-installation}
@@ -94,7 +94,7 @@ mkdir my-extension-app
 cd my-extension-app
 
 npm init -y
-npm add -D web-extend @rsbuild/core web-ext
+npm add -D bext @rsbuild/core web-ext
 ```
 
 ```shell [pnpm]
@@ -102,7 +102,7 @@ mkdir my-extension-app
 cd my-extension-app
 
 npm init -y
-pnpm add -D web-extend @rsbuild/core web-ext
+pnpm add -D bext @rsbuild/core web-ext
 ```
 
 ```shell [yarn]
@@ -110,7 +110,7 @@ mkdir my-extension-app
 cd my-extension-app
 
 npm init -y
-yarn add -D web-extend @rsbuild/core web-ext
+yarn add -D bext @rsbuild/core web-ext
 ```
 
 :::
@@ -153,10 +153,10 @@ yarn add -D eslint prettier
 {
   "type": "module",
   "scripts": {
-    "dev": "web-extend dev --open",
-    "build": "web-extend build",
-    "preview": "web-extend preview",
-    "zip": "web-extend zip"
+    "dev": "bext dev --open",
+    "build": "bext build",
+    "preview": "bext preview",
+    "zip": "bext zip"
   }
 }
 ```
@@ -172,7 +172,6 @@ const root = document.querySelector('#root');
 if (root) {
   root.innerHTML = `
   <div class="content">
-    <h1>Vanilla WebExtend</h1>
     <p>This is a popup page.</p>
   </div>
   `;
@@ -182,7 +181,7 @@ if (root) {
 或者，使用 CLI 生成入口点：
 
 ```shell
-npx web-extend g popup
+npx bext g popup
 ```
 
 ## 开发工作流 {#development-workflow}

@@ -4,11 +4,11 @@ outline: [2, 3]
 
 # Browser Support
 
-WebExtend is designed to help you build cross-browser extensions with ease. This guide covers everything you need to know about browser compatibility, configuration, and development workflow.
+Bext is designed to help you build cross-browser extensions with ease. This guide covers everything you need to know about browser compatibility, configuration, and development workflow.
 
 ## Browser Targets
 
-WebExtend supports the following extension targets:
+Bext supports the following extension targets:
 
 | Target        | Description         | Status                               |
 | ------------- | ------------------- | ------------------------------------ |
@@ -27,25 +27,25 @@ When using `chrome-mv3`, the built extension is compatible with most Chromium-ba
 - Opera
 - Other Chromium-based browsers
 
-To specify a target browser, use the `--target` or `-t` flag with `web-extend` commands:
+To specify a target browser, use the `--target` or `-t` flag with `bext` commands:
 
 ```shell
 # Development mode
-web-extend dev -t firefox-mv2
+bext dev -t firefox-mv2
 
 # Production build
-web-extend build -t firefox-mv2
+bext build -t firefox-mv2
 
 # Preview build
-web-extend preview -t firefox-mv2
+bext preview -t firefox-mv2
 
 # Create zip package
-web-extend zip -t firefox-mv2
+bext zip -t firefox-mv2
 ```
 
 ### Environment Variables
 
-WebExtend injects the `import.meta.env.WEB_EXTEND_TARGET` environment variable during build, which helps handle browser-specific code:
+Bext injects the `import.meta.env.WEB_EXTEND_TARGET` environment variable during build, which helps handle browser-specific code:
 
 ```js [src/background.js]
 const target = import.meta.env.WEB_EXTEND_TARGET || '';
@@ -70,7 +70,7 @@ When developing cross-browser extensions, you'll encounter two main types of com
 
 ### Manifest Configuration
 
-WebExtend automatically handles manifest compatibility by:
+Bext automatically handles manifest compatibility by:
 
 - Parsing entry files from the file system
 - Reflecting them to `manifest.json` items
@@ -78,8 +78,8 @@ WebExtend automatically handles manifest compatibility by:
 
 Example of custom manifest configuration:
 
-```js [web-extend.config.ts]
-import { defineConfig } from 'web-extend';
+```js [bext.config.ts]
+import { defineConfig } from 'bext';
 
 export default defineConfig({
   manifest: ({ target, mode }) => {
@@ -97,7 +97,7 @@ Reference documentation:
 
 ### Extension API
 
-WebExtend currently doesn't handle Extension API compatibility automatically. You'll need to manage this yourself using the following approaches:
+Bext currently doesn't handle Extension API compatibility automatically. You'll need to manage this yourself using the following approaches:
 
 #### For Chromium-based Browsers
 
@@ -129,14 +129,14 @@ Recommended packages:
 
 ## Browser Startup
 
-WebExtend automatically opens the appropriate browser when running development or preview commands:
+Bext automatically opens the appropriate browser when running development or preview commands:
 
 ```shell
 # Development mode with auto-open
-web-extend dev --open
+bext dev --open
 
 # Preview production build
-web-extend preview
+bext preview
 ```
 
 The browser selection is based on the target:
@@ -153,7 +153,7 @@ To customize settings for the runner, you can create a `web-ext.config.[m|c]js` 
 Open a tab at the specificed URL when the browser starts. Example:
 
 ```js [web-ext.config.js]
-import { defineWebExtConfig } from 'web-extend';
+import { defineWebExtConfig } from 'bext';
 
 export default defineWebExtConfig({
   run: {
@@ -167,7 +167,7 @@ export default defineWebExtConfig({
 Provide a custom Chromium or Firefox executable path to open the specific browser.
 
 ```js [web-ext.config.js]
-import { defineWebExtConfig } from 'web-extend';
+import { defineWebExtConfig } from 'bext';
 
 export default defineWebExtConfig({
   run: {
@@ -185,7 +185,7 @@ export default defineWebExtConfig({
 
 ```js [Mac/Linux]
 // web-ext.config.js
-import { defineWebExtConfig } from 'web-extend';
+import { defineWebExtConfig } from 'bext';
 
 export default defineWebExtConfig({
   run: {
@@ -197,7 +197,7 @@ export default defineWebExtConfig({
 ```js [Windows]
 // web-ext.config.js
 import { resolve } from 'node:path';
-import { defineWebExtConfig } from 'web-extend';
+import { defineWebExtConfig } from 'bext';
 
 export default defineWebExtConfig({
   run: {

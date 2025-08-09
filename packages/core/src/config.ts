@@ -2,7 +2,7 @@ import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import type { RsbuildConfig } from '@rsbuild/core';
-import type { WebExtendCommonConfig } from '@web-extend/manifest/types';
+import type { UseManifest, WebExtendCommonConfig } from '@web-extend/manifest/types';
 import type { Jiti } from 'jiti';
 import type { WebExtConfig } from './runner.js';
 
@@ -52,7 +52,14 @@ export async function loadConfig<T>({
   }
 }
 
-const webExtendConfigFiles = ['web-extend.config.mjs', 'web-extend.config.ts', 'web-extend.config.js'];
+const webExtendConfigFiles = [
+  'bext.config.mjs',
+  'bext.config.ts',
+  'bext.config.js',
+  'web-extend.config.mjs',
+  'web-extend.config.ts',
+  'web-extend.config.js',
+];
 
 export function loadWebExtendConfig(root: string) {
   return loadConfig<WebExtendConfig>({
@@ -63,4 +70,8 @@ export function loadWebExtendConfig(root: string) {
 
 export const defineWebExtendConfig = (config: WebExtendConfig) => {
   return config;
+};
+
+export const defineManifest = (manifest: UseManifest) => {
+  return manifest;
 };

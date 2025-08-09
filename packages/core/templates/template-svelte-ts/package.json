@@ -4,10 +4,10 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "web-extend dev --open",
-    "build": "web-extend build",
-    "preview": "web-extend preview",
-    "zip": "web-extend zip",
+    "dev": "bext dev --open",
+    "build": "bext build",
+    "preview": "bext preview",
+    "zip": "bext zip",
     "svelte-check": "svelte-check --tsconfig ./tsconfig.json",
     "lint": "eslint .",
     "format": "prettier --write ."

@@ -5,18 +5,18 @@ outline: [2, 3]
 # Entry Points
 
 ::: tip What are Entry Points?
-Entry points are the core building blocks of a browser extension. They define different components like background, popup, or content scripts that make up your extension. WebExtend makes it easy to manage these entry points through a file-based convention system.
+Entry points are the core building blocks of a browser extension. They define different components like background, popup, or content scripts that make up your extension. Bext makes it easy to manage these entry points through a file-based convention system.
 :::
 
 ## File-based Entry Points
 
-WebExtend supports file-conventional entry points, meaning it parses entry points based on the file system and generates the corresponding manifest fields. So you no longer need to define these entry points manually in `manifest.json`.
+Bext supports file-conventional entry points, meaning it parses entry points based on the file system and generates the corresponding manifest fields. So you no longer need to define these entry points manually in `manifest.json`.
 
 ::: tip Why File-based Entry Points?
 File-based entry points reduce boilerplate code and make your extension more maintainable. Instead of managing complex manifest configurations, you can focus on writing the actual extension code.
 :::
 
-In WebExtend, all entry points are located in the source directory. Every entry point can be a folder or a file.
+In Bext, all entry points are located in the source directory. Every entry point can be a folder or a file.
 
 When the entry point is a file, only files ending with `.js|.jsx|.ts|.tsx` will be discovered. The build tool injects an HTML template for each entry point, if necessary, and generates the corresponding HTML file.
 
@@ -64,7 +64,7 @@ The background script runs in the extension's background context. The background
 Generate the entry automatically:
 
 ```shell
-npx web-extend g background
+npx bext g background
 ```
 
 Example usage:
@@ -91,7 +91,7 @@ The bookmarks entry will be reflected to the `chrome_url_overrides.bookmarks` fi
 Generate the entry automatically.
 
 ```shell
-npx web-extend g bookmarks
+npx bext g bookmarks
 ```
 
 ### Content Scripts
@@ -124,10 +124,10 @@ Generate the entry automatically:
 
 ```shell
 # for a single content script
-npx web-extend g content
+npx bext g content
 
 # for multiple content scripts
-npx web-extend g contents/site-one contents/site-two
+npx bext g contents/site-one contents/site-two
 ```
 
 #### Adding CSS
@@ -146,7 +146,7 @@ Be careful with CSS selectors in content scripts. They can conflict with the web
 For example:
 
 ```css [src/content/index.css]
-.web-extend-content-container {
+.my-content-container {
   position: fixed;
   bottom: 20px;
   right: 20px;
@@ -155,7 +155,7 @@ For example:
   z-index: 1000;
 }
 
-.web-extend-content {
+.my-content {
   color: #000;
   background-color: #fff;
   margin-right: 8px;
@@ -173,8 +173,8 @@ let root = document.getElementById('myContent');
 if (!root) {
   root = document.createElement('div');
   root.id = 'myContent';
-  root.innerHTML = `<div class="web-extend-content-container">
-    <div class="web-extend-content">
+  root.innerHTML = `<div class="my-content-container">
+    <div class="my-content">
       <p>This is a content script.</p>
     </div>
   </div>`;
@@ -201,8 +201,8 @@ if (!host) {
   shadow.adoptedStyleSheets = [sheet];
 
   const root = document.createElement('div');
-  root.innerHTML = `<div class="web-extend-content-container">
-    <div class="web-extend-content">
+  root.innerHTML = `<div class="my-content-container">
+    <div class="my-content">
       <p>This is a content script.</p>
     </div>
   </div>`;
@@ -236,7 +236,7 @@ export const config = {
 ```
 
 ```ts [src/content/index.ts]
-import type { ContentScriptConfig } from 'web-extend';
+import type { ContentScriptConfig } from 'bext';
 
 export const config: ContentScriptConfig = {
   matches: ['https://www.google.com/*'],
@@ -274,7 +274,7 @@ The devtools entry will be reflected to the `devtools_page` field in `manifest.j
 Generate the entry automatically:
 
 ```shell
-npx web-extend g devtools
+npx bext g devtools
 ```
 
 For example:
@@ -291,10 +291,10 @@ Generate the panel entry automatically:
 
 ```shell
 # create a single panel
-npx web-extend g panel
+npx bext g panel
 
 # create multiple panels
-npx web-extend g panels/panel1,panels/panel2
+npx bext g panels/panel1,panels/panel2
 ```
 
 See [with-devtools](https://github.com/web-extend/examples/tree/main/with-devtools).
@@ -313,7 +313,7 @@ The history entry will be reflected to the `chrome_url_overrides.history` field 
 Generate the entry automatically:
 
 ```shell
-npx web-extend g history
+npx bext g history
 ```
 
 ### Icons
@@ -330,14 +330,14 @@ src/assets/
 └─ icon-128.png
 ```
 
-Alternatively, you can use WebExtend's generator to automatically create icons in different sizes. The generator will read a template icon file from the `src/assets` directory (named `icon.png`, `icon-1024.png`, `icon-512.png` or `icon-128.png`) and generate resized versions at 16px, 32px, 48px and 128px. You can also specify custom sizes using the `--size` option:
+Alternatively, you can use Bext's generator to automatically create icons in different sizes. The generator will read a template icon file from the `src/assets` directory (named `icon.png`, `icon-1024.png`, `icon-512.png` or `icon-128.png`) and generate resized versions at 16px, 32px, 48px and 128px. You can also specify custom sizes using the `--size` option:
 
 ```shell
 # generate icons in default sizes
-npx web-extend g icons
+npx bext g icons
 
 # generate icons in custom sizes
-npx web-extend g icons --size 16 32 48 128
+npx bext g icons --size 16 32 48 128
 ```
 
 See [with-icons](https://github.com/web-extend/examples/tree/main/with-icons).
@@ -356,7 +356,7 @@ The new tab page replaces the browser's default new tab page. The new tab entry 
 Generate the entry automatically:
 
 ```shell
-npx web-extend g newtab
+npx bext g newtab
 ```
 
 ### Options
@@ -373,7 +373,7 @@ The options page provides a way for users to customize your extension. The optio
 Generate the entry automatically:
 
 ```shell
-npx web-extend g options
+npx bext g options
 ```
 
 See [with-options](https://github.com/web-extend/examples/tree/main/with-options).
@@ -390,7 +390,7 @@ Pages are HTML documents that are not listed in `manifest.json`, but can be acce
 Generate the entry automatically:
 
 ```shell
-npx web-extend g pages/welcome
+npx bext g pages/welcome
 ```
 
 ### Popup
@@ -407,7 +407,7 @@ The popup is a temporary UI that appears when users click your extension's icon.
 Generate the entry automatically:
 
 ```shell
-npx web-extend g popup
+npx bext g popup
 ```
 
 Here's a basic popup setup using React:
@@ -448,10 +448,10 @@ Generate the entry automatically.
 
 ```shell
 # create a single entry
-npx web-extend g sandbox
+npx bext g sandbox
 
 # create multiple entries
-npx web-extend g sandboxes/sandbox1 sandboxes/sandbox2
+npx bext g sandboxes/sandbox1 sandboxes/sandbox2
 
 ```
 
@@ -535,7 +535,7 @@ Chrome calls it "Side Panel" while Firefox calls it "Sidebar". There are some AP
 Generate the entry automatically:
 
 ```shell
-npx web-extend g sidepanel
+npx bext g sidepanel
 ```
 
 See [with-sidepanel](https://github.com/web-extend/examples/tree/main/with-sidepanel).

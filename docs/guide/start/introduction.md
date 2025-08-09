@@ -4,13 +4,13 @@ outline: deep
 
 # Introduction
 
-## What is WebExtend? {#what}
+## What is Bext? {#what}
 
-WebExtend is a modern build tool designed to streamline web extension development. It provides a powerful yet simple development environment that lets you create cross-browser extensions using the latest web technologies. Whether you're building a simple utility or a complex browser extension, WebExtend offers the tools and workflows to make your development process efficient and enjoyable.
+Bext (formerly known as WebExtend) is a modern build tool designed to streamline web extension development. It provides a powerful yet simple development environment that lets you create cross-browser extensions using the latest web technologies. Whether you're building a simple utility or a complex browser extension, Bext offers the tools and workflows to make your development process efficient and enjoyable.
 
-## Why WebExtend? {#why}
+## Why Bext? {#why}
 
-While there are several tools available for web extension development like Plasmo, WXT, and CRXJS, WebExtend stands out by addressing common pain points and offering unique advantages:
+While there are several tools available for web extension development like Plasmo, WXT, and CRXJS, Bext stands out by addressing common pain points and offering unique advantages:
 
 ### Key Differentiators
 
@@ -21,20 +21,20 @@ While there are several tools available for web extension development like Plasm
 
 ### Pain Points Solved
 
-Many existing tools suffer from limitations that WebExtend specifically addresses:
+Many existing tools suffer from limitations that Bext specifically addresses:
 
 - ❌ No content_scripts HMR support, requiring page refreshes
 - ❌ Complex or confusing APIs that increase learning curve
 - ❌ Limited browser compatibility
 - ❌ Slow build times and development experience
 
-WebExtend solves these issues with a thoughtful, developer-first approach.
+Bext solves these issues with a thoughtful, developer-first approach.
 
 ## Main Features {#main-features}
 
 ### 📝 File-based Entry Points {#file-based-entrypoints}
 
-WebExtend uses a file-system based approach for managing extension entrypoints. Simply create files in the conventional directories, and WebExtend automatically configures your `manifest.json`. This reduces configuration overhead and makes your project structure more intuitive.
+Bext uses a file-system based approach for managing extension entrypoints. Simply create files in the conventional directories, and Bext automatically configures your `manifest.json`. This reduces configuration overhead and makes your project structure more intuitive.
 
 ```
 src/
@@ -58,7 +58,7 @@ Experience a development environment that just works:
 
 ### 🧭 Multi-Browser Support {#multi-browser-support}
 
-Write once, run everywhere. WebExtend handles browser-specific manifest configurations and polyfills automatically:
+Write once, run everywhere. Bext handles browser-specific manifest configurations and polyfills automatically:
 
 - Chrome/Chromium-based browsers
 - Firefox
@@ -87,7 +87,7 @@ See [using libraries](../essentials/using-libraries.md) for integration guides.
 
 ### 🚀 Lightning Fast Performance {#lightning-fast-performance}
 
-Built on [Rsbuild](https://rsbuild.rs/), WebExtend delivers exceptional performance:
+Built on [Rsbuild](https://rsbuild.rs/), Bext delivers exceptional performance:
 
 - Blazing fast dev server startup
 - Quick rebuild times with intelligent caching
@@ -95,22 +95,22 @@ Built on [Rsbuild](https://rsbuild.rs/), WebExtend delivers exceptional performa
 
 ## Comparisons {#comparisons}
 
-Here's how WebExtend stacks up against other popular web extension development tools:
+Here's how Bext stacks up against other popular web extension development tools:
 
-| Feature                                  | WebExtend | Plasmo   | WXT     | CRXJS    |
-| ---------------------------------------- | --------- | -------- | ------- | -------- |
-| Bundler                                  | Rsbuild   | Parcel   | Vite    | Vite     |
-| First-class TypeScript support           | ✅        | ✅       | ✅      | ✅       |
-| File-based entry points                  | ✅        | ✅       | ✅      | ❌       |
-| Live-reloading + HMR for extension pages | ✅        | 🟡 [^1]  | ✅      | ✅       |
-| Live-reloading + HMR for content_scripts | ✅        | 🟡 [^2]  | 🟡 [^2] | ✅       |
-| MV3 and MV2 support                      | ✅        | ✅       | ✅      | 🟡 [^3]  |
-| Multi-browser support                    | ✅        | ✅       | ✅      | 🟡 [^4]  |
-| Automatic extension running              | ✅        | ❌       | ✅      | ❌       |
-| Build performance                        | Fast      | Moderate | Fast    | Fast     |
-| Configuration complexity                 | Low       | Moderate | High    | Low      |
-| Learning curve                           | Gentle    | Moderate | Steep   | Moderate |
-| Community and ecosystem                  | Growing   | Large    | Medium  | Medium   |
+| Feature                                  | Bext    | Plasmo   | WXT     | CRXJS    |
+| ---------------------------------------- | ------- | -------- | ------- | -------- |
+| Bundler                                  | Rsbuild | Parcel   | Vite    | Vite     |
+| First-class TypeScript support           | ✅      | ✅       | ✅      | ✅       |
+| File-based entry points                  | ✅      | ✅       | ✅      | ❌       |
+| Live-reloading + HMR for extension pages | ✅      | 🟡 [^1]  | ✅      | ✅       |
+| Live-reloading + HMR for content_scripts | ✅      | 🟡 [^2]  | 🟡 [^2] | ✅       |
+| MV3 and MV2 support                      | ✅      | ✅       | ✅      | 🟡 [^3]  |
+| Multi-browser support                    | ✅      | ✅       | ✅      | 🟡 [^4]  |
+| Automatic extension running              | ✅      | ❌       | ✅      | ❌       |
+| Build performance                        | Fast    | Moderate | Fast    | Fast     |
+| Configuration complexity                 | Low     | Moderate | High    | Low      |
+| Learning curve                           | Gentle  | Moderate | Steep   | Moderate |
+| Community and ecosystem                  | Growing | Large    | Medium  | Medium   |
 
 [^1]: Only React HMR support available.
 
@@ -122,7 +122,7 @@ Here's how WebExtend stacks up against other popular web extension development t
 
 ## Getting Help {#getting-help}
 
-We're here to help you succeed with WebExtend:
+We're here to help you succeed with Bext:
 
 - 📖 [Documentation](https://web-extend.github.io/web-extend/): Comprehensive guides and API references
 - 🐛 [GitHub Issues](https://github.com/web-extend/web-extend/issues): Report bugs or request features
@@ -131,7 +131,7 @@ We're here to help you succeed with WebExtend:
 
 ## Pre-Requisite Knowledge {#pre-requisite-knowledge}
 
-To make the most of WebExtend, familiarize yourself with basic web extension concepts and architecture.
+To make the most of Bext, familiarize yourself with basic web extension concepts and architecture.
 
 Helpful resources:
 
@@ -140,12 +140,12 @@ Helpful resources:
 
 ## Ready to Start? {#ready-to-start}
 
-Now that you understand what WebExtend offers, you're ready to build your first extension!
+Now that you understand what Bext offers, you're ready to build your first extension!
 
-Getting started with WebExtend is straightforward:
+Getting started with Bext is straightforward:
 
 ```bash
-npx web-extend@latest init
+npx bext@latest init
 ```
 
 Head over to our [Quick Start](./quick-start.md) guide to begin your journey.
