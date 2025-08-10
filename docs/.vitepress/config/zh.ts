@@ -24,10 +24,11 @@ export default defineConfig({
           base: '/zh/guide/essentials/',
           items: [
             { text: '目录结构', link: 'project-structure' },
-            { text: '入口', link: 'entrypoints' },
+            { text: '入口起点', link: 'entrypoints' },
             { text: '环境变量', link: 'environment-variables' },
             { text: '使用库', link: 'using-libraries' },
             { text: '浏览器支持', link: 'browsers' },
+            { text: '国际化', link: 'i18n' },
             { text: '远程代码', link: 'remote-code' },
           ],
         },

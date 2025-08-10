@@ -10,9 +10,9 @@
     "format": "prettier --write .",
     "lint": "biome check .",
     "lint:write": "biome check . --write",
-    "docs:dev": "cd docs && pnpm dev",
-    "docs:build": "cd docs && pnpm build",
-    "docs:preview": "cd docs && pnpm preview",
+    "dev:docs": "cd docs && pnpm dev",
+    "build:docs": "cd docs && pnpm build",
+    "preview:docs": "cd docs && pnpm preview",
     "prepare": "husky"
   },
   "lint-staged": {
