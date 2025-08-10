@@ -50,7 +50,10 @@ export default defineConfig({
           text: 'API 参考',
           base: '/zh/api/',
           collapsed: false,
-          items: [{ text: 'web-extend', link: 'web-extend' }],
+          items: [
+            { text: 'web-extend', link: 'web-extend' },
+            { text: '@web-extend/rsbuild-plugin', link: 'rsbuild-plugin' },
+          ],
         },
       ],
     },

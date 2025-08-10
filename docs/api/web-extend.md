@@ -194,13 +194,13 @@ Options:
 
 Options:
 
-- [`entriesDir`](#entriesDir)
-- [`outDir`](#outDir)
-- [`publicDir`](#publicDir)
+- [`entriesDir`](#entriesdir)
+- [`outDir`](#outdir)
+- [`publicDir`](#publicdir)
 - [`manifest`](#manifest)
 - [`target`](#target)
 - [`rsbuild`](#rsbuild)
-- [`webExt`](#webExt)
+- [`webExt`](#webext)
 
 #### entriesDir
 
@@ -249,7 +249,7 @@ Customize browser target.
 
 #### webExt
 
-- Type: [`WebExtConfig`](#web-ext-config)
+- Type: [`WebExtConfig`](https://github.com/web-extend/web-extend/blob/main/packages/core/src/runner.ts#L46)
 - Default: `{}`
 
 Usage:
