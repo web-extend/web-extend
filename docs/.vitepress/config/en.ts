@@ -49,7 +49,7 @@ export default defineConfig({
           text: 'API Reference',
           base: '/api/',
           collapsed: false,
-          items: [{ text: 'bext', link: 'index' }],
+          items: [{ text: 'bext', link: 'bext' }],
         },
       ],
     },
