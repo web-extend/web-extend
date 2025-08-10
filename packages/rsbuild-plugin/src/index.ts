@@ -58,6 +58,7 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
         source: {
           define: {
             'import.meta.env.WEB_EXTEND_TARGET': JSON.stringify(target),
+            'import.meta.env.BEXT_TARGET': JSON.stringify(target),
           },
         },
         dev: {

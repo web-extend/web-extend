@@ -111,12 +111,12 @@ export interface WebExtendContext {
   runtime?: WebExtendRuntime;
 }
 
-export type UseManifest =
+export type UserManifest =
   | WebExtendManifest
   | ((props: { target: WebExtendTarget; mode: string }) => MaybePromise<WebExtendManifest>);
 
 export interface WebExtendCommonConfig {
-  manifest?: UseManifest;
+  manifest?: UserManifest;
   target?: WebExtendTarget;
   /**
    * @deprecated Use `entriesDir` instead.
