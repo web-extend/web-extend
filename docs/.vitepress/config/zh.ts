@@ -6,7 +6,17 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: '指南', link: '/zh/guide/start/introduction' },
-      { text: '示例', link: 'https://github.com/web-extend/examples' },
+      {
+        text: '资源',
+        items: [
+          { text: 'Awesome WebExtend', link: 'resources/awesome' },
+          { text: '示例', link: 'https://github.com/web-extend/examples' },
+        ],
+      },
+      {
+        text: '版本',
+        items: [{ text: '更新日志', link: 'https://github.com/web-extend/web-extend/releases' }],
+      },
     ],
 
     sidebar: {

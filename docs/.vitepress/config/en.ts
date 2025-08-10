@@ -6,7 +6,17 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: 'Guide', link: '/guide/start/introduction' },
-      { text: 'Examples', link: 'https://github.com/web-extend/examples' },
+      {
+        text: 'Resources',
+        items: [
+          { text: 'Awesome WebExtend', link: 'resources/awesome' },
+          { text: 'Examples', link: 'https://github.com/web-extend/examples' },
+        ],
+      },
+      {
+        text: 'Version',
+        items: [{ text: 'Changelog', link: 'https://github.com/web-extend/web-extend/releases' }],
+      },
     ],
 
     sidebar: {
