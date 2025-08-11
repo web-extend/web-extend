@@ -6,9 +6,50 @@ outline: [2, 3]
 
 入口起点是浏览器扩展的核心构建块。它们定义构成扩展的不同组件，如 background、popup 或 content_scripts。
 
+## 配置入口 {#configuring-entry-points}
+
+你可以通过 `manifest` 选项来配置入口。WebExtend 会解析它来找到扩展中使用的入口。
+
+例如：
+
+```ts [web-extend.config.ts]
+import { defineConfig } from 'web-extend';
+
+export default defineConfig({
+  manifest: {
+    background: {
+      service_worker: './src/background.ts',
+    },
+    content_scripts: [
+      {
+        matches: ['https://www.google.com/*'],
+        js: ['./src/content.ts'],
+      },
+    ],
+    action: {
+      default_popup: './src/popup.ts',
+    },
+  },
+});
+```
+
+`manifest` 选项也可以是一个返回 manifest 对象的函数。
+
+```ts [web-extend.config.ts]
+import { defineConfig } from 'web-extend';
+
+export default defineConfig({
+  manifest: ({ target, mode }) => {
+    return {
+      // ...
+    };
+  },
+});
+```
+
 ## 声明式入口 {#declarative-entry}
 
-WebExtend 通过基于文件的约定系统可以轻松管理这些入口起点。
+除了 `manifest` 选项，WebExtend 还支持通过基于文件的约定系统来轻松管理入口起点。
 
 ::: tip 为什么使用声明式入口？
 声明式入口点减少了样板代码，使扩展更易于维护。你可以专注于编写实际的扩展代码，而不是管理复杂的清单配置。

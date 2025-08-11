@@ -6,9 +6,50 @@ outline: [2, 3]
 
 Entry points are the core building blocks of a browser extension. They define different components like background, popup, or content scripts that make up your extension.
 
+## Configuring Entry Points
+
+You can configure entry points through the `manifest` option. WebExtend will parse it to find the entry points used in the extension.
+
+For example:
+
+```ts [web-extend.config.ts]
+import { defineConfig } from 'web-extend';
+
+export default defineConfig({
+  manifest: {
+    background: {
+      service_worker: './src/background.ts',
+    },
+    content_scripts: [
+      {
+        matches: ['https://www.google.com/*'],
+        js: ['./src/content.ts'],
+      },
+    ],
+    action: {
+      default_popup: './src/popup.ts',
+    },
+  },
+});
+```
+
+The `manifest` option also can be a function that returns a manifest object.
+
+```ts [web-extend.config.ts]
+import { defineConfig } from 'web-extend';
+
+export default defineConfig({
+  manifest: ({ target, mode }) => {
+    return {
+      // ...
+    };
+  },
+});
+```
+
 ## File-based Entry Points
 
-WebExtend makes it easy to manage these entry points through a file-based convention system.
+Besides the `manifest` option, WebExtend also makes it easy to manage these entry points through a file-based convention system.
 
 ::: tip Why File-based Entry Points?
 File-based entry points reduce boilerplate code and make your extension more maintainable. Instead of managing complex manifest configurations, you can focus on writing the actual extension code.
