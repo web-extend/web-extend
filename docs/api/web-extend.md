@@ -194,13 +194,13 @@ Options:
 
 Options:
 
-- [`entriesDir`](#entriesDir)
-- [`outDir`](#outDir)
-- [`publicDir`](#publicDir)
+- [`entriesDir`](#entriesdir)
+- [`outDir`](#outdir)
+- [`publicDir`](#publicdir)
 - [`manifest`](#manifest)
 - [`target`](#target)
 - [`rsbuild`](#rsbuild)
-- [`webExt`](#webExt)
+- [`webExt`](#webext)
 
 #### entriesDir
 
@@ -225,7 +225,12 @@ Customize public path.
 
 #### manifest
 
-- Type: [`WebExtensionManifest`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json)
+- Type:
+
+```ts
+type Manifest = UserManifest | ((props: { target: WebExtendTarget; mode: string }) => MaybePromise<UserManifest>);
+```
+
 - Default: `{}`
 
 Customize `manifest` configuration. WebExtend will merge the `manifest` option and the fields parsed from entry files (the previous takes precedence). The merged configuration will be used to generate `manifest.json` automatically.
@@ -249,7 +254,7 @@ Customize browser target.
 
 #### webExt
 
-- Type: [`WebExtConfig`](#web-ext-config)
+- Type: [`WebExtConfig`](https://github.com/web-extend/web-extend/blob/main/packages/core/src/runner.ts#L46)
 - Default: `{}`
 
 Usage:
@@ -280,6 +285,20 @@ export default defineWebExtConfig({
   },
 });
 ```
+
+<!-- ### defineManifest
+
+`defineManifest` function helps you to customize `manifest.json` configuration with type inference.
+
+Usage:
+
+```ts [web-extend.config.ts]
+import { defineManifest } from 'web-extend';
+
+export default defineManifest({
+  name: 'My Extension',
+});
+``` -->
 
 ## Types
 
@@ -312,15 +331,3 @@ export const config: ContentScriptConfig = {
   matches: ['https://www.google.com/*'],
 };
 ```
-
-<!-- ### WebExtendManifest {#web-extend-manifest}
-
-source: [`packages/manifest/src/types.ts`](https://github.com/web-extend/web-extend/blob/main/packages/manifest/src/types.ts)
-
-### WebExtendConfig {#web-extend-config}
-
-source: [`packages/core/src/config.ts`](https://github.com/web-extend/web-extend/blob/main/packages/core/src/config.ts#L9)
-
-### WebExtConfig {#web-ext-config}
-
-source: [`packages/core/src/runner.ts`](https://github.com/web-extend/web-extend/blob/main/packages/core/src/runner.ts#L46) -->

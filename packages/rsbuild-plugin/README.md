@@ -17,7 +17,7 @@ There are two ways to use this plugin.
 1. Use the `@web-extend/rsbuild-plugin` package directly.
 2. Use `web-extend` CLI, which is a wrapper of `@web-extend/rsbuild-plugin`.
 
-We recommend using the `web-extend` CLI to initialize a new extension project. Because it provides a more user-friendly experience.
+We recommend using the `web-extend` CLI to initialize a new extension project. It provides a more user-friendly experience.
 
 ### Use `@web-extend/rsbuild-plugin` directly
 

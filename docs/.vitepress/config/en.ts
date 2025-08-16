@@ -6,7 +6,17 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: 'Guide', link: '/guide/start/introduction' },
-      { text: 'Examples', link: 'https://github.com/web-extend/examples' },
+      {
+        text: 'Resources',
+        items: [
+          { text: 'Awesome WebExtend', link: 'resources/awesome' },
+          { text: 'Examples', link: 'https://github.com/web-extend/examples' },
+        ],
+      },
+      {
+        text: 'Version',
+        items: [{ text: 'Changelog', link: 'https://github.com/web-extend/web-extend/releases' }],
+      },
     ],
 
     sidebar: {
@@ -28,6 +38,7 @@ export default defineConfig({
             { text: 'Environment Variables', link: 'environment-variables' },
             { text: 'Using Libraries', link: 'using-libraries' },
             { text: 'Browser Support', link: 'browsers' },
+            { text: 'I18n', link: 'i18n' },
             { text: 'Remote Code', link: 'remote-code' },
           ],
         },
@@ -49,7 +60,10 @@ export default defineConfig({
           text: 'API Reference',
           base: '/api/',
           collapsed: false,
-          items: [{ text: 'web-extend', link: 'web-extend' }],
+          items: [
+            { text: 'web-extend', link: 'web-extend' },
+            { text: '@web-extend/rsbuild-plugin', link: 'rsbuild-plugin' },
+          ],
         },
       ],
     },

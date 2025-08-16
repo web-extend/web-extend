@@ -6,7 +6,17 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: '指南', link: '/zh/guide/start/introduction' },
-      { text: '示例', link: 'https://github.com/web-extend/examples' },
+      {
+        text: '资源',
+        items: [
+          { text: 'Awesome WebExtend', link: 'resources/awesome' },
+          { text: '示例', link: 'https://github.com/web-extend/examples' },
+        ],
+      },
+      {
+        text: '版本',
+        items: [{ text: '更新日志', link: 'https://github.com/web-extend/web-extend/releases' }],
+      },
     ],
 
     sidebar: {
@@ -24,10 +34,11 @@ export default defineConfig({
           base: '/zh/guide/essentials/',
           items: [
             { text: '目录结构', link: 'project-structure' },
-            { text: '入口', link: 'entrypoints' },
+            { text: '入口起点', link: 'entrypoints' },
             { text: '环境变量', link: 'environment-variables' },
             { text: '使用库', link: 'using-libraries' },
             { text: '浏览器支持', link: 'browsers' },
+            { text: '国际化', link: 'i18n' },
             { text: '远程代码', link: 'remote-code' },
           ],
         },
@@ -49,7 +60,10 @@ export default defineConfig({
           text: 'API 参考',
           base: '/zh/api/',
           collapsed: false,
-          items: [{ text: 'web-extend', link: 'web-extend' }],
+          items: [
+            { text: 'web-extend', link: 'web-extend' },
+            { text: '@web-extend/rsbuild-plugin', link: 'rsbuild-plugin' },
+          ],
         },
       ],
     },

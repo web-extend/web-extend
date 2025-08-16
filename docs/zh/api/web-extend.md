@@ -194,13 +194,13 @@ Options:
 
 选项：
 
-- [`entriesDir`](#entriesDir)
-- [`outDir`](#outDir)
-- [`publicDir`](#publicDir)
+- [`entriesDir`](#entriesdir)
+- [`outDir`](#outdir)
+- [`publicDir`](#publicdir)
 - [`manifest`](#manifest)
 - [`target`](#target)
 - [`rsbuild`](#rsbuild)
-- [`webExt`](#webExt)
+- [`webExt`](#webext)
 
 #### entriesDir
 
@@ -247,7 +247,7 @@ type WebExtendTarget = 'chrome-mv3' | 'firefox-mv2' | 'firefox-mv3' | 'safari-mv
 
 #### webExt
 
-- 类型: [`WebExtConfig`](#web-ext-config)
+- 类型: [`WebExtConfig`](https://github.com/web-extend/web-extend/blob/main/packages/core/src/runner.ts#L46)
 - 默认值: `{}`
 
 使用：

@@ -4,21 +4,60 @@ outline: [2, 3]
 
 # Entry Points
 
-::: tip What are Entry Points?
-Entry points are the core building blocks of a browser extension. They define different components like background, popup, or content scripts that make up your extension. WebExtend makes it easy to manage these entry points through a file-based convention system.
-:::
+Entry points are the core building blocks of a browser extension. They define different components like background, popup, or content scripts that make up your extension.
+
+## Configuring Entry Points
+
+You can configure entry points through the `manifest` option. WebExtend will parse it to find the entry points used in the extension.
+
+For example:
+
+```ts [web-extend.config.ts]
+import { defineConfig } from 'web-extend';
+
+export default defineConfig({
+  manifest: {
+    background: {
+      service_worker: './src/background.ts',
+    },
+    content_scripts: [
+      {
+        matches: ['https://www.google.com/*'],
+        js: ['./src/content.ts'],
+      },
+    ],
+    action: {
+      default_popup: './src/popup.ts',
+    },
+  },
+});
+```
+
+The `manifest` option also can be a function that returns a manifest object.
+
+```ts [web-extend.config.ts]
+import { defineConfig } from 'web-extend';
+
+export default defineConfig({
+  manifest: ({ target, mode }) => {
+    return {
+      // ...
+    };
+  },
+});
+```
 
 ## File-based Entry Points
 
-WebExtend supports file-conventional entry points, meaning it parses entry points based on the file system and generates the corresponding manifest fields. So you no longer need to define these entry points manually in `manifest.json`.
+Besides the `manifest` option, WebExtend also makes it easy to manage these entry points through a file-based convention system.
 
 ::: tip Why File-based Entry Points?
 File-based entry points reduce boilerplate code and make your extension more maintainable. Instead of managing complex manifest configurations, you can focus on writing the actual extension code.
 :::
 
-In WebExtend, all entry points are located in the source directory. Every entry point can be a folder or a file.
+All entry points are located in the `entriesDir` (default is `src`) directory. Each entry point can be a folder or a file.
 
-When the entry point is a file, only files ending with `.js|.jsx|.ts|.tsx` will be discovered. The build tool injects an HTML template for each entry point, if necessary, and generates the corresponding HTML file.
+- When the entry point is a file, only files ending with `.js|.jsx|.ts|.tsx` will be discovered. The build tool injects an HTML template for each entry point, if necessary, and generates the corresponding HTML file.
 
 ```
 src/
@@ -27,9 +66,9 @@ src/
 └─ content.ts -> entry point
 ```
 
-When the entry point is a folder, and that folder contains a single entry point, the `index.js` file within that folder will be discovered as the entry point.
+- When the entry point is a folder, and that folder contains a single entry point, the `index.js` file within that folder will be discovered as the entry point.
 
-When the entry point is a folder, and that folder contains multiple entry points, all the direct `*.js` or `*/index.js` files within that folder will be discovered as entry points. Only files in `contents`, `pages`, `sandboxes` and `scripting` folders will be discovered as multiple entry points currently.
+- When the entry point is a folder, and that folder contains multiple entry points, all the direct `*.js` or `*/index.js` files within that folder will be discovered as entry points. Only files in `contents`, `pages`, `sandboxes` and `scripting` folders will be discovered as multiple entry points currently.
 
 ```
 src/
@@ -44,11 +83,18 @@ src/
       └─ index.ts -> entry point
 ```
 
-::: warning Note
-Make sure to follow the exact file naming conventions. For example, `background.ts` will be recognized, but `my-background.ts` won't be.
-:::
+## Entry Generator
 
-## Entry Point Types
+WebExtend comes with a generator to help you create entry points automatically.
+
+```shell
+npx web-extend g [entry...]
+
+# Or use the short form
+npx we g [entry...]
+```
+
+## Entry Types
 
 ### Background
 
@@ -75,7 +121,7 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 ```
 
-See [with-background](https://github.com/web-extend/examples/tree/main/with-background).
+See [with-background](https://github.com/web-extend/examples/tree/main/with-background) for an example.
 
 ### Bookmarks
 
@@ -146,7 +192,7 @@ Be careful with CSS selectors in content scripts. They can conflict with the web
 For example:
 
 ```css [src/content/index.css]
-.web-extend-content-container {
+.my-content-container {
   position: fixed;
   bottom: 20px;
   right: 20px;
@@ -155,7 +201,7 @@ For example:
   z-index: 1000;
 }
 
-.web-extend-content {
+.my-content {
   color: #000;
   background-color: #fff;
   margin-right: 8px;
@@ -173,8 +219,8 @@ let root = document.getElementById('myContent');
 if (!root) {
   root = document.createElement('div');
   root.id = 'myContent';
-  root.innerHTML = `<div class="web-extend-content-container">
-    <div class="web-extend-content">
+  root.innerHTML = `<div class="my-content-container">
+    <div class="my-content">
       <p>This is a content script.</p>
     </div>
   </div>`;
@@ -201,8 +247,8 @@ if (!host) {
   shadow.adoptedStyleSheets = [sheet];
 
   const root = document.createElement('div');
-  root.innerHTML = `<div class="web-extend-content-container">
-    <div class="web-extend-content">
+  root.innerHTML = `<div class="my-content-container">
+    <div class="my-content">
       <p>This is a content script.</p>
     </div>
   </div>`;
@@ -214,16 +260,16 @@ if (!host) {
 
 #### Adding Configuration
 
-Export an object named `config` in the `content` entry to configure how and where your content script runs. This will be reflected to other fields in `content_scripts[index]`.
+Export an object named `config` in the entry to configure how and where your content script runs. This will be reflected to other fields in `content_scripts[index]`.
 
-::: tip Configuration Options
 Common configuration options include:
 
 - `matches`: URL patterns where the script should run
 - `exclude_matches`: URL patterns to exclude
 - `run_at`: When to inject the script (`document_start`, `document_end`, or `document_idle`)
 - `all_frames`: Whether to run in all frames
-  :::
+
+For example:
 
 ::: code-group
 
@@ -247,16 +293,7 @@ export const config: ContentScriptConfig = {
 
 :::
 
-::: warning Troubleshooting
-Common issues with content scripts:
-
-1. Script not running? Check your `matches` patterns
-2. Styles not applying? Check for conflicts or try Shadow DOM
-3. Can't access page variables? Remember content scripts run in an isolated world
-4. Performance issues? Consider using `run_at` and load only what's necessary
-   :::
-
-See [with-content](https://github.com/web-extend/examples/tree/main/with-content), [with-multi-contents](https://github.com/web-extend/examples/tree/main/with-multi-contents).
+See [with-content](https://github.com/web-extend/examples/tree/main/with-content) and [with-multi-contents](https://github.com/web-extend/examples/tree/main/with-multi-contents) for examples.
 
 ### Devtools
 
@@ -277,7 +314,7 @@ Generate the entry automatically:
 npx web-extend g devtools
 ```
 
-For example:
+Example usage:
 
 ```ts [src/devtools.ts]
 chrome.devtools.panels.create('My Panel', '', 'panel.html');
@@ -297,7 +334,7 @@ npx web-extend g panel
 npx web-extend g panels/panel1,panels/panel2
 ```
 
-See [with-devtools](https://github.com/web-extend/examples/tree/main/with-devtools).
+See [with-devtools](https://github.com/web-extend/examples/tree/main/with-devtools) for an example.
 
 ### History
 
@@ -340,7 +377,7 @@ npx web-extend g icons
 npx web-extend g icons --size 16 32 48 128
 ```
 
-See [with-icons](https://github.com/web-extend/examples/tree/main/with-icons).
+See [with-icons](https://github.com/web-extend/examples/tree/main/with-icons) for an example.
 
 ### Newtab
 
@@ -376,7 +413,7 @@ Generate the entry automatically:
 npx web-extend g options
 ```
 
-See [with-options](https://github.com/web-extend/examples/tree/main/with-options).
+See [with-options](https://github.com/web-extend/examples/tree/main/with-options) for an example.
 
 ### Pages
 
@@ -410,13 +447,12 @@ Generate the entry automatically:
 npx web-extend g popup
 ```
 
-Here's a basic popup setup using React:
+Here's a basic popup example using React:
 
 ```tsx [src/popup/index.tsx]
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
-import './index.css';
 
 const rootEl = document.getElementById('root');
 if (rootEl) {
@@ -429,7 +465,7 @@ if (rootEl) {
 }
 ```
 
-See [with-popup](https://github.com/web-extend/examples/tree/main/with-popup).
+See [with-popup](https://github.com/web-extend/examples/tree/main/with-popup) for an example.
 
 ### Sandbox
 
@@ -469,26 +505,13 @@ document.querySelector("#root").innerHTML = `
 }
 ```
 
-See [with-sandbox](https://github.com/web-extend/examples/tree/main/with-sandbox), [with-multi-sandboxes](https://github.com/web-extend/examples/tree/main/with-multi-sandboxes).
+See [with-sandbox](https://github.com/web-extend/examples/tree/main/with-sandbox) and [with-multi-sandboxes](https://github.com/web-extend/examples/tree/main/with-multi-sandboxes) for examples.
 
 ### Scripting
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/scripting) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/scripting)
 
 The scripting API allows you to inject JavaScript and CSS into web pages programmatically. This is different from content scripts as it provides more flexibility in when and where to inject the code.
-
-::: tip When to Use Scripting vs Content Scripts
-
-- Use Content Scripts when you need:
-  - Consistent injection on specific pages
-  - Early access to page load events
-  - Persistent presence on the page
-- Use Scripting API when you need:
-  - Dynamic injection based on user action
-  - One-time script execution
-  - More control over injection timing
-
-:::
 
 | Entry Path                                 | Output Path            |
 | ------------------------------------------ | ---------------------- |
@@ -511,21 +534,13 @@ chrome.tabs.onActivated.addListener((e) => {
 });
 ```
 
-See [with-scripting](https://github.com/web-extend/examples/tree/main/with-scripting).
+See [with-scripting](https://github.com/web-extend/examples/tree/main/with-scripting) for an example.
 
 ### Side Panel
 
 [Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/sidePanel) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Sidebars)
 
 The side panel entry point will be reflected to the `side_panel.default_path` or `sidebar_action.default_panel` field in `manifest.json`.
-
-::: warning Browser Differences
-Chrome calls it "Side Panel" while Firefox calls it "Sidebar". There are some API differences between browsers:
-
-- Chrome: Uses `side_panel.default_path`
-- Firefox: Uses `sidebar_action.default_panel`
-
-:::
 
 | Entry Path                           | Output Path      |
 | ------------------------------------ | ---------------- |
@@ -538,4 +553,4 @@ Generate the entry automatically:
 npx web-extend g sidepanel
 ```
 
-See [with-sidepanel](https://github.com/web-extend/examples/tree/main/with-sidepanel).
+See [with-sidepanel](https://github.com/web-extend/examples/tree/main/with-sidepanel) for an example.

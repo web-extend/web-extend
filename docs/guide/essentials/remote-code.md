@@ -1,6 +1,6 @@
 # Remote Code
 
-In Manifest V3, the remote code is not allowed according to the [Chrome Web Store policy](https://developer.chrome.com/docs/extensions/develop/migrate/improve-security#remove-remote-code). Never mind, you can use Rspack's [`buildHttp`](https://rspack.rs/config/experiments#experimentsbuildhttp) feature to support building remote code. The configuration is as follows:
+According to the [Chrome Web Store policy](https://developer.chrome.com/docs/extensions/develop/migrate/improve-security#remove-remote-code), the remote code is not allowed in Manifest V3. Nevertheless, you can use Rspack's [`buildHttp`](https://rspack.rs/config/experiments#experimentsbuildhttp) feature to support building remote code. The configuration is as follows:
 
 ```ts [rsbuild.config.ts]
 import { defineConfig } from '@rsbuild/core';

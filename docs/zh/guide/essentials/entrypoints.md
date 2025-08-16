@@ -2,23 +2,62 @@
 outline: [2, 3]
 ---
 
-# 入口 {#entrypoints}
+# 入口起点 {#entrypoints}
 
-::: tip 什么是入口？
-入口是浏览器扩展的核心构建块。它们定义构成扩展的不同组件，如 background、popup 或 content_scripts。WebExtend 通过基于文件的约定系统可以轻松管理这些入口点。
-:::
+入口起点是浏览器扩展的核心构建块。它们定义构成扩展的不同组件，如 background、popup 或 content_scripts。
 
-## 声明式入口
+## 配置入口 {#configuring-entry-points}
 
-WebExtend 会基于文件系统自动解析入口文件，生成对应的 manifest 字段。因此，您无需再在 `manifest.json` 中手动维护这些入口定义。
+你可以通过 `manifest` 选项来配置入口。WebExtend 会解析它来找到扩展中使用的入口。
+
+例如：
+
+```ts [web-extend.config.ts]
+import { defineConfig } from 'web-extend';
+
+export default defineConfig({
+  manifest: {
+    background: {
+      service_worker: './src/background.ts',
+    },
+    content_scripts: [
+      {
+        matches: ['https://www.google.com/*'],
+        js: ['./src/content.ts'],
+      },
+    ],
+    action: {
+      default_popup: './src/popup.ts',
+    },
+  },
+});
+```
+
+`manifest` 选项也可以是一个返回 manifest 对象的函数。
+
+```ts [web-extend.config.ts]
+import { defineConfig } from 'web-extend';
+
+export default defineConfig({
+  manifest: ({ target, mode }) => {
+    return {
+      // ...
+    };
+  },
+});
+```
+
+## 声明式入口 {#declarative-entry}
+
+除了 `manifest` 选项，WebExtend 还支持通过基于文件的约定系统来轻松管理入口起点。
 
 ::: tip 为什么使用声明式入口？
 声明式入口点减少了样板代码，使扩展更易于维护。你可以专注于编写实际的扩展代码，而不是管理复杂的清单配置。
 :::
 
-在 WebExtend 中，入口文件位于源码目录下。入口可以是目录或文件中任意一种形式。
+在 WebExtend 中，入口文件位于 `entriesDir` 目录下（默认是 `src`）。入口可以是目录或文件中任意一种形式。
 
-当入口为文件时，仅支持扩展名为 `.js|.jsx|.ts|.tsx` 的入口文件。构建工具会自动为每个入口注入一个 [HTML 模板](https://rsbuild.rs/guide/basic/html-template)，生成对应的 HTML 文件。
+- 当入口为文件时，仅支持扩展名为 `.js|.jsx|.ts|.tsx` 的入口文件。构建工具会自动为每个入口注入一个 [HTML 模板](https://rsbuild.rs/guide/basic/html-template)，生成对应的 HTML 文件。
 
 ```
 src/
@@ -27,9 +66,9 @@ src/
 └─ content.js -> entry point
 ```
 
-当入口为目录，并且为单入口时，该目录下的 `index.js` 文件将作为入口。
+- 当入口为目录，并且为单入口时，该目录下的 `index.js` 文件将作为入口。
 
-当入口为目录，并且为多入口时，该目录下的所有一级 `*.js` 或 `*/index.js` 文件将作为入口。目前仅有 `contents`、`sandboxes` 和 `panels` 目录支持多入口。
+- 当入口为目录，并且为多入口时，该目录下的所有一级 `*.js` 或 `*/index.js` 文件将作为入口。目前仅有 `contents`、`sandboxes` 和 `panels` 目录支持多入口。
 
 ```
 src/
@@ -44,15 +83,22 @@ src/
       └─ index.js -> entry point
 ```
 
-::: warning 注意
-确保遵循正确的文件命名约定。例如，`background.ts` 可以被识别，但 `my-background.ts` 则无法被识别。
-:::
+## 入口生成器 {#entry-generator}
 
-## 入口类型
+WebExtend 内置了一个生成器，帮助你自动创建入口。
+
+```shell
+npx web-extend g [entry...]
+
+# 或使用简写
+npx we g [entry...]
+```
+
+## 入口类型 {#entry-types}
 
 ### Background
 
-[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest/background) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/background)
+[Chrome 文档](https://developer.chrome.com/docs/extensions/reference/manifest/background) | [Firefox 文档](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/background)
 
 Background 脚本运行在浏览器扩展的后台上下文中。Background 入口对应了 `manifest.json` 中的 `background.service_worker` 或 `background.scripts` 字段。
 
@@ -75,11 +121,11 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 ```
 
-参考 [with-background](https://github.com/web-extend/examples/tree/main/with-background)。
+参考 [with-background](https://github.com/web-extend/examples/tree/main/with-background) 示例。
 
 ### Bookmarks
 
-[Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages)，Firefox 不支持 bookmarks。
+[Chrome 文档](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages)，Firefox 不支持 bookmarks。
 
 Bookmarks 入口对应了 `manifest.json` 中的 `chrome_url_overrides.bookmarks` 字段。
 
@@ -96,7 +142,7 @@ npx web-extend g bookmarks
 
 ### Content Scripts
 
-[Chrome Docs](https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_scripts)
+[Chrome 文档](https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts) | [Firefox 文档](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_scripts)
 
 Content Scripts 是在网页上下文中运行的 JavaScript 文件。他们可以读取和修改与你的扩展交互的网页的内容。
 
@@ -118,7 +164,7 @@ Content Scripts 是在网页上下文中运行的 JavaScript 文件。他们可�
 
 #### 添加内容脚本 {#adding-multiple-content-scripts}
 
-`content` 入口对应 `manifest.json` 中的 `content_scripts[index].js` 字段。
+content 入口对应 `manifest.json` 中的 `content_scripts[index].js` 字段。
 
 自动生成入口：
 
@@ -146,7 +192,7 @@ npx web-extend g contents/site-one contents/site-two
 示例如下：
 
 ```css [src/content/index.css]
-.web-extend-content-container {
+.my-content-container {
   position: fixed;
   bottom: 20px;
   right: 20px;
@@ -155,7 +201,7 @@ npx web-extend g contents/site-one contents/site-two
   z-index: 1000;
 }
 
-.web-extend-content {
+.my-content {
   color: #000;
   background-color: #fff;
   margin-right: 8px;
@@ -173,8 +219,8 @@ let root = document.getElementById('myContent');
 if (!root) {
   root = document.createElement('div');
   root.id = 'myContent';
-  root.innerHTML = `<div class="web-extend-content-container">
-    <div class="web-extend-content">
+  root.innerHTML = `<div class="my-content-container">
+    <div class="my-content">
       <p>This is a content script.</p>
     </div>
   </div>`;
@@ -201,8 +247,8 @@ if (!host) {
   shadow.adoptedStyleSheets = [sheet];
 
   const root = document.createElement('div');
-  root.innerHTML = `<div class="web-extend-content-container">
-    <div class="web-extend-content">
+  root.innerHTML = `<div class="my-content-container">
+    <div class="my-content">
       <p>This is a content script.</p>
     </div>
   </div>`;
@@ -214,7 +260,14 @@ if (!host) {
 
 #### 添加配置 {#adding-config}
 
-在入口文件中具名导出一个 `config` 对象，对应 `manifest.json` 中 `content_scripts` 的其他字段。如果使用 TypeScript，WebExtend 提供了一个 `ContentScriptConfig` 类型。示例如下。
+在入口文件中具名导出一个 `config` 对象，对应 `manifest.json` 中 `content_scripts` 的其他字段。常见的配置选项包括：
+
+- `matches`: 脚本运行的 URL 模式
+- `exclude_matches`: 排除的 URL 模式
+- `run_at`: 何时注入脚本 (`document_start`, `document_end`, 或 `document_idle`)
+- `all_frames`: 是否在所有框架中运行
+
+示例如下：
 
 ::: code-group
 
@@ -238,11 +291,11 @@ export const config: ContentScriptConfig = {
 
 :::
 
-参考 [with-content](https://github.com/web-extend/examples/tree/main/with-content)、[with-multi-contents](https://github.com/web-extend/examples/tree/main/with-multi-contents)。
+参考 [with-content](https://github.com/web-extend/examples/tree/main/with-content) 和 [with-multi-contents](https://github.com/web-extend/examples/tree/main/with-multi-contents) 示例。
 
 ### Devtools
 
-[Chrome Docs](https://developer.chrome.com/docs/extensions/how-to/devtools/extend-devtools) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/devtools_page)
+[Chrome 文档](https://developer.chrome.com/docs/extensions/how-to/devtools/extend-devtools) | [Firefox 文档](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/devtools_page)
 
 Devtools 允许你使用自定义功能扩展浏览器的开发者工具。这非常适合创建调试工具、性能分析器或专用检查器。
 
@@ -279,11 +332,11 @@ npx web-extend g panel
 npx web-extend g panels/panel1,panels/panel2
 ```
 
-参考 [with-devtools](https://github.com/web-extend/examples/tree/main/with-devtools)。
+参考 [with-devtools](https://github.com/web-extend/examples/tree/main/with-devtools) 示例。
 
 ### History
 
-[Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages)，Firefox 不支持 history。
+[Chrome 文档](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages)，Firefox 不支持 history。
 
 History 入口对应了 `manifest.json` 中的 `chrome_url_overrides.history` 字段。
 
@@ -300,7 +353,7 @@ npx web-extend g history
 
 ### Icons
 
-[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest/icons) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/icons)
+[Chrome 文档](https://developer.chrome.com/docs/extensions/reference/manifest/icons) | [Firefox 文档](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/icons)
 
 在 src 目录下创建 `assets/icon-{size}.png` 文件，其对应 `manifest.json` 中的 `icons` 和 `action.default_icon` 字段。
 
@@ -322,11 +375,11 @@ npx web-extend g icons
 npx web-extend g icons --size 16 32 48 128
 ```
 
-参考 [with-icons](https://github.com/web-extend/examples/tree/main/with-icons)。
+参考 [with-icons](https://github.com/web-extend/examples/tree/main/with-icons) 示例。
 
 ### Newtab
 
-[Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/chrome_url_overrides)
+[Chrome 文档](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages) | [Firefox 文档](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/chrome_url_overrides)
 
 Newtab 将替换浏览器的默认新标签页。 Newtab 入口对应了 `manifest.json` 中的 `chrome_url_overrides.newtab` 字段。
 
@@ -338,7 +391,7 @@ npx web-extend g newtab
 
 ### Options
 
-[Chrome Docs](https://developer.chrome.com/docs/extensions/develop/ui/options-page) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/options_ui)
+[Chrome 文档](https://developer.chrome.com/docs/extensions/develop/ui/options-page) | [Firefox 文档](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/options_ui)
 
 Options 为用户提供了自定义扩展的方法。 Options 入口对应了 `manifest.json` 中的 `options_ui.page` 字段。
 
@@ -348,7 +401,7 @@ Options 为用户提供了自定义扩展的方法。 Options 入口对应了 `m
 npx web-extend g options
 ```
 
-参考 [with-options](https://github.com/web-extend/examples/tree/main/with-options).
+参考 [with-options](https://github.com/web-extend/examples/tree/main/with-options) 示例。
 
 ### Pages
 
@@ -367,7 +420,7 @@ npx web-extend g pages/welcome
 
 ### Popup
 
-[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/action) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/action)
+[Chrome 文档](https://developer.chrome.com/docs/extensions/reference/api/action) | [Firefox 文档](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/action)
 
 Popup 是一个临时 UI，当用户单击扩展的图标时显示。Popup 入口对应了 `manifest.json` 中的 `action.default_popup` 字段。
 
@@ -400,11 +453,11 @@ if (rootEl) {
 }
 ```
 
-参考 [with-popup](https://github.com/web-extend/examples/tree/main/with-popup)。
+参考 [with-popup](https://github.com/web-extend/examples/tree/main/with-popup) 示例。
 
 ### Sandbox
 
-[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/manifest/sandbox)，Firefox 不支持 sandbox。
+[Chrome 文档](https://developer.chrome.com/docs/extensions/reference/manifest/sandbox)，Firefox 不支持 sandbox。
 
 Sandbox 入口对应了 `manifest.json` 中的 `sandbox.pages` 字段。
 
@@ -439,11 +492,11 @@ document.querySelector("#root").innerHTML = `
 }
 ```
 
-参考 [with-sandbox](https://github.com/web-extend/examples/tree/main/with-sandbox)、[with-multi-sandboxes](https://github.com/web-extend/examples/tree/main/with-multi-sandboxes)。
+参考 [with-sandbox](https://github.com/web-extend/examples/tree/main/with-sandbox) 和 [with-multi-sandboxes](https://github.com/web-extend/examples/tree/main/with-multi-sandboxes) 示例。
 
 ### Scripting
 
-[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/scripting) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/scripting)
+[Chrome 文档](https://developer.chrome.com/docs/extensions/reference/api/scripting) | [Firefox 文档](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/scripting)
 
 Scripting 允许你以编程方式将 JavaScript 和 CSS 注入网页。这与内容脚本不同，因为它在何时何地注入代码方面提供了更大的灵活性。
 
@@ -468,11 +521,11 @@ chrome.tabs.onActivated.addListener((e) => {
 });
 ```
 
-参考 [with-scripting](https://github.com/web-extend/examples/tree/main/with-scripting).
+参考 [with-scripting](https://github.com/web-extend/examples/tree/main/with-scripting) 示例。
 
 ### Side panel
 
-[Chrome Docs](https://developer.chrome.com/docs/extensions/reference/api/sidePanel) | [Firefox Docs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Sidebars)
+[Chrome 文档](https://developer.chrome.com/docs/extensions/reference/api/sidePanel) | [Firefox 文档](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Sidebars)
 
 Sidepanel 入口对应了 `manifest.json` 中的 `side_panel.default_path` 或 `sidebar_action.default_panel` 字段。
 
@@ -487,4 +540,4 @@ Sidepanel 入口对应了 `manifest.json` 中的 `side_panel.default_path` 或 `
 npx web-extend g sidepanel
 ```
 
-参考 [with-sidepanel](https://github.com/web-extend/examples/tree/main/with-sidepanel)。
+参考 [with-sidepanel](https://github.com/web-extend/examples/tree/main/with-sidepanel) 示例。
