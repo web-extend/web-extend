@@ -2,11 +2,11 @@ import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import type { RsbuildConfig } from '@rsbuild/core';
-import type { UserManifest, WebExtendCommonConfig } from '@web-extend/manifest/types';
+import type { WebExtendCommonConfig } from '@web-extend/manifest/types';
 import type { Jiti } from 'jiti';
 import type { WebExtConfig } from './runner.js';
 
-export interface WebExtendConfig extends WebExtendCommonConfig {
+export interface UserConfig extends WebExtendCommonConfig {
   cacheDir?: string;
   rsbuild?: RsbuildConfig;
   webExt?: WebExtConfig;
@@ -17,7 +17,7 @@ type ConfigResult<T> = {
   filePath?: string;
 };
 
-export type WebExtendConfigResult = ConfigResult<WebExtendConfig>;
+export type WebExtendConfigResult = ConfigResult<UserConfig>;
 
 export async function loadConfig<T>({
   root,
@@ -55,16 +55,12 @@ export async function loadConfig<T>({
 const webExtendConfigFiles = ['web-extend.config.mjs', 'web-extend.config.ts', 'web-extend.config.js'];
 
 export function loadWebExtendConfig(root: string) {
-  return loadConfig<WebExtendConfig>({
+  return loadConfig<UserConfig>({
     root,
     configFiles: webExtendConfigFiles,
   });
 }
 
-export const defineWebExtendConfig = (config: WebExtendConfig) => {
+export const defineConfig = (config: UserConfig) => {
   return config;
-};
-
-export const defineManifest = (manifest: UserManifest) => {
-  return manifest;
 };

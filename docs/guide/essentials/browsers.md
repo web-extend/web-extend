@@ -4,8 +4,6 @@ outline: [2, 3]
 
 # Browser Support
 
-WebExtend is designed to help you build cross-browser extensions with ease. This guide covers everything you need to know about browser compatibility, configuration, and development workflow.
-
 ## Browser Targets
 
 WebExtend supports the following extension targets:
@@ -66,9 +64,9 @@ if (target.includes('firefox')) {
 When developing cross-browser extensions, you'll encounter two main types of compatibility challenges:
 
 1. Manifest configuration compatibility
-2. Extension API compatibility
+2. Extension APIs compatibility
 
-### Manifest Configuration
+### Manifest
 
 WebExtend automatically handles manifest compatibility by:
 
@@ -76,7 +74,7 @@ WebExtend automatically handles manifest compatibility by:
 - Reflecting them to `manifest.json` items
 - Supporting custom manifest configuration
 
-Example of custom manifest configuration:
+For example:
 
 ```js [web-extend.config.ts]
 import { defineConfig } from 'web-extend';
@@ -90,42 +88,9 @@ export default defineConfig({
 });
 ```
 
-Reference documentation:
+### Extension APIs
 
-- [Chrome Manifest](https://developer.chrome.com/docs/extensions/reference/manifest)
-- [Firefox Manifest](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json)
-
-### Extension API
-
-WebExtend currently doesn't handle Extension API compatibility automatically. You'll need to manage this yourself using the following approaches:
-
-#### For Chromium-based Browsers
-
-Use the `chrome` API directly:
-
-```ts
-chrome.storage.local.set({ key: 'value' });
-chrome.runtime.sendMessage({ type: 'message' });
-```
-
-Recommended packages: [@types/chrome](https://www.npmjs.com/package/@types/chrome)
-
-#### For Firefox
-
-Use the `webextension-polyfill` package:
-
-```ts
-import browser from 'webextension-polyfill';
-
-// The API is similar to chrome.* but uses promises
-browser.storage.local.set({ key: 'value' });
-browser.runtime.sendMessage({ type: 'message' });
-```
-
-Recommended packages:
-
-- [webextension-polyfill](https://www.npmjs.com/package/webextension-polyfill)
-- [@types/webextension-polyfill](https://www.npmjs.com/package/@types/webextension-polyfill)
+See [Extension APIs](./extension-apis.md) for details.
 
 ## Browser Startup
 
@@ -146,13 +111,11 @@ The browser selection is based on the target:
 
 To customize settings for the runner, you can create a `web-ext.config.[m|c]js` file in the root directory. See [web-ext run](https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#web-ext-run) for a full list of configurations.
 
-### Recipes
-
-#### Open the specific URL
+### Open the specific URL
 
 Open a tab at the specificed URL when the browser starts. Example:
 
-```js [web-ext.config.js]
+```ts [web-ext.config.ts]
 import { defineWebExtConfig } from 'web-extend';
 
 export default defineWebExtConfig({
@@ -162,11 +125,11 @@ export default defineWebExtConfig({
 });
 ```
 
-#### Open the specific browser
+### Open the specific browser
 
 Provide a custom Chromium or Firefox executable path to open the specific browser.
 
-```js [web-ext.config.js]
+```ts [web-ext.config.ts]
 import { defineWebExtConfig } from 'web-extend';
 
 export default defineWebExtConfig({
@@ -177,14 +140,14 @@ export default defineWebExtConfig({
 });
 ```
 
-#### Preserve profile changes
+### Preserve profile changes
 
 `web-ext` creates a new temporary profile each time the browser starts. You can provide a profile path to keep profile changes. Example:
 
 ::: code-group
 
-```js [Mac/Linux]
-// web-ext.config.js
+```ts [Mac/Linux]
+// web-ext.config.ts
 import { defineWebExtConfig } from 'web-extend';
 
 export default defineWebExtConfig({
@@ -194,8 +157,8 @@ export default defineWebExtConfig({
 });
 ```
 
-```js [Windows]
-// web-ext.config.js
+```ts [Windows]
+// web-ext.config.ts
 import { resolve } from 'node:path';
 import { defineWebExtConfig } from 'web-extend';
 

@@ -34,6 +34,7 @@
   "description": "A Build Tool for building web extensions.",
   "dependencies": {
     "@clack/prompts": "^0.11.0",
+    "@types/chrome": "^0.1.4",
     "@web-extend/rsbuild-plugin": "workspace:*",
     "archiver": "^7.0.1",
     "chalk": "^5.4.1",

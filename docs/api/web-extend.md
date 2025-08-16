@@ -186,7 +186,19 @@ Options:
   -h, --help                 display help for command
 ```
 
-## Functions
+## API
+
+### browser
+
+`browser` is the browser object. It is the same as the `chrome` object in Chrome and the `browser` object in Firefox. We merge the two objects to get a unified browser object.
+
+Usage:
+
+```ts
+import { browser } from 'web-extend';
+
+browser.runtime.sendMessage({ type: 'message' });
+```
 
 ### defineConfig
 
@@ -286,7 +298,7 @@ export default defineWebExtConfig({
 });
 ```
 
-<!-- ### defineManifest
+### defineManifest
 
 `defineManifest` function helps you to customize `manifest.json` configuration with type inference.
 
@@ -298,7 +310,7 @@ import { defineManifest } from 'web-extend';
 export default defineManifest({
   name: 'My Extension',
 });
-``` -->
+```
 
 ## Types
 

@@ -315,7 +315,7 @@ export const config: ContentScriptConfig = {
 
 源码: [`packages/manifest/src/types.ts`](https://github.com/web-extend/web-extend/blob/main/packages/manifest/src/types.ts)
 
-### WebExtendConfig {#web-extend-config}
+### UserConfig {#web-extend-config}
 
 源码: [`packages/core/src/config.ts`](https://github.com/web-extend/web-extend/blob/main/packages/core/src/config.ts#L9)
 
