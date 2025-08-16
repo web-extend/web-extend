@@ -4,7 +4,7 @@ layout: home
 
 hero:
   name: 'WebExtend'
-  text: 'The build tool for web extensions'
+  text: 'The Framework for web extensions'
   tagline: 'Build browser extensions the modern way.'
   actions:
     - theme: brand
