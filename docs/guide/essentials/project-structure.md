@@ -11,7 +11,7 @@ WebExtend provides a standardized project structure that helps you organize your
 A typical WebExtend project structure looks like this:
 
 ```
-my-extension-app/
+.
 ├── public/                # Static assets
 │   └── _locales/          # Localization files
 ├── src/                   # Source code
@@ -19,30 +19,30 @@ my-extension-app/
 │   │   ├── icon-16.png
 │   │   ├── icon-32.png
 │   │   └── icon-128.png
-│   ├── background.js      # Background script
+│   ├── background.ts      # Background script
 │   ├── content/           # Content script
-│   │   └── index.js
-│   ├── devtools.js        # DevTools page
+│   │   └── index.ts
+│   ├── devtools.ts        # DevTools page
 │   ├── pages/
 │   │   └── welcome/       # Page implementation
-│   │       ├── index.js
+│   │       ├── index.ts
 │   │       └── style.css
 │   ├── popup/             # Popup UI
-│   │   ├── index.js
+│   │   ├── index.ts
 │   │   └── style.css
 │   ├── options/           # Options page
-│   │   └── index.js
+│   │   └── index.ts
 │   ├── scripting/         # Scripting injection
-│   │   └── index.js
+│   │   └── index.ts
 │   └── sidepanel/         # Side panel
-│       └── index.js
+│       └── index.ts
 ├── .env                   # Environment variables
 ├── .env.development       # Development env vars
 ├── .env.production        # Production env vars
 ├── .gitignore             # Git ignore rules
 ├── package.json           # Project metadata
-├── web-extend.config.js   # WebExtend configuration
-├── web-ext.config.js      # Web-ext configuration
+├── web-extend.config.ts   # WebExtend configuration
+├── web-ext.config.ts      # Web-ext configuration
 ├── rsbuild.config.ts      # Rsbuild configuration
 └── tsconfig.json          # TypeScript configuration
 ```
@@ -65,13 +65,13 @@ The following table describes the main files and directories at the root of your
 | `.gitignore`             | Specifies which files Git should ignore                          |
 | `package.json`           | Project metadata, dependencies and scripts                       |
 | `rsbuild.config.ts`      | Rsbuild configuration file for build customization               |
-| `web-extend.config.js`   | Configuration file for WebExtend                                 |
-| `web-ext.config.js`      | Configuration file for web-ext                                   |
+| `web-extend.config.ts`   | Configuration file for WebExtend                                 |
+| `web-ext.config.ts`      | Configuration file for web-ext                                   |
 | `tsconfig.json`          | TypeScript configuration (if using TypeScript)                   |
 
-## Entries Directory
+### src Directory
 
-Entries directory is used to organize entry files.
+Source directory is used to organize source files.
 
 | Name                       | Description                                               |
 | -------------------------- | --------------------------------------------------------- |
@@ -88,34 +88,6 @@ Entries directory is used to organize entry files.
 | `sandbox/` or `sandboxes/` | Sandbox pages (single or multiple)                        |
 | `scripting/`               | Scripting injection implementation                        |
 | `sidepanel/`               | Side panel implementation                                 |
-
-## Manifest Generation
-
-There is no need to manually write `manifest.json` file, WebExtend will generate it automatically based on your project structure. The following table shows how your files map to manifest fields:
-
-| Manifest Keys                    | Source Location                                  |
-| -------------------------------- | ------------------------------------------------ |
-| `manifest_version`               | Defaults to `3`                                  |
-| `name`                           | `displayName` or `name` from package.json        |
-| `version`                        | `version` from package.json                      |
-| `description`                    | `description` from package.json                  |
-| `author`                         | `author` from package.json                       |
-| `homepage_url`                   | `homepage` from package.json                     |
-| `icons`, `action.default_icon`   | `src/assets/icon-[size].png`                     |
-| `action.default_popup`           | `src/popup/index.js` or `src/popup.js`           |
-| `background.service_worker`      | `src/background/index.js` or `src/background.js` |
-| `content_scripts`                | `src/content/index.js` or `src/contents/*.js`    |
-| `options_ui.page`                | `src/options/index.js` or `src/options.js`       |
-| `devtools_page`                  | `src/devtools/index.js` or `src/devtools.js`     |
-| `sandbox.pages`                  | `src/sandbox/index.js` or `src/sandboxes/*.js`   |
-| `chrome_url_overrides.newtab`    | `src/newtab/index.js` or `src/newtab.js`         |
-| `chrome_url_overrides.bookmarks` | `src/bookmarks/index.js` or `src/bookmarks.js`   |
-| `chrome_url_overrides.history`   | `src/history/index.js` or `src/history.js`       |
-| `side_panel.default_path`        | `src/sidepanel/index.js` or `src/sidepanel.js`   |
-| `_locales`                       | `public/_locales/*`                              |
-| `web_accessible_resources`       | `public/*`                                       |
-
-## Configuration Files
 
 ### .env
 
@@ -148,15 +120,13 @@ API_ENDPOINT=https://dev-api.example.com
 DEBUG=true
 ```
 
-See [environment variables](../essentials/environment-variables.md) for more details.
-
-### web-extend.config.js
+### web-extend.config.ts
 
 WebExtend allows customization of various aspects of your project through the `web-extend.config.(ts|js|mjs)` file.
 
 For example:
 
-```ts [web-extend.config.js]
+```ts [web-extend.config.ts]
 import { defineConfig } from 'web-extend';
 
 export default defineConfig({
@@ -169,7 +139,7 @@ export default defineConfig({
 });
 ```
 
-### web-ext.config.js
+### web-ext.config.ts
 
 WebExtend uses [web-ext](https://github.com/mozilla/web-ext) as the browser runner. You can customize runner configurations through either:
 
@@ -180,7 +150,7 @@ When both configuration methods are provided, the `webExt` option in `web-extend
 
 For example:
 
-```javascript [web-ext.config.js]
+```ts [web-ext.config.ts]
 import { defineWebExtConfig } from 'web-extend';
 
 export default defineWebExtConfig({
@@ -188,7 +158,7 @@ export default defineWebExtConfig({
 });
 ```
 
-### rsbuild.config.js
+### rsbuild.config.ts
 
 WebExtend uses [Rsbuild](https://rsbuild.rs/) as the bundler. You can customize Rsbuild configurations through either:
 
@@ -199,7 +169,7 @@ When both configuration methods are provided, the `rsbuild` option in `web-exten
 
 For example:
 
-```js [rsbuild.config.js]
+```ts [rsbuild.config.ts]
 import { defineConfig } from '@rsbuild/core';
 import { pluginReact } from '@rsbuild/plugin-react';
 

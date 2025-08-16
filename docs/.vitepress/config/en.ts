@@ -38,6 +38,7 @@ export default defineConfig({
             { text: 'Environment Variables', link: 'environment-variables' },
             { text: 'Using Libraries', link: 'using-libraries' },
             { text: 'Browsers', link: 'browsers' },
+            { text: 'Manifest', link: 'manifest' },
             { text: 'Extension APIs', link: 'extension-apis' },
             { text: 'I18n', link: 'i18n' },
             { text: 'Remote Code', link: 'remote-code' },

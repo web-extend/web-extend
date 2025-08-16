@@ -41,7 +41,7 @@ web-extend preview -t firefox-mv2
 web-extend zip -t firefox-mv2
 ```
 
-### Environment Variables
+### Env Variables
 
 WebExtend injects the `import.meta.env.WEB_EXTEND_TARGET` environment variable during build, which helps handle browser-specific code:
 
@@ -63,34 +63,8 @@ if (target.includes('firefox')) {
 
 When developing cross-browser extensions, you'll encounter two main types of compatibility challenges:
 
-1. Manifest configuration compatibility
-2. Extension APIs compatibility
-
-### Manifest
-
-WebExtend automatically handles manifest compatibility by:
-
-- Parsing entry files from the file system
-- Reflecting them to `manifest.json` items
-- Supporting custom manifest configuration
-
-For example:
-
-```js [web-extend.config.ts]
-import { defineConfig } from 'web-extend';
-
-export default defineConfig({
-  manifest: ({ target, mode }) => {
-    return {
-      // ...
-    };
-  },
-});
-```
-
-### Extension APIs
-
-See [Extension APIs](./extension-apis.md) for details.
+- **Manifest compatibility**: WebExtend automatically handles manifest compatibility. See [Manifest](./manifest.md) for more details.
+- **Extension APIs compatibility**: WebExtend provides a simple unified browser object for all browsers. See [Extension APIs](./extension-apis.md) for more details.
 
 ## Browser Startup
 
