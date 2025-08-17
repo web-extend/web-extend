@@ -1,4 +1,4 @@
-.web-extend-content-container {
+.my-content-container {
   position: fixed;
   bottom: 20px;
   right: 20px;
@@ -7,7 +7,7 @@
   z-index: 1000;
 }
 
-.web-extend-content {
+.my-content {
   color: #000;
   background-color: #fff;
   margin-right: 8px;
@@ -17,12 +17,12 @@
   padding: 12px;
 }
 
-.web-extend-content h1 {
+.my-content h1 {
   font-size: 1.8rem;
   font-weight: 700;
 }
 
-.web-extend-content p {
+.my-content p {
   font-size: 1.2rem;
   font-weight: 400;
   opacity: 0.5;

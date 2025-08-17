@@ -2,8 +2,8 @@ import './index.css';
 import type { ContentScriptConfig } from 'web-extend';
 
 function render(root: HTMLElement) {
-  root.innerHTML = `<div class="web-extend-content-container">
-    <div class="web-extend-content" style="display: none;">
+  root.innerHTML = `<div class="my-content-container">
+    <div class="my-content" style="display: none;">
       <h1>Vanilla WebExtend</h1>
       <p>This is a content script.</p>
     </div>
@@ -16,7 +16,7 @@ function render(root: HTMLElement) {
         height="48"
         style="cursor: pointer"
       >
-        <title>web-extend</title>
+        <title>Logo</title>
         <circle cx="512" cy="512" r="512" fill="#1296db" />
         <path
           d="M568.747 398.507l56.747 56.747h277.76L960 398.507v-277.76L903.253 64h-277.76l-56.747 56.747v277.76h0.001z m334.506-277.76v277.76h-277.76v-277.76h277.76zM64 903.253L120.747 960H736l56.747-56.747V622.507L736 568.747H455.253V288l-53.76-56.747H120.747L64 288V903.253z m56.747-334.506V288h280.747v280.747H120.747z m280.746 334.506H120.747V622.507h280.747v280.746h-0.001z m53.76-280.746H736v280.747H455.253V622.507z"
@@ -28,21 +28,19 @@ function render(root: HTMLElement) {
   </div>`;
 
   const handleClick = () => {
-    const el = document.getElementsByClassName(
-      'web-extend-content',
-    )[0] as HTMLElement;
+    const el = document.getElementsByClassName('my-content')[0] as HTMLElement;
     if (el) {
       el.style.display = el.style.display === 'none' ? 'block' : 'none';
     }
   };
-  const btn = document.querySelector('.web-extend-content-container svg');
+  const btn = document.querySelector('.my-content-container svg');
   btn?.addEventListener('click', handleClick);
 }
 
-let root = document.getElementById('web-extend-content');
+let root = document.getElementById('my-content');
 if (!root) {
   root = document.createElement('div');
-  root.id = 'web-extend-content';
+  root.id = 'my-content';
   document.body.appendChild(root);
   render(root);
 }

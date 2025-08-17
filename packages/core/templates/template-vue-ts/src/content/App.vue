@@ -9,8 +9,8 @@ function toggle() {
 </script>
 
 <template>
-  <div class="web-extend-content-container">
-    <div v-if="visible" class="web-extend-content">
+  <div class="my-content-container">
+    <div v-if="visible" class="my-content">
       <h1>WebExtend + Vue</h1>
       <p>This is a content script.</p>
     </div>
@@ -36,7 +36,7 @@ function toggle() {
 </template>
 
 <style scoped>
-.web-extend-content-container {
+.my-content-container {
   position: fixed;
   bottom: 20px;
   right: 20px;
@@ -45,7 +45,7 @@ function toggle() {
   z-index: 1000;
 }
 
-.web-extend-content {
+.my-content {
   color: #000;
   background-color: #fff;
   margin-right: 8px;
@@ -55,12 +55,12 @@ function toggle() {
   padding: 12px;
 }
 
-.web-extend-content h1 {
+.my-content h1 {
   font-size: 1.8rem;
   font-weight: 700;
 }
 
-.web-extend-content p {
+.my-content p {
   font-size: 1.2rem;
   font-weight: 400;
   opacity: 0.5;
