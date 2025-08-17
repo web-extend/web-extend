@@ -225,13 +225,12 @@ export const pluginWebExtend = (options: PluginWebExtendOptions = {}): RsbuildPl
       const manifestEntry: WebExtendEntryOutput[] = [];
       for (const [entryName, entrypoint] of Object.entries(entrypoints)) {
         const { assets = [], auxiliaryAssets = [] } = entrypoint;
-        const output = [...assets, ...auxiliaryAssets]
-          .map((item) => item.name)
-          .filter((item) => !item.includes('.hot-update.'));
-
         manifestEntry.push({
           name: entryName,
-          output,
+          output: {
+            initial: assets.map((item) => item.name).filter((item) => !item.includes('.hot-update.')),
+            assets: auxiliaryAssets.map((item) => item.name).filter((item) => !item.includes('.hot-update.')),
+          },
         });
       }
 

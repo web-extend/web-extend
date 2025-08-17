@@ -40,7 +40,7 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
 
 const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, output }) => {
   const { background } = manifest;
-  const scripts = output?.filter((item) => item.endsWith('.js')) || [];
+  const scripts = output?.initial?.filter((item) => item.endsWith('.js')) || [];
   if (!background || !scripts.length) return;
 
   if (background.scripts) {

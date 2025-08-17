@@ -97,7 +97,8 @@ const getIconOutputName = (input: string, output: string[]) => {
 };
 
 const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, output, context }) => {
-  if (!output?.length) return;
+  const assets = output?.assets || [];
+  if (!assets.length) return;
 
   const { rootPath } = context;
 
@@ -107,7 +108,7 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, output, co
       const file = icons[size];
       const isPublicFile = file.startsWith('/') && !file.startsWith(rootPath);
       if (isPublicFile) continue;
-      const res = getIconOutputName(file, output || []);
+      const res = getIconOutputName(file, assets);
       if (res) {
         icons[size] = res;
       } else {
@@ -124,7 +125,7 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = ({ manifest, output, co
   }
 
   if (typeof pointer?.default_icon === 'string') {
-    pointer.default_icon = getIconOutputName(pointer.default_icon, output || []);
+    pointer.default_icon = getIconOutputName(pointer.default_icon, assets);
   } else if (typeof pointer?.default_icon === 'object') {
     helper(pointer.default_icon);
   }

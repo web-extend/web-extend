@@ -16,7 +16,12 @@ export interface WebExtendEntryInput {
 
 export type WebExtendEntryOutput = {
   name: string;
-  output: string[];
+  output: {
+    initial?: string[];
+    assets?: string[];
+    html?: string[];
+    async?: string[];
+  };
 };
 
 export type WebExtendSingleEntryKey =

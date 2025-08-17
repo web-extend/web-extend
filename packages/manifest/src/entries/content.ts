@@ -57,7 +57,7 @@ const normalizeEntry: ManifestEntryProcessor['normalizeEntry'] = async ({ manife
 
 const writeEntry: ManifestEntryProcessor['writeEntry'] = async ({ manifest, name, output, context, entries }) => {
   const { content_scripts } = manifest;
-  if (!content_scripts?.length || !output?.length) return;
+  if (!content_scripts?.length || !output?.initial?.length) return;
 
   const entry = entries[key] || [];
   const index = entry.findIndex((item) => item.name === name);
@@ -84,8 +84,8 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = async ({ manifest, name
     };
   }
 
-  content_scripts[index].js = output.filter((item) => item.endsWith('.js'));
-  content_scripts[index].css = output.filter((item) => item.endsWith('.css'));
+  content_scripts[index].js = output.initial?.filter((item) => item.endsWith('.js')) || [];
+  content_scripts[index].css = output.initial?.filter((item) => item.endsWith('.css')) || [];
 };
 
 const copyContentScriptFile = async (script: string, distPath: string) => {

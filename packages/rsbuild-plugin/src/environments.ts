@@ -29,6 +29,7 @@ function getWebEnvironmentConfig({ entries, isDev }: NormalizeRsbuildEnvironment
         js: getJsDistPath(webEntry),
         css: getCssDistPath(webEntry),
       },
+      // manifest: '.rsbuild/manifest.web.json',
     },
   };
 }
@@ -55,6 +56,7 @@ export const normalizeRsbuildEnvironments = (options: NormalizeRsbuildEnvironmen
         filename: {
           js: getJsDistPath(backgroundEntry),
         },
+        // manifest: '.rsbuild/manifest.background.json',
       },
     };
   }
