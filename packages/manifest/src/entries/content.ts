@@ -1,7 +1,11 @@
 import { existsSync } from 'node:fs';
 import { copyFile, mkdir, readFile } from 'node:fs/promises';
 import { basename, posix, resolve } from 'node:path';
-import type { ContentScriptConfig, ManifestContentScript } from '../browser.js';
+import type {
+  ContentScriptConfig,
+  ManifestContentScript,
+  ManifestWebAccessibleResourcesC2ItemType,
+} from '../browser.js';
 import {
   getMultipleDeclarativeEntryFile,
   getSingleDeclarativeEntryFile,
@@ -86,6 +90,20 @@ const writeEntry: ManifestEntryProcessor['writeEntry'] = async ({ manifest, name
 
   content_scripts[index].js = output.initial?.filter((item) => item.endsWith('.js')) || [];
   content_scripts[index].css = output.initial?.filter((item) => item.endsWith('.css')) || [];
+
+  // add web_accessible_resources
+  const assets = (output.assets || []).filter((item) => !item.endsWith('.map'));
+  if (assets.length) {
+    manifest.web_accessible_resources ??= [];
+    if (manifest.manifest_version === 2) {
+      (manifest.web_accessible_resources as string[]).push(...assets);
+    } else {
+      (manifest.web_accessible_resources as ManifestWebAccessibleResourcesC2ItemType[]).push({
+        resources: assets,
+        matches: content_scripts[index].matches || ['<all_urls>'],
+      });
+    }
+  }
 };
 
 const copyContentScriptFile = async (script: string, distPath: string) => {

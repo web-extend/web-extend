@@ -21,6 +21,7 @@ import type {
   WebExtendEntryOutput,
   WebExtendTarget,
 } from './types.js';
+import { deepClone } from './utils.js';
 
 async function initManifest(rootPath: string, target?: WebExtendTarget) {
   const manifest: Partial<WebExtendManifest> = {
@@ -74,9 +75,11 @@ export const normalizeContext = (options: NormalizeContextOptions): WebExtendCon
 };
 
 export class ManifestManager {
-  public context = {} as WebExtendContext;
-  public entries: WebExtendEntries = {};
-  private manifest = {} as WebExtendManifest;
+  context = {} as WebExtendContext;
+  entries: WebExtendEntries = {};
+  #manifest = {} as WebExtendManifest;
+  #normalizedManifest = {} as WebExtendManifest;
+  #isWritting = false;
 
   async normalize(options: NormalizeContextOptions) {
     this.context = normalizeContext(options);
@@ -141,11 +144,23 @@ export class ManifestManager {
 
     polyfillManifest({ manifest: finalManifest, context: this.context });
 
-    this.manifest = finalManifest;
+    this.#normalizedManifest = finalManifest;
+    this.#manifest = deepClone(finalManifest);
     this.entries = entries;
   }
 
+  async preWriteEntries() {
+    if (this.#manifest.web_accessible_resources) {
+      this.#manifest.web_accessible_resources = deepClone(this.#normalizedManifest.web_accessible_resources);
+    }
+  }
+
   async writeEntries(result: WebExtendEntryOutput[]) {
+    if (!this.#isWritting) {
+      await this.preWriteEntries();
+      this.#isWritting = true;
+    }
+
     if (!this.entries || !this.context) return;
     const entries = this.entries;
 
@@ -160,7 +175,7 @@ export class ManifestManager {
 
       if (entryKey && processor?.writeEntry) {
         await processor.writeEntry({
-          manifest: this.manifest,
+          manifest: this.#manifest,
           rootPath: this.context.rootPath,
           name,
           output,
@@ -175,7 +190,7 @@ export class ManifestManager {
     if (!this.context) return;
     const { rootPath, outDir, mode, runtime } = this.context;
     const distPath = resolve(rootPath, outDir);
-    const manifest = this.manifest;
+    const manifest = this.#manifest;
 
     if (!existsSync(distPath)) {
       await mkdir(distPath, { recursive: true });
@@ -189,6 +204,8 @@ export class ManifestManager {
 
     const data = isDevMode(mode) ? JSON.stringify(manifest, null, 2) : JSON.stringify(manifest);
     await writeFile(join(distPath, 'manifest.json'), data);
+
+    this.#isWritting = false;
   }
 
   async copyPublicFiles() {
